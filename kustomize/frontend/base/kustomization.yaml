@@ -1,0 +1,10 @@
+namespace: frontend
+resources:
+  - service.yaml
+  - deployment.yaml
+  - route.yaml
+
+configMapGenerator:
+  - envs:
+      - shared-env.yaml
+    name: shared-envs

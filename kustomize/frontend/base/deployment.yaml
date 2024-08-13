@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: frontend
+  name: frontend
+  namespace: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - image: frontend
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: '128Mi'
+              cpu: '500m'
+          name: frontend
+          envFrom:
+            - configMapRef:
+                name: shared-envs
+---
+

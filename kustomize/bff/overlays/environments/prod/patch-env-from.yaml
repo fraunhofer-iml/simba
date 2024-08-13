@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bff
+spec:
+  template:
+    spec:
+      containers:
+        - name: bff
+          image: nexus.blockchain-europe.iml.fraunhofer.de/bff:prod

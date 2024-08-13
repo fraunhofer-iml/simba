@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bff
+  name: bff
+  namespace: bff
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bff
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: bff
+    spec:
+      containers:
+        - image: bff
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: '128Mi'
+              cpu: '500m'
+          name: bff
+          envFrom:
+            - configMapRef:
+                name: shared-envs
+---
+

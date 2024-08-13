@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  template:
+    spec:
+      containers:
+        - name: frontend
+          image: nexus.blockchain-europe.iml.fraunhofer.de:5001/frontend:latest
+          envFrom:
+            - configMapRef:
+                name: envs
+            - configMapRef:
+                name: shared-envs
