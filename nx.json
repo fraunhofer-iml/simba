@@ -1,7 +1,10 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
     "production": [
       "default",
       "!{projectRoot}/.eslintrc.json",
@@ -34,7 +37,9 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/bff-e2e/**/*"]
+      "exclude": [
+        "apps/bff-e2e/**/*"
+      ]
     },
     {
       "plugin": "@nx/playwright/plugin",
@@ -46,8 +51,13 @@
   "targetDefaults": {
     "@angular-devkit/build-angular:application": {
       "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "production",
+        "^production"
+      ]
     }
   },
   "generators": {
@@ -57,5 +67,6 @@
       "style": "scss",
       "unitTestRunner": "jest"
     }
-  }
+  },
+  "defaultBase": "main"
 }

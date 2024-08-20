@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Offer {
+  id           String   @id @default(cuid())
+  creationDate DateTime @default(now())
+  price        Float
+  status       String
+
+  Order Order[]
+}
+
+model Product {
+  id      String @id @default(cuid())
+  name    String
+  variant String
+
+  Order Order[]
+}
+
+model Machine {
+  id           String @id @default(cuid())
+  description  String
+  minimalPrice Float
+}
+
+model Participant {
+  id                       String @id @default(cuid())
+  name                     String
+  city                     String
+  countryCode              String
+  address                  String
+  zip                      String
+  vatId                    String
+  commercialRegisterNumber String
+
+  Order Order[]
+
+  Invoice         Invoice[]
+  TradeReceivable TradeReceivable[]
+}
+
+model Invoice {
+  id               String   @id @default(cuid())
+  creationDate     DateTime @default(now())
+  contractCurrency String
+  measuringUnit    String
+  netPricePerUnit  String
+  amount           Int
+  vat              Float
+  status           String
+
+  debitor   Participant @relation(fields: [debitorId], references: [id])
+  debitorId String
+
+  TradeReceivable TradeReceivable[]
+}
+
+model TradeReceivable {
+  id           String   @id @default(cuid())
+  nft          String
+  status       String
+  creationDate DateTime @default(now())
+  value        Float
+
+  debitor   Participant @relation(fields: [debitorId], references: [id])
+  debitorId String
+
+  order Order[]
+
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+  invoiceId String
+}
+
+model Order {
+  id             String    @id @default(cuid())
+  creationDate   DateTime  @default(now())
+  completionDate DateTime? @default(now())
+  amount         Int
+  status         String
+  calendarWeek   String
+  offers         String[]
+  machines       String[]
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+
+  customer      Participant @relation(fields: [participantId], references: [id])
+  participantId String
+
+  acceptedOffer Offer?  @relation(fields: [offerId], references: [id])
+  offerId       String?
+
+  tradeReceivable   TradeReceivable? @relation(fields: [tradeReceivableId], references: [id])
+  tradeReceivableId String?
+}
