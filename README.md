@@ -74,3 +74,16 @@ It will show tasks that you can run with Nx.
 - [Join the community](https://nx.dev/community)
 - [Subscribe to the Nx Youtube Channel](https://www.youtube.com/@nxdevtools)
 - [Follow us on Twitter](https://twitter.com/nxdevtools)
+
+
+## prisma schema update
+npx prisma migrate dev
+
+npx prisma generate
+npx prisma db push
+
+npx prisma studio
+
+## container creation and start
+nx run [bff]:container
+docker run -P --network host [affds-bff]:[feature-init]
