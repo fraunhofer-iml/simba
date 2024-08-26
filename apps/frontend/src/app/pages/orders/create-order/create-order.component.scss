@@ -1,0 +1,62 @@
+.deadline{
+    justify-content: flex-end;
+    position: absolute;
+    right: 16px;
+    margin-bottom: 5px;
+}
+
+.offers-container{
+    display: flex;
+    justify-content: space-around;
+    height: 100% ;
+    flex-wrap: wrap;
+}
+.offers-card{
+    box-shadow: 0 2px 6px;
+    min-height: 50%;
+    margin: 16px;
+}
+.offers-header{
+    display: flex;
+    flex-direction: row;
+}
+.offer{
+    flex:50%;
+    max-width: 45%;
+    height: 100%;
+    margin-top:16px;
+    margin-bottom: 32px;
+}
+.order-card{
+    box-shadow: 0 2px 6px;
+    height: 10%;
+    margin: 16px;
+}
+.order-content{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.order-field{
+    min-width:25%;
+}
+.decline-button{
+    width: 200px;
+    position: absolute;
+    right: 16px;
+}
+
+.accept-button{
+    width: 200px;
+    position: absolute;
+    right: 16px;
+}
+
+.create-button{
+    width: 200px;
+    margin-top: 8px;
+}
+
+.creation-container{
+    margin: 0rem 1rem 0rem 1rem;
+}

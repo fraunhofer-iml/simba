@@ -1,0 +1,37 @@
+.sidebar-container {
+    width: auto;
+    height: 100%;
+    border: 1px solid #555;
+    background: #eee;
+  }
+
+.spacer{
+    max-width: 80%;
+}
+
+.drawer-content-container{
+    margin: 0rem 1rem 0rem 1rem;
+    height: 90%;
+}
+
+.selection-list{
+    min-height: 70%;
+}
+
+.user-container{
+    display: flex;
+    flex-direction: row;
+    gap: 90px;
+    margin: 24px 0px 24px 0px;
+}
+    
+.user-information{
+    display: flex;
+    flex-direction: row;
+    padding-left: 16px;
+    margin-top: 8px;
+}
+    
+.logos-container{
+    margin-top: 32px;
+}

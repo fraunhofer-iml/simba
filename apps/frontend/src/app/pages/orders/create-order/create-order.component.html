@@ -1,0 +1,61 @@
+<div class="creation-container">
+<h1>Create Order</h1>
+<mat-divider></mat-divider>
+<mat-card appearance="outlined" class="order-card">
+  <mat-card-content>
+    <form class="order-content">
+      <mat-form-field class="order-field">
+        <mat-select placeholder="Produkt">
+          @for (product of products; track product) {
+          <mat-option [value]="product">{{ product }} </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="order-field">
+        <input matInput value="50" />
+      </mat-form-field>
+      <mat-form-field class="order-field">
+        <mat-select placeholder="Month">
+          @for (month of months; track month) {
+          <mat-option [value]="month">{{ month }} </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <div>
+        <button class="create-button" mat-raised-button>Create</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+<mat-card appearance="outlined" class="offers-card">
+  <mat-card-content class="offers-card-content">
+    <div class="offers-header">
+      <mat-card-title>Offers</mat-card-title>
+      <mat-card-title class="deadline">Expiration</mat-card-title>
+    </div>
+    <div class="offers-container">
+      @for (offer of offers; track $index) {
+      <mat-card class="offer">
+        <mat-card-content>
+          <p>{{ offer.id }}</p>
+          <p>{{ offer.name }}</p>
+          <p>{{ offer.amount }}</p>
+          <p>{{ offer.price }}</p>
+          <p>{{ offer.month }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button class="accept-button" color="primary">
+            Accept
+          </button>
+        </mat-card-actions>
+      </mat-card>
+      }
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button class="decline-button" color="primary">
+      Decline All
+    </button>
+  </mat-card-actions>
+</mat-card>
+</div>

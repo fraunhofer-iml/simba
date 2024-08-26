@@ -1,5 +1,33 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import '@angular/material/prebuilt-themes/azure-blue.css';
 
-/* You can add global styles to this file, and also import other style files */
+@font-face{
+    font-family: "roboto";
+    src: url("/assets/fonts/Roboto/Roboto-Regular.ttf");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "roboto-bold";
+    src: url("/assets/fonts/Roboto/Roboto-Bold.ttf");
+    font-weight: bold;
+    font-style: normal;
+}
+
+.material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+}
+
+html, body { height: 100%; 
+}
+body { margin: 0; font-family: roboto, "Helvetica Neue", sans-serif; }
+h1 { font-weight: normal}
+
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
