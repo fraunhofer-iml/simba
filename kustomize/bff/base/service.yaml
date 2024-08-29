@@ -5,12 +5,12 @@ metadata:
   labels:
     app: bff-service
   name: bff-service
-  namespace: bff
 spec:
   ports:
-    - port: 8080
+    - port: 3000
       protocol: TCP
-      targetPort: 8080
+      name: rest
+      targetPort: 3000
   selector:
     app: bff
 ---

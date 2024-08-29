@@ -1,0 +1,25 @@
+namespace: skala-affds
+resources:
+  - namespace.yaml
+
+configMapGenerator:
+  - envs:
+      - envs.yaml
+    name: envs
+    options:
+      disableNameSuffixHash: true
+
+secretGenerator:
+  - name: keycloak
+    literals:
+      - IBAF_KEYCLOAK_USER=frontend
+      - IBAF_KEYCLOAK_PASSWORD=OqSNNhx0bxZO6U6oMF65MipTpWPQifux
+    options:
+      disableNameSuffixHash: true
+  - name: image-pull-secret
+    files:
+      - .dockerconfigjson=docker-config.json
+    type: kubernetes.io/dockerconfigjson
+    options:
+      disableNameSuffixHash: true
+

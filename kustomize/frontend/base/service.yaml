@@ -5,12 +5,11 @@ metadata:
   labels:
     app: frontend-service
   name: frontend-service
-  namespace: frontend
 spec:
   ports:
-    - port: 8080
+    - port: 4200
       protocol: TCP
-      targetPort: 8080
+      targetPort: 4200
   selector:
     app: frontend
 ---

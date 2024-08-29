@@ -1,0 +1,4 @@
+# Keycloak
+KEYCLOAK_URL=https://kc.public.apps.blockchain-europe.iml.fraunhofer.de
+KEYCLOAK_REALM=AFFDS
+KEYCLOAK_GRANT_TYPE=client_credentials

@@ -5,7 +5,6 @@ metadata:
   labels:
     app: frontend
   name: frontend
-  namespace: frontend
 spec:
   replicas: 1
   selector:
@@ -18,15 +17,27 @@ spec:
         app: frontend
     spec:
       containers:
-        - image: frontend
+        - image: container-registry.gitlab.cc-asp.fraunhofer.de/skala/ap3/core/frontend:latest
           imagePullPolicy: Always
           resources:
             limits:
-              memory: '128Mi'
-              cpu: '500m'
-          name: frontend
+              memory: "128Mi"
+              cpu: "500m"
+          name: mynature-adapter
+          env:
+            - name: KEYCLOAK_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak
+                  key: KEYCLOAK_CLIENT_ID
+            - name: KEYCLOAK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak
+                  key: KEYCLOAK_SECRET
           envFrom:
             - configMapRef:
-                name: shared-envs
+                name: envs
+      imagePullSecrets:
+        - name: image-pull-secret
 ---
-

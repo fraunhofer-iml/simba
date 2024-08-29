@@ -10,7 +10,7 @@ export class OrdersController {
 
   @Post()
   @ApiOperation({
-    description: 'Create a new order.'
+    description: 'Accepts an order, stores it in the database and transfers it to the CPPS scheduler.'
   })
   create(@Body() createOrderDto: CreateOrderDto): void {
     this.ordersService.create(createOrderDto);

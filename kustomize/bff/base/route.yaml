@@ -6,13 +6,13 @@ metadata:
   labels:
     app: bff-route
 spec:
-  host: bff.apps.blockchain-europe.iml.fraunhofer.de
+  host: bff.affds.apps.blockchain-europe.iml.fraunhofer.de
   to:
     kind: Service
     name: bff-service
     weight: 100
   port:
-    targetPort: 8080
+    targetPort: 3000
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect

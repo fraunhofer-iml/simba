@@ -5,7 +5,6 @@ metadata:
   labels:
     app: bff
   name: bff
-  namespace: bff
 spec:
   replicas: 1
   selector:
@@ -18,7 +17,7 @@ spec:
         app: bff
     spec:
       containers:
-        - image: bff
+        - image: container-registry.gitlab.cc-asp.fraunhofer.de/skala/ap3/core/bff:latest
           imagePullPolicy: Always
           resources:
             limits:
