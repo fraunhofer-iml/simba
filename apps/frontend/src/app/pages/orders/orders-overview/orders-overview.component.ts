@@ -3,7 +3,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Order } from '../../../model/offers.model';
+import { map, Observable } from 'rxjs';
+import { OrdersService } from '../../../services/orders/orders.service';
+import { OrderDto } from 'libs/api/src/dtos/order/order.dto';
+
 
 @Component({
   selector: 'app-orders-overview',
@@ -12,18 +15,24 @@ import { Order } from '../../../model/offers.model';
 })
 export class OrdersOverviewComponent {
   displayedColumns: string[] = ["orderId","date","status","price","products","robots","customerID"];
-  dataSource: MatTableDataSource<Order>;
+  dataSource = new MatTableDataSource<OrderDto>;
+  dataSourceObservable: Observable<MatTableDataSource<OrderDto>>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private router:Router) {
-    this.dataSource = new MatTableDataSource();
+  constructor(private router:Router, orderService:OrdersService) {
+    this.dataSource = new MatTableDataSource<OrderDto>()
+    this.dataSourceObservable = orderService.getOrders().pipe(map( (orders) => {
+      const dataSource = this.dataSource;
+      dataSource.data = orders;
+      return dataSource;
+    }));
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
   }
 
   applyFilter(event: Event) {

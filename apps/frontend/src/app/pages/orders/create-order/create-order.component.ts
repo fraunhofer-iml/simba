@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { MatDatepicker } from '@angular/material/datepicker';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CreateOrderDto } from 'libs/api/src/dtos/order';
+import { ProductDto } from 'libs/api/src/dtos/product/product.dto';
+import { ProductMocks } from 'libs/api/src/dtos/product/mocks/product.mock';
+import { OrdersService } from '../../../services/orders/orders.service';
+
 
 @Component({
   selector: 'app-create-order',
@@ -8,11 +13,14 @@ import { MatDatepicker } from '@angular/material/datepicker';
 })
 export class CreateOrderComponent {
 
-  products: string[] = ['Quadrokopter'];
+  orderForm: FormGroup;
+
+  products: ProductDto[] = ProductMocks;
   months: string[] = ["January", "February", 'March',
     'April', 'May', 'June', 'July', 'August', 'September',
      'October', 'November', 'December'
     ]
+
   offers: any[] = [
     {
       id: '12345',
@@ -44,5 +52,16 @@ export class CreateOrderComponent {
     },
   ];
 
-  constructor() {}
+  constructor(private orderService: OrdersService, private builder:FormBuilder) {
+    this.orderForm = builder.group({
+      product:['',[Validators.required]],
+      amount: [0,[Validators.required]],
+      calendarWeek: ['',[Validators.required]]
+    })
+  }
+  createHardware(){
+    this.orderService.createOrder(this.orderForm.getRawValue() as CreateOrderDto)
+  }
+
+
 }

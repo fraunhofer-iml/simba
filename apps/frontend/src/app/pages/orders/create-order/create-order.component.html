@@ -3,26 +3,26 @@
 <mat-divider></mat-divider>
 <mat-card appearance="outlined" class="order-card">
   <mat-card-content>
-    <form class="order-content">
+    <form class="order-content" [formGroup]="orderForm">
       <mat-form-field class="order-field">
-        <mat-select placeholder="Produkt">
+        <mat-select placeholder="Produkt" formControlName="product">
           @for (product of products; track product) {
-          <mat-option [value]="product">{{ product }} </mat-option>
+          <mat-option [value]="product">{{ product.name }} </mat-option>
           }
         </mat-select>
       </mat-form-field>
       <mat-form-field class="order-field">
-        <input matInput value="50" />
+        <input matInput formControlName="amount" />
       </mat-form-field>
       <mat-form-field class="order-field">
-        <mat-select placeholder="Month">
+        <mat-select placeholder="Month" formControlName="calendarWeek">
           @for (month of months; track month) {
           <mat-option [value]="month">{{ month }} </mat-option>
           }
         </mat-select>
       </mat-form-field>
       <div>
-        <button class="create-button" mat-raised-button>Create</button>
+        <button class="create-button" (click)="createHardware()" mat-raised-button [disabled]="!orderForm.valid">Create</button>
       </div>
     </form>
   </mat-card-content>
@@ -43,7 +43,7 @@
           <p>{{ offer.price }}</p>
           <p>{{ offer.month }}</p>
         </mat-card-content>
-        <mat-card-actions>
+        <mat-card-actions> 
           <button mat-raised-button class="accept-button" color="primary">
             Accept
           </button>

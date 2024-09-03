@@ -17,6 +17,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { OrdersRoutingModule } from './orders-routing.module';
+import { OrdersService } from '../../services/orders/orders.service';
+import { provideHttpClient } from '@angular/common/http';
 
 
 @NgModule({
@@ -42,6 +44,7 @@ import { OrdersRoutingModule } from './orders-routing.module';
     MatSortModule,
     MatPaginatorModule,
     OrdersRoutingModule
-  ]
+  ],
+  providers:[OrdersService, provideHttpClient()]
 })
 export class OrdersModule { }
