@@ -75,6 +75,8 @@ It will show tasks that you can run with Nx.
 - [Subscribe to the Nx Youtube Channel](https://www.youtube.com/@nxdevtools)
 - [Follow us on Twitter](https://twitter.com/nxdevtools)
 
+## set up environment
+docker run -it --rm --name rabbitmq --network host -p 5672:5672 -p 15672:15672 rabbitmq:3.13-management
 
 ## prisma schema update
 npx prisma migrate dev
@@ -87,3 +89,5 @@ npx prisma studio
 ## container creation and start
 nx run [bff]:container
 docker run -P --network host [affds-bff]:[feature-init]
+
+

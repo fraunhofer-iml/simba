@@ -10,15 +10,30 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": [
+      "es2020",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@ap3/api": ["libs/api/src/index.ts"],
-      "@ap3/config": ["libs/config/src/index.ts"],
-      "@ap3/database": ["libs/database/src/index.ts"]
+      "@ap3/amqp": [
+        "libs/amqp/src/index.ts"
+      ],
+      "@ap3/api": [
+        "libs/api/src/index.ts"
+      ],
+      "@ap3/config": [
+        "libs/config/src/index.ts"
+      ],
+      "@ap3/database": [
+        "libs/database/src/index.ts"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

@@ -1,5 +1,0 @@
-namespace: bff
-resources:
-  - service.yaml
-  - deployment.yaml
-  - route.yaml

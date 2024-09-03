@@ -7,10 +7,13 @@ export class OffersService {
     return OpenOffersMock;
   }
 
-  findOne(id: string) {
+  findOne(offerId: string) {
     return OpenOffersMock[0];
   }
 
-  acceptOffer(id: string) {;
+  acceptOffer(offerId: string) {;
+  }
+
+  declineOffers(orderId: string) {;
   }
 }

@@ -13,11 +13,11 @@ export interface KeycloakConfig {
 }
 
 export default registerAs(KEYCLOAK_IDENTIFIER, () => ({
-  url: process.env.KEYCLOAK_URL || 'https://kc.public.apps.blockchain-europe.iml.fraunhofer.de',
-  realm: process.env.KEYCLOAK_REALM || 'AP3',
-  clientId: process.env.KEYCLOAK_CLIENT_ID || '',
-  secret: process.env.KEYCLOAK_SECRET || '',
-  username: process.env.KEYCLOAK_USER || '',
-  password: process.env.KEYCLOAK_PASSWORD || '',
-  grantType: process.env.KEYCLOAK_GRANT_TYPE || 'client_credentials',
+  url: process.env['KEYCLOAK_URL'] || 'https://kc.public.apps.blockchain-europe.iml.fraunhofer.de',
+  realm: process.env['KEYCLOAK_REALM'] || 'AP3',
+  clientId: process.env['KEYCLOAK_CLIENT_ID'] || '',
+  secret: process.env['KEYCLOAK_SECRET'] || '',
+  username: process.env['KEYCLOAK_USER'] || '',
+  password: process.env['KEYCLOAK_PASSWORD'] || '',
+  grantType: process.env['KEYCLOAK_GRANT_TYPE'] || 'client_credentials',
 }));

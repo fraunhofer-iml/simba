@@ -12,13 +12,13 @@ async function bootstrap() {
   const config = new DocumentBuilder().setTitle('SKALA AP3 backend for frontend').setVersion('0.0').addBearerAuth().build();
   const document = SwaggerModule.createDocument(app, config);
 
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup(configuration.getGeneralConfig().swaggerPath, app, document);
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
     })
   );
-  app.useLogger(configuration.getLogLevel());
+  app.useLogger(configuration.getGeneralConfig().logLevel);
   app.enableCors();
   const port = configuration.getBFFConfig().port;
   await app.listen(port);

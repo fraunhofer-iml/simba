@@ -34,6 +34,7 @@ danger:
 
 include:
   - 'apps/bff/.gitlab-ci.yml'
+  - 'apps/process-svc/.gitlab-ci.yml'
   - 'apps/frontend/.gitlab-ci.yml'
 
 all:deploy:
@@ -46,13 +47,16 @@ all:deploy:
     - apk add --no-cache git curl bash coreutils
     - curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
     - mv kustomize /usr/local/bin/
+    - git clone https://pipeline-token:${GL_TOKEN}@gitlab.cc-asp.fraunhofer.de/skala/ap3/pipeline.git
     - git config --global user.email "gitlab@oe260.iml.fhg.de"
     - git config --global user.name "GitLab CI/CD"
   script:
-    - cd ./kustomize/bff/overlays/dev
-    - kustomize edit set image ${CRI_PATH}/bff:latest #$CI_COMMIT_TAG
-    - cd ../../../../frontend/overlays/dev
-    - kustomize edit set image ${CRI_PATH}/frontend:latest #$CI_COMMIT_TAG
+    - cd pipeline/kustomize/ibaf-connection-service/overlays/dev
+    - kustomize edit set image ${CRI_PATH}/bff:$CI_COMMIT_TAG
+    - cd ../../../process-svc/overlays/dev
+    - kustomize edit set image ${CRI_PATH}/process-svc:$CI_COMMIT_TAG
+    - cd ../../../frontend/overlays/dev
+    - kustomize edit set image ${CRI_PATH}/frontend:$CI_COMMIT_TAG
     - git commit -am '[skip ci] manifest-image update'
     - git push origin main
   only:

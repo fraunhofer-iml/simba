@@ -36,4 +36,12 @@ export class OffersController {
   acceptOffer(@Param('id') id: string) {
     this.offersService.acceptOffer(id);
   }
+
+  @Patch('decline')
+  @ApiOperation({
+    description: 'Decline all offers for a specific order'
+  })
+  declineOffers(@Query('orderId') orderId: string){
+    this.offersService.declineOffers(orderId)
+  }
 }

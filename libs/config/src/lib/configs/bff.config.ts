@@ -7,5 +7,5 @@ export interface bffConfig {
 }
 
 export default registerAs(BFF_IDENTIFIER, () => ({
-  port: process.env.BFF_PORT || 3000,
+  port: process.env['BFF_PORT'] || 3000,
 }));

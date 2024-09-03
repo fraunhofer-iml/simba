@@ -1,5 +1,0 @@
-namespace: frontend
-resources:
-  - service.yaml
-  - deployment.yaml
-  - route.yaml
