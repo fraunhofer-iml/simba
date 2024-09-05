@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto, OrderDto } from '@ap3/api';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @Controller('orders')
 @ApiTags('Orders')
@@ -12,23 +12,42 @@ export class OrdersController {
   @ApiOperation({
     description: 'Accepts an order, stores it in the database and transfers it to the CPPS scheduler.'
   })
-  create(@Body() createOrderDto: CreateOrderDto): void {
-    this.ordersService.create(createOrderDto);
+  @ApiBody({
+    schema: {
+      type:'object',
+      properties:{
+        productId:{type:'string'},
+        amount:{type:'number'},
+        calendarWeek:{type:'number'},
+        customerId:{type:'string'},
+      }
+    },
+    required:true
+  })
+  async create(@Body() createOrderDto: CreateOrderDto): Promise<void> {
+    await this.ordersService.create(createOrderDto);
   }
 
   @Get()
   @ApiOperation({
     description: 'Get all active orders.'
   })
-  findAll(): OrderDto[] {
-    return this.ordersService.findAll();
+  async findAll(): Promise<OrderDto[]> {
+    return await this.ordersService.findAll();
   }
 
   @Get(':id')
   @ApiOperation({
     description: 'Get an order based on the corresponding order id.'
   })
-  findOne(@Param('id') id: string) {
-    return this.ordersService.findOne(id);
+  @ApiParam({
+
+    name: 'id',
+    type: String,
+    description: 'Identifying id; Required to identify the offer.',
+    required: true,
+  })
+  async findOne(@Param('id') id: string): Promise<OrderDto> {
+    return await this.ordersService.findOne(id);
   }
 }

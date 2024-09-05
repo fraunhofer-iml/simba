@@ -5,7 +5,8 @@ import { ProductMocks } from '../../product';
 export const OrderMock: OrderDto[] = [
   {
     id: 'O1',
-    product: ProductMocks[0].id,
+    productId: ProductMocks[0].id,
+    product: ProductMocks[0],
     amount: 1,
     calendarWeek: 50,
     creationDate: '2024-08-31T13:24:16.595Z',
@@ -16,7 +17,8 @@ export const OrderMock: OrderDto[] = [
   },
   {
     id: 'O2',
-    product: ProductMocks[1].id,
+    productId: ProductMocks[1].id,
+    product: ProductMocks[0],
     amount: 1,
     calendarWeek: 52,
     creationDate: '2024-08-30T13:24:16.595Z',

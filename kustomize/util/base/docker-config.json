@@ -1,8 +1,0 @@
-{
-  "auths": {
-    "container-registry.gitlab.cc-asp.fraunhofer.de": {
-      "username": "robot$ibaf-integration+argocd",
-      "password": "xdkNM43ISi8nFKYnluhC6TLJBdrluhYd"
-    }
-  }
-}

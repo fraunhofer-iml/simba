@@ -1,0 +1,17 @@
+[
+  {
+    "id": "rt001",
+    "description": "test robot 1",
+    "minimalPrice": 1.30
+  },
+  {
+  "id": "rt002",
+  "description": "test robot 2",
+  "minimalPrice": 1.15
+  },
+  {
+  "id": "rt003",
+  "description": "test robot 3",
+  "minimalPrice": 1.45
+  }
+]

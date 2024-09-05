@@ -2,7 +2,13 @@
   "name": "@ap3/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "dev": "nx run-many --all --parallel 5 --target serve",
+    "test": "nx run-many --all --parallel 5 --target test"
+  },
+  "prisma": {
+    "seed": "bun prisma/seed.ts"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "~18.1.0",

@@ -1,9 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namespace: skala-affds
-resources:
-  - ../../base
-
-images:
-  - name: container-registry.gitlab.cc-asp.fraunhofer.de/skala/ap3/core/bff
-    newTag: ec398ad45f3fd8acd59c0368a2cc94c3c8c2c9d8

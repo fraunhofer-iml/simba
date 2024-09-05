@@ -1,6 +1,7 @@
-import { Controller, Get, Body, Patch, Param, Query } from '@nestjs/common';
+import { Controller, Get, Patch, Param, Query } from '@nestjs/common';
 import { OffersService } from './offers.service';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { OfferDto } from '@ap3/api';
 
 @Controller('offers')
 @ApiTags('Offers')
@@ -17,7 +18,7 @@ export class OffersController {
     description: 'Filter parameter; Only returns offers corresponding to given order id.',
     required: false,
   })
-  findAll(@Query('orderId') orderId?: string) {
+  findAll(@Query('orderId') orderId?: string): Promise<OfferDto[]> {
     return this.offersService.findAll(orderId);
   }
 
@@ -25,7 +26,13 @@ export class OffersController {
   @ApiOperation({
     description: 'Get an offer based on the corresponding offer id.'
   })
-  findOne(@Param('id') id: string) {
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Identifying id; Required to identify the offer.',
+    required: true,
+  })
+  findOne(@Param('id') id: string): Promise<OfferDto> {
     return this.offersService.findOne(id);
   }
 
@@ -33,7 +40,13 @@ export class OffersController {
   @ApiOperation({
     description: 'Accept an offer.'
   })
-  acceptOffer(@Param('id') id: string) {
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Identifying id; Required to identify the offer.',
+    required: true,
+  })
+  acceptOffer(@Param('id') id: string): void {
     this.offersService.acceptOffer(id);
   }
 
@@ -41,7 +54,13 @@ export class OffersController {
   @ApiOperation({
     description: 'Decline all offers for a specific order'
   })
-  declineOffers(@Query('orderId') orderId: string){
+  @ApiQuery({
+    name: 'orderId',
+    type: String,
+    description: 'Identifying id; Required to identify the order.',
+    required: true,
+  })
+  declineOffers(@Query('orderId') orderId: string): void{
     this.offersService.declineOffers(orderId)
   }
 }

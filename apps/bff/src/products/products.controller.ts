@@ -1,7 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ProductDto } from '@ap3/api';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @Controller('products')
 @ApiTags('Products')
@@ -12,7 +12,7 @@ export class ProductsController {
   @ApiOperation({
     description: 'Get all available products.'
   })
-  findAll(): ProductDto[] {
+  findAll(): Promise<ProductDto[]> {
     return this.productsService.findAll();
   }
 
@@ -20,7 +20,13 @@ export class ProductsController {
   @ApiOperation({
     description: 'Get a product based on the corresponding product id.'
   })
-  findOne(@Param('id') id: string): ProductDto {
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Identifying id; Required to identify the product.',
+    required: true,
+  })
+  findOne(@Param('id') id: string): Promise<ProductDto> {
     return this.productsService.findOne(+id);
   }
 }
