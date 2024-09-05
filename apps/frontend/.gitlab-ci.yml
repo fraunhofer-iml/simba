@@ -66,9 +66,11 @@ frontend:build:
     paths:
       - dist/apps/frontend
   only:
-    - main
+    - tags
 
 frontend:archive:
+  needs:
+    - frontend:build
   stage: archive
   image: docker
   services:

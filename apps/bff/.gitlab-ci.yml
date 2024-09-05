@@ -67,9 +67,11 @@ bff:build:
     paths:
       - dist/apps/bff
   only:
-    - main
+    - tags
 
 bff:archive:
+  needs:
+    - bff:build
   stage: archive
   image: docker
   services:

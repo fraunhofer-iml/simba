@@ -67,9 +67,11 @@ process-svc:build:
     paths:
       - dist/apps/process-svc
   only:
-    - main
+    - tags
 
 process-svc:archive:
+  needs:
+    - process-svc:build
   stage: archive
   image: docker
   services:
