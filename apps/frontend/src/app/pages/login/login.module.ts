@@ -21,7 +21,7 @@ import { RouterLink } from '@angular/router';
     MatButtonModule,
     MatDividerModule,
     RouterLink
-  ], 
+  ],
   exports:[LoginComponent]
 })
 export class LoginModule { }

@@ -1,61 +1,67 @@
 <div class="creation-container">
-<h1>Create Order</h1>
-<mat-divider></mat-divider>
-<mat-card appearance="outlined" class="order-card">
-  <mat-card-content>
-    <form class="order-content" [formGroup]="orderForm">
-      <mat-form-field class="order-field">
-        <mat-select placeholder="Produkt" formControlName="product">
-          @for (product of products; track product) {
-          <mat-option [value]="product">{{ product.name }} </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field class="order-field">
-        <input matInput formControlName="amount" />
-      </mat-form-field>
-      <mat-form-field class="order-field">
-        <mat-select placeholder="Month" formControlName="calendarWeek">
-          @for (month of months; track month) {
-          <mat-option [value]="month">{{ month }} </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-      <div>
-        <button class="create-button" (click)="createHardware()" mat-raised-button [disabled]="!orderForm.valid">Create</button>
+  <h1>Create Order</h1>
+  <mat-divider></mat-divider>
+  <mat-card class="order-card">
+    <mat-card-content>
+      <form class="order-content" [formGroup]="orderForm">
+        <mat-form-field class="order-field">
+          <mat-select placeholder="Produkt" formControlName="product">
+            @for (product of products; track product) {
+              <mat-option [value]="product">{{ product.name }} </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="order-field">
+          <input matInput formControlName="amount" type="number"  value="number"/>
+        </mat-form-field>
+        <mat-form-field class="order-field">
+          <mat-select placeholder="Month" formControlName="calendarWeek">
+            @for (month of months; track month) {
+              <mat-option [value]="month">{{ month }} </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <div>
+          <button class="create-button" (click)="createHardware()" mat-raised-button [disabled]="!orderForm.valid">Create</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Offers -->
+  <mat-card *ngIf="openOffers">
+    <mat-card-content>
+      <div class="offers-header">
+        <h1 class="title">Offers</h1>
+        <div class="deadline">
+          <p>Expiration Time:</p>
+          <countdown [config]="countdownConfig" (event)="onEvent($event)"></countdown>
+        </div>
       </div>
-    </form>
-  </mat-card-content>
-</mat-card>
-<mat-card appearance="outlined" class="offers-card">
-  <mat-card-content class="offers-card-content">
-    <div class="offers-header">
-      <mat-card-title>Offers</mat-card-title>
-      <mat-card-title class="deadline">Expiration</mat-card-title>
-    </div>
-    <div class="offers-container">
-      @for (offer of offers; track $index) {
-      <mat-card class="offer">
-        <mat-card-content>
-          <p>{{ offer.id }}</p>
-          <p>{{ offer.name }}</p>
-          <p>{{ offer.amount }}</p>
-          <p>{{ offer.price }}</p>
-          <p>{{ offer.month }}</p>
-        </mat-card-content>
-        <mat-card-actions> 
-          <button mat-raised-button class="accept-button" color="primary">
-            Accept
-          </button>
-        </mat-card-actions>
-      </mat-card>
-      }
-    </div>
-  </mat-card-content>
-  <mat-card-actions>
-    <button mat-raised-button class="decline-button" color="primary">
-      Decline All
-    </button>
-  </mat-card-actions>
-</mat-card>
+      <div class="offers-container">
+        @for (offer of offers$ | async; track $index) {
+          <mat-card class="offers">
+            <mat-card-content>
+            <div class="offerIdAndDate">
+              <p id="offerId" class="grey">ID {{ offer.id }}</p>
+              <p id="offerDate" class="grey">{{ offer.creationDate | date }}</p>
+            </div>
+              <p id="offerName">Quadrokopter</p>
+              <p id="offerAmount">Amount: 2</p>
+              <div class="offerPrice">
+                <img ngSrc="assets/icons/price.png" alt="Icon" height="30" width="30" />
+                <p>{{ offer.price | number : '1.2-2' }}</p>
+              </div>
+            </mat-card-content>
+            <mat-card-actions class="button-container">
+              <button mat-flat-button class="accept-button" color="green" (click)="acceptOffer(offer.id)">Accept</button>
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+    </mat-card-content>
+    <mat-card-actions class="button-container">
+      <button mat-flat-button class="decline-button" (click)="declineAllOffers()">Decline All</button>
+    </mat-card-actions>
+  </mat-card>
 </div>

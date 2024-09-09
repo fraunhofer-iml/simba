@@ -5,9 +5,8 @@ import {MatDividerModule } from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { SidebarComponent } from './sidebar.component';
-import {BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {RouterOutlet } from '@angular/router';
-import { NoopAnimationDriver } from '@angular/animations/browser';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -15,14 +14,15 @@ describe('SidebarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports:[    
+      imports:[
         MatSidenavModule,
         MatIconModule,
         MatDividerModule,
         MatListModule,
-        MatButtonModule,
-      NoopAnimationsModule,
-      RouterOutlet],
+        MatButtonModule, 
+        NoopAnimationsModule,
+        RouterOutlet
+      ],
       declarations: [SidebarComponent]
     })
     .compileComponents();

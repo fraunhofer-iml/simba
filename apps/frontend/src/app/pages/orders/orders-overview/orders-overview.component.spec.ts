@@ -14,8 +14,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { OrdersOverviewComponent } from './orders-overview.component';
-import {BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { OrdersService } from '../../../services/orders/orders.service';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { provideHttpClient } from '@angular/common/http';
 
 describe('OrdersOverviewComponent', () => {
@@ -24,7 +24,7 @@ describe('OrdersOverviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports:[    
+      imports:[
         MatIconModule,
         MatCardModule,
         MatDividerModule,

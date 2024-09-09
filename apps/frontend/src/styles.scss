@@ -22,10 +22,17 @@
     'opsz' 24
 }
 
-html, body { height: 100%; 
+html, body { height: 100%;
 }
 body { margin: 0; font-family: roboto, "Helvetica Neue", sans-serif; }
 h1 { font-weight: normal}
+
+/* Colors */
+
+.grey {
+  color: #737373;
+}
+
 
 /* @tailwind base;
 @tailwind components;

@@ -9,7 +9,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { WalletComponent } from './wallet.component';
-import {BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {RouterOutlet } from '@angular/router';
 
 describe('WalletComponent', () => {
@@ -18,14 +18,14 @@ describe('WalletComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports:[   
+      imports:[
         MatGridListModule,
         MatDividerModule,
         MatCardModule,
-        MatFormFieldModule, 
-        MatInputModule, 
+        MatFormFieldModule,
+        MatInputModule,
         MatTableModule,
-        MatSortModule, 
+        MatSortModule,
         MatPaginatorModule,
         MatIconModule,
         NoopAnimationsModule,

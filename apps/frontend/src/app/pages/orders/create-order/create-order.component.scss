@@ -1,62 +1,124 @@
-.deadline{
-    justify-content: flex-end;
-    position: absolute;
-    right: 16px;
-    margin-bottom: 5px;
+.deadline {
+  grid-column: 2 / 3;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.offers-container{
-    display: flex;
-    justify-content: space-around;
-    height: 100% ;
-    flex-wrap: wrap;
-}
-.offers-card{
-    box-shadow: 0 2px 6px;
-    min-height: 50%;
-    margin: 16px;
-}
-.offers-header{
-    display: flex;
-    flex-direction: row;
-}
-.offer{
-    flex:50%;
-    max-width: 45%;
-    height: 100%;
-    margin-top:16px;
-    margin-bottom: 32px;
-}
-.order-card{
-    box-shadow: 0 2px 6px;
-    height: 10%;
-    margin: 16px;
-}
-.order-content{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-}
-.order-field{
-    min-width:25%;
-}
-.decline-button{
-    width: 200px;
-    position: absolute;
-    right: 16px;
+.offers-container {
+  display: flex;
+  justify-content: space-around;
+  height: 100%;
+  flex-wrap: wrap;
 }
 
-.accept-button{
-    width: 200px;
-    position: absolute;
-    right: 16px;
+.offers-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 1rem;
 }
 
-.create-button{
-    width: 200px;
-    margin-top: 8px;
+.offers {
+  flex: 50%;
+  max-width: 45%;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding: 1em;
 }
 
-.creation-container{
-    margin: 0rem 1rem 0rem 1rem;
+.order-card {
+  margin: 1em 0 1em 0;
+}
+
+.order-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.order-field {
+  min-width: 25%;
+}
+
+.title {
+  font-size: large;
+}
+
+.decline-button {
+  width: 200px;
+  position: absolute;
+  color: white;
+  font-weight: bold;
+}
+
+.button-container {
+  padding: 2em 2em 3em 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.accept-button {
+  width: 150px;
+  position: absolute;
+  background-color: green;
+  color: white;
+  font-weight: bold;
+}
+
+.create-button {
+  width: 200px;
+  margin-top: 8px;
+}
+
+.creation-container {
+  margin: 0 1rem 0 1rem;
+}
+
+.offerPrice {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: -1em;
+}
+
+.offerIdAndDate {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: space-between;
+}
+
+#expiration {
+  display: flex;
+  align-items: center;
+  gap: 10px
+}
+
+#offerId {
+  font-size: small;
+  margin-top: -0.5em;
+}
+
+#offerName {
+  font-size: 1.5em;
+  margin-top: -0.1em;
+}
+
+#offerAmount {
+  margin-top: -1em;
+}
+
+#offerDate {
+  font-size: 0.8rem;
+  margin-top: -0.5em;
+}
+
+@media (max-width: 60em) {
+  .offers-container {
+    display: block;
+  }
+  .offers {
+    max-width: 100%;
+  }
 }

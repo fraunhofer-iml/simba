@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
-import { OrdersService } from '../../../services/orders/orders.service';
+import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { OrderDto } from 'libs/api/src/dtos/order/order.dto';
 
 

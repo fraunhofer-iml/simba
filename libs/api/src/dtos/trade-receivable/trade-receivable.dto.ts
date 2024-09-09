@@ -24,5 +24,5 @@ export class TradeReceivableDto {
     this.status = status;
     this.invoiceId = invoiceId;
   }
-  
+
 }

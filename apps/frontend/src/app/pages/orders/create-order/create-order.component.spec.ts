@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule } from '@angular/material/paginator';
+
+import { CreateOrderComponent } from './create-order.component';
+import { OffersService } from '../../../shared/services/offers/offers.service';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { CountdownEvent, CountdownModule } from 'ngx-countdown';
+import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
@@ -13,21 +16,28 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CreateOrderComponent } from './create-order.component';
-import {BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { OrdersService } from '../../../services/orders/orders.service';
-import { provideHttpClient } from '@angular/common/http';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { OrdersService } from '../../../shared/services/orders/orders.service';
+import { CreateOrderDto, OrderDto, OrderMock } from '@ap3/api';
+import { of, throwError } from 'rxjs';
 
 describe('CreateOrderComponent', () => {
   let component: CreateOrderComponent;
   let fixture: ComponentFixture<CreateOrderComponent>;
+  let orderService: OrdersService;
+  let offerService: OffersService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports:[    
+      declarations: [CreateOrderComponent],
+      imports: [
+        MatDividerModule,
+        CountdownModule,
         MatIconModule,
         MatCardModule,
-        MatDividerModule,
         MatListModule,
         MatInputModule,
         MatSelectModule,
@@ -36,22 +46,56 @@ describe('CreateOrderComponent', () => {
         MatNativeDateModule,
         MatFormFieldModule,
         ReactiveFormsModule,
-        MatFormFieldModule,
         MatTableModule,
         MatSortModule,
         MatPaginatorModule,
-      NoopAnimationsModule],
-      declarations: [CreateOrderComponent],
-      providers:[OrdersService, provideHttpClient()]
-    })
-    .compileComponents();
+        NoopAnimationsModule,
+      ],
+      providers: [
+        OffersService,
+        OrdersService,
+        HttpClient,
+        HttpHandler,
+        Router
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CreateOrderComponent);
     component = fixture.componentInstance;
+    orderService = TestBed.inject(OrdersService);
+    offerService = TestBed.inject(OffersService);
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should call declineAllOffers when countdown reaches zero', () => {
+    const event: CountdownEvent = { left: 0 } as CountdownEvent;
+    jest.spyOn(component, 'declineAllOffers');
+    component.onEvent(event);
+    expect(component.declineAllOffers).toHaveBeenCalled();
+  });
+
+  it('should handle successful order creation', () => {
+    const orderDto: OrderDto = OrderMock[0];
+    jest.spyOn(orderService, 'createOrder').mockReturnValue(of(orderDto));
+    jest.spyOn(offerService, 'getOffersByOrderId').mockReturnValue(of([]));
+
+    component.createHardware();
+    expect(orderService.createOrder).toHaveBeenCalledWith(component.orderForm.getRawValue() as CreateOrderDto);
+    expect(offerService.getOffersByOrderId).toHaveBeenCalledWith(orderDto.id);
+    expect(component.openOffers).toBe(true);
+  });
+
+  it('should handle error in order creation', () => {
+    jest.spyOn(orderService, 'createOrder').mockReturnValue(throwError(() => new Error('Error')));
+    jest.spyOn(offerService, 'getOffersByOrderId');
+
+    component.createHardware();
+    expect(orderService.createOrder).toHaveBeenCalled();
+    expect(offerService.getOffersByOrderId).not.toHaveBeenCalled();
+    expect(component.openOffers).toBe(false);
   });
 });

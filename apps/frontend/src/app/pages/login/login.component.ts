@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth/auth.service';
+import { AuthService } from '../../shared/services/auth/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -9,10 +10,10 @@ import { AuthService } from '../../services/auth/auth.service';
 })
 export class LoginComponent {
 
-  constructor( private authservice: AuthService, private router:Router){}
+  constructor( private authService: AuthService, private router:Router){}
 
   routeToLayout(){
-    this.authservice.changeStatus();
-    this.router.navigate([''])
+    this.authService.changeStatus();
+    this.router.navigate([environment.ORDERS.ORDER])
   }
 }

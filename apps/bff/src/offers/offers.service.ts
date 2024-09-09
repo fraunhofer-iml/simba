@@ -17,11 +17,11 @@ export class OffersService {
     return firstValueFrom(this.processAMQPClient.send(OfferMessagePatterns.READ_BY_ID,{offerId}));
   }
 
-  async acceptOffer(offerId: string): Promise<boolean>{;
+  async acceptOffer(offerId: string): Promise<boolean> {
     return firstValueFrom(this.processAMQPClient.send(OfferMessagePatterns.ACCEPT_BY_ID,{offerId}));
   }
 
-  async declineOffers(offerId: string):Promise<boolean> {;
+  async declineOffers(offerId: string):Promise<boolean> {
     return firstValueFrom(this.processAMQPClient.send(OfferMessagePatterns.DECLINE_BY_ID,{offerId}));
   }
 }

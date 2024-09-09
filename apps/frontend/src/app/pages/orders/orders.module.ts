@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { CreateOrderComponent } from './create-order/create-order.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -17,15 +17,14 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { OrdersRoutingModule } from './orders-routing.module';
-import { OrdersService } from '../../services/orders/orders.service';
-import { provideHttpClient } from '@angular/common/http';
+import { OrdersService } from '../../shared/services/orders/orders.service';
+import { HttpClientModule, provideHttpClient } from '@angular/common/http';
+import { OffersService } from '../../shared/services/offers/offers.service';
+import { CountdownComponent } from 'ngx-countdown';
 
 
 @NgModule({
-  declarations: [
-    OrdersOverviewComponent,
-    CreateOrderComponent
-  ],
+  declarations: [OrdersOverviewComponent, CreateOrderComponent],
   imports: [
     CommonModule,
     MatIconModule,
@@ -43,8 +42,11 @@ import { provideHttpClient } from '@angular/common/http';
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    OrdersRoutingModule
+    OrdersRoutingModule,
+    HttpClientModule,
+    NgOptimizedImage,
+    CountdownComponent,
   ],
-  providers:[OrdersService, provideHttpClient()]
+  providers: [OffersService, OrdersService, provideHttpClient()],
 })
-export class OrdersModule { }
+export class OrdersModule {}
