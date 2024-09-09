@@ -36,6 +36,6 @@ export class OrderPrismaService {
   }
 
   async deleteOrder(whereId: Prisma.OrderWhereUniqueInput) {
-    this.prisma.order.delete({where: whereId});
+    await this.prisma.order.delete({where: whereId});
   }
 }

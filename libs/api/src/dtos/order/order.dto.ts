@@ -1,32 +1,34 @@
-import { ProductDto } from "../product";
-
 export class OrderDto {
   id: string;
   productId: string;
-  product: ProductDto;
   amount: number;
-  calendarWeek: number;
+  dueMonth: string;
   creationDate: string;
   status: string;
-  price: number;
+  acceptedOfferId: string;
+  offerIds: string[];
   robots: string[];
   customerId: string;
+  tradeReceivableId: string;
 
-  constructor(id: string, productId: string, product: ProductDto, amount: number, calendarWeek: number, creationDate: string, status: string, price: number, robots: string[], customerId: string) {
+
+  constructor(id: string, productId: string, amount: number, dueMonth: string, creationDate: string, status: string, acceptedOfferId: string, offerIds: string[], robots: string[], customerId: string, tradeReceivableId: string) {
     this.id = id;
     this.productId = productId;
-    this.product = product;
     this.amount = amount;
-    this.calendarWeek = calendarWeek;
+    this.dueMonth = dueMonth;
     this.creationDate = creationDate;
     this.status = status;
-    this.price = price;
+    this.acceptedOfferId = acceptedOfferId;
+    this.offerIds = offerIds;
     this.robots = robots;
     this.customerId = customerId;
+    this.tradeReceivableId = tradeReceivableId;
   }
 }
 
-export type CreateOrderDto = Pick<OrderDto, 'productId' | 'amount' | 'calendarWeek' | 'customerId'>;
+export type CreateOrderDto = Pick<OrderDto, 'productId' | 'amount' | 'dueMonth' | 'customerId'>;
 
-export type UpdateOrderDto = Pick<OrderDto, 'id' | 'productId' | 'amount' | 'calendarWeek' | 'customerId'>;
+export type UpdateOrderDto = Pick<OrderDto, 'id' | 'productId' | 'amount' | 'dueMonth' | 'customerId'>;
+
 

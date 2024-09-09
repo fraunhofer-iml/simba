@@ -90,7 +90,7 @@ model Order {
   completionDate DateTime? @default(now())
   amount         Int
   status         String
-  calendarWeek   String
+  dueMonth       String
   offers         String[]
   machines       String[]
 

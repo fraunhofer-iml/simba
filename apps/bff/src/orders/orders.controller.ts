@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto, OrderDto } from '@ap3/api';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
@@ -18,7 +18,7 @@ export class OrdersController {
       properties:{
         productId:{type:'string'},
         amount:{type:'number'},
-        calendarWeek:{type:'number'},
+        dueMonth:{type:'string'},
         customerId:{type:'string'},
       }
     },
@@ -41,7 +41,6 @@ export class OrdersController {
     description: 'Get an order based on the corresponding order id.'
   })
   @ApiParam({
-
     name: 'id',
     type: String,
     description: 'Identifying id; Required to identify the offer.',
@@ -49,5 +48,19 @@ export class OrdersController {
   })
   async findOne(@Param('id') id: string): Promise<OrderDto> {
     return await this.ordersService.findOne(id);
+  }
+
+  @Delete(':id')
+  @ApiOperation({
+    description: 'Delete an order based on the corresponding order id.'
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Identifying id; Required to identify the offer.',
+    required: true,
+  })
+  async deleteOne(@Param('id') id: string): Promise<void> {
+    await this.ordersService.deleteOne(id);
   }
 }

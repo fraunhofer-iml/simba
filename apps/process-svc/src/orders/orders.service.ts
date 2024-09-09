@@ -1,9 +1,8 @@
-import {Injectable, Logger} from '@nestjs/common';
+import {Injectable, Logger, NotImplementedException} from '@nestjs/common';
 import { OrderPrismaService } from '@ap3/database';
-import { Order, Prisma } from '@prisma/client';
-import { CreateOrderDto, OrderDto, UpdateOrderDto } from '@ap3/api';
-import { OrderStatesEnum } from '@ap3/config';
+import {Order, Prisma} from '@prisma/client';
 import util from "node:util";
+import {CreateOrderAmqpDto, OrderAmqpDto, UpdateOrderAmqpDto} from "@ap3/amqp";
 
 @Injectable()
 export class OrdersService {
@@ -11,53 +10,38 @@ export class OrdersService {
 
   constructor(private readonly orderPrismaService: OrderPrismaService) {
   }
-  async create(createOrderDto: CreateOrderDto): Promise<Order> {
+  async create(createOrderDto: CreateOrderAmqpDto): Promise<OrderAmqpDto> {
     this.logger.debug(`Received message from amqp: ${util.inspect(createOrderDto)}`);
     try {
-      const newOrder: Prisma.OrderCreateInput = {
-        creationDate: new Date().toISOString(),
-        amount: createOrderDto.amount,
-        status: OrderStatesEnum.NEW,
-        calendarWeek: createOrderDto.calendarWeek.toString(),
-        product: { connect: { id: createOrderDto.productId }},
-        customer: { connect: { id: createOrderDto.customerId }}
-      }
+      const newOrder:Prisma.OrderCreateInput = createOrderDto.toPrismaEntity();
       this.logger.debug(`Create order: ${util.inspect(newOrder)}`);
-      return await this.orderPrismaService.createOrder(newOrder);
+      return OrderAmqpDto.fromPrismaEntity(await this.orderPrismaService.createOrder(newOrder));
     }catch (e){
       this.logger.error(e)
     }
   }
 
-  async findAll(): Promise<OrderDto[]> {
-    const orderDtos: OrderDto[] = [];
+  async findAll(): Promise<OrderAmqpDto[]> {
+    const orderDtos: OrderAmqpDto[] = [];
      const orders: Order[] = await this.orderPrismaService.getOrders();
      orders.forEach((order:Order) => {
-       orderDtos.push({
-         id: order.id,
-         productId: order.productId,
-         product: {id: order.productId, name: 'Quadrocopter'}, //TODO: Load from database
-         amount: order.amount,
-         calendarWeek: +order.calendarWeek,
-         creationDate: order.creationDate.toISOString(),
-         status: order.status,
-         price: 0.33, //TODO: Remove from model or replace with offer price
-         robots: order.machines,
-         customerId: order.participantId,
-       });
+       orderDtos.push(OrderAmqpDto.fromPrismaEntity(order));
      });
      return orderDtos;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
+  async findOne(id: string) {
+    this.logger.debug(id);
+    const order: Order = await this.orderPrismaService.getOrder({id: id});
+    return OrderAmqpDto.fromPrismaEntity(order);
   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
+  async update(id: string, updateOrderDto: UpdateOrderAmqpDto) {
+    throw new NotImplementedException("An update for orders is not planned yet.");
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  async remove(id: string): Promise<void> {
+    this.logger.debug(`Remove order with id: ${id}`);
+    await this.orderPrismaService.deleteOrder({id: id});
   }
 }

@@ -85,6 +85,9 @@ npx prisma generate
 npx prisma db push
 
 npx prisma studio
+# reset
+npx prisma db push --force-reset && npx prisma db seed
+
 
 ## container creation and start
 nx run [bff]:container

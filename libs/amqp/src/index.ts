@@ -5,3 +5,4 @@ export * from './lib/message-patterns/offer.pattern';
 export * from './lib/message-patterns/product.pattern';
 export * from './lib/message-patterns/trade-receivable.pattern';
 export * from './lib/broker.queues';
+export * from './lib/dtos';

@@ -1,11 +1,9 @@
-import { OrderDto } from '../order.dto';
-import { ProductMocks } from '../../product';
+import {OrderAmqpDto} from "../../order-amqp.dto";
 
-
-export const OrderMock: OrderDto[] = [
+export const OrderAmqpMock = <OrderAmqpDto[]>[
   {
     id: 'O1',
-    productId: ProductMocks[0].id,
+    productId: 'P1',
     amount: 1,
     dueMonth: 'november',
     creationDate: '2024-08-31T13:24:16.595Z',
@@ -18,7 +16,7 @@ export const OrderMock: OrderDto[] = [
   },
   {
     id: 'O2',
-    productId: ProductMocks[1].id,
+    productId: 'P1',
     amount: 1,
     dueMonth: 'november',
     creationDate: '2024-08-30T13:24:16.595Z',
