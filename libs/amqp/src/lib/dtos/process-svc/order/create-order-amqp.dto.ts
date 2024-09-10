@@ -1,5 +1,5 @@
 import {PickType} from "@nestjs/swagger";
-import {OrderAmqpDto} from "../order-amqp.dto";
+import {OrderAmqpDto} from "../../order-amqp.dto";
 import {CreateOrderDto} from "@ap3/api";
 import {Prisma} from "@prisma/client";
 import {OrderStatesEnum} from "@ap3/config";

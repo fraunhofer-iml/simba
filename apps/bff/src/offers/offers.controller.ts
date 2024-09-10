@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Param, Query } from '@nestjs/common';
+import {Controller, Get, Patch, Param, Query, Post} from '@nestjs/common';
 import { OffersService } from './offers.service';
 import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { OfferDto } from '@ap3/api';
@@ -36,6 +36,21 @@ export class OffersController {
     return this.offersService.findOne(id);
   }
 
+  @Post()
+  @ApiOperation({
+    description: 'Create new offers.'
+  })
+  @ApiQuery({
+    name: 'orderId',
+    type: String,
+    description: 'Identifying id; Required to identify the order.',
+    required: true,
+  })
+  async createOffers(@Query('orderId') orderId: string): Promise<void> {
+    console.log("ORDER", orderId);
+    await this.offersService.createOffer(orderId);
+  }
+
   @Patch(':id/accept')
   @ApiOperation({
     description: 'Accept an offer.'
@@ -61,6 +76,7 @@ export class OffersController {
     required: true,
   })
   declineOffers(@Query('orderId') orderId: string): void{
-    this.offersService.declineOffers(orderId)
+    console.log("ORDER", orderId)
+    // this.offersService.declineOffers(orderId)
   }
 }

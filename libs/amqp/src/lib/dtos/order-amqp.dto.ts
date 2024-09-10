@@ -1,6 +1,3 @@
-import {OrderDto} from "@ap3/api";
-import {Order} from "@prisma/client";
-
 export class OrderAmqpDto {
   id: string;
   productId: string;
@@ -14,7 +11,7 @@ export class OrderAmqpDto {
   customerId: string;
   tradeReceivableId: string;
 
-  public static fromPrismaEntity(order: Order): OrderAmqpDto{
+  public static fromPrismaEntity(order: any): OrderAmqpDto{
     return <OrderAmqpDto>{
       id: order.id,
       creationDate: order.creationDate.toISOString(),
@@ -24,7 +21,7 @@ export class OrderAmqpDto {
       productId: order.productId,
       robots: order.machines,
       customerId: order.participantId,
-      acceptedOfferId: order.offerId,
+      acceptedOfferId: order.acceptedByOrderId,
       offerIds: order.offers,
       tradeReceivableId: order.tradeReceivableId,
     }

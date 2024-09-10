@@ -1,5 +1,5 @@
 import {Injectable, Logger, NotImplementedException} from '@nestjs/common';
-import { OrderPrismaService } from '@ap3/database';
+import {OrderPrismaService, OrderWithAcceptedOffer} from '@ap3/database';
 import {Order, Prisma} from '@prisma/client';
 import util from "node:util";
 import {CreateOrderAmqpDto, OrderAmqpDto, UpdateOrderAmqpDto} from "@ap3/amqp";
@@ -32,7 +32,7 @@ export class OrdersService {
 
   async findOne(id: string) {
     this.logger.debug(id);
-    const order: Order = await this.orderPrismaService.getOrder({id: id});
+    const order: OrderWithAcceptedOffer = await this.orderPrismaService.getOrder({id: id});
     return OrderAmqpDto.fromPrismaEntity(order);
   }
 

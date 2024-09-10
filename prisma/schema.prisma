@@ -19,7 +19,9 @@ model Offer {
   price        Float
   status       String
 
-  Order Order[]
+  order           Order  @relation("OrderOffers", fields: [orderId], references: [id])
+  orderId         String
+  acceptedByOrder Order? @relation("OrderAcceptedOffer")
 }
 
 model Product {
@@ -27,7 +29,7 @@ model Product {
   name    String
   variant String
 
-  Order Order[]
+  order Order[]
 }
 
 model Machine {
@@ -46,7 +48,7 @@ model Participant {
   vatId                    String
   commercialRegisterNumber String
 
-  Order Order[]
+  order Order[]
 
   Invoice         Invoice[]
   TradeReceivable TradeReceivable[]
@@ -62,9 +64,8 @@ model Invoice {
   vat              Float
   status           String
 
-  debitor   Participant @relation(fields: [debitorId], references: [id])
-  debitorId String
-
+  debitor         Participant       @relation(fields: [debitorId], references: [id])
+  debitorId       String
   TradeReceivable TradeReceivable[]
 }
 
@@ -78,7 +79,8 @@ model TradeReceivable {
   debitor   Participant @relation(fields: [debitorId], references: [id])
   debitorId String
 
-  order Order[]
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String @unique
 
   invoice   Invoice @relation(fields: [invoiceId], references: [id])
   invoiceId String
@@ -91,8 +93,11 @@ model Order {
   amount         Int
   status         String
   dueMonth       String
-  offers         String[]
   machines       String[]
+
+  offers            Offer[] @relation("OrderOffers")
+  acceptedOffer     Offer?  @relation("OrderAcceptedOffer", fields: [acceptedByOrderId], references: [id])
+  acceptedByOrderId String? @unique
 
   product   Product @relation(fields: [productId], references: [id])
   productId String
@@ -100,9 +105,6 @@ model Order {
   customer      Participant @relation(fields: [participantId], references: [id])
   participantId String
 
-  acceptedOffer Offer?  @relation(fields: [offerId], references: [id])
-  offerId       String?
-
-  tradeReceivable   TradeReceivable? @relation(fields: [tradeReceivableId], references: [id])
-  tradeReceivableId String?
+  tradeReceivableId String?          @unique
+  TradeReceivable   TradeReceivable?
 }

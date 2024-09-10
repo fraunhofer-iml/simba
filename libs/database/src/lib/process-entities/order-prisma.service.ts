@@ -1,7 +1,8 @@
 import { PrismaService } from '../prisma.service';
 import {Injectable, Logger} from '@nestjs/common';
-import { Order, Prisma } from '@prisma/client';
+import {Offer, Order, Prisma} from '@prisma/client';
 import * as util from "node:util";
+import {OrderWithAcceptedOffer} from "./order.types";
 
 @Injectable()
 export class OrderPrismaService {
@@ -9,15 +10,22 @@ export class OrderPrismaService {
   constructor(private prisma: PrismaService) {
   }
 
-  async getOrder(whereId: Prisma.OrderWhereUniqueInput):Promise<Order | null> {
-    return this.prisma.order.findUnique({where: whereId});
+  async getOrder(whereId: Prisma.OrderWhereUniqueInput):Promise<any | null> {
+    const order = await this.prisma.order.findUnique({
+      where: whereId,
+      include: {
+        acceptedOffer: true,
+      }
+    });
+
+    return order;
   }
 
   async getOrders():Promise<Order[]>{
     return this.prisma.order.findMany();
   }
 
-  async createOrder(data: Prisma.OrderCreateInput): Promise<Order>{
+  async createOrder(data: Prisma.OrderCreateInput): Promise<Order | null>{
     this.logger.debug("Insert new order via prisma");
     try{
       return await this.prisma.order.create({data});
@@ -27,7 +35,7 @@ export class OrderPrismaService {
     }
   }
 
-  async updateOrder(params:{where: Prisma.OrderWhereUniqueInput, data: Prisma.OrderUpdateInput}): Promise<Order>{
+  async updateOrder(params:{where: Prisma.OrderWhereUniqueInput, data: Prisma.OrderUpdateInput}): Promise<Order | null>{
     const {where, data} = params;
     return this.prisma.order.update({
       data,
