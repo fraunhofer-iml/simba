@@ -3,7 +3,7 @@ frontend:run-tests:
   stage: test
   extends: .default
   script:
-    - bun nx run frontend:test
+    - npx nx run frontend:test
   artifacts:
     paths:
       - ./apps/frontend/coverage

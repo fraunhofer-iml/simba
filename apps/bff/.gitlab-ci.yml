@@ -8,7 +8,6 @@ bff:run-tests:
     paths:
       - ./apps/bff/coverage
     expire_in: 1 week
-  allow_failure: true
   only:
     - merge_requests
     - main

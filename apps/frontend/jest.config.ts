@@ -3,6 +3,7 @@ export default {
   displayName: 'frontend',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
+  coverageReporters: [['lcov', { projectRoot: __dirname }], 'text', 'text-summary'],
   coverageDirectory: './coverage',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
