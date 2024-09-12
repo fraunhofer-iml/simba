@@ -1,8 +1,7 @@
 import { PrismaService } from '../prisma.service';
 import {Injectable, Logger} from '@nestjs/common';
-import {Offer, Order, Prisma} from '@prisma/client';
+import {Order, Prisma} from '@prisma/client';
 import * as util from "node:util";
-import {OrderWithAcceptedOffer} from "./order.types";
 
 @Injectable()
 export class OrderPrismaService {

@@ -1,0 +1,39 @@
+import { PrismaService } from '../prisma.service';
+import {Injectable, Logger, NotFoundException} from '@nestjs/common';
+import {Product} from '@prisma/client';
+import util from "node:util";
+
+@Injectable()
+export class ProductPrismaService {
+  private logger = new Logger(ProductPrismaService.name);
+
+  constructor(private prisma: PrismaService) {
+  }
+
+  async getProduct(id: string):Promise <Product | null>{
+    this.logger.debug(`Return product by id ${id} from database`);
+    try{
+      const product = await this.prisma.product.findUnique({
+        where: { id: id }
+      });
+      if(!product){
+        throw new NotFoundException(`Product with id ${id} was not found in database.`);
+      }
+      return product;
+    }catch(e){
+      this.logger.error(util.inspect(e));
+      throw e;
+    }
+  }
+
+  async getProducts():Promise <Product[]>{
+    this.logger.debug(`Return all products from database`);
+    try{
+      return await this.prisma.product.findMany({});
+    }catch(e){
+      this.logger.error(util.inspect(e));
+      throw e;
+    }
+  }
+
+}

@@ -27,6 +27,6 @@ export class ProductsController {
     required: true,
   })
   findOne(@Param('id') id: string): Promise<ProductDto> {
-    return this.productsService.findOne(+id);
+    return this.productsService.findOne(id);
   }
 }

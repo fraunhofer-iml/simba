@@ -50,13 +50,13 @@ export class OfferPrismaService {
   async getOffersById(id: string):Promise<Offer>{
     this.logger.debug("Return offer by id from database");
     try{
-      const order = await this.prisma.offer.findUnique({
+      const offer = await this.prisma.offer.findUnique({
         where: { id: id }
       });
-      if(!order){
+      if(!offer){
         throw new NotFoundException(`Offer with id ${id} was not found in database.`);
       }
-      return order;
+      return offer;
     }catch(e){
       this.logger.error(util.inspect(e));
       throw e;
