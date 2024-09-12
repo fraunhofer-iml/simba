@@ -1,7 +1,6 @@
 export * from './lib/configuration.module';
 export * from './lib/configuration.service';
 export * from './lib/keycloak.config.service';
-export * from './lib/configs/process.config';
 export * from './lib/configs/bff.config';
 export * from './lib/configs/keycloak.config';
 export * from './lib/configs/general.config';

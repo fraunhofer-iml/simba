@@ -8,6 +8,10 @@ export class BrokerAmqp {
     return this.getMessageBroker(AmqpBrokerQueues.PROCESS_SVC_QUEUE)
   }
 
+  public getMasterDataSvcBroker(): DynamicModule{
+    return this.getMessageBroker(AmqpBrokerQueues.MASTER_DATA_SVC_QUEUE)
+  }
+
   private getMessageBroker(queue: string): DynamicModule {
     const amqpUri = process.env['BROKER_URI'] || "amqp://localhost:5672";
 

@@ -5,7 +5,6 @@ import { ConfigurationService } from './configuration.service';
 import { KeycloakConfigService } from './keycloak.config.service';
 import { KeycloakConnectModule } from 'nest-keycloak-connect';
 import bffConfig from './configs/bff.config';
-import processConfig from './configs/process.config';
 import generalConfig from './configs/general.config';
 
 @Module({
@@ -14,7 +13,7 @@ import generalConfig from './configs/general.config';
     envFilePath: ['../../.env'],
     isGlobal: true,
     cache: true,
-    load: [keycloakConfig, bffConfig, processConfig, generalConfig],
+    load: [keycloakConfig, bffConfig, generalConfig],
   }),
     KeycloakConnectModule,
   ],

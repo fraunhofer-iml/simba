@@ -1,7 +1,7 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {ProductPrismaService} from "@ap3/database";
-import {Product} from "@prisma/client";
 import {ProductAmqpDto} from "@ap3/amqp";
+import {Product} from "@prisma/client";
 
 @Injectable()
 export class ProductsService {

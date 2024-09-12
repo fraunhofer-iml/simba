@@ -4,8 +4,8 @@ import { ProductsController } from './products.controller';
 import { BrokerAmqp } from '@ap3/amqp';
 
 @Module({
+  imports: [new BrokerAmqp().getMasterDataSvcBroker()],
   controllers: [ProductsController],
   providers: [ProductsService],
-  imports: [new BrokerAmqp().getProcessSvcBroker()],
 })
 export class ProductsModule {}

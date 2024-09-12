@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 
 import { KEYCLOAK_IDENTIFIER, KeycloakConfig } from './configs/keycloak.config';
 import { BFF_IDENTIFIER, bffConfig } from './configs/bff.config';
-import { PROCESS_SVC_IDENTIFIER, processSvcConfig } from './configs/process.config';
 import { GENERAL_IDENTIFIER, generalConfig } from './configs/general.config';
 
 @Injectable()
@@ -19,16 +18,6 @@ export class ConfigurationService {
       throw new Error(msg);
     }
     return generalConfig;
-  }
-
-  public getProcessSvcConfig(): processSvcConfig{
-    const processSvcConfig = this.configService.get<processSvcConfig>(PROCESS_SVC_IDENTIFIER);
-    if (!processSvcConfig) {
-      const msg = 'Environment variables for bff configuration missing!';
-      this.logger.error(msg);
-      throw new Error(msg);
-    }
-    return processSvcConfig;
   }
 
   public getBFFConfig(): bffConfig{
