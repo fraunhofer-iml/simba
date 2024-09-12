@@ -39,6 +39,7 @@ export class OffersService {
   }
 
   async findAllByOrderId(orderId: string): Promise<OfferAmqpDto[]>{
+    this.logger.debug(`Get offers filtered by order id ${orderId}`);
     const offerDtos: OfferAmqpDto[] = [];
     const offers: Offer[] = await this.offerPrismaService.getOffersByOrderId(orderId);
     offers.forEach((offer) => {

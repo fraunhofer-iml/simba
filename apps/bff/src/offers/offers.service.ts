@@ -12,8 +12,10 @@ export class OffersService {
 
   async findAll(orderId?: string): Promise<OfferDto[]> {
     if(orderId){
-      return firstValueFrom(this.processAMQPClient.send(OfferMessagePatterns.READ_ALL,orderId));
+      this.logger.debug(`Get offers filtered by order id ${orderId}`);
+      return firstValueFrom(this.processAMQPClient.send(OfferMessagePatterns.READ_BY_ORDER_ID,orderId));
     } else {
+      this.logger.debug(`Get all offers`);
       return firstValueFrom(this.processAMQPClient.send(OfferMessagePatterns.READ_ALL, {}));
     }
   }
@@ -31,7 +33,9 @@ export class OffersService {
     return firstValueFrom(this.processAMQPClient.send(OfferMessagePatterns.ACCEPT_BY_ID, offerId));
   }
 
-  async declineOffers(offerId: string):Promise<boolean> {
+  async declineOffers(offerId: string):Promise<void> {
+    this.logger.warn('NOT YET IMPLEMENTED')
+    this.logger.debug(`Order id ${offerId}`);
     return firstValueFrom(this.processAMQPClient.send(OfferMessagePatterns.DECLINE_BY_ID,[offerId]));
   }
 }
