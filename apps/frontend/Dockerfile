@@ -6,5 +6,5 @@ RUN rm -rf /usr/share/nginx/html/*
 COPY ./dist/apps/frontend/browser/ /usr/share/nginx/html/
 
 USER nginx
-EXPOSE 4200:4200
+EXPOSE 8080:8080
 CMD ["/bin/sh",  "-c",  "exec nginx -g 'daemon off;'"]
