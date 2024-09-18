@@ -23,7 +23,7 @@ export class OrdersController {
   }
 
   @MessagePattern(OrderMessagePatterns.REMOVE_ORDER_BY_ID)
-  async remove(@Payload() id: string) {
+  async remove(@Payload() id: string):Promise<boolean> {
     return await this.ordersService.remove(id);
   }
 }

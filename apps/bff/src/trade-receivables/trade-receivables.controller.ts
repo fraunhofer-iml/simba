@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Param } from '@nestjs/common';
 import { TradeReceivablesService } from './trade-receivables.service';
 import { ApiParam } from '@nestjs/swagger';
+import {TradeReceivableDto} from "@ap3/api";
 
 @Controller('trade-receivables')
 export class TradeReceivablesController {
@@ -13,13 +14,13 @@ export class TradeReceivablesController {
     required: true,
   })
   @Post(':orderId')
-  create(@Param('orderId') orderId: string) {
-    return this.tradeReceivableService.create(orderId);
+  async create(@Param('orderId') orderId: string): Promise<void> {
+    return await this.tradeReceivableService.create(orderId);
   }
 
   @Get()
-  findAll() {
-    return this.tradeReceivableService.findAll();
+  async findAll(): Promise<TradeReceivableDto[]> {
+    return await this.tradeReceivableService.findAll();
   }
 
   @ApiParam({
@@ -29,7 +30,7 @@ export class TradeReceivablesController {
     required: true,
   })
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<TradeReceivableDto> {
     return this.tradeReceivableService.findOne(id);
   }
 }

@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
-import { OrderDto } from 'libs/api/src/dtos/order/order.dto';
+import { OrderOverviewDto } from '@ap3/api';
 
 
 @Component({
@@ -15,14 +15,14 @@ import { OrderDto } from 'libs/api/src/dtos/order/order.dto';
 })
 export class OrdersOverviewComponent {
   displayedColumns: string[] = ["orderId","date","status","price","products","robots","customerID"];
-  dataSource = new MatTableDataSource<OrderDto>;
-  dataSourceObservable: Observable<MatTableDataSource<OrderDto>>;
+  dataSource = new MatTableDataSource<OrderOverviewDto>;
+  dataSourceObservable: Observable<MatTableDataSource<OrderOverviewDto>>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private router:Router, orderService:OrdersService) {
-    this.dataSource = new MatTableDataSource<OrderDto>()
+    this.dataSource = new MatTableDataSource<OrderOverviewDto>()
     this.dataSourceObservable = orderService.getOrders().pipe(map( (orders) => {
       const dataSource = this.dataSource;
       dataSource.data = orders;

@@ -21,7 +21,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
-import { CreateOrderDto, OrderDto, OrderMock } from '@ap3/api';
+import { CreateOrderDto, OrderDto, OrderMock, OrderOverviewDto, OrderOverviewMock } from '@ap3/api';
 import { of, throwError } from 'rxjs';
 
 describe('CreateOrderComponent', () => {
@@ -79,13 +79,19 @@ describe('CreateOrderComponent', () => {
   });
 
   it('should handle successful order creation', () => {
-    const orderDto: OrderDto = OrderMock[0];
-    jest.spyOn(orderService, 'createOrder').mockReturnValue(of(orderDto));
+    let createOrderFrontendDto: CreateOrderDto = {
+      productId: component.orderForm.get("product")?.value.id,
+      amount: component.orderForm.get("amount")?.value,
+      dueMonth: component.orderForm.get("calendarMonth")?.value,
+      customerId: "pt0001",
+    }
+
+    jest.spyOn(orderService, 'createOrder').mockReturnValue(of(OrderOverviewMock[0]));
     jest.spyOn(offerService, 'getOffersByOrderId').mockReturnValue(of([]));
 
     component.createHardware();
-    expect(orderService.createOrder).toHaveBeenCalledWith(component.orderForm.getRawValue() as CreateOrderDto);
-    expect(offerService.getOffersByOrderId).toHaveBeenCalledWith(orderDto.id);
+    expect(orderService.createOrder).toHaveBeenCalledWith(createOrderFrontendDto);
+    expect(offerService.getOffersByOrderId).toHaveBeenCalledWith(OrderOverviewMock[0].id);
     expect(component.openOffers).toBe(true);
   });
 

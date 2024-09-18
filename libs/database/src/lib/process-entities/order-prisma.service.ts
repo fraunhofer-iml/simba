@@ -2,6 +2,7 @@ import { PrismaService } from '../prisma.service';
 import {Injectable, Logger} from '@nestjs/common';
 import {Order, Prisma} from '@prisma/client';
 import * as util from "node:util";
+import {OrderWithAcceptedOffer} from "./order.types";
 
 @Injectable()
 export class OrderPrismaService {
@@ -9,7 +10,7 @@ export class OrderPrismaService {
   constructor(private prisma: PrismaService) {
   }
 
-  async getOrder(whereId: Prisma.OrderWhereUniqueInput):Promise<any | null> {
+  async getOrder(whereId: Prisma.OrderWhereUniqueInput):Promise<OrderWithAcceptedOffer | null> {
     const order = await this.prisma.order.findUnique({
       where: whereId,
       include: {
@@ -42,7 +43,11 @@ export class OrderPrismaService {
     })
   }
 
-  async deleteOrder(whereId: Prisma.OrderWhereUniqueInput) {
-    await this.prisma.order.delete({where: whereId});
+  async deleteOrder(id: string): Promise<Order | null> {
+    return this.prisma.order.delete(
+      {
+        where:
+          {id: id}
+      });
   }
 }

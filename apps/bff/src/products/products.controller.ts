@@ -12,8 +12,8 @@ export class ProductsController {
   @ApiOperation({
     description: 'Get all available products.'
   })
-  findAll(): Promise<ProductDto[]> {
-    return this.productsService.findAll();
+  async findAll(): Promise<ProductDto[]> {
+    return await this.productsService.findAll();
   }
 
   @Get(':id')
@@ -26,7 +26,7 @@ export class ProductsController {
     description: 'Identifying id; Required to identify the product.',
     required: true,
   })
-  findOne(@Param('id') id: string): Promise<ProductDto> {
-    return this.productsService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<ProductDto> {
+    return await this.productsService.findOne(id);
   }
 }

@@ -60,8 +60,8 @@ export class OffersController {
     description: 'Identifying id; Required to identify the offer.',
     required: true,
   })
-  acceptOffer(@Param('id') id: string): void {
-    this.offersService.acceptOffer(id);
+  async acceptOffer(@Param('id') id: string): Promise<void> {
+    await this.offersService.acceptOffer(id);
   }
 
   @Patch('decline')
@@ -74,7 +74,7 @@ export class OffersController {
     description: 'Identifying id; Required to identify the order.',
     required: true,
   })
-  declineOffers(@Query('orderId') orderId: string): void{
-    this.offersService.declineOffers(orderId)
+  async declineOffers(@Query('orderId') orderId: string): Promise<void>{
+    await this.offersService.declineOffers(orderId)
   }
 }

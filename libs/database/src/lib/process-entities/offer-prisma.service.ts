@@ -31,7 +31,7 @@ export class OfferPrismaService {
   }
 
   async getOffersByOrderId(orderId: string):Promise<Offer[]>{
-    this.logger.debug("Return all offers from database");
+    this.logger.debug("Return all offers by Id from database");
     try{
       return await this.prisma.offer.findMany({
         where: {
@@ -76,11 +76,11 @@ export class OfferPrismaService {
     }
   }
 
-  async acceptOffer(id: string): Promise<void> {
+  async acceptOffer(id: string): Promise<Offer> {
     this.logger.debug(`Accept offer with id ${id} in database`);
     const offer: Offer = await this.getOffersById(id);
     try {
-      await this.prisma.offer.update({
+      return await this.prisma.offer.update({
         where: {id: id},
         data: {
           acceptedByOrder:{

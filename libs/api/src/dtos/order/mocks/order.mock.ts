@@ -1,5 +1,6 @@
 import { OrderDto } from '../order.dto';
 import { ProductMocks } from '../../product';
+import { OrderOverviewDto } from '../order-overview.dto';
 
 
 export const OrderMock: OrderDto[] = [
@@ -13,7 +14,7 @@ export const OrderMock: OrderDto[] = [
     acceptedOfferId: '',
     offerIds: [],
     robots: ['M1', 'M2'],
-    customerId: 'C1',
+    customerId: 'pt0001',
     tradeReceivableId: '',
   },
   {
@@ -26,7 +27,30 @@ export const OrderMock: OrderDto[] = [
     acceptedOfferId: '',
     offerIds: [],
     robots: ['M1', 'M2'],
-    customerId: 'C1',
+    customerId: 'pt0001',
     tradeReceivableId: '',
   }
 ]
+
+export const OrderOverviewMock: OrderOverviewDto[] = [
+  { id: 'O1',
+    product: ProductMocks[0],
+    amount: 1,
+    calendarMonth: 'november',
+    creationDate: '2024-08-31T13:24:16.595Z',
+    status: 'Accepted',
+    price: 5,
+    robots: ['M1', 'M2'],
+    customerId: 'pt0001',
+},
+{ id: 'O2',
+  product: ProductMocks[0],
+  amount: 1,
+  calendarMonth: 'januar',
+  creationDate: '2024-08-31T13:24:16.595Z',
+  status: 'Accepted',
+  price: 7,
+  robots: ['M2'],
+  customerId: 'pt0001',
+}
+];

@@ -21,6 +21,7 @@ import { OrdersService } from '../../shared/services/orders/orders.service';
 import { HttpClientModule, provideHttpClient } from '@angular/common/http';
 import { OffersService } from '../../shared/services/offers/offers.service';
 import { CountdownComponent } from 'ngx-countdown';
+import { ProductService } from '../../shared/services/product/product.service';
 
 
 @NgModule({
@@ -47,6 +48,6 @@ import { CountdownComponent } from 'ngx-countdown';
     NgOptimizedImage,
     CountdownComponent,
   ],
-  providers: [OffersService, OrdersService, provideHttpClient()],
+  providers: [OffersService, OrdersService, provideHttpClient(), ProductService],
 })
 export class OrdersModule {}

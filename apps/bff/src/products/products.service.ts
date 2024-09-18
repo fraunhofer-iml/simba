@@ -1,19 +1,26 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ProductDto } from '@ap3/api';
-import { AmqpBrokerQueues, ProductMessagePatterns } from '@ap3/amqp';
+import { AmqpBrokerQueues, OrderAmqpDto, ProductMessagePatterns } from '@ap3/amqp';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class ProductsService {
-
+  private logger = new Logger(ProductsService.name);
   constructor( @Inject(AmqpBrokerQueues.MASTER_DATA_SVC_QUEUE) private readonly masterDataAMQPClient : ClientProxy){}
 
-  findAll(): Promise<ProductDto[]> {
-    return firstValueFrom(this.masterDataAMQPClient.send(ProductMessagePatterns.READ_ALL, {}));
+  async findAll(): Promise<ProductDto[]> {
+    return await firstValueFrom(this.masterDataAMQPClient.send(ProductMessagePatterns.READ_ALL, {}));
   }
 
-  findOne(id: string): Promise<ProductDto> {
-    return firstValueFrom(this.masterDataAMQPClient.send(ProductMessagePatterns.READ_BY_ID, id));
+  async findOne(id: string): Promise<ProductDto> {
+    return await firstValueFrom(this.masterDataAMQPClient.send(ProductMessagePatterns.READ_BY_ID, id));
+  }
+
+
+  async loadProductRefs(dto: OrderAmqpDto){
+    this.logger.debug("Retrieving Produkt for : " + dto.id);
+    return await this.findOne(dto.productId);
   }
 }
+

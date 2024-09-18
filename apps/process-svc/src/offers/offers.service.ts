@@ -9,7 +9,7 @@ export class OffersService {
   constructor(private readonly offerPrismaService: OfferPrismaService) {
   }
 
-  async createOffers(orderId: string){
+  async createOffers(orderId: string): Promise<boolean>{
     try{
       this.logger.debug(`Create new offers for order ${orderId}`);
       const offers: CreateOfferAmqpDto[] = [];
@@ -22,7 +22,8 @@ export class OffersService {
       }
       offers.forEach((offer: CreateOfferAmqpDto) => {
         this.offerPrismaService.createOffer(offer.toPrismaEntity());
-      })
+      });
+      return true;
     }catch (e){
       this.logger.error(e);
       throw e;
@@ -53,11 +54,12 @@ export class OffersService {
     return OfferAmqpDto.fromPrismaEntity(offer);
   }
 
-  async accept(id: string): Promise<void>{
-    await this.offerPrismaService.acceptOffer(id);
+  async accept(id: string): Promise<Offer>{
+    const offer:Offer = await this.offerPrismaService.acceptOffer(id);
+    return OfferAmqpDto.fromPrismaEntity(offer);
   }
 
-  async decline(id: string[]) {
+  async decline(id: string[]):Promise<boolean> {
     throw new NotImplementedException("What is the expected behaviour if all offers are rejected?");
   }
 }

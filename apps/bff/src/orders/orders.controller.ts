@@ -1,11 +1,12 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Logger } from '@nestjs/common';
 import { OrdersService } from './orders.service';
-import { CreateOrderDto, OrderDto } from '@ap3/api';
+import { CreateOrderDto, OrderOverviewDto } from '@ap3/api';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @Controller('orders')
 @ApiTags('Orders')
 export class OrdersController {
+  private logger = new Logger(OrdersController.name);
   constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
@@ -24,15 +25,15 @@ export class OrdersController {
     },
     required:true
   })
-  async create(@Body() createOrderDto: CreateOrderDto): Promise<void> {
-    await this.ordersService.create(createOrderDto);
+  async create(@Body() createOrderDto: CreateOrderDto): Promise<OrderOverviewDto> {
+    return await this.ordersService.create(createOrderDto);
   }
 
   @Get()
   @ApiOperation({
     description: 'Get all active orders.'
   })
-  async findAll(): Promise<OrderDto[]> {
+  async findAll(): Promise<OrderOverviewDto[]> {
     return await this.ordersService.findAll();
   }
 
@@ -46,7 +47,7 @@ export class OrdersController {
     description: 'Identifying id; Required to identify the offer.',
     required: true,
   })
-  async findOne(@Param('id') id: string): Promise<OrderDto> {
+  async findOne(@Param('id') id: string): Promise<OrderOverviewDto> {
     return await this.ordersService.findOne(id);
   }
 

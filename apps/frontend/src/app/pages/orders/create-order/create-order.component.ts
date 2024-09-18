@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ProductDto } from 'libs/api/src/dtos/product/product.dto';
 import { ProductMocks } from 'libs/api/src/dtos/product/mocks/product.mock';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
-import { CreateOrderDto, OfferDto, OrderDto, ProductDto } from '@ap3/api';
+import { CreateOrderDto, OfferDto, OrderOverviewDto } from '@ap3/api';
 import { OffersService } from '../../../shared/services/offers/offers.service';
 import { Router } from '@angular/router';
 import { CountdownEvent } from 'ngx-countdown';
 import { Countdown } from './model/countdown';
 import { environment } from '../../../../environments/environment';
+import { ProductService } from '../../../shared/services/product/product.service';
 
 @Component({
   selector: 'app-create-order',
@@ -19,7 +21,7 @@ export class CreateOrderComponent {
   orderForm: FormGroup;
   offers$: Observable<OfferDto[]> | undefined;
   openOffers = false;
-  products: ProductDto[] = ProductMocks;
+  products$: Observable<ProductDto[]> | undefined;
   months: string[] = ["January", "February", 'March',
     'April', 'May', 'June', 'July', 'August', 'September',
      'October', 'November', 'December'
@@ -33,23 +35,36 @@ export class CreateOrderComponent {
     private orderService: OrdersService,
     private builder: FormBuilder,
     private offerService: OffersService,
-    private router: Router
+    private router: Router,
+    private productService : ProductService
   ) {
     this.orderForm = builder.group({
       product:['',[Validators.required]],
       amount: [0,[Validators.required]],
-      calendarWeek: ['',[Validators.required]]
-    })
+      calendarMonth: ['',[Validators.required]]
+    });
+
+    this.products$ = this.productService.getProducts();
+
   }
 
   createHardware() {
-    this.orderService.createOrder(this.orderForm.getRawValue() as CreateOrderDto).pipe(
+    let createOrderdDto : CreateOrderDto = {
+      productId: this.orderForm.get("product")?.value.id,
+      amount: this.orderForm.get("amount")?.value,
+      dueMonth: this.orderForm.get("calendarMonth")?.value,
+      customerId: "pt0001"
+    }
+
+    this.orderService.createOrder(createOrderdDto).pipe(
       catchError(() => {
         return of(null);
       })
-    ).subscribe((order: OrderDto | null) => {
+    ).subscribe((order: OrderOverviewDto | null) => {
       if (order) {
+        console.log(order);
         this.offers$ = this.offerService.getOffersByOrderId(order.id);
+        console.log(this.offers$);
         this.openOffers = true;
       }
     })
@@ -73,7 +88,7 @@ export class CreateOrderComponent {
 
   declineAllOffers() {
     this.offers$?.pipe(
-      map(offers => offers.map(offer => offer.orderId)),
+      map(offers => offers.map(offer => offer.id)),
       switchMap(orderIds =>
         forkJoin(orderIds.map(orderId =>
             this.offerService.declineAllOffersByOrderId(orderId)
@@ -83,6 +98,7 @@ export class CreateOrderComponent {
     ).subscribe(() => {
       this.navigateToOrders();
     });
+
   }
 
   private navigateToOrders() {

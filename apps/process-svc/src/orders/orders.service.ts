@@ -40,8 +40,9 @@ export class OrdersService {
     throw new NotImplementedException("An update for orders is not planned yet.");
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string): Promise<boolean> {
     this.logger.debug(`Remove order with id: ${id}`);
-    await this.orderPrismaService.deleteOrder({id: id});
+    const deletedOrder: Order = await this.orderPrismaService.deleteOrder(id);
+    return !!deletedOrder;
   }
 }

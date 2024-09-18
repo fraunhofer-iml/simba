@@ -6,7 +6,7 @@
       <form class="order-content" [formGroup]="orderForm">
         <mat-form-field class="order-field">
           <mat-select placeholder="Produkt" formControlName="product">
-            @for (product of products; track product) {
+            @for (product of products$ | async; track product) {
               <mat-option [value]="product">{{ product.name }} </mat-option>
             }
           </mat-select>
@@ -15,7 +15,7 @@
           <input matInput formControlName="amount" type="number"  value="number"/>
         </mat-form-field>
         <mat-form-field class="order-field">
-          <mat-select placeholder="Month" formControlName="calendarWeek">
+          <mat-select placeholder="Month" formControlName="calendarMonth">
             @for (month of months; track month) {
               <mat-option [value]="month">{{ month }} </mat-option>
             }
@@ -46,8 +46,8 @@
               <p id="offerId" class="grey">ID {{ offer.id }}</p>
               <p id="offerDate" class="grey">{{ offer.creationDate | date }}</p>
             </div>
-              <p id="offerName">Quadrokopter</p>
-              <p id="offerAmount">Amount: 2</p>
+            <p id="offerName" >{{orderForm.get('product')?.value.name}}</p>
+            <p id="offerAmount">{{orderForm.get('amount')?.value}}</p>
               <div class="offerPrice">
                 <img ngSrc="assets/icons/price.png" alt="Icon" height="30" width="30" />
                 <p>{{ offer.price | number : '1.2-2' }}</p>
