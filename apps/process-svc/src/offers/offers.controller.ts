@@ -22,18 +22,18 @@ export class OffersController {
     return this.offerService.findAllByOrderId(orderId);
   }
 
+  @MessagePattern(OfferMessagePatterns.DECLINE_ALL_OF_ORDER)
+  async declineOffersByOrderId(@Payload() orderId: string): Promise<boolean> {
+    return this.offerService.decline(orderId);
+  }
+
   @MessagePattern(OfferMessagePatterns.READ_BY_ID)
-  async findOne(@Payload() id: string): Promise<OfferAmqpDto> {
-    return this.offerService.findOne(id);
+  async findOne(@Payload() offerId: string): Promise<OfferAmqpDto> {
+    return this.offerService.findOne(offerId);
   }
 
   @MessagePattern(OfferMessagePatterns.ACCEPT_BY_ID)
-  async acceptOffer(@Payload() id: string): Promise<OfferAmqpDto> {
-    return this.offerService.accept(id);
-  }
-
-  @MessagePattern(OfferMessagePatterns.DECLINE_BY_ID)
-  async declineOffers(@Payload() id: string[]): Promise<boolean> {
-    return this.offerService.decline(id);
+  async acceptOffer(@Payload() offerId: string): Promise<OfferAmqpDto> {
+    return this.offerService.accept(offerId);
   }
 }

@@ -2,6 +2,7 @@ import { PrismaService } from '../prisma.service';
 import {Injectable, Logger, NotFoundException} from '@nestjs/common';
 import * as util from "node:util";
 import {Offer, Prisma} from "@prisma/client";
+import {OfferStatesEnum} from "@ap3/config";
 
 @Injectable()
 export class OfferPrismaService {
@@ -30,12 +31,17 @@ export class OfferPrismaService {
     }
   }
 
-  async getOffersByOrderId(orderId: string):Promise<Offer[]>{
-    this.logger.debug("Return all offers by Id from database");
+  async getOffersByOrderId(orderId: string, states: string[]):Promise<Offer[]>{
+    this.logger.debug(`Return all offers by Id ${orderId} from database`);
     try{
       return await this.prisma.offer.findMany({
         where: {
-          orderId: orderId,
+          orderId: {
+            equals: String(orderId),
+          },
+          status: {
+            in: states,
+          }
         },
         include: {
           order: true,
@@ -76,18 +82,34 @@ export class OfferPrismaService {
     }
   }
 
+  async setOfferState(id: string, state: string):Promise<Offer>{
+    try{
+      return await this.prisma.offer.update({
+        where: {id: id},
+        data: {
+          status: state,
+        },
+      });
+    }catch(e){
+      this.logger.error(util.inspect(e));
+      throw e;
+    }
+  }
+
   async acceptOffer(id: string): Promise<Offer> {
     this.logger.debug(`Accept offer with id ${id} in database`);
     const offer: Offer = await this.getOffersById(id);
+    this.logger.debug(`Connect offer to order #${offer.orderId}`);
     try {
       return await this.prisma.offer.update({
         where: {id: id},
         data: {
           acceptedByOrder:{
             connect: {
-              acceptedByOrderId: offer.orderId
+              id: String(offer.orderId)
             }
-          }
+          },
+          status: OfferStatesEnum.ACCEPTED,
         },
       });
     } catch (e) {

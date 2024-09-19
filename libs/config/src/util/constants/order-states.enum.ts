@@ -1,3 +1,5 @@
+import {OfferStatesEnum} from "./offer-states.enum";
+
 export enum OrderStatesEnum {
   NEW = 'New',
   ACCEPTED = 'Accepted',
@@ -5,3 +7,5 @@ export enum OrderStatesEnum {
   FINISHED = 'Finished',
   CANCELED = 'Canceled',
 }
+
+export const ORDER_STATES_TO_SHOW: string[] = [OrderStatesEnum.NEW, OrderStatesEnum.ACCEPTED, OrderStatesEnum.IN_PROGRESS, OrderStatesEnum.FINISHED];

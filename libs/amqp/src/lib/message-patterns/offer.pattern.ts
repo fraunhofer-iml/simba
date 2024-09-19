@@ -4,5 +4,5 @@ export enum OfferMessagePatterns{
   READ_BY_ID = 'offers/read-by-id',
   READ_BY_ORDER_ID = 'offers/read-by-order-id',
   ACCEPT_BY_ID = 'offers/accept',
-  DECLINE_BY_ID = 'offers/decline'
+  DECLINE_ALL_OF_ORDER = 'offers/decline'
 }

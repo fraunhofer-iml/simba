@@ -3,6 +3,7 @@ import {OrderPrismaService, OrderWithAcceptedOffer} from '@ap3/database';
 import {Order, Prisma} from '@prisma/client';
 import util from "node:util";
 import {CreateOrderAmqpDto, OrderAmqpDto, UpdateOrderAmqpDto} from "@ap3/amqp";
+import {ORDER_STATES_TO_SHOW} from "@ap3/config";
 
 @Injectable()
 export class OrdersService {
@@ -23,7 +24,7 @@ export class OrdersService {
 
   async findAll(): Promise<OrderAmqpDto[]> {
     const orderDtos: OrderAmqpDto[] = [];
-     const orders: Order[] = await this.orderPrismaService.getOrders();
+     const orders: Order[] = await this.orderPrismaService.getOrders(ORDER_STATES_TO_SHOW);
      orders.forEach((order:Order) => {
        orderDtos.push(OrderAmqpDto.fromPrismaEntity(order));
      });
@@ -32,7 +33,7 @@ export class OrdersService {
 
   async findOne(id: string) {
     this.logger.debug(id);
-    const order: OrderWithAcceptedOffer = await this.orderPrismaService.getOrder({id: id});
+    const order: OrderWithAcceptedOffer = await this.orderPrismaService.getOrder(id);
     return OrderAmqpDto.fromPrismaEntity(order);
   }
 

@@ -18,8 +18,8 @@ export class OffersController {
     description: 'Filter parameter; Only returns offers corresponding to given order id.',
     required: false,
   })
-  findAll(@Query('orderId') orderId?: string): Promise<OfferDto[]> {
-    return this.offersService.findAll(orderId);
+  async findAll(@Query('orderId') orderId?: string): Promise<OfferDto[]> {
+    return await this.offersService.findAll(orderId);
   }
 
   @Get(':id')
@@ -32,8 +32,8 @@ export class OffersController {
     description: 'Identifying id; Required to identify the offer.',
     required: true,
   })
-  findOne(@Param('id') id: string): Promise<OfferDto> {
-    return this.offersService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<OfferDto> {
+    return await this.offersService.findOne(id);
   }
 
   @Post()

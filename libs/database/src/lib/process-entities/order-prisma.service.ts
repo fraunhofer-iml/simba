@@ -3,6 +3,7 @@ import {Injectable, Logger} from '@nestjs/common';
 import {Order, Prisma} from '@prisma/client';
 import * as util from "node:util";
 import {OrderWithAcceptedOffer} from "./order.types";
+import {OrderStatesEnum} from "@ap3/config";
 
 @Injectable()
 export class OrderPrismaService {
@@ -10,9 +11,9 @@ export class OrderPrismaService {
   constructor(private prisma: PrismaService) {
   }
 
-  async getOrder(whereId: Prisma.OrderWhereUniqueInput):Promise<OrderWithAcceptedOffer | null> {
+  async getOrder(id: string):Promise<OrderWithAcceptedOffer | null> {
     const order = await this.prisma.order.findUnique({
-      where: whereId,
+      where: {id: String(id)},
       include: {
         acceptedOffer: true,
       }
@@ -21,8 +22,14 @@ export class OrderPrismaService {
     return order;
   }
 
-  async getOrders():Promise<Order[]>{
-    return this.prisma.order.findMany();
+  async getOrders(states: string[]):Promise<Order[]>{
+    return this.prisma.order.findMany({
+      where: {
+        status: {
+          in: states,
+        }
+      }
+    });
   }
 
   async createOrder(data: Prisma.OrderCreateInput): Promise<Order | null>{
@@ -33,6 +40,15 @@ export class OrderPrismaService {
       this.logger.error(util.inspect(e));
       throw e;
     }
+  }
+
+  async setOrderState(id: string, state: OrderStatesEnum):Promise<Order>{
+    return this.prisma.order.update({
+      where: {id: String(id)},
+      data: {
+        status: state.toString()
+      }
+    })
   }
 
   async updateOrder(params:{where: Prisma.OrderWhereUniqueInput, data: Prisma.OrderUpdateInput}): Promise<Order | null>{
@@ -47,7 +63,7 @@ export class OrderPrismaService {
     return this.prisma.order.delete(
       {
         where:
-          {id: id}
+          {id: String(id)}
       });
   }
 }

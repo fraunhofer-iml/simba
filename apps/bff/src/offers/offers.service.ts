@@ -36,10 +36,9 @@ export class OffersService {
     return await firstValueFrom<boolean>(this.processAMQPClient.send(OfferMessagePatterns.ACCEPT_BY_ID, offerId));
   }
 
-  async declineOffers(offerId: string): Promise<boolean> {
-    this.logger.warn('NOT YET IMPLEMENTED')
-    this.logger.debug(`Order id ${offerId}`);
-    return await firstValueFrom<boolean>(this.processAMQPClient.send(OfferMessagePatterns.DECLINE_BY_ID, [offerId]));
+  async declineOffers(orderId: string): Promise<boolean> {
+    this.logger.debug(`Order id ${orderId}`);
+    return await firstValueFrom<boolean>(this.processAMQPClient.send(OfferMessagePatterns.DECLINE_ALL_OF_ORDER, [orderId]));
   }
 
   async loadOfferRef(dto: OrderAmqpDto): Promise<OfferDto> {
