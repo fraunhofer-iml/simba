@@ -1,4 +1,4 @@
-const BASE_URL = 'https://bff.affds.apps.blockchain-europe.iml.fraunhofer.de';
+const BASE_URL = 'https://affds-bff.apps.blockchain-europe.iml.fraunhofer.de';
 
 export const environment = {
   production: true,
