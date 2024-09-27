@@ -72,6 +72,7 @@ describe('CreateOrderComponent', () => {
   });
 
   it('should call declineAllOffers when countdown reaches zero', () => {
+    component.orderId = "123";
     const event: CountdownEvent = { left: 0 } as CountdownEvent;
     jest.spyOn(component, 'declineAllOffers');
     component.onEvent(event);

@@ -21,9 +21,9 @@ export class OffersService {
         offer.orderId = orderId;
         offers.push(offer)
       }
-      offers.forEach((offer: CreateOfferAmqpDto) => {
-        this.offerPrismaService.createOffer(offer.toPrismaEntity());
-      });
+      for(let offer of offers){
+        await this.offerPrismaService.createOffer(offer.toPrismaEntity());
+      }
       return true;
     }catch (e){
       this.logger.error(e);

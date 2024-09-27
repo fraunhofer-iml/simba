@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProductDto } from 'libs/api/src/dtos/product/product.dto';
-import { ProductMocks } from 'libs/api/src/dtos/product/mocks/product.mock';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
-import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { catchError, Observable, of } from 'rxjs';
 import { CreateOrderDto, OfferDto, OrderOverviewDto } from '@ap3/api';
 import { OffersService } from '../../../shared/services/offers/offers.service';
 import { Router } from '@angular/router';
@@ -19,6 +18,7 @@ import { ProductService } from '../../../shared/services/product/product.service
 })
 export class CreateOrderComponent {
   orderForm: FormGroup;
+  orderId: string;
   offers$: Observable<OfferDto[]> | undefined;
   openOffers = false;
   products$: Observable<ProductDto[]> | undefined;
@@ -43,7 +43,7 @@ export class CreateOrderComponent {
       amount: [0,[Validators.required]],
       calendarMonth: ['',[Validators.required]]
     });
-
+    this.orderId = "";
     this.products$ = this.productService.getProducts();
 
   }
@@ -63,6 +63,7 @@ export class CreateOrderComponent {
     ).subscribe((order: OrderOverviewDto | null) => {
       if (order) {
         console.log(order);
+        this.orderId = order.id;
         this.offers$ = this.offerService.getOffersByOrderId(order.id);
         console.log(this.offers$);
         this.openOffers = true;
@@ -87,18 +88,12 @@ export class CreateOrderComponent {
   }
 
   declineAllOffers() {
-    this.offers$?.pipe(
-      map(offers => offers.map(offer => offer.id)),
-      switchMap(orderIds =>
-        forkJoin(orderIds.map(orderId =>
-            this.offerService.declineAllOffersByOrderId(orderId)
-          )
-        )
-      ),
-    ).subscribe(() => {
-      this.navigateToOrders();
-    });
-
+    if(this.orderId){
+    this.offerService.declineAllOffersByOrderId(this.orderId).subscribe(res => this.navigateToOrders());
+    }
+    else{
+      throw new Error("No OrderId available");
+    }
   }
 
   private navigateToOrders() {

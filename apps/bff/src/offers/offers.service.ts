@@ -38,7 +38,7 @@ export class OffersService {
 
   async declineOffers(orderId: string): Promise<boolean> {
     this.logger.debug(`Order id ${orderId}`);
-    return await firstValueFrom<boolean>(this.processAMQPClient.send(OfferMessagePatterns.DECLINE_ALL_OF_ORDER, [orderId]));
+    return await firstValueFrom<boolean>(this.processAMQPClient.send(OfferMessagePatterns.DECLINE_ALL_OF_ORDER, orderId));
   }
 
   async loadOfferRef(dto: OrderAmqpDto): Promise<OfferDto> {

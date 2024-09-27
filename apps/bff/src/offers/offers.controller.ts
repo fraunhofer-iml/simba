@@ -75,6 +75,6 @@ export class OffersController {
     required: true,
   })
   async declineOffers(@Query('orderId') orderId: string): Promise<void>{
-    await this.offersService.declineOffers(orderId)
+    await this.offersService.declineOffers(orderId);
   }
 }

@@ -23,8 +23,8 @@ export class OffersService {
   }
 
   public declineAllOffersByOrderId(orderId: string): Observable<OrderDto> {
-    let params = new HttpParams();
-    params = params.set('orderId', orderId);
-    return this.httpClient.patch<OrderDto>(`${environment.OFFERS.DECLINE}`, { params });
+    let httpParams = new HttpParams();
+    httpParams = httpParams.set('orderId', orderId);
+    return this.httpClient.patch<OrderDto>(`${environment.OFFERS.DECLINE}`,{}, {params : httpParams} );
   }
 }

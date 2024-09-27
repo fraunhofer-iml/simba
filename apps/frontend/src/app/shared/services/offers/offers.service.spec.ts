@@ -71,7 +71,7 @@ describe('OffersService', () => {
       (error) => expect(error.message).toBe(errorMessage)
     );
 
-    const req = httpMock.expectOne(`${environment.OFFERS.URL}/decline`);
+    const req = httpMock.expectOne(`${environment.OFFERS.URL}/decline?orderId=${orderId}`);
     req.flush(errorMessage, { status: 500, statusText: 'Server Error' });
   });
 });
