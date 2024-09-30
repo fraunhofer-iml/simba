@@ -9,7 +9,6 @@ export const environment = {
   },
   ORDERS: {
     URL: `${BASE_URL}/orders`,
-    ORDER: '/orders',
   },
   PRODUCTS: {
     URL: `${BASE_URL}/products`,
@@ -17,4 +16,13 @@ export const environment = {
   TRADERECEIVABLES: {
     URL: `${BASE_URL}/trade-receivables`,
   },
+};
+
+export const ROUTING = {
+  newOrders: '/orders/new',
+  login: '/login',
+  accept: '/accept',
+  orders: '/orders',
+  wallet: '/wallet',
+  production: '/production',
 };

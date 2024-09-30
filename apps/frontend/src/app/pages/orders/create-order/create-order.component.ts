@@ -1,11 +1,10 @@
-import { CreateOrderDto, OfferDto, OrderOverviewDto } from '@ap3/api';
-import { ProductDto } from 'libs/api/src/dtos/product/product.dto';
+import { CreateOrderDto, OfferDto, OrderOverviewDto, ProductDto } from '@ap3/api';
 import { CountdownEvent } from 'ngx-countdown';
 import { catchError, Observable, of } from 'rxjs';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { environment } from '../../../../environments/environment';
+import { ROUTING } from '../../../../environments/environment';
 import { OffersService } from '../../../shared/services/offers/offers.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { ProductService } from '../../../shared/services/product/product.service';
@@ -50,7 +49,7 @@ export class CreateOrderComponent {
   ) {
     this.orderForm = builder.group({
       product: ['', [Validators.required]],
-      amount: [0, [Validators.required]],
+      amount: [null, [Validators.required]],
       calendarMonth: ['', [Validators.required]],
     });
     this.orderId = '';
@@ -58,7 +57,7 @@ export class CreateOrderComponent {
   }
 
   createHardware() {
-    let createOrderdDto: CreateOrderDto = {
+    const createOrderdDto: CreateOrderDto = {
       productId: this.orderForm.get('product')?.value.id,
       amount: this.orderForm.get('amount')?.value,
       dueMonth: this.orderForm.get('calendarMonth')?.value,
@@ -74,11 +73,10 @@ export class CreateOrderComponent {
       )
       .subscribe((order: OrderOverviewDto | null) => {
         if (order) {
-          console.log(order);
           this.orderId = order.id;
           this.offers$ = this.offerService.getOffersByOrderId(order.id);
-          console.log(this.offers$);
           this.openOffers = true;
+          this.orderForm.disable();
         }
       });
   }
@@ -111,6 +109,6 @@ export class CreateOrderComponent {
   }
 
   private navigateToOrders() {
-    this.router.navigate([environment.ORDERS.ORDER]);
+    this.router.navigate([ROUTING.orders]);
   }
 }

@@ -1,39 +1,42 @@
-<mat-drawer-container class="sidebar-container">
-    <mat-drawer mode="side" opened>
-      <div class="drawer-content-container">
-        <h1>Skala 3.0</h1>
-        <mat-divider class="spacer"></mat-divider>
-          <mat-selection-list class="selection-list">
-              <mat-list-item routerLink="orders"> 
-              <img src="assets/icons/orders.svg" alt="Icon">
-                Orders
-              </mat-list-item>
-              <mat-list-item routerLink="production" > 
-              <img src="assets/icons/precision_manufacturing.svg" alt="Icon">
-                Production
-              </mat-list-item>
-              <mat-list-item routerLink="wallet"> 
-                <img src="assets/icons/wallet.svg" alt="Icon">
-                Wallet
-              </mat-list-item>
-          </mat-selection-list>
-        <mat-divider class="spacer"></mat-divider>
-        <div class="user-container">
-          <div class="user-information">
-            <img src="assets/icons/account_circle.svg" alt="Icon">
-            <span> Max Mustermann</span>
-          </div>
-            <button mat-button><img src="assets/icons/logout.svg" alt="Icon"></button>
-          </div>
-          <mat-divider class="spacer"></mat-divider>
-          <div class="logos-container">
-          <img src="./assets/logos/fraunhofer.png" width="300" height="50"/>
-          <img src="./assets/logos/tu.png" width="300" height="50">
-        </div>
+<div class="drawer-content-container">
+  <div class="title">
+    <img src="./assets/logos/simba_logo.png" alt="simba logo" id="simba" />
+    <p>SiMBA</p>
+  </div>
+  <mat-divider></mat-divider>
+  <mat-selection-list class="selection-list">
+    <mat-list-item [routerLink]="ROUTING.orders" routerLinkActive="active">
+      <div class="image">
+        <img src="assets/icons/orders.svg" alt="Icon" id="orders" />
+        Orders
       </div>
-    </mat-drawer>
-
-    <mat-drawer-content>
-      <router-outlet></router-outlet>
-    </mat-drawer-content>   
-  </mat-drawer-container>
+    </mat-list-item>
+    <mat-list-item [routerLink]="ROUTING.production" routerLinkActive="active">
+      <div class="image">
+        <img src="assets/icons/precision_manufacturing.svg" alt="Icon" />
+        Production
+      </div>
+    </mat-list-item>
+    <mat-list-item [routerLink]="ROUTING.wallet" routerLinkActive="active">
+      <div class="image">
+        <img src="assets/icons/wallet.svg" alt="Icon" id="wallet" />
+        Wallet
+      </div>
+    </mat-list-item>
+  </mat-selection-list>
+  <div class="footer">
+    <div class="user-container">
+      <div class="user-information">
+        <img src="assets/icons/account_circle.svg" alt="Icon" class="icon" />
+        <span> Max Mustermann </span>
+      </div>
+      <button mat-button>
+        <img src="assets/icons/logout.svg" alt="Icon" (click)="logout()" (keydown)="logout()"/>
+      </button>
+    </div>
+    <div class="logos-container">
+      <img src="./assets/logos/fraunhofer.png" alt="fraunhofer logo" class="logos" />
+      <img src="./assets/logos/tu.png" alt="tu logo" class="logos" />
+    </div>
+  </div>
+</div>

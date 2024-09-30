@@ -25,14 +25,45 @@
 html, body { height: 100%;
 }
 body { margin: 0; font-family: roboto, "Helvetica Neue", sans-serif; }
-h1 { font-weight: normal}
 
-/* Colors */
-
+/* Main Design Features */
 .grey {
   color: #737373;
 }
 
+:root {
+  --creme-color: #d9ddef;
+  --lavendel-color: #f4f4f4;
+  --dark-blue-color: #1f2c56;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+h1 {
+  font-size: x-large;
+  font-weight: bold;
+  color: var(--dark-blue-color);
+  margin: 1em;
+}
+
+.card {
+  background-color: white;
+  border-radius: 1em;
+  padding: 2em;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 0 1em 0 1em;
+}
+
+/* All Buttons */
+.mat-mdc-unelevated-button:not(:disabled) {
+  background-color: var(--dark-blue-color) !important;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: white !important;
+}
 
 /* @tailwind base;
 @tailwind components;

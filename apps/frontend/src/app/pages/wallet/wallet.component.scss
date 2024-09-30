@@ -22,7 +22,7 @@
 .searchbar-container{
     display: flex;
     justify-content: space-between;
-    gap: 40%;
+    gap: 10%;
 }
 
 .wallet-container{
@@ -35,7 +35,7 @@
 /* Materials */
 .mat-mdc-card-content:first-child {
     padding-top: 0px;
-} 
+}
 
 .mat-mdc-card-content:last-child {
     padding-bottom: 0;
@@ -56,4 +56,3 @@
     border: 1px solid grey;
     box-sizing: border-box;
 }
-  

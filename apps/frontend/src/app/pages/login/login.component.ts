@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../shared/services/auth/auth.service';
-import { environment } from '../../../environments/environment';
+import { ROUTING } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +14,6 @@ export class LoginComponent {
 
   routeToLayout(){
     this.authService.changeStatus();
-    this.router.navigate([environment.ORDERS.ORDER])
+    this.router.navigate([ROUTING.orders]);
   }
 }

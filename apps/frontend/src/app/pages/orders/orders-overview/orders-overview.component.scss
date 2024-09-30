@@ -1,35 +1,42 @@
 @use '@angular/material' as mat;
 @import '../../../../styles.scss';
 
-.searchbar{
-    border-radius: 20px;
-    min-width: 40%;
-    margin-top: 20px;
+.searchbar {
+  border-radius: 20px;
+  width: 50%;
 }
 
-.table-container{
-
-    margin-left: 1rem;
-    margin-right: 1rem;
+.table-container {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  overflow-x: auto;
 }
 
-.searchbar-container{
-    margin-left: 1rem;
-    margin-right: 1rem;
-    display: flex;
-    justify-content: space-between;
-    gap: 40%;
-
+.searchbar-container {
+  display: flex;
+  gap: 50%;
+  margin-bottom: 1em;
 }
 
-.create-button-container{
-    margin-top: 30px;
+.create-button {
+  min-width: 150px;
+  margin-top: 1em;
 }
 
-.create-button{
-    min-width: 150px;
+.overview-container {
+  margin: 0 1rem 0 1rem;
 }
 
-.overview-container{
-    margin: 0rem 1rem 0rem 1rem;
+.mat-mdc-table {
+  background-color: white;
+}
+
+.mat-mdc-paginator {
+  background-color: white;
+}
+
+@media (max-width: 60em) {
+  .searchbar-container{
+    gap: 10%;
+  }
 }

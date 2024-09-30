@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { OrderOverviewDto } from '@ap3/api';
+import { ROUTING } from '../../../../environments/environment';
 
 
 @Component({
@@ -17,6 +18,7 @@ export class OrdersOverviewComponent {
   displayedColumns: string[] = ["orderId","date","status","price","products","robots","customerID"];
   dataSource = new MatTableDataSource<OrderOverviewDto>;
   dataSourceObservable: Observable<MatTableDataSource<OrderOverviewDto>>;
+  protected readonly ROUTING = ROUTING;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;

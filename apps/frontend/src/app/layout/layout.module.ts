@@ -1,18 +1,17 @@
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatIconModule } from '@angular/material/icon';
-import {MatDividerModule } from '@angular/material/divider';
-import {MatListModule} from '@angular/material/list';
-import { LayoutRoutingModule } from './layout-routing.module';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { LayoutRoutingModule } from './layout-routing.module';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { ContentLayoutComponent } from './content-layout/content-layout.component';
 
 
 @NgModule({
-  declarations: [
-    SidebarComponent
-  ],
+  declarations: [SidebarComponent, ContentLayoutComponent],
   imports: [
     LayoutRoutingModule,
     CommonModule,
@@ -20,8 +19,9 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     MatDividerModule,
     MatListModule,
-    MatButtonModule
+    MatButtonModule,
+    NgOptimizedImage,
   ],
-  exports:[SidebarComponent]
+  exports: [SidebarComponent, ContentLayoutComponent],
 })
-export class LayoutModule { }
+export class LayoutModule {}

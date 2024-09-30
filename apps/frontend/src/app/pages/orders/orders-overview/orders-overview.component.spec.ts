@@ -17,6 +17,7 @@ import { OrdersOverviewComponent } from './orders-overview.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { provideHttpClient } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 describe('OrdersOverviewComponent', () => {
   let component: OrdersOverviewComponent;
@@ -40,7 +41,8 @@ describe('OrdersOverviewComponent', () => {
         MatTableModule,
         MatSortModule,
         MatPaginatorModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        RouterModule.forRoot([])
       ],
       providers:[OrdersService, provideHttpClient()],
       declarations: [OrdersOverviewComponent]
