@@ -1,16 +1,18 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
-import {MatGridListModule} from '@angular/material/grid-list';
-import { WalletComponent } from './wallet.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
+import { TradeReceivableService } from '../../shared/services/trade-receivable/trade-receivable.service';
+import { WalletComponent } from './wallet.component';
 
 describe('WalletComponent', () => {
   let component: WalletComponent;
@@ -18,7 +20,8 @@ describe('WalletComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports:[
+      providers: [TradeReceivableService],
+      imports: [
         MatGridListModule,
         MatDividerModule,
         MatCardModule,
@@ -29,11 +32,11 @@ describe('WalletComponent', () => {
         MatPaginatorModule,
         MatIconModule,
         NoopAnimationsModule,
-        RouterOutlet
+        RouterOutlet,
+        HttpClientTestingModule,
       ],
-      declarations: [WalletComponent]
-    })
-    .compileComponents();
+      declarations: [WalletComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(WalletComponent);
     component = fixture.componentInstance;

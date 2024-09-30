@@ -5,11 +5,11 @@ export const environment = {
   OFFERS: {
     URL: `${BASE_URL}/offers`,
     ACCEPT: '/accept',
-    DECLINE: `${BASE_URL}/offers/decline`
+    DECLINE: `${BASE_URL}/offers/decline`,
   },
   ORDERS: {
     URL: `${BASE_URL}/orders`,
-    ORDER: '/orders'
+    ORDER: '/orders',
   },
   PRODUCTS: {
     URL: `${BASE_URL}/products`,

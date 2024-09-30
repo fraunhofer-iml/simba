@@ -1,0 +1,32 @@
+import { CreateTradeReceivableDto, TradeReceivableDto } from '@ap3/api';
+import { TradeReceivablePrismaService } from '@ap3/database';
+import { Injectable, Logger } from '@nestjs/common';
+import { TradeReceivable } from '@prisma/client';
+
+@Injectable()
+export class TradeReceivablesService {
+  private logger = new Logger(TradeReceivablesService.name);
+  constructor(private readonly tradeReceivablePrismaService: TradeReceivablePrismaService) {}
+  create(createTradeReceivableDto: CreateTradeReceivableDto): boolean {
+    return true;
+  }
+
+  async findAll(id: string): Promise<TradeReceivableDto[]> {
+    this.logger.debug('requesting Tradereceivables of id : ', id);
+    let tradeReceivables: TradeReceivable[] = [];
+    let tradeReceivableDtos: TradeReceivableDto[] = [];
+    if (id) {
+      tradeReceivables = await this.tradeReceivablePrismaService.getAllTradeReceivablesById(id);
+    } else {
+      tradeReceivables = await this.tradeReceivablePrismaService.getAll();
+    }
+    for (let tr of tradeReceivables) {
+      tradeReceivableDtos.push(TradeReceivableDto.fromPrismaEntity(tr));
+    }
+    return tradeReceivableDtos;
+  }
+
+  async findOne(id: string): Promise<TradeReceivableDto> {
+    return TradeReceivableDto.fromPrismaEntity(await this.tradeReceivablePrismaService.getOneTradeReceivableById(id));
+  }
+}

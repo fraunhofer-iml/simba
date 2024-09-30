@@ -1,36 +1,33 @@
-import { Controller, Get, Post, Param } from '@nestjs/common';
+import { CreateTradeReceivableDto, TradeReceivableDto } from '@ap3/api';
+import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 import { TradeReceivablesService } from './trade-receivables.service';
-import { ApiParam } from '@nestjs/swagger';
-import {TradeReceivableDto} from "@ap3/api";
 
 @Controller('trade-receivables')
+@ApiTags('Trade-Receivables')
 export class TradeReceivablesController {
   constructor(private readonly tradeReceivableService: TradeReceivablesService) {}
 
-  @ApiParam({
-    name: 'orderId',
-    type: String,
-    description: 'Identifying id; Required to identify the corresponding order a trade-receivable should be created for.',
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {},
+    },
     required: true,
   })
-  @Post(':orderId')
-  async create(@Param('orderId') orderId: string): Promise<void> {
-    return await this.tradeReceivableService.create(orderId);
-  }
-
-  @Get()
-  async findAll(): Promise<TradeReceivableDto[]> {
-    return await this.tradeReceivableService.findAll();
+  @Post()
+  async create(@Body() createDto: CreateTradeReceivableDto): Promise<void> {
+    return await this.tradeReceivableService.create(createDto);
   }
 
   @ApiParam({
     name: 'id',
     type: String,
-    description: 'Identifying id; Required to identify the trade-receivable.',
+    description: 'Identifying id; Required to identify the corresponding trade-receivables of a participant.',
     required: true,
   })
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<TradeReceivableDto> {
-    return this.tradeReceivableService.findOne(id);
+  async findAll(@Param('id') id: string): Promise<TradeReceivableDto[]> {
+    return await this.tradeReceivableService.findAll(id);
   }
 }

@@ -1,23 +1,24 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { TradeReceivableDto } from '@ap3/api';
-import { ClientProxy } from '@nestjs/microservices';
 import { AmqpBrokerQueues, TradeReceivableMessagePatterns } from '@ap3/amqp';
+import { CreateTradeReceivableDto, TradeReceivableDto } from '@ap3/api';
 import { firstValueFrom } from 'rxjs';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class TradeReceivablesService {
+  private logger = new Logger(TradeReceivablesService.name);
+  constructor(@Inject(AmqpBrokerQueues.PROCESS_SVC_QUEUE) private readonly processAMQPClient: ClientProxy) {}
 
-  constructor( @Inject(AmqpBrokerQueues.PROCESS_SVC_QUEUE) private readonly processAMQPClient : ClientProxy){}
-
-  async create(orderId: string): Promise<void> {
-    return await firstValueFrom(this.processAMQPClient.send(TradeReceivableMessagePatterns.CREATE, {orderId}));;
+  async create(createDto: CreateTradeReceivableDto): Promise<void> {
+    return await firstValueFrom(this.processAMQPClient.send(TradeReceivableMessagePatterns.CREATE, createDto));
   }
 
-  async findAll(): Promise<TradeReceivableDto[]> {
-    return await firstValueFrom(this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_ALL, {}));;
+  async findAll(id: string): Promise<TradeReceivableDto[]> {
+    this.logger.debug('Requesting Tradereceivables of user : ' + id);
+    return await firstValueFrom(this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_ALL, { id }));
   }
 
   async findOne(id: string): Promise<TradeReceivableDto> {
-    return await firstValueFrom(this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_BY_ID, {id}));;
+    return await firstValueFrom(this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_BY_ID, { id }));
   }
 }

@@ -1,28 +1,28 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { CreateOrderComponent } from './create-order.component';
-import { OffersService } from '../../../shared/services/offers/offers.service';
-import { HttpClient, HttpHandler } from '@angular/common/http';
-import { CountdownEvent, CountdownModule } from 'ngx-countdown';
-import { Router } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatListModule } from '@angular/material/list';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatButtonModule } from '@angular/material/button';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { CreateOrderDto, OrderDto, OrderMock, OrderOverviewDto, OrderOverviewMock } from '@ap3/api';
+import { CountdownEvent, CountdownModule } from 'ngx-countdown';
 import { of, throwError } from 'rxjs';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
+import { OffersService } from '../../../shared/services/offers/offers.service';
+import { OrdersService } from '../../../shared/services/orders/orders.service';
+import { ProductService } from '../../../shared/services/product/product.service';
+import { CreateOrderComponent } from './create-order.component';
 
 describe('CreateOrderComponent', () => {
   let component: CreateOrderComponent;
@@ -51,13 +51,7 @@ describe('CreateOrderComponent', () => {
         MatPaginatorModule,
         NoopAnimationsModule,
       ],
-      providers: [
-        OffersService,
-        OrdersService,
-        HttpClient,
-        HttpHandler,
-        Router
-      ],
+      providers: [OffersService, OrdersService, ProductService, HttpClient, HttpHandler, Router],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CreateOrderComponent);
@@ -72,7 +66,7 @@ describe('CreateOrderComponent', () => {
   });
 
   it('should call declineAllOffers when countdown reaches zero', () => {
-    component.orderId = "123";
+    component.orderId = '123';
     const event: CountdownEvent = { left: 0 } as CountdownEvent;
     jest.spyOn(component, 'declineAllOffers');
     component.onEvent(event);
@@ -81,11 +75,11 @@ describe('CreateOrderComponent', () => {
 
   it('should handle successful order creation', () => {
     let createOrderFrontendDto: CreateOrderDto = {
-      productId: component.orderForm.get("product")?.value.id,
-      amount: component.orderForm.get("amount")?.value,
-      dueMonth: component.orderForm.get("calendarMonth")?.value,
-      customerId: "pt0001",
-    }
+      productId: component.orderForm.get('product')?.value.id,
+      amount: component.orderForm.get('amount')?.value,
+      dueMonth: component.orderForm.get('calendarMonth')?.value,
+      customerId: 'pt0001',
+    };
 
     jest.spyOn(orderService, 'createOrder').mockReturnValue(of(OrderOverviewMock[0]));
     jest.spyOn(offerService, 'getOffersByOrderId').mockReturnValue(of([]));

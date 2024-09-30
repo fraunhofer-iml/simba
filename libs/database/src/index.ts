@@ -4,3 +4,4 @@ export * from './lib/process-entities/order-prisma.service';
 export * from './lib/process-entities/offer-prisma.service';
 export * from './lib/process-entities/product-prisma.service';
 export * from './lib/process-entities/order.types';
+export * from './lib/process-entities/trade-receivable-prisma.service';
