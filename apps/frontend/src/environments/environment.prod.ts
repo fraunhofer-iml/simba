@@ -18,3 +18,12 @@ export const environment = {
     URL: `${BASE_URL}/trade-receivables`,
   },
 };
+
+export const ROUTING = {
+  newOrders: '/orders/new',
+  login: '/login',
+  accept: '/accept',
+  orders: '/orders',
+  wallet: '/wallet',
+  production: '/production',
+};
