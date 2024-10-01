@@ -76,6 +76,7 @@ It will show tasks that you can run with Nx.
 - [Follow us on Twitter](https://twitter.com/nxdevtools)
 
 ## set up environment
+## run start-database.sh script 
 docker run -it --rm --name rabbitmq --network host -p 5672:5672 -p 15672:15672 rabbitmq:3.13-management
 
 ## prisma schema update
@@ -88,8 +89,8 @@ npx prisma studio
 # reset
 npx prisma db push --force-reset && npx prisma db seed
 
-
 ## container creation and start
+## docker image must be build before merge request
 nx run [bff]:container
 docker run -P --network host [affds-bff]:[feature-init]
 
