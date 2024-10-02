@@ -1,5 +1,5 @@
-import { TradeReceivableMessagePatterns } from '@ap3/amqp';
-import { CreateTradeReceivableDto, TradeReceivableDto } from '@ap3/api';
+import { TradeReceivableAmqpDto, TradeReceivableMessagePatterns } from '@ap3/amqp';
+import { CreateTradeReceivableDto } from '@ap3/api';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { TradeReceivablesService } from './trade-receivables.service';
@@ -14,12 +14,12 @@ export class TradeReceivablesController {
   }
 
   @MessagePattern(TradeReceivableMessagePatterns.READ_ALL)
-  async findAll(@Payload() userId: string): Promise<TradeReceivableDto[]> {
+  async findAll(@Payload() userId: string): Promise<TradeReceivableAmqpDto[]> {
     return this.tradeReceivablesService.findAll(userId);
   }
 
   @MessagePattern(TradeReceivableMessagePatterns.READ_BY_ID)
-  async findOne(@Payload() orderId: string): Promise<TradeReceivableDto> {
+  async findOne(@Payload() orderId: string): Promise<TradeReceivableAmqpDto> {
     return this.tradeReceivablesService.findOne(orderId);
   }
 }

@@ -1,4 +1,4 @@
-import { AmqpBrokerQueues, TradeReceivableMessagePatterns } from '@ap3/amqp';
+import { AmqpBrokerQueues, TradeReceivableAmqpDto, TradeReceivableMessagePatterns } from '@ap3/amqp';
 import { CreateTradeReceivableDto, TradeReceivableDto } from '@ap3/api';
 import { firstValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -15,7 +15,15 @@ export class TradeReceivablesService {
 
   async findAll(id: string): Promise<TradeReceivableDto[]> {
     this.logger.debug('Requesting Tradereceivables of user : ' + id);
-    return await firstValueFrom(this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_ALL, { id }));
+    let frontendDtos: TradeReceivableDto[] = [];
+    let amqpDtos: TradeReceivableAmqpDto[] = await firstValueFrom(
+      this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_ALL, { id })
+    );
+
+    for (let amqpDto of amqpDtos) {
+      frontendDtos.push(TradeReceivableAmqpDto.toTradeReceivableDto(amqpDto));
+    }
+    return frontendDtos;
   }
 
   async findOne(id: string): Promise<TradeReceivableDto> {

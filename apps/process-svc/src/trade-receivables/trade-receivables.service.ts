@@ -1,4 +1,5 @@
-import { CreateTradeReceivableDto, TradeReceivableDto } from '@ap3/api';
+import { TradeReceivableAmqpDto } from '@ap3/amqp';
+import { CreateTradeReceivableDto } from '@ap3/api';
 import { TradeReceivablePrismaService } from '@ap3/database';
 import { Injectable, Logger } from '@nestjs/common';
 import { TradeReceivable } from '@prisma/client';
@@ -11,22 +12,22 @@ export class TradeReceivablesService {
     return true;
   }
 
-  async findAll(id: string): Promise<TradeReceivableDto[]> {
+  async findAll(id: string): Promise<TradeReceivableAmqpDto[]> {
     this.logger.debug('requesting Tradereceivables of id : ', id);
     let tradeReceivables: TradeReceivable[] = [];
-    let tradeReceivableDtos: TradeReceivableDto[] = [];
+    let tradeReceivableDtos: TradeReceivableAmqpDto[] = [];
     if (id) {
       tradeReceivables = await this.tradeReceivablePrismaService.getAllTradeReceivablesById(id);
     } else {
       tradeReceivables = await this.tradeReceivablePrismaService.getAll();
     }
     for (let tr of tradeReceivables) {
-      tradeReceivableDtos.push(TradeReceivableDto.fromPrismaEntity(tr));
+      tradeReceivableDtos.push(TradeReceivableAmqpDto.fromPrismaEntity(tr));
     }
     return tradeReceivableDtos;
   }
 
-  async findOne(id: string): Promise<TradeReceivableDto> {
-    return TradeReceivableDto.fromPrismaEntity(await this.tradeReceivablePrismaService.getOneTradeReceivableById(id));
+  async findOne(id: string): Promise<TradeReceivableAmqpDto> {
+    return TradeReceivableAmqpDto.fromPrismaEntity(await this.tradeReceivablePrismaService.getOneTradeReceivableById(id));
   }
 }

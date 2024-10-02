@@ -1,5 +1,3 @@
-import { TradeReceivable } from '@prisma/client';
-
 export class TradeReceivableDto {
   id: string;
   debtorId: string;
@@ -17,17 +15,5 @@ export class TradeReceivableDto {
     this.orderId = orderId;
     this.status = status;
     this.invoiceId = invoiceId;
-  }
-
-  public static fromPrismaEntity(tradereceivable: TradeReceivable) {
-    return new TradeReceivableDto(
-      tradereceivable.id,
-      tradereceivable.debitorId,
-      tradereceivable.nft,
-      tradereceivable.value,
-      tradereceivable.orderId,
-      tradereceivable.status,
-      tradereceivable.invoiceId
-    );
   }
 }

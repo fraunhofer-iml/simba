@@ -1,30 +1,33 @@
-import {Inject, Injectable, Logger} from '@nestjs/common';
-import {CreateOrderDto, OrderOverviewDto} from '@ap3/api';
-import {AmqpBrokerQueues, CreateOrderAmqpDto, OrderAmqpDto, OrderMessagePatterns} from '@ap3/amqp';
-import {ClientProxy} from '@nestjs/microservices';
-import {firstValueFrom, lastValueFrom} from 'rxjs';
-import * as util from "node:util";
-import {DtoConversionService} from '../shared/dto-conversion.service';
-import {OffersService} from '../offers/offers.service';
-import {ProductsService} from '../products/products.service';
+import * as util from 'node:util';
+import { AmqpBrokerQueues, CreateOrderAmqpDto, OrderAmqpDto, OrderMessagePatterns } from '@ap3/amqp';
+import { CreateOrderDto, OrderOverviewDto } from '@ap3/api';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { OffersService } from '../offers/offers.service';
+import { ProductsService } from '../products/products.service';
 
 @Injectable()
 export class OrdersService {
   private logger = new Logger(OrdersService.name);
 
   constructor(
-    @Inject(AmqpBrokerQueues.PROCESS_SVC_QUEUE) private readonly processAMQPClient: ClientProxy, private converter: DtoConversionService, private offerService: OffersService, private productService: ProductsService,) {
-  }
+    @Inject(AmqpBrokerQueues.PROCESS_SVC_QUEUE) private readonly processAMQPClient: ClientProxy,
+    private offerService: OffersService,
+    private productService: ProductsService
+  ) {}
 
   async create(createOrderDto: CreateOrderDto): Promise<OrderOverviewDto> {
     try {
       const createOrder: CreateOrderAmqpDto = CreateOrderAmqpDto.fromFEDto(createOrderDto);
-      const receivedOrder: OrderAmqpDto = await firstValueFrom<OrderAmqpDto>(this.processAMQPClient.send(OrderMessagePatterns.CREATE, createOrder));
+      const receivedOrder: OrderAmqpDto = await firstValueFrom<OrderAmqpDto>(
+        this.processAMQPClient.send(OrderMessagePatterns.CREATE, createOrder)
+      );
       await this.offerService.createOffer(receivedOrder.id);
 
       const productRef = await this.productService.loadProductRefs(receivedOrder);
       const offerRef = await this.offerService.loadOfferRef(receivedOrder);
-      return await this.converter.toOrderOverviewDto(receivedOrder, productRef, offerRef);
+      return OrderAmqpDto.toOrderOverviewDto(receivedOrder, productRef, offerRef);
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
@@ -40,7 +43,7 @@ export class OrdersService {
       for (const order of orders) {
         const productRef = await this.productService.loadProductRefs(order);
         const offerRef = await this.offerService.loadOfferRef(order);
-        const orderOverview = await this.converter.toOrderOverviewDto(order, productRef, offerRef);
+        const orderOverview = OrderAmqpDto.toOrderOverviewDto(order, productRef, offerRef);
         frontendDtos.push(orderOverview);
       }
     } catch (e) {
@@ -57,7 +60,7 @@ export class OrdersService {
       order = await firstValueFrom<OrderAmqpDto>(this.processAMQPClient.send(OrderMessagePatterns.READ_BY_ID, id));
       const productRef = await this.productService.loadProductRefs(order);
       const offerRef = await this.offerService.loadOfferRef(order);
-      return await this.converter.toOrderOverviewDto(order, productRef, offerRef);
+      return OrderAmqpDto.toOrderOverviewDto(order, productRef, offerRef);
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;

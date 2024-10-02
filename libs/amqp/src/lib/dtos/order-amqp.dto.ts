@@ -1,3 +1,7 @@
+import { OfferDto } from 'libs/api/src/dtos/offer';
+import { OrderOverviewDto } from 'libs/api/src/dtos/order';
+import { ProductDto } from 'libs/api/src/dtos/product';
+
 export class OrderAmqpDto {
   id: string;
   productId: string;
@@ -11,7 +15,7 @@ export class OrderAmqpDto {
   customerId: string;
   tradeReceivableId: string;
 
-  public static fromPrismaEntity(order: any): OrderAmqpDto{
+  public static fromPrismaEntity(order: any): OrderAmqpDto {
     return <OrderAmqpDto>{
       id: order.id,
       creationDate: order.creationDate.toISOString(),
@@ -24,6 +28,20 @@ export class OrderAmqpDto {
       acceptedOfferId: order.acceptedByOrderId,
       offerIds: order.offers,
       tradeReceivableId: order.tradeReceivableId,
-    }
+    };
+  }
+
+  public static toOrderOverviewDto(dto: OrderAmqpDto, productDto: ProductDto, offerDto: OfferDto): OrderOverviewDto {
+    return new OrderOverviewDto(
+      dto.id,
+      productDto,
+      dto.amount,
+      dto.dueMonth,
+      dto.creationDate,
+      dto.status,
+      offerDto ? offerDto.price : 0,
+      dto.robots,
+      dto.customerId
+    );
   }
 }
