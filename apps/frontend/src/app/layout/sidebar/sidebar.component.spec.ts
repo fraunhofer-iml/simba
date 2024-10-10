@@ -1,14 +1,17 @@
+import { TranslateModule } from '@ngx-translate/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatIconModule } from '@angular/material/icon';
-import {MatDividerModule } from '@angular/material/divider';
-import {MatListModule} from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
-import { SidebarComponent } from './sidebar.component';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../shared/services/auth/auth.service';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { SidebarComponent } from './sidebar.component';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -26,8 +29,8 @@ describe('SidebarComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      schemas:[NO_ERRORS_SCHEMA],
-      imports:[
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [
         MatSidenavModule,
         MatIconModule,
         MatDividerModule,
@@ -35,13 +38,16 @@ describe('SidebarComponent', () => {
         MatButtonModule,
         NoopAnimationsModule,
         RouterOutlet,
+        TranslateModule.forRoot(),
+        MatSelectModule,
+        MatMenuModule,
       ],
       declarations: [SidebarComponent],
-      providers: [{ provide: AuthService, useValue: authServiceMock },
+      providers: [
+        { provide: AuthService, useValue: authServiceMock },
         { provide: Router, useValue: routerMock },
-      ]
-    })
-    .compileComponents();
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SidebarComponent);
     component = fixture.componentInstance;

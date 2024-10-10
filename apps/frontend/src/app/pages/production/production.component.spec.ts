@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDividerModule } from '@angular/material/divider';
 import { ProductionComponent } from './production.component';
@@ -8,10 +9,9 @@ describe('ProductionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports:[ MatDividerModule,],
+      imports: [MatDividerModule, TranslateModule.forRoot()],
       declarations: [ProductionComponent],
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ProductionComponent);
     component = fixture.componentInstance;

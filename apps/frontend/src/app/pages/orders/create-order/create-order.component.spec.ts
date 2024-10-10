@@ -1,4 +1,5 @@
-import { CreateOrderDto, OrderDto, OrderMock, OrderOverviewDto, OrderOverviewMock } from '@ap3/api';
+import { CreateOrderDto, OrderOverviewMock } from '@ap3/api';
+import { TranslateModule } from '@ngx-translate/core';
 import { CountdownEvent, CountdownModule } from 'ngx-countdown';
 import { of, throwError } from 'rxjs';
 import { HttpClient, HttpHandler } from '@angular/common/http';
@@ -50,6 +51,7 @@ describe('CreateOrderComponent', () => {
         MatSortModule,
         MatPaginatorModule,
         NoopAnimationsModule,
+        TranslateModule.forRoot(),
       ],
       providers: [OffersService, OrdersService, ProductService, HttpClient, HttpHandler, Router],
     }).compileComponents();

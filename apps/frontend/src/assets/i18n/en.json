@@ -1,0 +1,38 @@
+{
+  "ProjectName": "SiMBA",
+  "Orders": "Orders",
+  "Production": "Production",
+
+  "Create": "Create",
+  "CreateOrder": "Create Order",
+  "ProduktInputField": "Product",
+  "AmountInputField": "Amount",
+  "MonthInputField": "Month",
+  "Offers": "Offers",
+  "TimerText": "Expiration Time",
+  "AcceptOffer": "Accept",
+  "DeclineAllOffers": "Decline all",
+  "OrderTableFirstRow": "Order Id",
+  "OrderTableSecondRow": "Date",
+  "OrderTableThirdRow": "Status",
+  "OrderTableFourthRow": "Price",
+  "OrderTableFifthRow": "Products",
+  "OrderTableSixthRow": "Robots",
+  "OrderTableSeventhRow": "Customer Id",
+
+  "WalletTitle": "Wallet",
+  "WalletTransactions": "Transactions",
+  "NFTDetails": "NFT Details",
+  "TransaktionQuantity": "Quantity",
+  "TransaktionVolume": "Volume",
+  "TransaktionPending": "Pending",
+  "TransaktionOverdue": "Overdue",
+  "NftTableFirstRow": "InvoiceNo",
+  "NftTableSecondRow": "Payee",
+  "NftTableThirdRow": "InvoiceAmount",
+  "NftTableFourthRow": "InvoiceDueDate",
+  "NftTableFifthRow": "Payer",
+  "NftTableSixthRow": "FinancialStatus",
+
+  "LanguageLabel": "Language"
+}

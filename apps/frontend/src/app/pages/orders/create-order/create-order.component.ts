@@ -4,7 +4,7 @@ import { catchError, Observable, of } from 'rxjs';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ROUTING } from '../../../../environments/environment';
+import { ROUTING } from '../../../routing/routing.enum';
 import { OffersService } from '../../../shared/services/offers/offers.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { ProductService } from '../../../shared/services/product/product.service';

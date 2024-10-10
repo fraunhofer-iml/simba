@@ -1,8 +1,8 @@
-const BASE_URL = 'http://localhost:3000';
+export const BASE_URL = 'http://localhost:3000';
 
 export const environment = {
   production: false,
-  OFFERS: {
+/*   OFFERS: {
     URL: `${BASE_URL}/offers`,
     ACCEPT: '/accept',
     DECLINE: `${BASE_URL}/offers/decline`,
@@ -15,14 +15,5 @@ export const environment = {
   },
   TRADERECEIVABLES: {
     URL: `${BASE_URL}/trade-receivables`,
-  },
-};
-
-export const ROUTING = {
-  newOrders: '/orders/new',
-  login: '/login',
-  accept: '/accept',
-  orders: '/orders',
-  wallet: '/wallet',
-  production: '/production',
+  }, */
 };

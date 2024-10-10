@@ -1,19 +1,19 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { LayoutRoutingModule } from './layout-routing.module';
+import { RouterModule } from '@angular/router';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { ContentLayoutComponent } from './content-layout/content-layout.component';
-
 
 @NgModule({
-  declarations: [SidebarComponent, ContentLayoutComponent],
+  declarations: [SidebarComponent],
   imports: [
-    LayoutRoutingModule,
     CommonModule,
     MatSidenavModule,
     MatIconModule,
@@ -21,7 +21,11 @@ import { ContentLayoutComponent } from './content-layout/content-layout.componen
     MatListModule,
     MatButtonModule,
     NgOptimizedImage,
+    TranslateModule,
+    RouterModule,
+    MatSelectModule,
+    MatMenuModule,
   ],
-  exports: [SidebarComponent, ContentLayoutComponent],
+  exports: [SidebarComponent],
 })
 export class LayoutModule {}

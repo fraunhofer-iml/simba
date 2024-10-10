@@ -2,7 +2,8 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { TestBed } from '@angular/core/testing';
 import { OffersService } from './offers.service';
 import { OfferDto, OpenOffersMock } from '@ap3/api';
-import { environment } from '../../../../environments/environment';
+import { BASE_URL } from '../../../../environments/environment';
+import { ApiEndpoints } from '../endpoints/endpoints';
 
 describe('OffersService', () => {
   let service: OffersService;
@@ -30,7 +31,7 @@ describe('OffersService', () => {
       expect(offers).toEqual(mockOffers);
     });
 
-    const req = httpMock.expectOne(`${environment.OFFERS.URL}?orderId=${orderId}`);
+    const req = httpMock.expectOne(`${BASE_URL}${ApiEndpoints.offers.getAllOffers}?orderId=${orderId}`);
     expect(req.request.method).toBe('GET');
     req.flush(mockOffers);
   });
@@ -43,7 +44,7 @@ describe('OffersService', () => {
       expect(offer).toEqual(mockOffer);
     });
 
-    const req = httpMock.expectOne(`${environment.OFFERS.URL}/${offerId}`);
+    const req = httpMock.expectOne(`${BASE_URL}${ApiEndpoints.offers.getAllOffers}/${offerId}`);
     expect(req.request.method).toBe('GET');
     req.flush(mockOffer);
   });
@@ -56,7 +57,7 @@ describe('OffersService', () => {
       expect(offer).toEqual(mockOffer);
     });
 
-    const req = httpMock.expectOne(`${environment.OFFERS.URL}/${offerId}/accept`);
+    const req = httpMock.expectOne(`${BASE_URL}${ApiEndpoints.offers.getAllOffers}/${offerId}/accept`);
     expect(req.request.method).toBe('PATCH');
     expect(req.request.body).toBe(offerId);
     req.flush(mockOffer);
@@ -71,7 +72,7 @@ describe('OffersService', () => {
       (error) => expect(error.message).toBe(errorMessage)
     );
 
-    const req = httpMock.expectOne(`${environment.OFFERS.URL}/decline?orderId=${orderId}`);
+    const req = httpMock.expectOne(`${BASE_URL}${ApiEndpoints.offers.getAllOffers}${ApiEndpoints.offers.declineAllOffers}?orderId=${orderId}`);
     req.flush(errorMessage, { status: 500, statusText: 'Server Error' });
   });
 });

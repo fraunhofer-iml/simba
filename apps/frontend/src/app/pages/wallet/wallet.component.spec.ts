@@ -1,3 +1,4 @@
+import { TranslateModule } from '@ngx-translate/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
@@ -34,6 +35,7 @@ describe('WalletComponent', () => {
         NoopAnimationsModule,
         RouterOutlet,
         HttpClientTestingModule,
+        TranslateModule.forRoot(),
       ],
       declarations: [WalletComponent],
     }).compileComponents();

@@ -22,7 +22,7 @@ import { HttpClientModule, provideHttpClient } from '@angular/common/http';
 import { OffersService } from '../../shared/services/offers/offers.service';
 import { CountdownComponent } from 'ngx-countdown';
 import { ProductService } from '../../shared/services/product/product.service';
-
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [OrdersOverviewComponent, CreateOrderComponent],
@@ -47,6 +47,7 @@ import { ProductService } from '../../shared/services/product/product.service';
     HttpClientModule,
     NgOptimizedImage,
     CountdownComponent,
+    TranslateModule
   ],
   providers: [OffersService, OrdersService, provideHttpClient(), ProductService],
 })

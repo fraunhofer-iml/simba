@@ -1,27 +1,27 @@
 <div class="creation-container">
-  <h1>Create Order</h1>
+  <h1>{{ 'CreateOrder' | translate }}</h1>
   <div class="card">
     <mat-card-content>
       <form class="order-content" [formGroup]="orderForm">
         <mat-form-field class="order-field">
-          <mat-select placeholder="Produkt" formControlName="product">
+          <mat-select placeholder="{{ 'ProduktInputField' | translate }}" formControlName="product">
             @for (product of products$ | async; track product) {
               <mat-option [value]="product">{{ product.name }} </mat-option>
             }
           </mat-select>
         </mat-form-field>
         <mat-form-field class="order-field">
-          <input matInput placeholder="Amount" formControlName="amount" type="number" value="number" />
+          <input matInput placeholder="{{ 'AmountInputField' | translate }}" formControlName="amount" type="number" value="number" />
         </mat-form-field>
         <mat-form-field class="order-field">
-          <mat-select placeholder="Month" formControlName="calendarMonth">
+          <mat-select placeholder="{{ 'MonthInputField' | translate }}" formControlName="calendarMonth">
             @for (month of months; track month) {
               <mat-option [value]="month">{{ month }} </mat-option>
             }
           </mat-select>
         </mat-form-field>
         <div>
-          <button class="create-button" (click)="createHardware()" mat-flat-button [disabled]="!orderForm.valid">Create</button>
+          <button class="create-button" (click)="createHardware()" mat-flat-button [disabled]="!orderForm.valid">{{ 'Create' | translate }}</button>
         </div>
       </form>
     </mat-card-content>
@@ -30,9 +30,9 @@
   <!-- Offers -->
   <div class="card offer-container" *ngIf="openOffers">
     <div class="offers-header">
-      <h1 class="title">Offers</h1>
+      <h1 class="title">{{ 'Offers' | translate }}</h1>
       <div class="deadline">
-        <p>Expiration Time:</p>
+        <p>{{ 'TimerText' | translate }}</p>
         <countdown [config]="countdownConfig" (event)="onEvent($event)"></countdown>
       </div>
     </div>
@@ -50,13 +50,13 @@
             <p>{{ offer.price | number: '1.2-2' }}</p>
           </div>
           <div class="button-container">
-            <button mat-flat-button class="accept-button" (click)="acceptOffer(offer.id)">Accept</button>
+            <button mat-flat-button class="accept-button" (click)="acceptOffer(offer.id)">{{ 'AcceptOffer' | translate }}</button>
           </div>
         </div>
       }
     </div>
     <div class="button-container">
-      <button mat-flat-button class="decline-button" (click)="declineAllOffers()">Decline All</button>
+      <button mat-flat-button class="decline-button" (click)="declineAllOffers()">{{ 'DeclineAllOffers' | translate }}</button>
     </div>
   </div>
 </div>

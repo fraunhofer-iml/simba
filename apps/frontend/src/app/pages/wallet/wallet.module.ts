@@ -12,6 +12,7 @@ import { MatTableModule } from '@angular/material/table';
 import { TradeReceivableService } from '../../shared/services/trade-receivable/trade-receivable.service';
 import { WalletRoutingModule } from './wallet-routing.module';
 import { WalletComponent } from './wallet.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [WalletComponent],
@@ -27,6 +28,7 @@ import { WalletComponent } from './wallet.component';
     MatIconModule,
     WalletRoutingModule,
     MatGridListModule,
+    TranslateModule
   ],
   providers: [TradeReceivableService],
 })

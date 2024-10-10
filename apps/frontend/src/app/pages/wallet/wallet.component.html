@@ -1,17 +1,17 @@
 <div class="wallet-container">
-  <h1>Wallet</h1>
+  <h1>{{ 'WalletTitle' | translate }}</h1>
   <mat-card appearance="outlined" class="details-card">
     <div class="details-content">
-      <mat-card-title>Transactions</mat-card-title>
+      <mat-card-title>{{ 'WalletTransactions' | translate }}</mat-card-title>
       <div class="transaction-table-container">
         <mat-grid-list cols="3" rowHeight="2:1" gutterSize="0">
           <mat-grid-tile></mat-grid-tile>
-          <mat-grid-tile class="tile">Quantity</mat-grid-tile>
-          <mat-grid-tile class="tile">Volume</mat-grid-tile>
-          <mat-grid-tile class="tile">Pending</mat-grid-tile>
+          <mat-grid-tile class="tile">{{ 'TransaktionQuantity' | translate }}</mat-grid-tile>
+          <mat-grid-tile class="tile">{{ 'TransaktionVolume' | translate }}</mat-grid-tile>
+          <mat-grid-tile class="tile">{{ 'TransaktionPending' | translate }}</mat-grid-tile>
           <mat-grid-tile class="tile">5</mat-grid-tile>
           <mat-grid-tile class="tile">6</mat-grid-tile>
-          <mat-grid-tile class="tile">Overdue</mat-grid-tile>
+          <mat-grid-tile class="tile">{{ 'TransaktionOverdue' | translate }}</mat-grid-tile>
           <mat-grid-tile class="tile">8</mat-grid-tile>
           <mat-grid-tile class="tile">9</mat-grid-tile>
         </mat-grid-list>
@@ -19,7 +19,7 @@
     </div>
   </mat-card>
 
-  <h1>NFT-Details</h1>
+  <h1>{{ 'NFTDetails' | translate }}</h1>
   <mat-divider></mat-divider>
 
   <div class="searchbar-container">
@@ -32,28 +32,28 @@
     <div class="mat-elevation-z8">
       <table mat-table *ngIf="nftDatasourceObservable | async as source" [dataSource]="source" matSort>
         <ng-container matColumnDef="invoiceNo">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>InvoiceNo</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableFirstRow' | translate }}</th>
           <td mat-cell *matCellDef="let row">{{ row.invoiceNo }}</td>
         </ng-container>
         <ng-container matColumnDef="payee">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Payee</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableSecondRow' | translate }}</th>
           <td mat-cell *matCellDef="let row">{{ row.payee }}%</td>
         </ng-container>
         <ng-container matColumnDef="invoiceAmount">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>InvoiceAmount</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableThirdRow' | translate }}</th>
           <td mat-cell *matCellDef="let row">{{ row.invoiceAmount }}</td>
         </ng-container>
         <ng-container matColumnDef="invoiceDueDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>InvoiceDueDate</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableFourthRow' | translate }}</th>
           <td mat-cell *matCellDef="let row">{{ row.invoiceDueDate }}</td>
         </ng-container>
 
         <ng-container matColumnDef="payer">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Payer</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableFifthRow' | translate }}</th>
           <td mat-cell *matCellDef="let row">{{ row.payer }}%</td>
         </ng-container>
         <ng-container matColumnDef="financialStatus">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>FinancialStatus</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableSixthRow' | translate }}</th>
           <td mat-cell *matCellDef="let row">{{ row.financialStatus }}</td>
         </ng-container>
 

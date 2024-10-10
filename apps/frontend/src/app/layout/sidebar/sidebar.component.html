@@ -1,42 +1,61 @@
-<div class="drawer-content-container">
-  <div class="title">
-    <img src="./assets/logos/simba_logo.png" alt="simba logo" id="simba" />
-    <p>SiMBA</p>
-  </div>
-  <mat-divider></mat-divider>
-  <mat-selection-list class="selection-list">
-    <mat-list-item [routerLink]="ROUTING.orders" routerLinkActive="active">
-      <div class="image">
-        <img src="assets/icons/orders.svg" alt="Icon" id="orders" />
-        Orders
+<mat-drawer-container class="sidebar-container" autosize>
+  <mat-drawer mode="side" opened>
+    <div class="drawer-content-container">
+      <div class="title">
+        <img src="./assets/logos/simba_logo.png" alt="simba logo" id="simba" />
+        <p>{{ 'ProjectName' | translate }}</p>
+        <div class="language-button-container">
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <div class="image">
+              <img src="assets/icons/languages.svg" alt="Icon" id="orders" />
+            </div>
+          </button>
+          <mat-menu #menu="matMenu">
+            @for (language of languages; track language) {
+              <button mat-menu-item (click)="setLanguage(language)">{{ language }}</button>
+            }
+          </mat-menu>
+        </div>
       </div>
-    </mat-list-item>
-    <mat-list-item [routerLink]="ROUTING.production" routerLinkActive="active">
-      <div class="image">
-        <img src="assets/icons/precision_manufacturing.svg" alt="Icon" />
-        Production
+      <mat-divider></mat-divider>
+      <mat-selection-list class="selection-list">
+        <mat-list-item [routerLink]="ROUTING.orders" routerLinkActive="active">
+          <div class="image">
+            <img src="assets/icons/orders.svg" alt="Icon" id="orders" />
+            {{ 'Orders' | translate }}
+          </div>
+        </mat-list-item>
+        <mat-list-item [routerLink]="ROUTING.production" routerLinkActive="active">
+          <div class="image">
+            <img src="assets/icons/precision_manufacturing.svg" alt="Icon" />
+            {{ 'Production' | translate }}
+          </div>
+        </mat-list-item>
+        <mat-list-item [routerLink]="ROUTING.wallet" routerLinkActive="active">
+          <div class="image">
+            <img src="assets/icons/wallet.svg" alt="Icon" id="wallet" />
+            {{ 'WalletTitle' | translate }}
+          </div>
+        </mat-list-item>
+      </mat-selection-list>
+      <div class="footer">
+        <div class="user-container">
+          <div class="user-information">
+            <img src="assets/icons/account_circle.svg" alt="Icon" class="icon" />
+            <span> Max Mustermann </span>
+          </div>
+          <button mat-button>
+            <img src="assets/icons/logout.svg" alt="Icon" (click)="logout()" (keydown)="logout()" />
+          </button>
+        </div>
+        <div class="logos-container">
+          <img src="./assets/logos/fraunhofer.png" alt="fraunhofer logo" class="logos" />
+          <img src="./assets/logos/tu.png" alt="tu logo" class="logos" />
+        </div>
       </div>
-    </mat-list-item>
-    <mat-list-item [routerLink]="ROUTING.wallet" routerLinkActive="active">
-      <div class="image">
-        <img src="assets/icons/wallet.svg" alt="Icon" id="wallet" />
-        Wallet
-      </div>
-    </mat-list-item>
-  </mat-selection-list>
-  <div class="footer">
-    <div class="user-container">
-      <div class="user-information">
-        <img src="assets/icons/account_circle.svg" alt="Icon" class="icon" />
-        <span> Max Mustermann </span>
-      </div>
-      <button mat-button>
-        <img src="assets/icons/logout.svg" alt="Icon" (click)="logout()" (keydown)="logout()"/>
-      </button>
     </div>
-    <div class="logos-container">
-      <img src="./assets/logos/fraunhofer.png" alt="fraunhofer logo" class="logos" />
-      <img src="./assets/logos/tu.png" alt="tu logo" class="logos" />
-    </div>
-  </div>
-</div>
+  </mat-drawer>
+  <mat-drawer-content>
+    <ng-content></ng-content>
+  </mat-drawer-content>
+</mat-drawer-container>
