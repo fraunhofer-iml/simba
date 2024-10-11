@@ -9,8 +9,8 @@ export class TradeReceivablesController {
   constructor(private readonly tradeReceivablesService: TradeReceivablesService) {}
 
   @MessagePattern(TradeReceivableMessagePatterns.CREATE)
-  async create(@Payload() createDto: CreateTradeReceivableDto): Promise<boolean> {
-    return this.tradeReceivablesService.create(createDto);
+  async create(@Payload() orderId: string): Promise<void> {
+    return this.tradeReceivablesService.create(orderId);
   }
 
   @MessagePattern(TradeReceivableMessagePatterns.READ_ALL)

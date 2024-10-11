@@ -1,6 +1,6 @@
-import { CreateTradeReceivableDto, TradeReceivableDto } from '@ap3/api';
-import { Controller, Get, Post, Param, Body } from '@nestjs/common';
-import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
+import { TradeReceivableDto } from '@ap3/api';
+import { Controller, Get, Post, Param, Query } from '@nestjs/common';
+import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { TradeReceivablesService } from './trade-receivables.service';
 
 @Controller('trade-receivables')
@@ -8,16 +8,18 @@ import { TradeReceivablesService } from './trade-receivables.service';
 export class TradeReceivablesController {
   constructor(private readonly tradeReceivableService: TradeReceivablesService) {}
 
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {},
-    },
+  @ApiOperation({
+    description: 'Create new Trade-Receivable.',
+  })
+  @ApiQuery({
+    name: 'orderId',
+    type: String,
+    description: 'Identifying id; Required to identify the order of the trade-receivable.',
     required: true,
   })
   @Post()
-  async create(@Body() createDto: CreateTradeReceivableDto): Promise<void> {
-    return await this.tradeReceivableService.create(createDto);
+  async create(@Query('orderId') orderId: string): Promise<void> {
+    return await this.tradeReceivableService.create(orderId);
   }
 
   @ApiParam({

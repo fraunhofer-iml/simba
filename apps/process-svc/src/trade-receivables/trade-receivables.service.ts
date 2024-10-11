@@ -1,5 +1,4 @@
 import { TradeReceivableAmqpDto } from '@ap3/amqp';
-import { CreateTradeReceivableDto } from '@ap3/api';
 import { TradeReceivablePrismaService } from '@ap3/database';
 import { Injectable, Logger } from '@nestjs/common';
 import { TradeReceivable } from '@prisma/client';
@@ -8,9 +7,7 @@ import { TradeReceivable } from '@prisma/client';
 export class TradeReceivablesService {
   private logger = new Logger(TradeReceivablesService.name);
   constructor(private readonly tradeReceivablePrismaService: TradeReceivablePrismaService) {}
-  create(createTradeReceivableDto: CreateTradeReceivableDto): boolean {
-    return true;
-  }
+  create(orderId: string): void {}
 
   async findAll(id: string): Promise<TradeReceivableAmqpDto[]> {
     this.logger.debug('requesting Tradereceivables of id : ', id);
