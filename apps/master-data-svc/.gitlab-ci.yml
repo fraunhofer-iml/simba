@@ -67,6 +67,7 @@ master-data-svc:build:
     paths:
       - dist/apps/master-data-svc
   only:
+    - merge_requests
     - tags
 
 master-data-svc:archive:

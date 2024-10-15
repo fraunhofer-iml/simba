@@ -67,6 +67,7 @@ process-svc:build:
     paths:
       - dist/apps/process-svc
   only:
+    - merge_requests
     - tags
 
 process-svc:archive:

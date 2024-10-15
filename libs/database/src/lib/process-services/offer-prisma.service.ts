@@ -12,7 +12,7 @@ export class OfferPrismaService {
   }
 
   async createOffer(data: Prisma.OfferCreateInput): Promise<Offer>{
-    this.logger.debug("Insert new offer to database");
+    this.logger.verbose("Insert new offer to database");
     try{
       return await this.prisma.offer.create({data});
     }catch(e){
@@ -22,7 +22,7 @@ export class OfferPrismaService {
   }
 
   async getOffers(): Promise<Offer[]>{
-    this.logger.debug("Return all offers from database");
+    this.logger.verbose("Return all offers from database");
     try{
       return await this.prisma.offer.findMany();
     }catch(e){
@@ -32,7 +32,7 @@ export class OfferPrismaService {
   }
 
   async getOffersByOrderId(orderId: string, states: string[]):Promise<Offer[]>{
-    this.logger.debug(`Return all offers by Id ${orderId} from database`);
+    this.logger.verbose(`Return all offers by Id ${orderId} from database`);
     try{
       return await this.prisma.offer.findMany({
         where: {
@@ -54,7 +54,7 @@ export class OfferPrismaService {
   }
 
   async getOffersById(id: string):Promise<Offer>{
-    this.logger.debug("Return offer by id from database");
+    this.logger.verbose("Return offer by id from database");
     try{
       const offer = await this.prisma.offer.findUnique({
         where: { id: id }
@@ -70,7 +70,7 @@ export class OfferPrismaService {
   }
 
   async updateOffer(id: string, data: Prisma.OfferUpdateInput):Promise<void>{
-    this.logger.debug(`Update offer with id ${id} in database`);
+    this.logger.verbose(`Update offer with id ${id} in database`);
     try{
       await this.prisma.offer.update({
         where: { id: id },
@@ -97,9 +97,9 @@ export class OfferPrismaService {
   }
 
   async acceptOffer(id: string): Promise<Offer> {
-    this.logger.debug(`Accept offer with id ${id} in database`);
+    this.logger.verbose(`Accept offer with id ${id} in database`);
     const offer: Offer = await this.getOffersById(id);
-    this.logger.debug(`Connect offer to order #${offer.orderId}`);
+    this.logger.verbose(`Connect offer to order #${offer.orderId}`);
     try {
       return await this.prisma.offer.update({
         where: {id: id},

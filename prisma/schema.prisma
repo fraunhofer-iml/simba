@@ -55,7 +55,7 @@ model Participant {
 }
 
 model Invoice {
-  id               String   @id @default(cuid())
+  invoiceNumber    String   @id
   creationDate     DateTime @default(now())
   contractCurrency String
   measuringUnit    String
@@ -64,8 +64,8 @@ model Invoice {
   vat              Float
   status           String
 
-  debitor         Participant       @relation(fields: [debitorId], references: [id])
-  debitorId       String
+  debtor          Participant       @relation(fields: [debtorId], references: [id])
+  debtorId        String
   TradeReceivable TradeReceivable[]
 }
 
@@ -76,13 +76,13 @@ model TradeReceivable {
   creationDate DateTime @default(now())
   value        Float
 
-  debitor   Participant @relation(fields: [debitorId], references: [id])
-  debitorId String
+  debtor   Participant @relation(fields: [debtorId], references: [id])
+  debtorId String
 
   order   Order  @relation(fields: [orderId], references: [id])
   orderId String @unique
 
-  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+  invoice   Invoice @relation(fields: [invoiceId], references: [invoiceNumber])
   invoiceId String
 }
 

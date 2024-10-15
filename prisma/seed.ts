@@ -4,6 +4,7 @@ import { Entity, importEntities } from './data_import';
 const machines = require('./data/machines.json');
 const participants = require('./data/participants.json');
 const products = require('./data/products.json');
+const invoices = require('./data/invoices.json');
 
 const dataSets: Entity[] = [
   {
@@ -20,6 +21,11 @@ const dataSets: Entity[] = [
     name: 'product',
     records: products,
     createRecord: async (data: any) => await prisma.product.create({data}),
+  },
+  {
+    name: 'invoice',
+    records: invoices,
+    createRecord: async (data: any) => await prisma.invoice.create({data}),
   }
 ];
 

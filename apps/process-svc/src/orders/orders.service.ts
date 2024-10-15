@@ -11,10 +11,11 @@ export class OrdersService {
 
   constructor(private readonly orderPrismaService: OrderPrismaService) {
   }
+
   async create(createOrderDto: CreateOrderAmqpDto): Promise<OrderAmqpDto> {
     this.logger.debug(`Received message from amqp: ${util.inspect(createOrderDto)}`);
     try {
-      const newOrder:Prisma.OrderCreateInput = createOrderDto.toPrismaEntity();
+      const newOrder:Prisma.OrderCreateInput = createOrderDto.toPrismaCreateEntity();
       this.logger.debug(`Create order: ${util.inspect(newOrder)}`);
       return OrderAmqpDto.fromPrismaEntity(await this.orderPrismaService.createOrder(newOrder));
     }catch (e){

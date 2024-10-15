@@ -2,7 +2,7 @@ import { PrismaService } from '../prisma.service';
 import {Injectable, Logger} from '@nestjs/common';
 import {Order, Prisma} from '@prisma/client';
 import * as util from "node:util";
-import {OrderWithAcceptedOffer} from "./order.types";
+import {OrderWithAcceptedOffer} from "../types/order-with-accepted-offer.types";
 import {OrderStatesEnum} from "@ap3/config";
 
 @Injectable()

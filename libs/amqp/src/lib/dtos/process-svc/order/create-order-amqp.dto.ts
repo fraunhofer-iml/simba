@@ -1,20 +1,10 @@
-import {PickType} from "@nestjs/swagger";
 import {OrderAmqpDto} from "../../order-amqp.dto";
-import {CreateOrderDto} from "@ap3/api";
 import {Prisma} from "@prisma/client";
 import {OrderStatesEnum} from "@ap3/config";
+import {PickType} from "@nestjs/swagger";
 
 export class CreateOrderAmqpDto extends PickType(OrderAmqpDto, ['productId', 'amount','dueMonth', 'customerId']) {
-  static fromFEDto(createOrder: CreateOrderDto): CreateOrderAmqpDto{
-    return <CreateOrderAmqpDto>{
-      productId: createOrder.productId,
-      amount: createOrder.amount,
-      dueMonth: createOrder.dueMonth,
-      customerId: createOrder.customerId,
-    }
-  }
-
-  public toPrismaEntity(): Prisma.OrderCreateInput{
+  public toPrismaCreateEntity(): Prisma.OrderCreateInput{
     return <Prisma.OrderCreateInput>{
       creationDate: new Date().toISOString(),
       amount: this.amount,

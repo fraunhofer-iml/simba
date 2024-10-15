@@ -1,5 +1,4 @@
-import { TradeReceivableAmqpDto, TradeReceivableMessagePatterns } from '@ap3/amqp';
-import { CreateTradeReceivableDto } from '@ap3/api';
+import {CreateTradeReceivableAmqpDto, TradeReceivableAmqpDto, TradeReceivableMessagePatterns} from '@ap3/amqp';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { TradeReceivablesService } from './trade-receivables.service';
@@ -9,8 +8,8 @@ export class TradeReceivablesController {
   constructor(private readonly tradeReceivablesService: TradeReceivablesService) {}
 
   @MessagePattern(TradeReceivableMessagePatterns.CREATE)
-  async create(@Payload() orderId: string): Promise<void> {
-    return this.tradeReceivablesService.create(orderId);
+  async create(@Payload() createTradeReceivableDto: CreateTradeReceivableAmqpDto): Promise<TradeReceivableAmqpDto> {
+    return await this.tradeReceivablesService.create(createTradeReceivableDto);
   }
 
   @MessagePattern(TradeReceivableMessagePatterns.READ_ALL)

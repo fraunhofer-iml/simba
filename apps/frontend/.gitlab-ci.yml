@@ -66,6 +66,7 @@ frontend:build:
     paths:
       - dist/apps/frontend
   only:
+    - merge_requests
     - tags
 
 frontend:archive:

@@ -1,6 +1,6 @@
 import * as util from 'node:util';
 import { AmqpBrokerQueues, CreateOrderAmqpDto, OrderAmqpDto, OrderMessagePatterns } from '@ap3/amqp';
-import { CreateOrderDto, OrderOverviewDto } from '@ap3/api';
+import {CreateOrderDto, OrderDto, OrderOverviewDto} from '@ap3/api';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -19,7 +19,7 @@ export class OrdersService {
 
   async create(createOrderDto: CreateOrderDto): Promise<OrderOverviewDto> {
     try {
-      const createOrder: CreateOrderAmqpDto = CreateOrderAmqpDto.fromFEDto(createOrderDto);
+      const createOrder: CreateOrderAmqpDto = OrderDto.toAMQPDto(createOrderDto);
       const receivedOrder: OrderAmqpDto = await firstValueFrom<OrderAmqpDto>(
         this.processAMQPClient.send(OrderMessagePatterns.CREATE, createOrder)
       );
@@ -27,7 +27,7 @@ export class OrdersService {
 
       const productRef = await this.productService.loadProductRefs(receivedOrder);
       const offerRef = await this.offerService.loadOfferRef(receivedOrder);
-      return OrderAmqpDto.toOrderOverviewDto(receivedOrder, productRef, offerRef);
+      return OrderOverviewDto.toOrderOverviewDto(receivedOrder, productRef, offerRef);
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
@@ -43,7 +43,7 @@ export class OrdersService {
       for (const order of orders) {
         const productRef = await this.productService.loadProductRefs(order);
         const offerRef = await this.offerService.loadOfferRef(order);
-        const orderOverview = OrderAmqpDto.toOrderOverviewDto(order, productRef, offerRef);
+        const orderOverview = OrderOverviewDto.toOrderOverviewDto(order, productRef, offerRef);
         frontendDtos.push(orderOverview);
       }
     } catch (e) {
@@ -60,7 +60,7 @@ export class OrdersService {
       order = await firstValueFrom<OrderAmqpDto>(this.processAMQPClient.send(OrderMessagePatterns.READ_BY_ID, id));
       const productRef = await this.productService.loadProductRefs(order);
       const offerRef = await this.offerService.loadOfferRef(order);
-      return OrderAmqpDto.toOrderOverviewDto(order, productRef, offerRef);
+      return OrderOverviewDto.toOrderOverviewDto(order, productRef, offerRef);
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;

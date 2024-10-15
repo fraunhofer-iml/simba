@@ -1,28 +1,33 @@
-import { TradeReceivableDto } from 'libs/api/src/dtos/trade-receivable';
 import { TradeReceivable } from '@prisma/client';
 
 export class TradeReceivableAmqpDto {
   id: string;
-  debitorId: string;
+  debtorId: string;
   nft: string;
   value: number;
   orderId: string;
   status: string;
   invoiceId: string;
 
-  public static fromPrismaEntity(tradereceivable: TradeReceivable): TradeReceivableAmqpDto {
-    return <TradeReceivableAmqpDto>{
-      id: tradereceivable.id,
-      debitorId: tradereceivable.debitorId,
-      nft: tradereceivable.nft,
-      value: tradereceivable.value,
-      orderId: tradereceivable.orderId,
-      status: tradereceivable.status,
-      invoiceId: tradereceivable.invoiceId,
-    };
+  constructor(id: string, debtorId: string, nft: string, value: number, orderId: string, status: string, invoiceId: string) {
+    this.id = id;
+    this.debtorId = debtorId;
+    this.nft = nft;
+    this.value = value;
+    this.orderId = orderId;
+    this.status = status;
+    this.invoiceId = invoiceId;
   }
 
-  public static toTradeReceivableDto(dto: TradeReceivableAmqpDto): TradeReceivableDto {
-    return new TradeReceivableDto(dto.id, dto.debitorId, dto.nft, dto.value, dto.orderId, dto.status, dto.invoiceId);
+  public static fromPrismaEntity(tradeReceivable: TradeReceivable): TradeReceivableAmqpDto {
+    return <TradeReceivableAmqpDto>{
+      id: tradeReceivable.id,
+      debtorId: tradeReceivable.debtorId,
+      nft: tradeReceivable.nft,
+      value: tradeReceivable.value,
+      orderId: tradeReceivable.orderId,
+      status: tradeReceivable.status,
+      invoiceId: tradeReceivable.invoiceId,
+    };
   }
 }

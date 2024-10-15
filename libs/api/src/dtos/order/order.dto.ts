@@ -1,3 +1,5 @@
+import {CreateOrderAmqpDto} from "@ap3/amqp";
+
 export class OrderDto {
   id: string;
   productId: string;
@@ -25,10 +27,21 @@ export class OrderDto {
     this.customerId = customerId;
     this.tradeReceivableId = tradeReceivableId;
   }
+
+  static toAMQPDto(createOrder: CreateOrderDto): CreateOrderAmqpDto{
+    return <CreateOrderAmqpDto>{
+      productId: createOrder.productId,
+      amount: createOrder.amount,
+      dueMonth: createOrder.dueMonth,
+      customerId: createOrder.customerId,
+    }
+  }
 }
 
-export type CreateOrderDto = Pick<OrderDto, 'productId' | 'amount' | 'dueMonth' | 'customerId'>;
-
-export type UpdateOrderDto = Pick<OrderDto, 'id' | 'productId' | 'amount' | 'dueMonth' | 'customerId'>;
-
+export type CreateOrderDto = {
+  productId: string;
+  amount: number;
+  dueMonth:string;
+  customerId: string;
+}
 

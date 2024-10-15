@@ -1,3 +1,5 @@
+import {TradeReceivableAmqpDto} from "@ap3/amqp";
+
 export class TradeReceivableDto {
   id: string;
   debtorId: string;
@@ -15,5 +17,9 @@ export class TradeReceivableDto {
     this.orderId = orderId;
     this.status = status;
     this.invoiceId = invoiceId;
+  }
+
+  public static toTradeReceivableDto(dto: TradeReceivableAmqpDto){
+    return new TradeReceivableDto(dto.id, dto.debtorId, dto.nft, dto.value, dto.orderId, dto.status, dto.invoiceId);
   }
 }

@@ -1,5 +1,3 @@
-import {OfferStatesEnum} from "./offer-states.enum";
-
 export enum OrderStatesEnum {
   NEW = 'New',
   ACCEPTED = 'Accepted',

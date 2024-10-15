@@ -1,0 +1,24 @@
+[
+  {
+    "invoiceNumber": "IV001",
+    "creationDate": "2024-10-10T07:55:55.695Z",
+    "debtorId": "pt0001",
+    "contractCurrency": "EUR",
+    "measuringUnit": "Stück",
+    "netPricePerUnit": "10.0",
+    "amount": 3,
+    "vat": 1.9,
+    "status": "Open"
+  },
+  {
+    "invoiceNumber": "IV002",
+    "creationDate": "2024-10-10T07:55:55.695Z",
+    "debtorId": "pt0001",
+    "contractCurrency": "EUR",
+    "measuringUnit": "Stück",
+    "netPricePerUnit": "20.0",
+    "amount": 6,
+    "vat": 3.8,
+    "status": "Open"
+  }
+]
