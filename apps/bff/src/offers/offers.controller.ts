@@ -1,7 +1,7 @@
-import {Controller, Get, Patch, Param, Query, Post} from '@nestjs/common';
-import { OffersService } from './offers.service';
-import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { OfferDto } from '@ap3/api';
+import { Controller, Get, Patch, Param, Query, Post } from '@nestjs/common';
+import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { OffersService } from './offers.service';
 
 @Controller('offers')
 @ApiTags('Offers')
@@ -10,7 +10,7 @@ export class OffersController {
 
   @Get()
   @ApiOperation({
-    description: 'Get all active offers, can be filtered by order id.'
+    description: 'Get all active offers, can be filtered by order id.',
   })
   @ApiQuery({
     name: 'orderId',
@@ -24,7 +24,7 @@ export class OffersController {
 
   @Get(':id')
   @ApiOperation({
-    description: 'Get an offer based on the corresponding offer id.'
+    description: 'Get an offer based on the corresponding offer id.',
   })
   @ApiParam({
     name: 'id',
@@ -38,7 +38,7 @@ export class OffersController {
 
   @Post()
   @ApiOperation({
-    description: 'Create new offers.'
+    description: 'Create new offers.',
   })
   @ApiQuery({
     name: 'orderId',
@@ -52,7 +52,7 @@ export class OffersController {
 
   @Patch(':id/accept')
   @ApiOperation({
-    description: 'Accept an offer.'
+    description: 'Accept an offer.',
   })
   @ApiParam({
     name: 'id',
@@ -66,7 +66,7 @@ export class OffersController {
 
   @Patch('decline')
   @ApiOperation({
-    description: 'Decline all offers for a specific order'
+    description: 'Decline all offers for a specific order',
   })
   @ApiQuery({
     name: 'orderId',
@@ -74,7 +74,7 @@ export class OffersController {
     description: 'Identifying id; Required to identify the order.',
     required: true,
   })
-  async declineOffers(@Query('orderId') orderId: string): Promise<void>{
+  async declineOffers(@Query('orderId') orderId: string): Promise<void> {
     await this.offersService.declineOffers(orderId);
   }
 }

@@ -1,8 +1,9 @@
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { CountdownModule } from 'ngx-countdown';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -11,8 +12,8 @@ import { AppComponent } from './app.component';
 import { HttpLoaderFactory } from './app.config';
 import { appRoutes } from './app.routes';
 import { AuthGuard } from './guards/auth/auth.guard';
+import { initializeKeycloak } from './keycloak-initializer';
 import { LayoutModule } from './layout/layout.module';
-import { LoginModule } from './pages/login/login.module';
 import { OrdersModule } from './pages/orders/orders.module';
 import { WalletModule } from './pages/wallet/wallet.module';
 import { AuthService } from './shared/services/auth/auth.service';
@@ -27,8 +28,8 @@ import { AuthService } from './shared/services/auth/auth.service';
     BrowserAnimationsModule,
     OrdersModule,
     RouterModule.forRoot(appRoutes),
-    LoginModule,
     CountdownModule,
+    KeycloakAngularModule,
     TranslateModule.forRoot({
       defaultLanguage: 'de',
       loader: {
@@ -39,7 +40,17 @@ import { AuthService } from './shared/services/auth/auth.service';
     }),
     LayoutModule,
   ],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'de-DE' }, AuthGuard, AuthService],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'de-DE' },
+    AuthGuard,
+    AuthService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeKeycloak,
+      multi: true,
+      deps: [KeycloakService],
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -4,12 +4,12 @@ import { AuthService } from '../../shared/services/auth/auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private authservice: AuthService ,private router: Router){}
+  constructor(private authService: AuthService ,private router: Router){}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): MaybeAsync<GuardResult> {
-      if(this.authservice.isLoggedIn()){
+      if(this.authService.isLoggedIn()){
         return true;
       }else{
         this.router.navigate(['/login'])

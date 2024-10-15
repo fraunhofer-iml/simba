@@ -13,16 +13,18 @@ import { AuthService } from '../../shared/services/auth/auth.service';
 export class SidebarComponent {
   protected readonly ROUTING = ROUTING;
   languages: string[] = [Languages.DE, Languages.EN];
+  userName: string = '';
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private translationService: TranslateService
-  ) {}
+  ) {
+    this.userName = authService.getUserName();
+  }
 
   logout() {
-    this.authService.changeStatus();
-    this.router.navigate([ROUTING.login]);
+    this.authService.logout();
   }
 
   setLanguage(language: string) {
