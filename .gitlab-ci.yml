@@ -11,16 +11,16 @@ stages:
   - deploy
 
 .default:
-  image: imbios/bun-node:1.1.26-22-alpine
+  image: node:lts-alpine
   interruptible: true
   cache:
     key:
       files:
-        - bun.lockb
+        - package-lock.json
     paths:
-      - .bun/
+      - .npm
   before_script:
-    - bun install --frozen-lockfile
+    - npm install --cache .npm
 
 danger:
   stage: danger
@@ -66,4 +66,3 @@ all:deploy:
     - tags
   except:
     - branches
-

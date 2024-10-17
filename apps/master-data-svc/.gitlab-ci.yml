@@ -3,7 +3,7 @@ master-data-svc:run-tests:
   stage: test
   extends: .default
   script:
-    - bun nx run master-data-svc:test
+    - npx nx run master-data-svc:test
   artifacts:
     paths:
       - ./apps/master-data-svc/coverage
@@ -62,7 +62,7 @@ master-data-svc:build:
   stage: build
   extends: .default
   script:
-    - bun nx run master-data-svc:build
+    - npx nx run master-data-svc:build
   artifacts:
     paths:
       - dist/apps/master-data-svc
@@ -80,7 +80,7 @@ master-data-svc:archive:
   before_script:
     - echo "$HARBOR_TOKEN" | docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker build --pull --cache-from ${CRI_PATH}/master-data-svc -t ${CRI_PATH}/master-data-svc:$CI_COMMIT_TAG -f apps/master-data-svc/Dockerfile  .
+    - docker build --pull --cache-from ${CRI_PATH}/master-data-svc --build-arg APP=master-data-svc -t ${CRI_PATH}/master-data-svc:$CI_COMMIT_TAG -f docker/nest.dockerfile  .
     - docker push ${CRI_PATH}/master-data-svc:$CI_COMMIT_TAG
   only:
     - tags
