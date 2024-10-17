@@ -1,14 +1,16 @@
-FROM oven/bun:1.1.27
+ARG BUN_VERSION=1.1.30
+ARG NODE_VERSION=20.18.0
+
+FROM imbios/bun-node:${BUN_VERSION}-${NODE_VERSION}-slim
 WORKDIR /usr/src/app
 COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile --production
 COPY ./dist/apps/master-data-svc .
 COPY ./prisma .
-RUN chown -R bun:bun /usr/src/app
 
 RUN bun add -D prisma
-RUN bun prisma generate
+RUN bunx prisma generate
 
-USER bun
+USER node
 
 CMD ["bun", "main.js"]
