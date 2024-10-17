@@ -1,8 +1,8 @@
 ARG NODE_VERSION=20.18.0
-ARG APP
 
 FROM node:${NODE_VERSION}-alpine
 
+ARG APP
 ENV NODE_ENV="production"
 
 WORKDIR /home/node
