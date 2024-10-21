@@ -21,7 +21,7 @@ export class OffersService {
         offer.orderId = orderId;
         offers.push(offer)
       }
-      for(let offer of offers){
+      for(const offer of offers){
         await this.offerPrismaService.createOffer(offer.toPrismaEntity());
       }
       return true;

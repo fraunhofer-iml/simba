@@ -1,5 +1,5 @@
 import { PrismaService } from '../prisma.service';
-import {Injectable, Logger, NotFoundException} from '@nestjs/common';
+import {Injectable, Logger} from '@nestjs/common';
 import * as util from "node:util";
 import {Offer, Prisma} from "@prisma/client";
 import {OfferStatesEnum} from "@ap3/config";
@@ -56,12 +56,9 @@ export class OfferPrismaService {
   async getOffersById(id: string):Promise<Offer>{
     this.logger.verbose("Return offer by id from database");
     try{
-      const offer = await this.prisma.offer.findUnique({
+      const offer = await this.prisma.offer.findUniqueOrThrow({
         where: { id: id }
       });
-      if(!offer){
-        throw new NotFoundException(`Offer with id ${id} was not found in database.`);
-      }
       return offer;
     }catch(e){
       this.logger.error(util.inspect(e));

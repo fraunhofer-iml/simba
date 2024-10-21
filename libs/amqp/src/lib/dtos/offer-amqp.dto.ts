@@ -15,6 +15,14 @@ export class OfferAmqpDto{
     this.orderId = orderId;
   }
 
+  public static fromPrismaEntities(offers: Offer[]): OfferAmqpDto[]{
+    const retVal: OfferAmqpDto[] = []
+    for(const offer of offers){
+      retVal.push(this.fromPrismaEntity(offer));
+    }
+    return retVal;
+  }
+
   public static fromPrismaEntity(offer: Offer): OfferAmqpDto{
     return <OfferAmqpDto> {
       id: offer.id,

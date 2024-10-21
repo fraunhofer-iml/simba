@@ -8,7 +8,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configuration = app.get(ConfigurationService);
 
-  const config = new DocumentBuilder().setTitle('SKALA AP3 backend for frontend').setVersion('0.0').addBearerAuth().build();
+  const config = new DocumentBuilder()
+    .setTitle('SKALA AP3 backend for frontend')
+    .setVersion('0.0')
+    .addBearerAuth()
+    .build();
   const document = SwaggerModule.createDocument(app, config);
 
   SwaggerModule.setup(configuration.getGeneralConfig().swaggerPath, app, document);
