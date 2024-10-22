@@ -6,7 +6,7 @@ import {firstValueFrom} from 'rxjs';
 
 @Injectable()
 export class OffersService {
-  private logger = new Logger(OffersService.name);
+  private readonly logger = new Logger(OffersService.name);
 
   constructor(@Inject(AmqpBrokerQueues.PROCESS_SVC_QUEUE) private readonly processAMQPClient: ClientProxy) {
   }

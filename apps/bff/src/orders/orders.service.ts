@@ -9,12 +9,12 @@ import { ProductsService } from '../products/products.service';
 
 @Injectable()
 export class OrdersService {
-  private logger = new Logger(OrdersService.name);
+  private readonly logger = new Logger(OrdersService.name);
 
   constructor(
     @Inject(AmqpBrokerQueues.PROCESS_SVC_QUEUE) private readonly processAMQPClient: ClientProxy,
-    private offerService: OffersService,
-    private productService: ProductsService
+    private readonly offerService: OffersService,
+    private readonly productService: ProductsService
   ) {}
 
   async create(createOrderDto: CreateOrderDto): Promise<OrderOverviewDto> {

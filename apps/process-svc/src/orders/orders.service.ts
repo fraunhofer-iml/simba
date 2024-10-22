@@ -7,7 +7,7 @@ import {ORDER_STATES_TO_SHOW} from "@ap3/config";
 
 @Injectable()
 export class OrdersService {
-  private logger = new Logger(OrdersService.name);
+  private readonly logger = new Logger(OrdersService.name);
 
   constructor(private readonly orderPrismaService: OrderPrismaService) {
   }

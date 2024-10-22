@@ -6,7 +6,7 @@ import * as util from "node:util";
 
 @Injectable()
 export class ProductsService {
-  private logger = new Logger(ProductsService.name);
+  private readonly logger = new Logger(ProductsService.name);
 
   constructor(private readonly productPrismaService: ProductPrismaService) {
   }

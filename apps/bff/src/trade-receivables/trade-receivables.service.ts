@@ -6,7 +6,7 @@ import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class TradeReceivablesService {
-  private logger = new Logger(TradeReceivablesService.name);
+  private readonly logger = new Logger(TradeReceivablesService.name);
   constructor(@Inject(AmqpBrokerQueues.PROCESS_SVC_QUEUE) private readonly processAMQPClient: ClientProxy) {}
 
   async create(orderId: string, createTradeReceivableDto: CreateTradeReceivableDto): Promise<TradeReceivableDto> {

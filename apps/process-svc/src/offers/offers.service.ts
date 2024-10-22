@@ -6,7 +6,7 @@ import {OFFER_STATES_TO_SHOW, OfferStatesEnum, OrderStatesEnum} from "@ap3/confi
 
 @Injectable()
 export class OffersService {
-  private logger = new Logger(OffersService.name);
+  private readonly logger = new Logger(OffersService.name);
   constructor(private readonly offerPrismaService: OfferPrismaService, private readonly orderPrismaService: OrderPrismaService) {
   }
 

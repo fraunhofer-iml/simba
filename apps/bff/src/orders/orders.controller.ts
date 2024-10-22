@@ -1,5 +1,5 @@
 import { CreateOrderDto, OrderOverviewDto } from '@ap3/api';
-import { Body, Controller, Delete, Get, Logger, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { OrdersService } from './orders.service';
 
@@ -7,7 +7,6 @@ import { OrdersService } from './orders.service';
 @ApiTags('Orders')
 @ApiBearerAuth()
 export class OrdersController {
-  private logger = new Logger(OrdersController.name);
   constructor(private readonly ordersService: OrdersService) {}
 
   @Post()

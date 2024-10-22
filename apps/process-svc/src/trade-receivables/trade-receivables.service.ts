@@ -6,7 +6,7 @@ import util from "node:util";
 
 @Injectable()
 export class TradeReceivablesService {
-  private logger = new Logger(TradeReceivablesService.name);
+  private readonly logger = new Logger(TradeReceivablesService.name);
   constructor(private readonly tradeReceivablePrismaService: TradeReceivablePrismaService) {}
 
   async create(createTradeReceivableDto: CreateTradeReceivableAmqpDto): Promise<TradeReceivableAmqpDto> {

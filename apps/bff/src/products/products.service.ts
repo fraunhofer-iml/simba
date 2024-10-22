@@ -6,7 +6,7 @@ import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class ProductsService {
-  private logger = new Logger(ProductsService.name);
+  private readonly logger = new Logger(ProductsService.name);
   constructor( @Inject(AmqpBrokerQueues.MASTER_DATA_SVC_QUEUE) private readonly masterDataAMQPClient : ClientProxy){}
 
   async findAll(): Promise<ProductDto[]> {
