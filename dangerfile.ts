@@ -2,7 +2,7 @@ import { danger, markdown, warn } from 'danger';
 
 // ENFORCE LOCKFILE UP TO DATE
 const packagesChanged = danger.git.modified_files.includes('package.json');
-const lockfileChanged = ['yarn.lock', 'package-lock.json', 'pnpm-lock.yaml'].some((file) => danger.git.modified_files.includes(file));
+const lockfileChanged = ['package-lock.json'].some((file) => danger.git.modified_files.includes(file));
 
 if (packagesChanged && !lockfileChanged) {
   const message = 'Changes were made to package.json, but not to pnpm-lock.yml';

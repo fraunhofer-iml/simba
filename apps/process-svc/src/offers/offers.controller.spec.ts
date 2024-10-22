@@ -8,8 +8,8 @@ import {
   setOfferStateToAcceptedQuery,
   setOfferStateToDeclinedQuery,
   setOrderStateToAcceptedQuery
-} from "../../../bff/src/orders/test-mocks/create-offer.mock";
-import {queryOffersToShowWithOrder, queryOpenOffersByOrderId, queryUniqueOrThrow} from "../../../bff/src/orders/test-mocks/query-offers.mock";
+} from "./query-mocks/create-offer.mock";
+import {queryOffersToShowWithOrder, queryOpenOffersByOrderId, queryUniqueOrThrow} from "./query-mocks/query-offers.mock";
 
 describe('OfferController', () => {
   let controller: OffersController;
@@ -87,6 +87,7 @@ describe('OfferController', () => {
     prismaSpy.mockResolvedValue(offersMock[0]);
 
     const retVal = await controller.findOne(expectedReturn.id);
+    //TODO: Called With value
     expect(prisma.offer.findUniqueOrThrow).toHaveBeenCalled();
     expect(expectedReturn).toEqual(retVal);
   })

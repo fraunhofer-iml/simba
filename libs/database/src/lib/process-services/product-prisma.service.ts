@@ -28,12 +28,6 @@ export class ProductPrismaService {
 
   async getProducts():Promise <Product[]>{
     this.logger.debug(`Return all products from database`);
-    try{
-      return await this.prisma.product.findMany({});
-    }catch(e){
-      this.logger.error(util.inspect(e));
-      throw e;
-    }
+    return this.prisma.product.findMany({});
   }
-
 }

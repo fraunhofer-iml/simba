@@ -2,6 +2,7 @@ import {Injectable, Logger} from '@nestjs/common';
 import {ProductPrismaService} from "@ap3/database";
 import {ProductAmqpDto} from "@ap3/amqp";
 import {Product} from "@prisma/client";
+import * as util from "node:util";
 
 @Injectable()
 export class ProductsService {
@@ -20,7 +21,7 @@ export class ProductsService {
       })
       return productsDtos;
     }catch (e){
-      this.logger.error(e);
+      this.logger.error(util.inspect(e));
       throw e;
     }
   }
@@ -31,7 +32,7 @@ export class ProductsService {
       const product: Product = await this.productPrismaService.getProduct(id);
       return ProductAmqpDto.fromPrismaEntity(product);
     }catch (e){
-      this.logger.error(e);
+      this.logger.error(util.inspect(e));
       throw e;
     }
   }
