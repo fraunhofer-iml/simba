@@ -1,5 +1,6 @@
 import { CreateOrderDto, OrderOverviewMock } from '@ap3/api';
 import { TranslateModule } from '@ngx-translate/core';
+import moment from 'moment';
 import { CountdownEvent, CountdownModule } from 'ngx-countdown';
 import { of, throwError } from 'rxjs';
 import { HttpClient, HttpHandler } from '@angular/common/http';
@@ -23,6 +24,7 @@ import { Router } from '@angular/router';
 import { OffersService } from '../../../shared/services/offers/offers.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { ProductService } from '../../../shared/services/product/product.service';
+import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
 import { CreateOrderComponent } from './create-order.component';
 
 describe('CreateOrderComponent', () => {
@@ -53,7 +55,7 @@ describe('CreateOrderComponent', () => {
         NoopAnimationsModule,
         TranslateModule.forRoot(),
       ],
-      providers: [OffersService, OrdersService, ProductService, HttpClient, HttpHandler, Router],
+      providers: [OffersService, OrdersService, ProductService, HttpClient, HttpHandler, Router, CalendarWeekService],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CreateOrderComponent);
@@ -76,10 +78,16 @@ describe('CreateOrderComponent', () => {
   });
 
   it('should handle successful order creation', () => {
+    component.orderForm.get('date')?.setValue(moment());
+    component.orderForm.get('product')?.setValue('12345');
+    component.orderForm.get('selectedCalendarWeek')?.setValue(2);
+    component.orderForm.get('amount')?.setValue(4);
+
     let createOrderFrontendDto: CreateOrderDto = {
       productId: component.orderForm.get('product')?.value.id,
       amount: component.orderForm.get('amount')?.value,
-      dueMonth: component.orderForm.get('calendarMonth')?.value,
+      year: component.orderForm.get('date')?.value.year(),
+      calendarWeek: component.orderForm.get('selectedCalendarWeek')?.value,
       customerId: 'pt0001',
     };
 
@@ -93,6 +101,7 @@ describe('CreateOrderComponent', () => {
   });
 
   it('should handle error in order creation', () => {
+    component.orderForm.get('date')?.setValue(moment());
     jest.spyOn(orderService, 'createOrder').mockReturnValue(throwError(() => new Error('Error')));
     jest.spyOn(offerService, 'getOffersByOrderId');
 

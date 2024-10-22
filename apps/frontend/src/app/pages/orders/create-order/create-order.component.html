@@ -14,14 +14,22 @@
           <input matInput placeholder="{{ 'AmountInputField' | translate }}" formControlName="amount" type="number" value="number" />
         </mat-form-field>
         <mat-form-field class="order-field">
-          <mat-select placeholder="{{ 'MonthInputField' | translate }}" formControlName="calendarMonth">
-            @for (month of months; track month) {
-              <mat-option [value]="month">{{ month }} </mat-option>
+          <input placeholder="{{ 'YearInputField' | translate }}" matInput [matDatepicker]="dp" formControlName="date" />
+          <mat-hint>YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+          <mat-datepicker #dp startView="multi-year" (yearSelected)="setYear($event, dp)" panelClass="year-picker"> </mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="order-field">
+          <mat-select placeholder="{{ 'WeekInputField' | translate }}" formControlName="selectedCalendarWeek">
+            @for (week of allCalendarWeeks; track week) {
+              <mat-option [value]="week">{{ week }} </mat-option>
             }
           </mat-select>
         </mat-form-field>
-        <div>
-          <button class="create-button" (click)="createHardware()" mat-flat-button [disabled]="!orderForm.valid">{{ 'Create' | translate }}</button>
+        <div class="order-field">
+          <button class="create-button" (click)="createHardware()" mat-flat-button [disabled]="!orderForm.valid">
+            {{ 'Create' | translate }}
+          </button>
         </div>
       </form>
     </mat-card-content>

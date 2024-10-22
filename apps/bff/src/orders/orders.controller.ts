@@ -1,29 +1,30 @@
-import { Controller, Get, Post, Body, Param, Delete, Logger } from '@nestjs/common';
-import { OrdersService } from './orders.service';
 import { CreateOrderDto, OrderOverviewDto } from '@ap3/api';
-import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Logger, Param, Post } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { OrdersService } from './orders.service';
 
 @Controller('orders')
 @ApiTags('Orders')
+@ApiBearerAuth()
 export class OrdersController {
   private logger = new Logger(OrdersController.name);
   constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
   @ApiOperation({
-    description: 'Accepts an order, stores it in the database and transfers it to the CPPS scheduler.'
+    description: 'Accepts an order, stores it in the database and transfers it to the CPPS scheduler.',
   })
   @ApiBody({
     schema: {
-      type:'object',
-      properties:{
-        productId:{type:'string'},
-        amount:{type:'number'},
-        dueMonth:{type:'string'},
-        customerId:{type:'string'},
-      }
+      type: 'object',
+      properties: {
+        productId: { type: 'string' },
+        amount: { type: 'number' },
+        dueMonth: { type: 'string' },
+        customerId: { type: 'string' },
+      },
     },
-    required:true
+    required: true,
   })
   async create(@Body() createOrderDto: CreateOrderDto): Promise<OrderOverviewDto> {
     return await this.ordersService.create(createOrderDto);
@@ -31,7 +32,7 @@ export class OrdersController {
 
   @Get()
   @ApiOperation({
-    description: 'Get all active orders.'
+    description: 'Get all active orders.',
   })
   async findAll(): Promise<OrderOverviewDto[]> {
     return await this.ordersService.findAll();
@@ -39,7 +40,7 @@ export class OrdersController {
 
   @Get(':id')
   @ApiOperation({
-    description: 'Get an order based on the corresponding order id.'
+    description: 'Get an order based on the corresponding order id.',
   })
   @ApiParam({
     name: 'id',
@@ -53,7 +54,7 @@ export class OrdersController {
 
   @Delete(':id')
   @ApiOperation({
-    description: 'Delete an order based on the corresponding order id.'
+    description: 'Delete an order based on the corresponding order id.',
   })
   @ApiParam({
     name: 'id',

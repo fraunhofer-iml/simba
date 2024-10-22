@@ -1,10 +1,11 @@
 import {CreateTradeReceivableDto, TradeReceivableDto} from '@ap3/api';
 import {Controller, Get, Post, Param, Query, Body} from '@nestjs/common';
-import {ApiBody, ApiOperation, ApiParam, ApiQuery, ApiTags} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiTags} from '@nestjs/swagger';
 import { TradeReceivablesService } from './trade-receivables.service';
 
 @Controller('trade-receivables')
 @ApiTags('Trade-Receivables')
+@ApiBearerAuth()
 export class TradeReceivablesController {
   constructor(private readonly tradeReceivableService: TradeReceivablesService) {}
 

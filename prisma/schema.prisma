@@ -92,7 +92,8 @@ model Order {
   completionDate DateTime? @default(now())
   amount         Int
   status         String
-  dueMonth       String
+  year           Int
+  calendarWeek   Int
   machines       String[]
 
   offers            Offer[] @relation("OrderOffers")

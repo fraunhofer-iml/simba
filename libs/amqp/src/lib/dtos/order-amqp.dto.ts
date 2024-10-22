@@ -2,7 +2,8 @@ export class OrderAmqpDto {
   id: string;
   productId: string;
   amount: number;
-  dueMonth: string;
+  year: number;
+  calendarWeek: number;
   creationDate: string;
   status: string;
   acceptedOfferId?: string;
@@ -11,11 +12,21 @@ export class OrderAmqpDto {
   customerId: string;
   tradeReceivableId?: string;
 
-  constructor(id: string, productId: string, amount: number, dueMonth: string, creationDate: string, status: string, customerId: string) {
+  constructor(
+    id: string,
+    productId: string,
+    amount: number,
+    year: number,
+    calendarWeek: number,
+    creationDate: string,
+    status: string,
+    customerId: string
+  ) {
     this.id = id;
     this.productId = productId;
     this.amount = amount;
-    this.dueMonth = dueMonth;
+    this.year = year;
+    this.calendarWeek = calendarWeek;
     this.creationDate = creationDate;
     this.status = status;
     this.customerId = customerId;
@@ -29,7 +40,8 @@ export class OrderAmqpDto {
       creationDate: order.creationDate.toISOString(),
       amount: order.amount,
       status: order.status,
-      dueMonth: order.dueMonth,
+      year: order.year,
+      calendarWeek: order.calendarWeek,
       productId: order.productId,
       robots: order.machines,
       customerId: order.participantId,

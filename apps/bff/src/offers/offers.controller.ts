@@ -1,10 +1,11 @@
 import { OfferDto } from '@ap3/api';
-import { Controller, Get, Patch, Param, Query, Post } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { OffersService } from './offers.service';
 
 @Controller('offers')
 @ApiTags('Offers')
+@ApiBearerAuth()
 export class OffersController {
   constructor(private readonly offersService: OffersService) {}
 

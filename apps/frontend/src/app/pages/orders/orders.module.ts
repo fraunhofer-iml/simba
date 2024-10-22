@@ -1,28 +1,31 @@
-import { NgModule } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { CreateOrderComponent } from './create-order/create-order.component';
-import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatListModule } from '@angular/material/list';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatButtonModule } from '@angular/material/button';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { ReactiveFormsModule } from '@angular/forms';
-import { OrdersOverviewComponent } from './orders-overview/orders-overview.component';
-import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { OrdersRoutingModule } from './orders-routing.module';
-import { OrdersService } from '../../shared/services/orders/orders.service';
-import { HttpClientModule, provideHttpClient } from '@angular/common/http';
-import { OffersService } from '../../shared/services/offers/offers.service';
-import { CountdownComponent } from 'ngx-countdown';
-import { ProductService } from '../../shared/services/product/product.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { CountdownComponent } from 'ngx-countdown';
+import { CommonModule, DatePipe, NgOptimizedImage } from '@angular/common';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MY_FORMATS } from '../../shared/materials/formats/datepicker-format';
+import { OffersService } from '../../shared/services/offers/offers.service';
+import { OrdersService } from '../../shared/services/orders/orders.service';
+import { ProductService } from '../../shared/services/product/product.service';
+import { CalendarWeekService } from '../../shared/services/util/calendar-week.service';
+import { CreateOrderComponent } from './create-order/create-order.component';
+import { OrdersOverviewComponent } from './orders-overview/orders-overview.component';
+import { OrdersRoutingModule } from './orders-routing.module';
 
 @NgModule({
   declarations: [OrdersOverviewComponent, CreateOrderComponent],
@@ -44,11 +47,18 @@ import { TranslateModule } from '@ngx-translate/core';
     MatSortModule,
     MatPaginatorModule,
     OrdersRoutingModule,
-    HttpClientModule,
     NgOptimizedImage,
     CountdownComponent,
-    TranslateModule
+    TranslateModule,
   ],
-  providers: [OffersService, OrdersService, provideHttpClient(), ProductService],
+  providers: [
+    OffersService,
+    OrdersService,
+    provideHttpClient(withInterceptorsFromDi()),
+    ProductService,
+    DatePipe,
+    CalendarWeekService,
+    provideMomentDateAdapter(MY_FORMATS),
+  ],
 })
 export class OrdersModule {}
