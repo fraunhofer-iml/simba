@@ -1,9 +1,14 @@
 export enum OrderStatesEnum {
-  NEW = 'New',
-  ACCEPTED = 'Accepted',
-  IN_PROGRESS = 'In Progress',
-  FINISHED = 'Finished',
+  OPEN = 'Open',
+  PLANNED = 'Planned',
+  SCHEDULED = 'Scheduled',
+  PRODUCED = 'Produced',
   CANCELED = 'Canceled',
 }
 
-export const ORDER_STATES_TO_SHOW: string[] = [OrderStatesEnum.NEW, OrderStatesEnum.ACCEPTED, OrderStatesEnum.IN_PROGRESS, OrderStatesEnum.FINISHED];
+export const ORDER_STATES_TO_SHOW: string[] = [
+  OrderStatesEnum.OPEN,
+  OrderStatesEnum.PLANNED,
+  OrderStatesEnum.SCHEDULED,
+  OrderStatesEnum.PRODUCED,
+];

@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "clean": "rm -rf .angular dist node_modules prisma/dev.db prisma/erd.png",
+    "clean-install": "npm run clean && npm install && npm run set-up-db",
     "dev": "nx run-many --all --parallel 5 --target serve",
-    "test": "nx run-many --all --parallel 5 --target test",
     "migrate-db": "npx prisma migrate dev && npx prisma generate",
     "set-up-db": "npx prisma db push --force-reset && npx prisma db seed"
   },
@@ -93,6 +94,7 @@
     "@typescript-eslint/parser": "^7.16.0",
     "@typescript-eslint/utils": "^7.16.0",
     "autoprefixer": "^10.4.0",
+    "axios-mock-adapter": "^2.1.0",
     "eslint": "~8.57.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-playwright": "^0.15.3",

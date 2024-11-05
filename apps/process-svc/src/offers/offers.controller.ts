@@ -1,7 +1,7 @@
+import { OfferAmqpDto, OfferMessagePatterns } from '@ap3/amqp';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { OffersService } from './offers.service';
-import {OfferAmqpDto, OfferMessagePatterns} from "@ap3/amqp";
 
 @Controller()
 export class OffersController {

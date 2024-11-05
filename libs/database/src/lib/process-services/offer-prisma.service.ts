@@ -1,93 +1,107 @@
+import * as util from 'node:util';
+import { OfferStatesEnum } from '@ap3/config';
+import { Injectable, Logger } from '@nestjs/common';
+import { Offer, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
-import {Injectable, Logger} from '@nestjs/common';
-import * as util from "node:util";
-import {Offer, Prisma} from "@prisma/client";
-import {OfferStatesEnum} from "@ap3/config";
+import { ServiceProcessPrismaService } from './service-process-prisma.service';
 
 @Injectable()
 export class OfferPrismaService {
   private logger = new Logger(OfferPrismaService.name);
 
-  constructor(private prisma: PrismaService) {
-  }
+  constructor(
+    private prisma: PrismaService,
+    private serviceProcess: ServiceProcessPrismaService
+  ) {}
 
-  async createOffer(data: Prisma.OfferCreateInput): Promise<Offer>{
-    this.logger.verbose("Insert new offer to database");
-    try{
-      return await this.prisma.offer.create({data});
-    }catch(e){
+  async createOffer(data: Prisma.OfferCreateInput): Promise<Offer> {
+    this.logger.verbose('Insert new offer to database');
+    try {
+      return await this.prisma.offer.create({ data });
+    } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
     }
   }
 
-  async getOffers(): Promise<Offer[]>{
-    this.logger.verbose("Return all offers from database");
-    try{
+  async getOffers(): Promise<Offer[]> {
+    this.logger.verbose('Return all offers from database');
+    try {
       return await this.prisma.offer.findMany();
-    }catch(e){
+    } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
     }
   }
 
-  async getOffersByOrderId(orderId: string, states: string[]):Promise<Offer[]>{
+  //TODO: get latest state of order
+  async getOffersByOrderId(orderId: string, states: string[]): Promise<Offer[]> {
     this.logger.verbose(`Return all offers by Id ${orderId} from database`);
-    try{
+    try {
       return await this.prisma.offer.findMany({
         where: {
-          orderId: {
-            equals: String(orderId),
+          serviceProcess: {
+            orderId: {
+              equals: String(orderId),
+            },
           },
           status: {
             in: states,
-          }
+          },
         },
         include: {
-          order: true,
-        }
+          serviceProcess: {
+            include: {
+              order: {
+                include: {
+                  states: true,
+                },
+              },
+            },
+          },
+        },
       });
-    }catch(e){
+    } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
     }
   }
 
-  async getOffersById(id: string):Promise<Offer>{
-    this.logger.verbose("Return offer by id from database");
-    try{
+  async getOffersById(id: string): Promise<Offer> {
+    this.logger.verbose('Return offer by id from database');
+    try {
       const offer = await this.prisma.offer.findUniqueOrThrow({
-        where: { id: id }
+        where: { id: id },
       });
       return offer;
-    }catch(e){
+    } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
     }
   }
 
-  async updateOffer(id: string, data: Prisma.OfferUpdateInput):Promise<void>{
+  async updateOffer(id: string, data: Prisma.OfferUpdateInput): Promise<void> {
     this.logger.verbose(`Update offer with id ${id} in database`);
-    try{
+    try {
       await this.prisma.offer.update({
         where: { id: id },
-        data:  data,
+        data: data,
       });
-    }catch(e){
+    } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
     }
   }
 
-  async setOfferState(id: string, state: string):Promise<Offer>{
-    try{
+  async setOfferState(id: string, state: string): Promise<Offer> {
+    try {
       return await this.prisma.offer.update({
-        where: {id: id},
+        where: { id: id },
         data: {
           status: state,
         },
       });
-    }catch(e){
+    } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
     }
@@ -95,20 +109,17 @@ export class OfferPrismaService {
 
   async acceptOffer(id: string): Promise<Offer> {
     this.logger.verbose(`Accept offer with id ${id} in database`);
-    const offer: Offer = await this.getOffersById(id);
-    this.logger.verbose(`Connect offer to order #${offer.orderId}`);
     try {
-      return await this.prisma.offer.update({
-        where: {id: id},
+      //Set offer status and store offer
+      const offer: Offer = await this.prisma.offer.update({
+        where: { id: id },
         data: {
-          acceptedByOrder:{
-            connect: {
-              id: String(offer.orderId)
-            }
-          },
           status: OfferStatesEnum.ACCEPTED,
         },
       });
+      //Connect AcepptedOfferId of corresponding Service-Process to offer id
+      this.serviceProcess.setServiceProcessAcceptedOffer(offer.serviceProcessId, offer.id);
+      return offer;
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;

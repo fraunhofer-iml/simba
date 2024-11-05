@@ -38,6 +38,7 @@ fi
 
 docker run -d \
   --name $DB_CONTAINER_NAME \
+  --network host \
   -e POSTGRES_PASSWORD="$DB_PASSWORD" \
   -e POSTGRES_DB=ap3 \
   -p 5432:5432 \

@@ -1,5 +1,7 @@
-import {Offer, Order} from "@prisma/client";
+import { Offer, Order } from '@prisma/client';
 
 export type OrderWithAcceptedOffer = Order & {
-  acceptedOffer: Offer | null;
-}
+  serviceProcess: {
+    acceptedOffer: Offer | null;
+  } | null;
+};

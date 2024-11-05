@@ -1,6 +1,6 @@
 import * as util from 'node:util';
 import { AmqpBrokerQueues, CreateOrderAmqpDto, OrderAmqpDto, OrderMessagePatterns } from '@ap3/amqp';
-import {CreateOrderDto, OrderDto, OrderOverviewDto} from '@ap3/api';
+import { CreateOrderDto, OrderDto, OrderOverviewDto } from '@ap3/api';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -19,7 +19,8 @@ export class OrdersService {
 
   async create(createOrderDto: CreateOrderDto): Promise<OrderOverviewDto> {
     try {
-      const createOrder: CreateOrderAmqpDto = OrderDto.toAMQPDto(createOrderDto);
+      //TODO: Implement Company Services and a Currency decision
+      const createOrder: CreateOrderAmqpDto = OrderDto.toAMQPDto(createOrderDto, 'Euro', 'pt0001', 'pt0002');
       const receivedOrder: OrderAmqpDto = await firstValueFrom<OrderAmqpDto>(
         this.processAMQPClient.send(OrderMessagePatterns.CREATE, createOrder)
       );

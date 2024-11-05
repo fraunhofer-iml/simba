@@ -1,6 +1,6 @@
-import {Offer} from "@prisma/client";
+import { Offer } from '@prisma/client';
 
-export class OfferAmqpDto{
+export class OfferAmqpDto {
   id: string;
   creationDate: Date;
   price: number;
@@ -15,21 +15,21 @@ export class OfferAmqpDto{
     this.orderId = orderId;
   }
 
-  public static fromPrismaEntities(offers: Offer[]): OfferAmqpDto[]{
-    const retVal: OfferAmqpDto[] = []
-    for(const offer of offers){
-      retVal.push(this.fromPrismaEntity(offer));
+  public static fromPrismaEntities(offers: Offer[], orderId: string): OfferAmqpDto[] {
+    const retVal: OfferAmqpDto[] = [];
+    for (const offer of offers) {
+      retVal.push(this.fromPrismaEntity(offer, orderId));
     }
     return retVal;
   }
 
-  public static fromPrismaEntity(offer: Offer): OfferAmqpDto{
-    return <OfferAmqpDto> {
+  public static fromPrismaEntity(offer: Offer, orderId: string): OfferAmqpDto {
+    return <OfferAmqpDto>{
       id: offer.id,
       creationDate: offer.creationDate,
-      price: offer.price,
+      price: new Number(offer.price),
       status: offer.status,
-      orderId: offer.orderId,
-    }
+      orderId: orderId,
+    };
   }
 }

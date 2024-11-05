@@ -80,11 +80,11 @@ It will show tasks that you can run with Nx.
 ### posgres container
 run start-database.sh script
 ### refresh database schema and prisma entities
-npx run migrate-db
+npm run migrate-db
 ### refresh database
-npx run set-up-db
+npm run set-up-db
 ### start prisma studio
-npx prisma studio
+npm prisma studio
 
 ## Set Up RabbitMQ container: 
 docker run -it --rm --name rabbitmq --network host -p 5672:5672 -p 15672:15672 rabbitmq:3.13-management

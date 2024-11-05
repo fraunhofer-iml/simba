@@ -1,24 +1,30 @@
-import {Order} from "@prisma/client";
+import { Order } from '@prisma/client';
 
 export const ordersMock = <Order[]>[
   {
-    creationDate: new Date(),
-    amount: 3,
-    status: 'New',
-    year: 2024,
-    calendarWeek: 38,
-    productId: 'prod1',
-    participantId: 'pt0001',
-    machines: [],
+    id: 'cm2uiedwn000108miftzcf209',
+    documentIssueDate: new Date(),
+    noteContent: '',
+    buyerId: '',
+    sellerId: '',
+    referencedBuyerOrderLine: '',
+    buyerOrderRefDocumentId: '',
+    sumOfLinesAmount: 5,
+    totalAmountWithoutVat: null,
+    vatCurrency: '',
+    buyerAccountingRefId: '',
   },
   {
-    creationDate: new Date(),
-    amount: 2,
-    status: 'New',
-    year: 2024,
-    calendarWeek: 38,
-    productId: 'prod1',
-    participantId: 'pt0001',
-    machines: [],
-  }
-]
+    id: 'cm2uiild9000108mnf080gcp7',
+    documentIssueDate: new Date(),
+    noteContent: '',
+    buyerId: '',
+    sellerId: '',
+    referencedBuyerOrderLine: '',
+    buyerOrderRefDocumentId: '',
+    sumOfLinesAmount: 5,
+    totalAmountWithoutVat: null,
+    vatCurrency: '',
+    buyerAccountingRefId: '',
+  },
+];

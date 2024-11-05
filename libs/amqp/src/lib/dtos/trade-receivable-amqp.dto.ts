@@ -1,4 +1,4 @@
-import { TradeReceivable } from '@prisma/client';
+import { Invoice, OrderStatus, TradeReceivable } from '@prisma/client';
 
 export class TradeReceivableAmqpDto {
   id: string;
@@ -19,15 +19,15 @@ export class TradeReceivableAmqpDto {
     this.invoiceId = invoiceId;
   }
 
-  public static fromPrismaEntity(tradeReceivable: TradeReceivable): TradeReceivableAmqpDto {
+  public static fromPrismaEntity(tradeReceivable: TradeReceivable, invoice: Invoice, status: OrderStatus): TradeReceivableAmqpDto {
     return <TradeReceivableAmqpDto>{
       id: tradeReceivable.id,
-      debtorId: tradeReceivable.debtorId,
+      debtorId: invoice.debtorId,
       nft: tradeReceivable.nft,
-      value: tradeReceivable.value,
-      orderId: tradeReceivable.orderId,
-      status: tradeReceivable.status,
-      invoiceId: tradeReceivable.invoiceId,
+      value: new Number(invoice.totalAmountWithoutVat),
+      orderId: status.orderId,
+      status: status.status,
+      invoiceId: invoice.id,
     };
   }
 }

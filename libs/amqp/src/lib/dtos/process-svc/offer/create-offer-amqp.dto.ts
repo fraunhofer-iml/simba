@@ -1,15 +1,19 @@
-import {PickType} from "@nestjs/swagger";
-import {OfferAmqpDto} from "../../offer-amqp.dto";
-import {Prisma} from "@prisma/client";
-import {OfferStatesEnum} from "@ap3/config";
+import { OfferStatesEnum } from '@ap3/config';
+import { PickType } from '@nestjs/swagger';
+import { Prisma } from '@prisma/client';
+import { OfferAmqpDto } from '../../offer-amqp.dto';
 
-export class CreateOfferAmqpDto extends PickType(OfferAmqpDto, [ 'price','status', 'orderId']) {
-  public toPrismaEntity(): Prisma.OfferCreateInput {
+export class CreateOfferAmqpDto extends PickType(OfferAmqpDto, ['price', 'status', 'orderId']) {
+  public toPrismaEntity(relatedOfferId: string): Prisma.OfferCreateInput {
     return <Prisma.OfferCreateInput>{
-      creationDate: new Date().toISOString(),
+      creationDate: new Date(),
       price: this.price,
       status: OfferStatesEnum.OPEN,
-      order: { connect: { id: this.orderId }},
-    }
+      serviceProcess: {
+        connect: {
+          orderId: relatedOfferId,
+        },
+      },
+    };
   }
 }

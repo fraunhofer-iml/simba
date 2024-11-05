@@ -14,14 +14,16 @@ datasource db {
 }
 
 model Offer {
-  id           String   @id @default(cuid())
-  creationDate DateTime @default(now())
-  price        Float
-  status       String
+  id            String    @id @default(cuid())
+  creationDate  DateTime  @default(now())
+  decisionDate  DateTime?
+  scheduledDate DateTime?
+  price         Decimal   @db.Money
+  status        String
 
-  order           Order  @relation("OrderOffers", fields: [orderId], references: [id])
-  orderId         String
-  acceptedByOrder Order? @relation("OrderAcceptedOffer")
+  serviceProcess     ServiceProcess  @relation("OrderOffers", fields: [serviceProcessId], references: [id])
+  serviceProcessId   String
+  acceptedForProcess ServiceProcess? @relation("ProcessAcceptedOffer")
 }
 
 model Product {
@@ -29,83 +31,144 @@ model Product {
   name    String
   variant String
 
-  order Order[]
+  orderLines OrderLine[]
 }
 
 model Machine {
-  id           String @id @default(cuid())
+  id           String  @id @default(cuid())
+  cppsId       String?
   description  String
-  minimalPrice Float
+  minimalPrice Decimal @db.Money
 }
 
-model Participant {
-  id                       String @id @default(cuid())
-  name                     String
-  city                     String
-  countryCode              String
-  address                  String
-  zip                      String
-  vatId                    String
-  commercialRegisterNumber String
+model Company {
+  id                        String  @id @default(cuid())
+  name                      String
+  city                      String
+  countryCode               String
+  address                   String
+  zip                       String
+  vatId                     String
+  commercialRegisterNumber  String
+  telephone                 String?
+  emailAddress              String?
+  electronicAddress         String?
+  electronicAddressSchemeId String?
 
-  order Order[]
+  paymentInformation PaymentInformation[]
+  invoicesAsCreditor Invoice[]            @relation("creditorRel")
+  invoicesAsDeptor   Invoice[]            @relation("deptorRel")
+  ordersAsBuyer      Order[]              @relation("buyer")
+  ordersAsSeller     Order[]              @relation("seller")
+}
 
-  Invoice         Invoice[]
-  TradeReceivable TradeReceivable[]
+model PaymentInformation {
+  id        String  @id @default(cuid())
+  company   Company @relation(fields: [companyId], references: [id])
+  companyId String
+  IBAN      String
+  BIC       String
 }
 
 model Invoice {
-  invoiceNumber    String   @id
-  creationDate     DateTime @default(now())
-  contractCurrency String
-  measuringUnit    String
-  netPricePerUnit  String
-  amount           Int
-  vat              Float
-  status           String
+  id                    String   @id @default(cuid())
+  invoiceNumber         String
+  creationDate          DateTime @default(now())
+  contractCurrency      String
+  measuringUnit         String
+  netPricePerUnit       String
+  totalAmountWithoutVat Decimal  @db.Money
+  vat                   Decimal  @db.Money
 
-  debtor          Participant       @relation(fields: [debtorId], references: [id])
-  debtorId        String
-  TradeReceivable TradeReceivable[]
+  serviceProcess   ServiceProcess? @relation(fields: [serviceProcessId], references: [id])
+  serviceProcessId String?         @unique
+
+  debtor     Company? @relation(name: "deptorRel", fields: [debtorId], references: [id])
+  debtorId   String?
+  creditor   Company? @relation(name: "creditorRel", fields: [creditorId], references: [id])
+  creditorId String?
+
+  tradeReceivable TradeReceivable[]
 }
 
 model TradeReceivable {
-  id           String   @id @default(cuid())
-  nft          String
-  status       String
-  creationDate DateTime @default(now())
-  value        Float
+  id     String          @id @default(cuid())
+  nft    String
+  states PaymentStatus[]
 
-  debtor   Participant @relation(fields: [debtorId], references: [id])
-  debtorId String
-
-  order   Order  @relation(fields: [orderId], references: [id])
-  orderId String @unique
-
-  invoice   Invoice @relation(fields: [invoiceId], references: [invoiceNumber])
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
   invoiceId String
 }
 
+model PaymentStatus {
+  tradeReceivableId String
+  status            String
+  timestamp         DateTime        @default(now())
+  tradeReceivable   TradeReceivable @relation(fields: [tradeReceivableId], references: [id])
+
+  @@id([tradeReceivableId, status])
+}
+
+model ServiceProcess {
+  id              String    @id @default(cuid())
+  dueCalendarWeek Int
+  dueYear         Int
+  scheduledDate   DateTime?
+
+  order   Order?  @relation(fields: [orderId], references: [id])
+  orderId String? @unique
+
+  machines String[]
+
+  offers          Offer[]  @relation("OrderOffers")
+  acceptedOffer   Offer?   @relation("ProcessAcceptedOffer", fields: [acceptedOfferId], references: [id])
+  acceptedOfferId String?  @unique
+  invoice         Invoice?
+}
+
 model Order {
-  id             String    @id @default(cuid())
-  creationDate   DateTime  @default(now())
-  completionDate DateTime? @default(now())
-  amount         Int
-  status         String
-  year           Int
-  calendarWeek   Int
-  machines       String[]
+  id                       String        @id @default(cuid())
+  documentIssueDate        DateTime      @default(now())
+  noteContent              String?
+  referencedBuyerOrderLine String?
+  buyerOrderRefDocumentId  String?
+  sumOfLinesAmount         Int?
+  totalAmountWithoutVat    Decimal?      @db.Money
+  vatCurrency              String?
+  buyerAccountingRefId     String?
+  states                   OrderStatus[]
 
-  offers            Offer[] @relation("OrderOffers")
-  acceptedOffer     Offer?  @relation("OrderAcceptedOffer", fields: [acceptedByOrderId], references: [id])
-  acceptedByOrderId String? @unique
+  buyerId String
+  buyer   Company @relation("buyer", fields: [buyerId], references: [id])
 
-  product   Product @relation(fields: [productId], references: [id])
-  productId String
+  sellerId String
+  seller   Company @relation("seller", fields: [sellerId], references: [id])
 
-  customer      Participant @relation(fields: [participantId], references: [id])
-  participantId String
+  orderLines     OrderLine[]
+  serviceProcess ServiceProcess?
+}
 
-  tradeReceivableId String?          @unique
-  TradeReceivable   TradeReceivable?
+model OrderLine {
+  id                         String   @id @default(cuid())
+  netPrice                   Decimal? @db.Money
+  partialDeliveryAllowed     Boolean?
+  requestedQuantity          Decimal
+  unitOfMeasureCodeRequested String?
+  unitOfMeasureCodeAgreed    String?
+  lineTotalAmount            Decimal? @db.Money
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  itemId String
+  item   Product @relation(fields: [itemId], references: [id])
+}
+
+model OrderStatus {
+  orderId   String
+  status    String
+  timestamp DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id])
+
+  @@id([orderId, status])
 }

@@ -1,3 +1,5 @@
+import { OrderOverview } from '@ap3/database';
+
 export class OrderAmqpDto {
   id: string;
   productId: string;
@@ -34,20 +36,22 @@ export class OrderAmqpDto {
     this.robots = [];
   }
 
-  public static fromPrismaEntity(order: any): OrderAmqpDto {
+  public static fromPrismaEntity(order: OrderOverview): OrderAmqpDto {
     return <OrderAmqpDto>{
       id: order.id,
-      creationDate: order.creationDate.toISOString(),
-      amount: order.amount,
-      status: order.status,
-      year: order.year,
-      calendarWeek: order.calendarWeek,
-      productId: order.productId,
-      robots: order.machines,
-      customerId: order.participantId,
-      acceptedOfferId: order.acceptedByOrderId,
-      offerIds: order.offers,
-      tradeReceivableId: order.tradeReceivableId,
+      creationDate: order.documentIssueDate.toISOString(),
+      amount: order.serviceProcess?.acceptedOffer?.price.toNumber(),
+      status: order.states.reduce((latest, current ) =>{
+        return current.timestamp > latest.timestamp ? current : latest;
+      }).status,
+      year: order.serviceProcess?.dueYear,
+      calendarWeek: order.serviceProcess?.dueCalendarWeek,
+      productId: order.orderLines[0].item.id,
+      robots: order.serviceProcess?.machines,
+      customerId: order.buyer.id,
+      acceptedOfferId: order.serviceProcess?.acceptedOffer?.id,
+      offerIds: order.serviceProcess?.offers.map((offer) => offer.id),
+      tradeReceivableId: order.serviceProcess?.invoice?.tradeReceivable[0].id,
     };
   }
 }

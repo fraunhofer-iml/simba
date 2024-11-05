@@ -1,0 +1,20 @@
+[
+  {
+    "id": "o001",
+    "documentIssueDate": "2024-10-09T07:55:55.695Z",
+    "buyerId": "pt0001",
+    "sellerId": "pt0002"
+  },
+  {
+    "id": "o002",
+    "documentIssueDate": "2024-10-02T07:55:55.695Z",
+    "buyerId": "pt0001",
+    "sellerId": "pt0002"
+  },
+  {
+    "id": "o003",
+    "documentIssueDate": "2024-10-02T07:55:55.695Z",
+    "buyerId": "pt0001",
+    "sellerId": "pt0002"
+  }
+]

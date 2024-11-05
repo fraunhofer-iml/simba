@@ -42,8 +42,11 @@ export class OrderDto {
     this.tradeReceivableId = tradeReceivableId;
   }
 
-  static toAMQPDto(createOrder: CreateOrderDto): CreateOrderAmqpDto {
+  static toAMQPDto(createOrder: CreateOrderDto, vatCurrency: string, buyerId: string, sellerId: string): CreateOrderAmqpDto {
     return <CreateOrderAmqpDto>{
+      vatCurrency: vatCurrency,
+      buyerId: buyerId,
+      sellerId: sellerId,
       productId: createOrder.productId,
       amount: createOrder.amount,
       year: createOrder.year,

@@ -2,31 +2,67 @@ import { PrismaClient } from '@prisma/client';
 import { Entity, importEntities } from './data_import';
 
 const machines = require('./data/machines.json');
-const participants = require('./data/participants.json');
+const companies = require('./data/companies.json');
 const products = require('./data/products.json');
 const invoices = require('./data/invoices.json');
+const paymentStates = require('./data/payment-states.json');
+const tradeReceivables = require('./data/trade-receivables.json');
+const orderLines = require('./data/order-lines.json');
+const orders = require('./data/orders.json');
+const orderStates = require('./data/order-states.json');
+const serviceProcesses = require('./data/service-process.json');
 
 const dataSets: Entity[] = [
   {
-    name: 'participant',
-    records: participants,
-    createRecord: async (data: any) => await prisma.participant.create({data}),
+    name: 'company',
+    records: companies,
+    createRecord: async (data: any) => await prisma.company.create({ data }),
   },
   {
     name: 'machine',
     records: machines,
-    createRecord: async (data: any) => await prisma.machine.create({data}),
+    createRecord: async (data: any) => await prisma.machine.create({ data }),
   },
   {
     name: 'product',
     records: products,
-    createRecord: async (data: any) => await prisma.product.create({data}),
+    createRecord: async (data: any) => await prisma.product.create({ data }),
+  },
+  {
+    name: 'order',
+    records: orders,
+    createRecord: async (data: any) => await prisma.order.create({ data }),
+  },
+  {
+    name: 'orderLine',
+    records: orderLines,
+    createRecord: async (data: any) => await prisma.orderLine.create({ data }),
+  },
+  {
+    name: 'serviceProcess',
+    records: serviceProcesses,
+    createRecord: async (data: any) => await prisma.serviceProcess.create({ data }),
+  },
+  {
+    name: 'orderStates',
+    records: orderStates,
+    createRecord: async (data: any) => await prisma.orderStatus.create({ data }),
   },
   {
     name: 'invoice',
     records: invoices,
-    createRecord: async (data: any) => await prisma.invoice.create({data}),
-  }
+    createRecord: async (data: any) => await prisma.invoice.create({ data }),
+  },
+  {
+    name: 'tradeReceivable',
+    records: tradeReceivables,
+    createRecord: async (data: any) => await prisma.tradeReceivable.create({ data }),
+  },
+  {
+    name: 'paymentStatus',
+    records: paymentStates,
+    createRecord: async (data: any) => await prisma.paymentStatus.create({ data }),
+  },
 ];
 
 const prisma = new PrismaClient();

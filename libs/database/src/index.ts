@@ -6,3 +6,6 @@ export * from './lib/process-services/product-prisma.service';
 export * from './lib/types/order-with-accepted-offer.types';
 export * from './lib/process-services/trade-receivable-prisma.service';
 export * from './lib/process-services/mocks';
+export * from './lib/process-services/service-process-prisma.service';
+export * from './lib/process-services/invoice-prisma.service';
+export * from './lib/types/order-overview.types';

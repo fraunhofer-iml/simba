@@ -1,14 +1,14 @@
-import {Product} from "@prisma/client";
+import { Product } from '@prisma/client';
 
 export const productsMock = <Product[]>[
   {
-    "id": "prod1",
-    "name": "Quadrocopter",
-    "variant": "V001"
+    id: 'prod1',
+    name: 'Quadrocopter',
+    variant: 'V001',
   },
   {
-    "id": "prod2",
-    "name": "Quadrocopter",
-    "variant": "V003"
-  }
-]
+    id: 'prod2',
+    name: 'Okotocopter',
+    variant: 'V003',
+  },
+];

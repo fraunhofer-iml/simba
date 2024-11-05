@@ -24,7 +24,7 @@ const moment = _rollupMoment || _moment;
 })
 export class CreateOrderComponent {
   allCalendarWeeks: number[];
-  isDateSelected: boolean = false;
+  isDateSelected = false;
   orderForm: FormGroup;
   orderId: string;
   offers$: Observable<OfferDto[]> | undefined;

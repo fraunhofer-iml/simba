@@ -1,7 +1,7 @@
+import { CreateOrderAmqpDto, OrderAmqpDto, OrderMessagePatterns } from '@ap3/amqp';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { OrdersService } from './orders.service';
-import {CreateOrderAmqpDto, OrderAmqpDto, OrderMessagePatterns} from '@ap3/amqp';
 
 @Controller()
 export class OrdersController {
@@ -13,7 +13,7 @@ export class OrdersController {
   }
 
   @MessagePattern(OrderMessagePatterns.READ_ALL)
-  async findAll():Promise<OrderAmqpDto[]> {
+  async findAll(): Promise<OrderAmqpDto[]> {
     return await this.ordersService.findAll();
   }
 
@@ -23,7 +23,7 @@ export class OrdersController {
   }
 
   @MessagePattern(OrderMessagePatterns.REMOVE_ORDER_BY_ID)
-  async remove(@Payload() id: string):Promise<boolean> {
+  async remove(@Payload() id: string): Promise<boolean> {
     return await this.ordersService.remove(id);
   }
 }
