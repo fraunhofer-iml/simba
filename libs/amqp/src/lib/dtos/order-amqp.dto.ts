@@ -1,4 +1,5 @@
 import { OrderOverview } from '@ap3/database';
+import { ServiceStatus } from '@prisma/client';
 
 export class OrderAmqpDto {
   id: string;
@@ -41,9 +42,7 @@ export class OrderAmqpDto {
       id: order.id,
       creationDate: order.documentIssueDate.toISOString(),
       amount: order.serviceProcess?.acceptedOffer?.price.toNumber(),
-      status: order.states.reduce((latest, current ) =>{
-        return current.timestamp > latest.timestamp ? current : latest;
-      }).status,
+      status: this.getLatestStateName(order.serviceProcess?.states),
       year: order.serviceProcess?.dueYear,
       calendarWeek: order.serviceProcess?.dueCalendarWeek,
       productId: order.orderLines[0].item.id,
@@ -53,5 +52,15 @@ export class OrderAmqpDto {
       offerIds: order.serviceProcess?.offers.map((offer) => offer.id),
       tradeReceivableId: order.serviceProcess?.invoice?.tradeReceivable[0].id,
     };
+  }
+
+  private static getLatestStateName(states: ServiceStatus[] | undefined): string {
+    let retVal = '';
+    if (states && states.length > 0) {
+      retVal = states.reduce((latest, current) => {
+        return current.timestamp > latest.timestamp ? current : latest;
+      }).status;
+    }
+    return retVal;
   }
 }

@@ -9,7 +9,7 @@ const paymentStates = require('./data/payment-states.json');
 const tradeReceivables = require('./data/trade-receivables.json');
 const orderLines = require('./data/order-lines.json');
 const orders = require('./data/orders.json');
-const orderStates = require('./data/order-states.json');
+const serviceProcessStates = require('./data/service-process-states.json');
 const serviceProcesses = require('./data/service-process.json');
 
 const dataSets: Entity[] = [
@@ -44,9 +44,9 @@ const dataSets: Entity[] = [
     createRecord: async (data: any) => await prisma.serviceProcess.create({ data }),
   },
   {
-    name: 'orderStates',
-    records: orderStates,
-    createRecord: async (data: any) => await prisma.orderStatus.create({ data }),
+    name: 'serviceProcessStatus',
+    records: serviceProcessStates,
+    createRecord: async (data: any) => await prisma.serviceStatus.create({ data }),
   },
   {
     name: 'invoice',

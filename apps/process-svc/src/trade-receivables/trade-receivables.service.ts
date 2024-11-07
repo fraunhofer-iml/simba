@@ -1,17 +1,15 @@
 import util from 'node:util';
 import { CreateTradeReceivableAmqpDto, TradeReceivableAmqpDto } from '@ap3/amqp';
-import { InvoicePrismaService, OrderPrismaService, ServiceProcessPrismaService, TradeReceivablePrismaService } from '@ap3/database';
+import { InvoicePrismaService, TradeReceivablePrismaService } from '@ap3/database';
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
-import { Invoice, OrderStatus, ServiceProcess, TradeReceivable } from '@prisma/client';
+import { Invoice, PaymentStatus, TradeReceivable } from '@prisma/client';
 
 @Injectable()
 export class TradeReceivablesService {
   private readonly logger = new Logger(TradeReceivablesService.name);
   constructor(
     private readonly tradeReceivablePrismaService: TradeReceivablePrismaService,
-    private readonly invoicePrismaService: InvoicePrismaService,
-    private readonly orderPrismaService: OrderPrismaService,
-    private readonly serviceProcessService: ServiceProcessPrismaService
+    private readonly invoicePrismaService: InvoicePrismaService
   ) {}
 
   async create(createTradeReceivableDto: CreateTradeReceivableAmqpDto): Promise<TradeReceivableAmqpDto> {
@@ -19,11 +17,11 @@ export class TradeReceivablesService {
     try {
       const createTradeReceivable = createTradeReceivableDto.toPrismaCreateEntity();
       const tradeReceivable: TradeReceivable = await this.tradeReceivablePrismaService.createTradeReceivable(createTradeReceivable);
+      const trStates: PaymentStatus[] = await this.tradeReceivablePrismaService.getPaymentStatesForTradeReceivable(tradeReceivable.id);
+
       const relatedInvoice: Invoice = await this.invoicePrismaService.getInvoiceById(tradeReceivable.invoiceId);
-      const serviceProcess: ServiceProcess = await this.serviceProcessService.getServiceProcessById(relatedInvoice.id);
-      const orderStatus: OrderStatus = await this.orderPrismaService.getLatestOrderStatus(serviceProcess.orderId);
       if (tradeReceivable) {
-        return TradeReceivableAmqpDto.fromPrismaEntity(tradeReceivable, relatedInvoice, orderStatus);
+        return TradeReceivableAmqpDto.fromPrismaEntity(tradeReceivable, relatedInvoice, trStates);
       } else {
         throw new InternalServerErrorException(`Could not create trade receivable ${util.inspect(createTradeReceivableDto)}`);
       }
@@ -84,13 +82,10 @@ export class TradeReceivablesService {
 
   async findOne(id: string): Promise<TradeReceivableAmqpDto> {
     const relatedInvoice: Invoice = await this.invoicePrismaService.getInvoiceById(id);
-    const serviceProcess: ServiceProcess = await this.serviceProcessService.getServiceProcessById(relatedInvoice.id);
-    const orderStatus: OrderStatus = await this.orderPrismaService.getLatestOrderStatus(serviceProcess.orderId);
-    return TradeReceivableAmqpDto.fromPrismaEntity(
-      await this.tradeReceivablePrismaService.getOneTradeReceivableById(id),
-      relatedInvoice,
-      orderStatus
-    );
+    const tr: TradeReceivable = await this.tradeReceivablePrismaService.getOneTradeReceivableById(id);
+
+    const trStates: PaymentStatus[] = await this.tradeReceivablePrismaService.getPaymentStatesForTradeReceivable(tr.id);
+    return TradeReceivableAmqpDto.fromPrismaEntity(tr, relatedInvoice, trStates);
   }
 
   private async loadAssociatedDataAndConvertToDTO(tradeReceivables: TradeReceivable[]): Promise<TradeReceivableAmqpDto[]> {
@@ -98,11 +93,9 @@ export class TradeReceivablesService {
     for (const tr of tradeReceivables) {
       const relatedInvoice: Invoice = await this.invoicePrismaService.getInvoiceById(tr.invoiceId);
       this.logger.debug('related invoice: ', util.inspect(relatedInvoice));
-      const serviceProcess: ServiceProcess = await this.serviceProcessService.getServiceProcessById(relatedInvoice.serviceProcessId);
-      this.logger.debug('related serviceProcess: ', util.inspect(serviceProcess));
-      const orderStatus: OrderStatus = await this.orderPrismaService.getLatestOrderStatus(serviceProcess.orderId);
-      this.logger.debug('related orderStatus: ', util.inspect(orderStatus));
-      tradeReceivableDtos.push(TradeReceivableAmqpDto.fromPrismaEntity(tr, relatedInvoice, orderStatus));
+
+      const trStates: PaymentStatus[] = await this.tradeReceivablePrismaService.getPaymentStatesForTradeReceivable(tr.id);
+      tradeReceivableDtos.push(TradeReceivableAmqpDto.fromPrismaEntity(tr, relatedInvoice, trStates));
     }
     return tradeReceivableDtos;
   }

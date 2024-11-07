@@ -1,10 +1,13 @@
-import { OrderStatus, Product } from '@prisma/client';
+import { Product, ServiceStatus } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 
-export type OrderOverview = { id: string; documentIssueDate: Date } & { states: OrderStatus[] } & { orderLines: { item: Product }[] } & {
+export type OrderOverview = { id: string; documentIssueDate: Date } & {
+  orderLines: { item: Product }[];
+} & {
   serviceProcess: {
     dueCalendarWeek: number;
     dueYear: number;
+    states: ServiceStatus[];
     machines: string[];
     offers: {
       id: string;

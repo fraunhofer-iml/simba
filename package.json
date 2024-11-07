@@ -10,7 +10,7 @@
     "set-up-db": "npx prisma db push --force-reset && npx prisma db seed"
   },
   "prisma": {
-    "seed": "bun prisma/seed.ts",
+    "seed": "npx ts-node prisma/seed.ts",
     "studio": "npx prisma studio"
   },
   "private": true,

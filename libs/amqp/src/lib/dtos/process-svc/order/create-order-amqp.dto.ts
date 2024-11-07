@@ -1,4 +1,3 @@
-import { OrderStatesEnum } from '@ap3/config';
 import { PickType } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { OrderAmqpDto } from '../../order-amqp.dto';
@@ -18,12 +17,6 @@ export class CreateOrderAmqpDto extends PickType(OrderAmqpDto, ['productId', 'am
     return <Prisma.OrderCreateInput>{
       totalAmountWithoutVat: this.amount,
       vatCurrency: this.vatCurrency,
-      states: {
-        create: {
-          status: OrderStatesEnum.OPEN,
-          timestamp: new Date(),
-        },
-      },
       buyer: { connect: { id: this.buyerId } },
       seller: { connect: { id: this.sellerId } },
       serviceProcess: {

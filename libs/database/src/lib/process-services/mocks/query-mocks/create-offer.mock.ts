@@ -1,4 +1,4 @@
-import { OfferStatesEnum, OrderStatesEnum } from '@ap3/config';
+import { OfferStatesEnum, ServiceStatesEnum } from '@ap3/config';
 import { Prisma } from '@prisma/client';
 
 export const createOfferQuery = <Prisma.OfferCreateInput>{
@@ -15,7 +15,7 @@ export const createOfferQuery = <Prisma.OfferCreateInput>{
 export const setOrderStateToAcceptedQuery = <Prisma.OrderUpdateInput>{
   where: { id: String('cm2agsjs500009tf1hc9f5guo') },
   data: {
-    status: OrderStatesEnum.PLANNED,
+    status: ServiceStatesEnum.PLANNED,
   },
 };
 

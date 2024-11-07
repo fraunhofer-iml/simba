@@ -1,7 +1,8 @@
 import * as util from 'node:util';
+import { ServiceStatesEnum } from '@ap3/config';
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
 import { ServiceProcess } from '@prisma/client';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class ServiceProcessPrismaService {
@@ -25,5 +26,24 @@ export class ServiceProcessPrismaService {
       this.logger.error(util.inspect(e));
       throw e;
     }
+  }
+
+  async setServiceState(orderId: string, state: ServiceStatesEnum): Promise<ServiceProcess> {
+    return this.prismaService.serviceProcess.update({
+      where: {
+        orderId: String(orderId),
+      },
+      include: {
+        order: true,
+      },
+      data: {
+        states: {
+          create: {
+            status: state.toString(),
+            timestamp: new Date(),
+          },
+        },
+      },
+    });
   }
 }

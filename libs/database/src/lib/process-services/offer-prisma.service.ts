@@ -52,15 +52,11 @@ export class OfferPrismaService {
         include: {
           serviceProcess: {
             include: {
-              order: {
-                include: {
-                  states: true,
-                },
-              },
+              states: true,
             },
           },
         },
-      });
+      } as Prisma.OfferFindManyArgs);
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
@@ -110,15 +106,14 @@ export class OfferPrismaService {
   async acceptOffer(id: string): Promise<Offer> {
     this.logger.verbose(`Accept offer with id ${id} in database`);
     try {
-      //Set offer status and store offer
-      const offer: Offer = await this.prisma.offer.update({
+      const offer: Offer = <Offer>await this.prisma.offer.update({
         where: { id: id },
         data: {
           status: OfferStatesEnum.ACCEPTED,
         },
-      });
-      //Connect AcepptedOfferId of corresponding Service-Process to offer id
-      this.serviceProcess.setServiceProcessAcceptedOffer(offer.serviceProcessId, offer.id);
+      } as Prisma.OfferUpdateArgs);
+
+      await this.serviceProcess.setServiceProcessAcceptedOffer(offer.serviceProcessId, offer.id);
       return offer;
     } catch (e) {
       this.logger.error(util.inspect(e));

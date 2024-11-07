@@ -14,11 +14,7 @@ export const queryOffersToShowWithOrder = {
   include: {
     serviceProcess: {
       include: {
-        order: {
-          include: {
-            states: true,
-          },
-        },
+        states: true,
       },
     },
   },
@@ -38,11 +34,7 @@ export const queryOpenOffersByOrderId = {
   include: {
     serviceProcess: {
       include: {
-        order: {
-          include: {
-            states: true,
-          },
-        },
+        states: true,
       },
     },
   },

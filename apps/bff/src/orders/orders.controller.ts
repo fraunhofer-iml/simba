@@ -11,7 +11,8 @@ export class OrdersController {
 
   @Post()
   @ApiOperation({
-    description: 'Accepts an order, stores it in the database and transfers it to the CPPS scheduler.',
+    description:
+      'Creates an order and an corresponding process service, stores both entities in the database and transfers the order to the CPPS scheduler.',
   })
   @ApiBody({
     schema: {
@@ -19,7 +20,8 @@ export class OrdersController {
       properties: {
         productId: { type: 'string' },
         amount: { type: 'number' },
-        dueMonth: { type: 'string' },
+        year: { type: 'number' },
+        calendarWeek: { type: 'number' },
         customerId: { type: 'string' },
       },
     },

@@ -1,6 +1,6 @@
 import * as util from 'node:util';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Prisma, TradeReceivable } from '@prisma/client';
+import { PaymentStatus, Prisma, TradeReceivable } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 
 @Injectable()
@@ -95,6 +95,9 @@ export class TradeReceivablePrismaService {
     try {
       const tradeReceivable = await this.prismaService.tradeReceivable.findUnique({
         where: { id: trId },
+        include: {
+          states: true,
+        },
       });
       if (!tradeReceivable) {
         throw new NotFoundException(`Trade receivable with id ${trId} was not found in database.`);
@@ -104,5 +107,11 @@ export class TradeReceivablePrismaService {
       this.logger.error(util.inspect(e));
       throw e;
     }
+  }
+
+  async getPaymentStatesForTradeReceivable(trId: string): Promise<PaymentStatus[]> {
+    return this.prismaService.paymentStatus.findMany({
+      where: { tradeReceivableId: trId },
+    });
   }
 }

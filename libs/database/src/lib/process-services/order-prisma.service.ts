@@ -1,7 +1,6 @@
 import * as util from 'node:util';
-import { OrderStatesEnum } from '@ap3/config';
 import { Injectable, Logger } from '@nestjs/common';
-import { Order, OrderStatus, Prisma } from '@prisma/client';
+import { Order, Prisma, ServiceStatus } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import { OrderOverview } from '../types/order-overview.types';
 
@@ -17,9 +16,9 @@ export class OrderPrismaService {
         serviceProcess: {
           include: {
             acceptedOffer: true,
+            states: true,
           },
         },
-        states: true,
       },
     });
     return order;
@@ -28,10 +27,14 @@ export class OrderPrismaService {
   async getOrders(states: string[]): Promise<Order[]> {
     return this.prisma.order.findMany({
       include: {
-        states: {
-          where: {
-            status: {
-              in: states,
+        serviceProcess: {
+          include: {
+            states: {
+              where: {
+                status: {
+                  in: states,
+                },
+              },
             },
           },
         },
@@ -44,14 +47,13 @@ export class OrderPrismaService {
     return order && order.length == 1 ? order[0] : null;
   }
 
-  async getOrdersForOverview(id?: string): Promise<OrderOverview[]> {
+  async getOrdersForOverview(id?: string): Promise<OrderOverview[] | null> {
     const whereClause: Prisma.OrderWhereInput = id ? { id: String(id) } : {};
     return this.prisma.order.findMany({
       where: whereClause,
       select: {
         id: true,
         documentIssueDate: true,
-        states: true,
         orderLines: {
           select: {
             item: true,
@@ -62,6 +64,7 @@ export class OrderPrismaService {
             dueCalendarWeek: true,
             dueYear: true,
             machines: true,
+            states: true,
             offers: {
               select: {
                 id: true,
@@ -100,29 +103,14 @@ export class OrderPrismaService {
     });
   }
 
-  async createOrder(data: Prisma.OrderCreateInput): Promise<OrderOverview | null> {
+  async createOrder(data: Prisma.OrderCreateInput): Promise<Order | null> {
     this.logger.debug('Insert new order via prisma');
     try {
-      const order: Order = await this.prisma.order.create({ data });
-      return this.getOverviewOrder(order.id);
+      return this.prisma.order.create({ data });
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
     }
-  }
-
-  async setOrderState(id: string, state: OrderStatesEnum): Promise<Order> {
-    return this.prisma.order.update({
-      where: { id: String(id) },
-      data: {
-        states: {
-          create: {
-            status: state.toString(),
-            timestamp: new Date(),
-          },
-        },
-      },
-    });
   }
 
   async updateOrder(params: { where: Prisma.OrderWhereUniqueInput; data: Prisma.OrderUpdateInput }): Promise<Order | null> {
@@ -139,14 +127,23 @@ export class OrderPrismaService {
     });
   }
 
-  async getLatestOrderStatus(id: string): Promise<OrderStatus | null> {
-    return this.prisma.orderStatus.findFirst({
+  async getLatestServiceStatus(orderId: string): Promise<ServiceStatus | null> {
+    return this.prisma.serviceStatus.findFirst({
       where: {
-        orderId: id,
+        serviceProcess: {
+          orderId: orderId,
+        },
+      },
+      include: {
+        serviceProcess: {
+          select: {
+            orderId: true,
+          },
+        },
       },
       orderBy: {
         timestamp: 'desc',
       },
-    });
+    } as Prisma.ServiceStatusFindFirstArgs);
   }
 }

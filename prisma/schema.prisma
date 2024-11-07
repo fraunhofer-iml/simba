@@ -119,6 +119,7 @@ model ServiceProcess {
   orderId String? @unique
 
   machines String[]
+  states   ServiceStatus[]
 
   offers          Offer[]  @relation("OrderOffers")
   acceptedOffer   Offer?   @relation("ProcessAcceptedOffer", fields: [acceptedOfferId], references: [id])
@@ -127,16 +128,15 @@ model ServiceProcess {
 }
 
 model Order {
-  id                       String        @id @default(cuid())
-  documentIssueDate        DateTime      @default(now())
+  id                       String   @id @default(cuid())
+  documentIssueDate        DateTime @default(now())
   noteContent              String?
   referencedBuyerOrderLine String?
   buyerOrderRefDocumentId  String?
   sumOfLinesAmount         Int?
-  totalAmountWithoutVat    Decimal?      @db.Money
+  totalAmountWithoutVat    Decimal? @db.Money
   vatCurrency              String?
   buyerAccountingRefId     String?
-  states                   OrderStatus[]
 
   buyerId String
   buyer   Company @relation("buyer", fields: [buyerId], references: [id])
@@ -164,11 +164,11 @@ model OrderLine {
   item   Product @relation(fields: [itemId], references: [id])
 }
 
-model OrderStatus {
-  orderId   String
-  status    String
-  timestamp DateTime @default(now())
-  order     Order    @relation(fields: [orderId], references: [id])
+model ServiceStatus {
+  serviceProcessId String
+  status           String
+  timestamp        DateTime       @default(now())
+  serviceProcess   ServiceProcess @relation(fields: [serviceProcessId], references: [id])
 
-  @@id([orderId, status])
+  @@id([serviceProcessId, status])
 }
