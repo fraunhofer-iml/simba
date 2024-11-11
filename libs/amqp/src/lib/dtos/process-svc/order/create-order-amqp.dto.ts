@@ -15,7 +15,7 @@ export class CreateOrderAmqpDto extends PickType(OrderAmqpDto, ['productId', 'am
 
   public toPrismaCreateEntity(): Prisma.OrderCreateInput {
     return <Prisma.OrderCreateInput>{
-      totalAmountWithoutVat: this.amount,
+      totalAmountWithoutVat: null,
       vatCurrency: this.vatCurrency,
       buyer: { connect: { id: this.buyerId } },
       seller: { connect: { id: this.sellerId } },

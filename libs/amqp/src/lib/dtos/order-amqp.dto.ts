@@ -41,7 +41,7 @@ export class OrderAmqpDto {
     return <OrderAmqpDto>{
       id: order.id,
       creationDate: order.documentIssueDate.toISOString(),
-      amount: order.serviceProcess?.acceptedOffer?.price.toNumber(),
+      amount: order.orderLines[0].requestedQuantity.toNumber(),
       status: this.getLatestStateName(order.serviceProcess?.states),
       year: order.serviceProcess?.dueYear,
       calendarWeek: order.serviceProcess?.dueCalendarWeek,

@@ -13,7 +13,7 @@ import { OrdersService } from '../../../shared/services/orders/orders.service';
   styleUrl: './orders-overview.component.scss',
 })
 export class OrdersOverviewComponent implements AfterViewInit {
-  displayedColumns: string[] = ['orderId', 'date', 'status', 'price', 'products', 'robots', 'customerID'];
+  displayedColumns: string[] = ['orderId', 'date', 'status', 'price', 'products', 'amount', 'robots', 'customerID'];
   dataSource = new MatTableDataSource<OrderOverviewDto>();
   dataSourceObservable: Observable<MatTableDataSource<OrderOverviewDto>>;
   sort?: MatSort;
@@ -25,9 +25,7 @@ export class OrdersOverviewComponent implements AfterViewInit {
     this.setDataSourceSortAttribute();
   }
 
-  constructor(
-    orderService: OrdersService
-  ) {
+  constructor(orderService: OrdersService) {
     this.dataSourceObservable = orderService.getOrders().pipe(
       map((orders) => {
         this.dataSource.data = orders;

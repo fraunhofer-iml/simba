@@ -2,7 +2,7 @@ import { Product, ServiceStatus } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 
 export type OrderOverview = { id: string; documentIssueDate: Date } & {
-  orderLines: { item: Product }[];
+  orderLines: { item: Product; requestedQuantity: Decimal }[];
 } & {
   serviceProcess: {
     dueCalendarWeek: number;

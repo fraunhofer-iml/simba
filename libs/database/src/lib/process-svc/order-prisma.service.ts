@@ -57,6 +57,7 @@ export class OrderPrismaService {
         orderLines: {
           select: {
             item: true,
+            requestedQuantity: true,
           },
         },
         serviceProcess: {

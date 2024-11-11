@@ -21,8 +21,9 @@
   "OrderTableThirdRow": "Status",
   "OrderTableFourthRow": "Price",
   "OrderTableFifthRow": "Products",
-  "OrderTableSixthRow": "Robots",
-  "OrderTableSeventhRow": "Customer ID",
+  "OrderTableSixthRow": "Quantity",
+  "OrderTableSeventhRow": "Robots",
+  "OrderTableEigthRow": "Customer Id",
 
   "WalletTitle": "Wallet",
   "WalletTransactions": "Transactions",

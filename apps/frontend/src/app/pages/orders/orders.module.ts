@@ -18,6 +18,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { DialogOffersExpiredComponent } from '../../layout/dialog-offers-expired/dialog-offers-expired.component';
 import { MY_FORMATS } from '../../shared/materials/formats/datepicker-format';
 import { OffersService } from '../../shared/services/offers/offers.service';
 import { OrdersService } from '../../shared/services/orders/orders.service';
@@ -26,7 +27,6 @@ import { CalendarWeekService } from '../../shared/services/util/calendar-week.se
 import { CreateOrderComponent } from './create-order/create-order.component';
 import { OrdersOverviewComponent } from './orders-overview/orders-overview.component';
 import { OrdersRoutingModule } from './orders-routing.module';
-import { DialogOffersExpiredComponent } from '../../layout/dialog-offers-expired/dialog-offers-expired.component';
 
 @NgModule({
   declarations: [OrdersOverviewComponent, CreateOrderComponent, DialogOffersExpiredComponent],
