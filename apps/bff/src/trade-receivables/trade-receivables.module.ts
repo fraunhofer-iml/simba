@@ -6,6 +6,6 @@ import { TradeReceivablesService } from './trade-receivables.service';
 @Module({
   controllers: [TradeReceivablesController],
   providers: [TradeReceivablesService],
-  imports: [new BrokerAmqp().getProcessSvcBroker()],
+  imports: [new BrokerAmqp().getProcessSvcBroker(), new BrokerAmqp().getMasterDataSvcBroker()],
 })
 export class TradeReceivablesModule {}

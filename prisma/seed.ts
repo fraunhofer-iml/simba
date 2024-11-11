@@ -1,16 +1,26 @@
 import { PrismaClient } from '@prisma/client';
+import { CompaniesSeed } from '../libs/database/src/seed';
+import { InvoiceSeed } from '../libs/database/src/seed/invoices.seed';
+import { MachinesSeed } from '../libs/database/src/seed/machines.seed';
+import { OrderLinesSeed } from '../libs/database/src/seed/order-lines.seed';
+import { OrdersSeed } from '../libs/database/src/seed/orders.seed';
+import { PaymentStatesSeed } from '../libs/database/src/seed/payment-states.seed';
+import { ProductsSeed } from '../libs/database/src/seed/products.seed';
+import { SerivceProcessStatesSeed } from '../libs/database/src/seed/service-process-states.seed';
+import { ServiceProcessesSeed } from '../libs/database/src/seed/service-process.seed';
+import { TradeReceivablesSeed } from '../libs/database/src/seed/trade-receivables.seed';
 import { Entity, importEntities } from './data_import';
 
-const machines = require('./data/machines.json');
-const companies = require('./data/companies.json');
-const products = require('./data/products.json');
-const invoices = require('./data/invoices.json');
-const paymentStates = require('./data/payment-states.json');
-const tradeReceivables = require('./data/trade-receivables.json');
-const orderLines = require('./data/order-lines.json');
-const orders = require('./data/orders.json');
-const serviceProcessStates = require('./data/service-process-states.json');
-const serviceProcesses = require('./data/service-process.json');
+const machines = MachinesSeed;
+const companies = CompaniesSeed;
+const products = ProductsSeed;
+const invoices = InvoiceSeed;
+const paymentStates = PaymentStatesSeed;
+const tradeReceivables = TradeReceivablesSeed;
+const orderLines = OrderLinesSeed;
+const orders = OrdersSeed;
+const serviceProcessStates = SerivceProcessStatesSeed;
+const serviceProcesses = ServiceProcessesSeed;
 
 const dataSets: Entity[] = [
   {

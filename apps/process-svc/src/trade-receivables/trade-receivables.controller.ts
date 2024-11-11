@@ -18,7 +18,7 @@ export class TradeReceivablesController {
   }
 
   @MessagePattern(TradeReceivableMessagePatterns.READ_BY_ID)
-  async findAllById(@Payload() id: string): Promise<TradeReceivableAmqpDto> {
+  async findOneById(@Payload() id: string): Promise<TradeReceivableAmqpDto> {
     return await this.tradeReceivablesService.findOne(id);
   }
 

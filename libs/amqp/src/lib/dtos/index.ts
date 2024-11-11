@@ -3,3 +3,7 @@ export * from './process-svc';
 export * from './offer-amqp.dto';
 export * from './product-amqp.dto';
 export * from './trade-receivable-amqp.dto';
+export * from './payment-information-amqp.dto';
+export * from './master-data-svc';
+export * from './company-amqp.dto';
+export * from './payment-status-amqp.dto';

@@ -81,8 +81,8 @@ export class TradeReceivablesService {
   }
 
   async findOne(id: string): Promise<TradeReceivableAmqpDto> {
-    const relatedInvoice: Invoice = await this.invoicePrismaService.getInvoiceById(id);
     const tr: TradeReceivable = await this.tradeReceivablePrismaService.getOneTradeReceivableById(id);
+    const relatedInvoice: Invoice = await this.invoicePrismaService.getInvoiceById(tr.invoiceId);
 
     const trStates: PaymentStatus[] = await this.tradeReceivablePrismaService.getPaymentStatesForTradeReceivable(tr.id);
     return TradeReceivableAmqpDto.fromPrismaEntity(tr, relatedInvoice, trStates);

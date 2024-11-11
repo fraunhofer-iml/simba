@@ -2,21 +2,25 @@ import { TradeReceivableDto } from '../trade-receivable.dto';
 
 export const TradeReceivableMocks: TradeReceivableDto[] = [
   {
-    id: "TR1",
-    debtorId: "C1",
-    nft: "0AE568163FA56486E",
-    value: 15.8,
-    orderId: 'O1',
-    status: 'OPEN',
+    id: 'TR1',
     invoiceId: 'I1',
+    creditorId: 'pt0001',
+    creditor: 'Company A',
+    totalAmountWithoutVat: 15.8,
+    creationDate: '2024-08-31T13:24:16.595Z',
+    debtorId: 'pt0002',
+    debtor: 'Company B',
+    paymentStatus: 'Open',
   },
   {
-    id: "TR2",
-    debtorId: "C1",
-    nft: "1AE5681633A56486E",
-    value: 15.8,
-    orderId: 'O2',
-    status: 'OPEN',
+    id: 'TR2',
     invoiceId: 'I2',
-  }
-]
+    creditorId: 'pt0001',
+    creditor: 'Company A',
+    totalAmountWithoutVat: 13.8,
+    creationDate: '2024-09-31T13:24:16.595Z',
+    debtorId: 'pt0002',
+    debtor: 'Company B',
+    paymentStatus: 'Financed',
+  },
+];

@@ -1,6 +1,6 @@
 import { Company } from '@prisma/client';
 
-export const companyMock = <Company[]>[
+export const companiesMock = <Company[]>[
   {
     id: 'cm349r6pw000408l8geee42b0',
     name: 'TestOneCompany GmbH',

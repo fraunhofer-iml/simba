@@ -1,9 +1,9 @@
 import { ProductAmqpDto } from '@ap3/amqp';
-import { DatabaseModule, PrismaService, productsMock } from '@ap3/database';
+import { DatabaseModule, GET_PRODUCT_BY_ID_QUERY_MOCK, PrismaService, productsMock } from '@ap3/database';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ProductAmqpMock } from '../../../../libs/amqp/src/lib/dtos/master-data-svc/mocks/product-amqp.mock';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
-import { GET_PRODUCT_BY_ID_QUERY_MOCK } from './query-mocks/select-product.mock';
 
 describe('ProductsController', () => {
   let controller: ProductsController;
@@ -37,10 +37,7 @@ describe('ProductsController', () => {
   });
 
   it('findAll: should return all products', async () => {
-    const expectedReturn: ProductAmqpDto[] = [];
-    productsMock.forEach((product) => {
-      expectedReturn.push(ProductAmqpDto.fromPrismaEntity(product));
-    });
+    const expectedReturn: ProductAmqpDto[] = ProductAmqpMock;
 
     const prismaSpy = jest.spyOn(prisma.product, 'findMany');
     prismaSpy.mockResolvedValue(productsMock);
@@ -51,7 +48,7 @@ describe('ProductsController', () => {
   });
 
   it('findOne: should return product by id', async () => {
-    const expectedReturn = ProductAmqpDto.fromPrismaEntity(productsMock[0]);
+    const expectedReturn = ProductAmqpMock[0];
 
     const prismaSpy = jest.spyOn(prisma.product, 'findUnique');
     prismaSpy.mockResolvedValue(productsMock[0]);

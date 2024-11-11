@@ -22,9 +22,7 @@ export class TradeReceivablesController {
     schema: {
       type: 'object',
       properties: {
-        debtorId: { type: 'string' },
         nft: { type: 'string' },
-        value: { type: 'number' },
         invoiceId: { type: 'string' },
       },
     },
@@ -32,7 +30,7 @@ export class TradeReceivablesController {
   })
   @Post()
   async create(@Query('orderId') orderId: string, @Body() createTradeReceivableDto: CreateTradeReceivableDto): Promise<TradeReceivableDto> {
-    return await this.tradeReceivableService.create(orderId, createTradeReceivableDto);
+    return await this.tradeReceivableService.create(createTradeReceivableDto);
   }
 
   @ApiOperation({

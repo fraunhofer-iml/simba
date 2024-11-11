@@ -1,0 +1,43 @@
+import { Order } from '@prisma/client';
+
+export const OrdersSeed = <Order[]>[
+  {
+    id: 'o001',
+    documentIssueDate: new Date('2024-10-09T07:55:55.695Z'),
+    buyerId: 'pt0001',
+    sellerId: 'pt0002',
+    noteContent: null,
+    referencedBuyerOrderLine: null,
+    buyerOrderRefDocumentId: null,
+    sumOfLinesAmount: null,
+    totalAmountWithoutVat: null,
+    vatCurrency: null,
+    buyerAccountingRefId: null,
+  },
+  {
+    id: 'o002',
+    documentIssueDate: new Date('2024-10-02T07:55:55.695Z'),
+    buyerId: 'pt0001',
+    sellerId: 'pt0002',
+    noteContent: null,
+    referencedBuyerOrderLine: null,
+    buyerOrderRefDocumentId: null,
+    sumOfLinesAmount: null,
+    totalAmountWithoutVat: null,
+    vatCurrency: null,
+    buyerAccountingRefId: null,
+  },
+  {
+    id: 'o003',
+    documentIssueDate: new Date('2024-10-02T07:55:55.695Z'),
+    buyerId: 'pt0001',
+    sellerId: 'pt0002',
+    noteContent: null,
+    referencedBuyerOrderLine: null,
+    buyerOrderRefDocumentId: null,
+    sumOfLinesAmount: null,
+    totalAmountWithoutVat: null,
+    vatCurrency: null,
+    buyerAccountingRefId: null,
+  },
+];

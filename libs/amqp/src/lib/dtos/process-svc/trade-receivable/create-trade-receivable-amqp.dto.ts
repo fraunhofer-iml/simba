@@ -3,24 +3,27 @@ import { OmitType } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { TradeReceivableAmqpDto } from '../../trade-receivable-amqp.dto';
 
-export class CreateTradeReceivableAmqpDto extends OmitType(TradeReceivableAmqpDto, ['id'] as const) {
-  creationDate: Date;
+export class CreateTradeReceivableAmqpDto extends OmitType(TradeReceivableAmqpDto, [
+  'id',
+  'debtorId',
+  'creditorId',
+  'totalAmountWithoutVat',
+  'status',
+  'creationDate',
+] as const) {
   statusTimestamp: Date;
 
-  constructor(creationDate: Date, statusTimestamp: Date) {
+  constructor(statusTimestamp: Date, nft: string, invoiceId: string) {
     super();
-    this.creationDate = creationDate;
+    this.nft = nft;
+    this.invoiceId = invoiceId;
     this.statusTimestamp = statusTimestamp;
   }
   public toPrismaCreateEntity(): Prisma.TradeReceivableCreateInput {
     return <Prisma.TradeReceivableCreateInput>{
       nft: this.nft,
-      debtor: { connect: { id: this.debtorId } },
-      value: this.value,
-      creationDate: this.creationDate,
-      order: { connect: { id: this.orderId } },
-      status: { create: { orderId: this.orderId, status: PaymentStatesEnum.OPEN, timestamp: this.statusTimestamp } },
       invoice: { connect: { id: this.invoiceId } },
+      states: { create: { status: PaymentStatesEnum.OPEN, timestamp: this.statusTimestamp } },
     };
   }
 }

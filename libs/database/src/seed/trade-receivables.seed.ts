@@ -1,0 +1,14 @@
+import { TradeReceivable } from '@prisma/client';
+
+export const TradeReceivablesSeed = <TradeReceivable[]>[
+  {
+    id: 'TR001',
+    nft: 'AEF3122355213EFA1',
+    invoiceId: 'IV001',
+  },
+  {
+    id: 'TR002',
+    nft: 'AEF3122355213EFA2',
+    invoiceId: 'IV002',
+  },
+];
