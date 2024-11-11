@@ -10,6 +10,11 @@
   margin: 4px 0;
 }
 
+#flags {
+  margin-right: 0.5rem;
+  width: 1rem;
+}
+
 .selection-list mat-list-item.active {
   background-color: var(--creme-color);
 }

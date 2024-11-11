@@ -7,12 +7,14 @@
         <div class="language-button-container">
           <button mat-icon-button [matMenuTriggerFor]="menu">
             <div class="image">
-              <img src="assets/icons/languages.svg" alt="Icon" id="orders" />
+              <img src="assets/icons/languages.svg" alt="Icon" />
             </div>
           </button>
           <mat-menu #menu="matMenu">
             @for (language of languages; track language) {
-              <button mat-menu-item (click)="setLanguage(language)">{{ language }}</button>
+              <button mat-menu-item (click)="setLanguage(language.label)">
+                <img src="{{language.img}}" alt="flags" id="flags" />
+                {{ language.label }}</button>
             }
           </mat-menu>
         </div>
@@ -21,7 +23,7 @@
       <mat-selection-list class="selection-list">
         <mat-list-item [routerLink]="ROUTING.orders" routerLinkActive="active">
           <div class="image">
-            <img src="assets/icons/orders.svg" alt="Icon" id="orders" />
+            <img src="assets/icons/orders.svg" alt="Icon" />
             {{ 'Orders' | translate }}
           </div>
         </mat-list-item>

@@ -45,6 +45,11 @@
   min-width: 15%;
 }
 
+#order-week {
+  width: 300px;
+}
+
+
 .title {
   font-size: large;
 }
@@ -131,5 +136,14 @@
   }
   .year-picker .mat-calendar-body-cell-content {
     display: none;
+  }
+  .offerIdAndDate {
+    display: block;
+  }
+  #order-year {
+    width: 210px;
+  }
+  #order-week {
+    width: auto;
   }
 }

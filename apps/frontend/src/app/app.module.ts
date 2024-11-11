@@ -1,8 +1,8 @@
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { CountdownModule } from 'ngx-countdown';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -14,20 +14,16 @@ import { appRoutes } from './app.routes';
 import { AuthGuard } from './guards/auth/auth.guard';
 import { initializeKeycloak } from './keycloak-initializer';
 import { LayoutModule } from './layout/layout.module';
-import { OrdersModule } from './pages/orders/orders.module';
-import { WalletModule } from './pages/wallet/wallet.module';
 import { AuthService } from './shared/services/auth/auth.service';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
+    RouterModule.forRoot(appRoutes),
     CommonModule,
-    WalletModule,
     RouterOutlet,
     BrowserModule,
     BrowserAnimationsModule,
-    OrdersModule,
-    RouterModule.forRoot(appRoutes),
     CountdownModule,
     KeycloakAngularModule,
     TranslateModule.forRoot({
@@ -50,6 +46,7 @@ import { AuthService } from './shared/services/auth/auth.service';
       multi: true,
       deps: [KeycloakService],
     },
+    provideHttpClient(),
   ],
   bootstrap: [AppComponent],
 })

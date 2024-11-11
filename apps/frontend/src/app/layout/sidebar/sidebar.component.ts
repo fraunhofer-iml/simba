@@ -1,7 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import { Languages } from 'apps/frontend/src/assets/i18n/languages';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { ROUTING } from '../../routing/routing.enum';
 import { AuthService } from '../../shared/services/auth/auth.service';
 
@@ -12,12 +11,14 @@ import { AuthService } from '../../shared/services/auth/auth.service';
 })
 export class SidebarComponent {
   protected readonly ROUTING = ROUTING;
-  languages: string[] = [Languages.DE, Languages.EN];
-  userName: string = '';
+  userName = '';
+  languages = [
+    { label: Languages.DE, img: Languages.DEIMG },
+    { label: Languages.EN, img: Languages.ENIMG },
+  ];
 
   constructor(
     private authService: AuthService,
-    private router: Router,
     private translationService: TranslateService
   ) {
     this.userName = authService.getUserName();

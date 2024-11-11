@@ -11,9 +11,9 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field class="order-field">
-          <input matInput placeholder="{{ 'AmountInputField' | translate }}" formControlName="amount" type="number" value="number" />
+          <input matInput placeholder="{{ 'AmountInputField' | translate }}" formControlName="amount" type="number" value="number" min="1" pattern="\d*"/>
         </mat-form-field>
-        <mat-form-field class="order-field">
+        <mat-form-field class="order-field" id="order-year">
           <input
             placeholder="{{ 'YearInputField' | translate }}"
             matInput
@@ -25,10 +25,10 @@
           <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
           <mat-datepicker #dp startView="multi-year" (yearSelected)="setYear($event, dp)" panelClass="year-picker"> </mat-datepicker>
         </mat-form-field>
-        <mat-form-field class="order-field">
+        <mat-form-field class="order-field" id="order-week">
           <mat-select placeholder="{{ 'WeekInputField' | translate }}" formControlName="selectedCalendarWeek">
             @for (week of allCalendarWeeks; track week) {
-              <mat-option [value]="week">{{ week }} </mat-option>
+              <mat-option [value]="week">{{ 'CalenderWeek' | translate }} {{ week }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
@@ -55,12 +55,12 @@
         <div class="card offers">
           <div class="offerIdAndDate">
             <p id="offerId" class="grey">ID {{ offer.id }}</p>
-            <p id="offerDate" class="grey">{{ offer.creationDate | date }}</p>
+            <p id="offerDate" class="grey">{{ 'WeekInputField' | translate }}: {{ offer.creationDate |  date }}</p>
           </div>
           <p id="offerName">{{ orderForm.get('product')?.value.name }}</p>
-          <p id="offerAmount">{{ orderForm.get('amount')?.value }}</p>
+          <p id="offerAmount">{{ 'AmountInputField' | translate }}: {{ orderForm.get('amount')?.value }}</p>
           <div class="offerPrice">
-            <img ngSrc="assets/icons/price.png" alt="Icon" height="30" width="30" />
+            <img ngSrc="assets/icons/price.svg" alt="Icon" height="20" width="20" />
             <p>{{ offer.price | number: '1.2-2' }}</p>
           </div>
           <div class="button-container">
@@ -70,7 +70,7 @@
       }
     </div>
     <div class="button-container">
-      <button mat-flat-button class="decline-button" (click)="declineAllOffers()">{{ 'DeclineAllOffers' | translate }}</button>
+      <button mat-flat-button class="decline-button" (click)="declineAllOffers(); navigateToOrders()">{{ 'DeclineAllOffers' | translate }}</button>
     </div>
   </div>
 </div>

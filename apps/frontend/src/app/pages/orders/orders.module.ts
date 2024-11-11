@@ -26,9 +26,10 @@ import { CalendarWeekService } from '../../shared/services/util/calendar-week.se
 import { CreateOrderComponent } from './create-order/create-order.component';
 import { OrdersOverviewComponent } from './orders-overview/orders-overview.component';
 import { OrdersRoutingModule } from './orders-routing.module';
+import { DialogOffersExpiredComponent } from '../../layout/dialog-offers-expired/dialog-offers-expired.component';
 
 @NgModule({
-  declarations: [OrdersOverviewComponent, CreateOrderComponent],
+  declarations: [OrdersOverviewComponent, CreateOrderComponent, DialogOffersExpiredComponent],
   imports: [
     CommonModule,
     MatIconModule,
