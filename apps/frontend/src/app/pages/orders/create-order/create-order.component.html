@@ -14,8 +14,14 @@
           <input matInput placeholder="{{ 'AmountInputField' | translate }}" formControlName="amount" type="number" value="number" />
         </mat-form-field>
         <mat-form-field class="order-field">
-          <input placeholder="{{ 'YearInputField' | translate }}" matInput [matDatepicker]="dp" formControlName="date" />
-          <mat-hint>YYYY</mat-hint>
+          <input
+            placeholder="{{ 'YearInputField' | translate }}"
+            matInput
+            readonly
+            [matDatepickerFilter]="datePickerFilter"
+            [matDatepicker]="dp"
+            formControlName="date"
+          />
           <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
           <mat-datepicker #dp startView="multi-year" (yearSelected)="setYear($event, dp)" panelClass="year-picker"> </mat-datepicker>
         </mat-form-field>

@@ -23,6 +23,10 @@ const moment = _rollupMoment || _moment;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateOrderComponent {
+  datePickerFilter = (d: Moment | null): boolean => {
+    const year = (d || moment()).year();
+    return year >= moment().year();
+  };
   allCalendarWeeks: number[];
   isDateSelected = false;
   orderForm: FormGroup;
@@ -44,7 +48,7 @@ export class CreateOrderComponent {
     private readonly calendarWeekService: CalendarWeekService
   ) {
     this.orderForm = builder.group({
-      date: new FormControl<Moment | null>(null, Validators.required),
+      date: new FormControl<Moment | null>(moment(), Validators.required),
       product: new FormControl<string>('', Validators.required),
       amount: new FormControl<number | null>(null, [Validators.required, Validators.min(0)]),
       selectedCalendarWeek: new FormControl<number | null>({ value: null, disabled: true }, Validators.required),
