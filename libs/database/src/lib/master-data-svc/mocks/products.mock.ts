@@ -8,7 +8,7 @@ export const productsMock = <Product[]>[
   },
   {
     id: 'prod2',
-    name: 'Okotocopter',
+    name: 'Oktocopter',
     variant: 'V003',
   },
 ];

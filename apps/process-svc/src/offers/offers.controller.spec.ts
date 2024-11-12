@@ -8,7 +8,6 @@ import {
   queryOffersToShowWithOrder,
   queryOpenOffersByOrderId,
   serviceProcessMock,
-  setOfferStateToAcceptedQuery,
   setOfferStateToDeclinedQuery,
 } from '@ap3/database';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -58,12 +57,11 @@ describe('OfferController', () => {
   it('create: should create new offers for an order id', async () => {
     const prismaSpy = jest.spyOn(prisma.offer, 'create');
     prismaSpy.mockResolvedValue(offersMock[0]);
-    /*     const data = createOfferQuery; */
 
     const expectedReturn = true;
     const retVal = await controller.create(ordersMock[1].id);
 
-    /*     expect(prisma.offer.create).toHaveBeenCalledWith({ data }); */
+    /*     expect(prisma.offer.create).toHaveBeenCalledWith({ createOfferQuery }); */
     expect(prisma.offer.create).toBeCalledTimes(offersMock.length);
     expect(expectedReturn).toEqual(retVal);
     //wird 4 mal mit unterschiedlichen werten aufgerufen, tohavebeencalledwith wirft error
@@ -125,8 +123,8 @@ describe('OfferController', () => {
     prismaOfferUpdateSpy.mockResolvedValue(offersMock[0]);
 
     const retVal = await controller.acceptOffer(offersMock[0].id);
-    //Todo : umschreiben auf for schleife
-    /*   expect(prismaOfferUpdateSpy).toHaveBeenCalledWith(setOfferStateToAcceptedQuery); */
+
+    expect(prismaOfferUpdateSpy).toHaveBeenLastCalledWith(setOfferStateToDeclinedQuery);
     expect(prismaFindManySpy).toHaveBeenCalledWith(queryOpenOffersByOrderId);
     expect(prismaOfferUpdateSpy).toHaveBeenCalledWith(setOfferStateToDeclinedQuery);
     expect(prismaOfferUpdateSpy).toBeCalledTimes(offersMock.length);

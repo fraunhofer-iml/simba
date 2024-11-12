@@ -3,3 +3,4 @@ export * from './order/update-order-amqp.dto';
 export * from './mocks';
 export * from './offer/create-offer-amqp.dto';
 export * from './trade-receivable/create-trade-receivable-amqp.dto';
+export * from './mocks/create-order-amqp.mock';

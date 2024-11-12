@@ -16,7 +16,7 @@ export const companiesMock = <Company[]>[
     electronicAddressSchemeId: null,
   },
   {
-    id: 'cm349r6pw000408l8geee42b0',
+    id: 'cm35m1g4u000008jo6jfwd6c4',
     name: 'TestTwoCompany GmbH',
     city: 'München',
     countryCode: 'DE',

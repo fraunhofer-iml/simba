@@ -4,3 +4,6 @@ export * from './service-process.mock';
 export * from './query-mocks/create-offer.mock';
 export * from './query-mocks/query-offers.mock';
 export * from './query-mocks/query-trade-receivable.mock';
+export * from './query-mocks/create-order-query.mock';
+export * from './query-mocks/find-latest-service-status-mock';
+export * from './query-mocks/query-orders.mock';

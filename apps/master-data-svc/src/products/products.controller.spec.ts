@@ -1,7 +1,6 @@
-import { ProductAmqpDto } from '@ap3/amqp';
+import { ProductAmqpDto, ProductAmqpMock } from '@ap3/amqp';
 import { DatabaseModule, GET_PRODUCT_BY_ID_QUERY_MOCK, PrismaService, productsMock } from '@ap3/database';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProductAmqpMock } from '../../../../libs/amqp/src/lib/dtos/master-data-svc/mocks/product-amqp.mock';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
 

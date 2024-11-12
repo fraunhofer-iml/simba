@@ -32,7 +32,7 @@ export const setOfferStateToAcceptedQuery = <Prisma.OfferUpdateInput>{
 };
 
 export const setOfferStateToDeclinedQuery = <Prisma.OfferUpdateInput>{
-  where: { id: 'cm2agsjsn00029tf1z3rqc9vp' },
+  where: { id: 'cm2agsjsn00029tf1z3rqc7vp' },
   data: {
     status: OfferStatesEnum.REFUSED,
   },
