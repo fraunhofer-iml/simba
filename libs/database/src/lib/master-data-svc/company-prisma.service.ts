@@ -1,7 +1,8 @@
 import * as util from 'node:util';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Company } from '@prisma/client';
+import { Company, PaymentInformation } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
+import { CompanyWithPaymentModalitiesTypes } from '../types';
 
 @Injectable()
 export class CompanyPrismaService {
@@ -9,11 +10,14 @@ export class CompanyPrismaService {
 
   constructor(private prisma: PrismaService) {}
 
-  async getCompany(id: string): Promise<Company | null> {
+  async getCompany(id: string): Promise<CompanyWithPaymentModalitiesTypes | null> {
     this.logger.debug(`Return company by id ${id} from database`);
     try {
-      const company = await this.prisma.company.findUnique({
+      const company = <CompanyWithPaymentModalitiesTypes>await this.prisma.company.findUnique({
         where: { id: id },
+        include: {
+          paymentInformation: true,
+        },
       });
       if (!company) {
         throw new NotFoundException(`Company with id ${id} was not found in database.`);
@@ -25,8 +29,13 @@ export class CompanyPrismaService {
     }
   }
 
-  async getCompanies(): Promise<Company[]> {
+  async getCompanies(): Promise<CompanyWithPaymentModalitiesTypes[]> {
     this.logger.debug(`Return all companies from database`);
-    return this.prisma.company.findMany({});
+    const companies = <CompanyWithPaymentModalitiesTypes[]>await this.prisma.company.findMany({
+      include: {
+        paymentInformation: true,
+      },
+    });
+    return companies;
   }
 }

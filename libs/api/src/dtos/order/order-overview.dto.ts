@@ -10,6 +10,7 @@ export class OrderOverviewDto {
   calendarWeek: number;
   creationDate: string;
   status: string;
+  statusTimestamp: string;
   price: number;
   robots: string[];
   customerId: string;
@@ -22,6 +23,7 @@ export class OrderOverviewDto {
     calendarWeek: number,
     creationDate: string,
     status: string,
+    statusTimestamp: string,
     price: number,
     robots: string[],
     customerId: string
@@ -34,6 +36,7 @@ export class OrderOverviewDto {
     this.calendarWeek = calendarWeek;
     this.creationDate = creationDate;
     this.status = status;
+    this.statusTimestamp = statusTimestamp;
     this.price = price;
     this.robots = robots;
     this.customerId = customerId;
@@ -47,7 +50,8 @@ export class OrderOverviewDto {
       dto.year,
       dto.calendarWeek,
       dto.creationDate,
-      dto.status,
+      dto.status.status,
+      dto.status.timestamp,
       offerDto ? offerDto.price : 0,
       dto.robots ? dto.robots : [],
       dto.customerId

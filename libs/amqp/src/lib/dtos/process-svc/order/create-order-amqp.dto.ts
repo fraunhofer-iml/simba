@@ -1,6 +1,6 @@
 import { PickType } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
-import { OrderAmqpDto } from '../../order-amqp.dto';
+import { OrderAmqpDto } from './order-amqp.dto';
 
 export class CreateOrderAmqpDto extends PickType(OrderAmqpDto, ['productId', 'amount', 'year', 'calendarWeek', 'customerId']) {
   vatCurrency: string;

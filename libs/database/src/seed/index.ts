@@ -8,3 +8,4 @@ export * from './products.seed';
 export * from './service-process-states.seed';
 export * from './service-process.seed';
 export * from './trade-receivables.seed';
+export * from './payment-information.seed';

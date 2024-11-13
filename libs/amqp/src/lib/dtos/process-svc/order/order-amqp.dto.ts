@@ -1,5 +1,6 @@
 import { OrderOverview } from '@ap3/database';
 import { ServiceStatus } from '@prisma/client';
+import { ServiceStatusAmqpDto } from './service-status-amqp.dto';
 
 export class OrderAmqpDto {
   id: string;
@@ -8,7 +9,7 @@ export class OrderAmqpDto {
   year: number;
   calendarWeek: number;
   creationDate: string;
-  status: string;
+  status: ServiceStatusAmqpDto;
   acceptedOfferId?: string;
   offerIds: string[];
   robots: string[];
@@ -22,7 +23,7 @@ export class OrderAmqpDto {
     year: number,
     calendarWeek: number,
     creationDate: string,
-    status: string,
+    status: ServiceStatusAmqpDto,
     customerId: string
   ) {
     this.id = id;
@@ -38,11 +39,16 @@ export class OrderAmqpDto {
   }
 
   public static fromPrismaEntity(order: OrderOverview): OrderAmqpDto {
+    const lastState: ServiceStatus | null = this.getLatestState(order.serviceProcess?.states);
+    const currentState = lastState
+      ? new ServiceStatusAmqpDto(lastState.status, new Date(lastState.timestamp).toISOString())
+      : new ServiceStatusAmqpDto('', '');
+
     return <OrderAmqpDto>{
       id: order.id,
       creationDate: order.documentIssueDate.toISOString(),
       amount: order.orderLines[0].requestedQuantity.toNumber(),
-      status: this.getLatestStateName(order.serviceProcess?.states),
+      status: currentState,
       year: order.serviceProcess?.dueYear,
       calendarWeek: order.serviceProcess?.dueCalendarWeek,
       productId: order.orderLines[0].item.id,
@@ -54,12 +60,12 @@ export class OrderAmqpDto {
     };
   }
 
-  private static getLatestStateName(states: ServiceStatus[] | undefined): string {
-    let retVal = '';
+  private static getLatestState(states: ServiceStatus[] | undefined): ServiceStatus | null {
+    let retVal: ServiceStatus | null = null;
     if (states && states.length > 0) {
       retVal = states.reduce((latest, current) => {
         return current.timestamp > latest.timestamp ? current : latest;
-      }).status;
+      });
     }
     return retVal;
   }

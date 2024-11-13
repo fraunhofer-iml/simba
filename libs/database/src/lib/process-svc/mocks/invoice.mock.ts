@@ -1,9 +1,9 @@
 import { Company, Invoice, TradeReceivable } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
-import { CompaniesSeed } from '../../../seed/companies.seed';
+import { CompaniesSeed } from '../../../seed';
 import { tradeReceivableMock } from './trade-receivable.mock';
 
-export const invoiceMock = <(Invoice & { deptor: Company; creditor: Company; tradeReceivable: TradeReceivable[] })[]>[
+export const invoiceMock = <(Invoice & { debtor: Company; creditor: Company; tradeReceivable: TradeReceivable[] })[]>[
   {
     id: 'cm35qzbc3000108l05e5vhzgo',
     invoiceNumber: 'INV-20241105-1',
@@ -14,7 +14,7 @@ export const invoiceMock = <(Invoice & { deptor: Company; creditor: Company; tra
     totalAmountWithoutVat: new Decimal(9),
     vat: new Decimal(1),
     debtorId: CompaniesSeed[0].id,
-    deptor: CompaniesSeed[0],
+    debtor: CompaniesSeed[0],
     creditorId: CompaniesSeed[1].id,
     creditor: CompaniesSeed[1],
     serviceProcessId: 'cm32tlpy0000108kyhv7vetzh',
@@ -30,7 +30,7 @@ export const invoiceMock = <(Invoice & { deptor: Company; creditor: Company; tra
     totalAmountWithoutVat: new Decimal(8),
     vat: new Decimal(5),
     debtorId: CompaniesSeed[0].id,
-    deptor: CompaniesSeed[0],
+    debtor: CompaniesSeed[0],
     creditorId: CompaniesSeed[1].id,
     creditor: CompaniesSeed[1],
     serviceProcessId: 'cm32to3ma000008jvf41teuc8',

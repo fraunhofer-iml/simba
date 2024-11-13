@@ -1,5 +1,5 @@
-import { ServiceStatesEnum } from '@ap3/config';
-import { OrderAmqpDto } from '../../order-amqp.dto';
+import { ServiceStatusAmqpDto } from '../order';
+import { OrderAmqpDto } from '../order/order-amqp.dto';
 
 export const OrderAmqpMock = <OrderAmqpDto[]>[
   {
@@ -9,7 +9,7 @@ export const OrderAmqpMock = <OrderAmqpDto[]>[
     year: 2024,
     calendarWeek: 5,
     creationDate: '2024-11-05T14:58:51.652Z',
-    status: ServiceStatesEnum.PLANNED,
+    status: new ServiceStatusAmqpDto('Planned', '2024-11-05T14:58:51.652Z'),
     acceptedOfferId: undefined,
     offerIds: [],
     robots: ['cm36zvaom000108jk75746j7j', 'cm36zxzwf000408jker5cfzgf'],
@@ -21,9 +21,9 @@ export const OrderAmqpMock = <OrderAmqpDto[]>[
     productId: 'prod1',
     amount: 4,
     year: 2024,
-    calendarWeek: 30,
-    creationDate: '2026-11-20T09:14:25.356Z',
-    status: ServiceStatesEnum.OPEN,
+    calendarWeek: 40,
+    creationDate: '2024-08-30T13:24:16.595Z',
+    status: new ServiceStatusAmqpDto('Accepted', '2024-09-01T13:24:16.595Z'),
     acceptedOfferId: undefined,
     offerIds: [],
     robots: [],

@@ -76,7 +76,7 @@ It will show tasks that you can run with Nx.
 - [Follow us on Twitter](https://twitter.com/nxdevtools)
 
 # Set up environment
-## Database
+## Database (oc port-forward svc/oe260-rw 5432:5432)
 ### posgres container
 run start-database.sh script
 ### refresh database schema and prisma entities

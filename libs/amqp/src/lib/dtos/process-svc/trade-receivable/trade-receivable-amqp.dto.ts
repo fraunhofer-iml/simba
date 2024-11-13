@@ -35,18 +35,20 @@ export class TradeReceivableAmqpDto {
     const firstState = this.getFirstState(states);
     const lastState = this.getLatestState(states);
     const creationDate = firstState ? firstState.timestamp : null;
-    const currentState = lastState ? new PaymentStatusAmqpDto(lastState.status, lastState.timestamp) : null;
+    const currentState = lastState
+      ? new PaymentStatusAmqpDto(lastState.status, lastState.timestamp)
+      : new PaymentStatusAmqpDto('', new Date());
 
-    return <TradeReceivableAmqpDto>{
-      id: tradeReceivable.id,
-      debtorId: invoice.debtorId,
-      creditorId: invoice.creditorId,
-      nft: tradeReceivable.nft,
-      totalAmountWithoutVat: +invoice.totalAmountWithoutVat,
-      status: currentState,
-      invoiceId: invoice.id,
-      creationDate: creationDate,
-    };
+    return new TradeReceivableAmqpDto(
+      tradeReceivable.id,
+      invoice.debtorId ? invoice.debtorId : '',
+      invoice.creditorId ? invoice.creditorId : '',
+      tradeReceivable.nft,
+      +invoice.totalAmountWithoutVat,
+      currentState,
+      invoice.id,
+      creationDate ? creationDate : new Date()
+    );
   }
 
   private static getLatestState(states: PaymentStatus[]): PaymentStatus | null {

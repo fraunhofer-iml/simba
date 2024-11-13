@@ -1,2 +1,3 @@
-export * from './company/create-company-amqp.dto';
-export * from './mocks/product-amqp.mock';
+export * from './company';
+export * from './product';
+export * from './mocks';

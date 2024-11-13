@@ -14,7 +14,7 @@ export class CompaniesService {
   async findAll(): Promise<CompanyAmqpDto[]> {
     const companiesDTO: CompanyAmqpDto[] = [];
 
-    const companies: Company[] = await this.companyPrismaService.getCompanies();
+    const companies = await this.companyPrismaService.getCompanies();
     for (const company of companies) {
       companiesDTO.push(CompanyAmqpDto.fromEntity(company));
     }
@@ -23,7 +23,7 @@ export class CompaniesService {
   }
 
   async findOne(id: string): Promise<CompanyAmqpDto> {
-    const company: Company = await this.companyPrismaService.getCompany(id);
+    const company = await this.companyPrismaService.getCompany(id);
     return CompanyAmqpDto.fromEntity(company);
   }
 

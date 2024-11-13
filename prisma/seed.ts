@@ -4,6 +4,7 @@ import { InvoiceSeed } from '../libs/database/src/seed/invoices.seed';
 import { MachinesSeed } from '../libs/database/src/seed/machines.seed';
 import { OrderLinesSeed } from '../libs/database/src/seed/order-lines.seed';
 import { OrdersSeed } from '../libs/database/src/seed/orders.seed';
+import { PaymentInformationSeed } from '../libs/database/src/seed/payment-information.seed';
 import { PaymentStatesSeed } from '../libs/database/src/seed/payment-states.seed';
 import { ProductsSeed } from '../libs/database/src/seed/products.seed';
 import { SerivceProcessStatesSeed } from '../libs/database/src/seed/service-process-states.seed';
@@ -21,12 +22,18 @@ const orderLines = OrderLinesSeed;
 const orders = OrdersSeed;
 const serviceProcessStates = SerivceProcessStatesSeed;
 const serviceProcesses = ServiceProcessesSeed;
+const paymentInformations = PaymentInformationSeed;
 
 const dataSets: Entity[] = [
   {
     name: 'company',
     records: companies,
     createRecord: async (data: any) => await prisma.company.create({ data }),
+  },
+  {
+    name: 'paymentInformation',
+    records: paymentInformations,
+    createRecord: async (data: any) => await prisma.paymentInformation.create({ data }),
   },
   {
     name: 'machine',

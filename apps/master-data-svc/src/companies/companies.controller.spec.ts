@@ -1,8 +1,13 @@
-import { CompanyAmqpDto } from '@ap3/amqp';
-import { DatabaseModule, GET_COMPANY_BY_ID_QUERY_MOCK, PrismaService } from '@ap3/database';
+import { CompanyAmqpDto, CompanyAmqpMock } from '@ap3/amqp';
+import {
+  CompaniesSeed,
+  CompanyWithPaymentModalitiesTypes,
+  DatabaseModule,
+  GET_COMPANY_BY_ID_QUERY_MOCK,
+  PaymentInformationSeed,
+  PrismaService,
+} from '@ap3/database';
 import { Test, TestingModule } from '@nestjs/testing';
-import { OrderAmqpMock } from '../../../../libs/amqp/src/lib/dtos/master-data-svc/mocks/company-amqp.mock';
-import { CompaniesSeed } from '../../../../libs/database/src/seed';
 import { CompaniesController } from './companies.controller';
 import { CompaniesService } from './companies.service';
 
@@ -38,10 +43,15 @@ describe('CompanyController', () => {
   });
 
   it('findAll: should return all companies', async () => {
-    const expectedReturn: CompanyAmqpDto[] = OrderAmqpMock;
+    const expectedReturn: CompanyAmqpDto[] = CompanyAmqpMock;
+    const mockResolve: any = <CompanyWithPaymentModalitiesTypes[]>[
+      { ...CompaniesSeed[0], paymentInformation: [PaymentInformationSeed[0]] },
+      { ...CompaniesSeed[1], paymentInformation: [PaymentInformationSeed[1]] },
+      { ...CompaniesSeed[2], paymentInformation: [PaymentInformationSeed[2]] },
+    ];
 
     const prismaSpy = jest.spyOn(prisma.company, 'findMany');
-    prismaSpy.mockResolvedValue(CompaniesSeed);
+    prismaSpy.mockResolvedValue(mockResolve);
 
     const retVal = await controller.findAll();
     expect(prisma.company.findMany).toHaveBeenCalled();
@@ -49,14 +59,15 @@ describe('CompanyController', () => {
   });
 
   it('findOne: should return company by id', async () => {
-    const expectedReturn = OrderAmqpMock[0];
+    const expectedReturn = CompanyAmqpMock[0];
+    const mockResolve: any = <CompanyWithPaymentModalitiesTypes>{ ...CompaniesSeed[0], paymentInformation: [PaymentInformationSeed[0]] };
 
     const prismaSpy = jest.spyOn(prisma.company, 'findUnique');
-    prismaSpy.mockResolvedValue(CompaniesSeed[0]);
+    prismaSpy.mockResolvedValue(mockResolve);
 
     const retVal = await controller.findOne(CompaniesSeed[0].id);
     expect(prisma.company.findUnique).toHaveBeenCalledWith(GET_COMPANY_BY_ID_QUERY_MOCK);
-    expect(expectedReturn).toEqual(retVal);
+    expect(retVal).toEqual(expectedReturn);
   });
 
   it('findOne: should throw if not present in database', async () => {

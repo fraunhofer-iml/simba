@@ -10,6 +10,10 @@ export const CompaniesSeed = <Company[]>[
     zip: '44227',
     vatId: '12/748/29384',
     commercialRegisterNumber: 'HRA 5647',
+    telephone: '',
+    emailAddress: '',
+    electronicAddress: '',
+    electronicAddressSchemeId: '',
   },
   {
     id: 'pt0002',
@@ -20,6 +24,10 @@ export const CompaniesSeed = <Company[]>[
     zip: '44227',
     vatId: '12/748/29584',
     commercialRegisterNumber: 'HRA 5648',
+    telephone: '',
+    emailAddress: '',
+    electronicAddress: '',
+    electronicAddressSchemeId: '',
   },
   {
     id: 'pt0003',
@@ -30,5 +38,9 @@ export const CompaniesSeed = <Company[]>[
     zip: '44227',
     vatId: '12/748/29484',
     commercialRegisterNumber: 'HRA 5649',
+    telephone: '',
+    emailAddress: '',
+    electronicAddress: '',
+    electronicAddressSchemeId: '',
   },
 ];

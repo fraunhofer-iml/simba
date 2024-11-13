@@ -1,5 +1,4 @@
 import { CreateTradeReceivableAMQPMock, TradeReceivablesAMQPMock } from '@ap3/amqp';
-import { PaymentStatesEnum } from '@ap3/config';
 import {
   createTradeReceivableQuery,
   DatabaseModule,
@@ -13,7 +12,6 @@ import {
   TradeReceivablesSeed,
 } from '@ap3/database';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PaymentStatus } from '@prisma/client';
 import { TradeReceivablesController } from './trade-receivables.controller';
 import { TradeReceivablesService } from './trade-receivables.service';
 

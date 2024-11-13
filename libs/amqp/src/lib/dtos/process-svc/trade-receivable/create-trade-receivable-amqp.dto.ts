@@ -1,7 +1,7 @@
 import { PaymentStatesEnum } from '@ap3/config';
 import { OmitType } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
-import { TradeReceivableAmqpDto } from '../../trade-receivable-amqp.dto';
+import { TradeReceivableAmqpDto } from './trade-receivable-amqp.dto';
 
 export class CreateTradeReceivableAmqpDto extends OmitType(TradeReceivableAmqpDto, [
   'id',

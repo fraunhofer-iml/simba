@@ -1,6 +1,6 @@
-import { PaymentStatusAmqpDto } from '../../payment-status-amqp.dto';
-import { TradeReceivableAmqpDto } from '../../trade-receivable-amqp.dto';
 import { CreateTradeReceivableAmqpDto } from '../trade-receivable/create-trade-receivable-amqp.dto';
+import { PaymentStatusAmqpDto } from '../trade-receivable/payment-status-amqp.dto';
+import { TradeReceivableAmqpDto } from '../trade-receivable/trade-receivable-amqp.dto';
 
 export const CreateTradeReceivableAMQPMock = new CreateTradeReceivableAmqpDto(new Date('2024-08-16T10:09:41.295Z'), 'testnfthash', 'IV001');
 
