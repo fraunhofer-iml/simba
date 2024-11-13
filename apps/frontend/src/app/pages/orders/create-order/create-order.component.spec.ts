@@ -28,7 +28,6 @@ import { ProductService } from '../../../shared/services/product/product.service
 import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
 import { CreateOrderComponent } from './create-order.component';
 
-
 describe('CreateOrderComponent', () => {
   let component: CreateOrderComponent;
   let fixture: ComponentFixture<CreateOrderComponent>;
@@ -85,7 +84,7 @@ describe('CreateOrderComponent', () => {
     component.orderForm.get('selectedCalendarWeek')?.setValue(2);
     component.orderForm.get('amount')?.setValue(4);
 
-    let createOrderFrontendDto: CreateOrderDto = {
+    const createOrderFrontendDto: CreateOrderDto = {
       productId: component.orderForm.get('product')?.value.id,
       amount: component.orderForm.get('amount')?.value,
       year: component.orderForm.get('date')?.value.year(),
@@ -96,7 +95,7 @@ describe('CreateOrderComponent', () => {
     jest.spyOn(orderService, 'createOrder').mockReturnValue(of(OrderOverviewMock[0]));
     jest.spyOn(offerService, 'getOffersByOrderId').mockReturnValue(of([]));
 
-    component.createHardware();
+    component.createOrder();
     expect(orderService.createOrder).toHaveBeenCalledWith(createOrderFrontendDto);
     expect(offerService.getOffersByOrderId).toHaveBeenCalledWith(OrderOverviewMock[0].id);
     expect(component.openOffers).toBe(true);
@@ -107,7 +106,7 @@ describe('CreateOrderComponent', () => {
     jest.spyOn(orderService, 'createOrder').mockReturnValue(throwError(() => new Error('Error')));
     jest.spyOn(offerService, 'getOffersByOrderId');
 
-    component.createHardware();
+    component.createOrder();
     expect(orderService.createOrder).toHaveBeenCalled();
     expect(offerService.getOffersByOrderId).not.toHaveBeenCalled();
     expect(component.openOffers).toBe(false);

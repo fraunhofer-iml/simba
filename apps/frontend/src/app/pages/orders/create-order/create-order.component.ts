@@ -15,7 +15,6 @@ import { ProductService } from '../../../shared/services/product/product.service
 import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
 import { Countdown } from './model/countdown';
 
-
 const moment = _rollupMoment || _moment;
 
 @Component({
@@ -50,7 +49,7 @@ export class CreateOrderComponent {
     private readonly calendarWeekService: CalendarWeekService
   ) {
     this.orderForm = builder.group({
-      date: new FormControl<Moment | null>(moment(), Validators.required),
+      date: new FormControl<Moment | null>(null, Validators.required),
       product: new FormControl<string>('', Validators.required),
       amount: new FormControl<number | null>(null, [Validators.required, Validators.min(0)]),
       selectedCalendarWeek: new FormControl<number | null>({ value: null, disabled: true }, Validators.required),
@@ -74,7 +73,7 @@ export class CreateOrderComponent {
     datepicker.close();
   }
 
-  createHardware() {
+  createOrder() {
     const createOrderdDto: CreateOrderDto = {
       productId: this.orderForm.get('product')?.value.id,
       amount: this.orderForm.get('amount')?.value,

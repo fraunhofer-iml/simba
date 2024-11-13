@@ -11,7 +11,15 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field class="order-field">
-          <input matInput placeholder="{{ 'AmountInputField' | translate }}" formControlName="amount" type="number" value="number" min="1" pattern="\d*"/>
+          <input
+            matInput
+            placeholder="{{ 'AmountInputField' | translate }}"
+            formControlName="amount"
+            type="number"
+            value="number"
+            min="1"
+            pattern="\d*"
+          />
         </mat-form-field>
         <mat-form-field class="order-field" id="order-year">
           <input
@@ -33,7 +41,7 @@
           </mat-select>
         </mat-form-field>
         <div class="order-field">
-          <button class="create-button" (click)="createHardware()" mat-flat-button [disabled]="!orderForm.valid">
+          <button class="create-button" (click)="createOrder()" mat-flat-button [disabled]="!orderForm.valid">
             {{ 'Create' | translate }}
           </button>
         </div>
@@ -55,7 +63,7 @@
         <div class="card offers">
           <div class="offerIdAndDate">
             <p id="offerId" class="grey">ID {{ offer.id }}</p>
-            <p id="offerDate" class="grey">{{ 'WeekInputField' | translate }}: {{ offer.creationDate |  date }}</p>
+            <p id="offerDate" class="grey">{{ 'WeekInputField' | translate }}: {{ offer.creationDate | date }}</p>
           </div>
           <p id="offerName">{{ orderForm.get('product')?.value.name }}</p>
           <p id="offerAmount">{{ 'AmountInputField' | translate }}: {{ orderForm.get('amount')?.value }}</p>
@@ -70,7 +78,9 @@
       }
     </div>
     <div class="button-container">
-      <button mat-flat-button class="decline-button" (click)="declineAllOffers(); navigateToOrders()">{{ 'DeclineAllOffers' | translate }}</button>
+      <button mat-flat-button class="decline-button" (click)="declineAllOffers(); navigateToOrders()">
+        {{ 'DeclineAllOffers' | translate }}
+      </button>
     </div>
   </div>
 </div>
