@@ -1,10 +1,11 @@
 import { OFFER_STATES_TO_SHOW, OfferStatesEnum } from '@ap3/config';
+import { OffersSeed, ServiceProcessesSeed } from '../../../../seed';
 
 export const queryOffersToShowWithOrder = {
   where: {
     serviceProcess: {
       orderId: {
-        equals: String('cm2uiild9000108mnf080gcp7'),
+        equals: String(ServiceProcessesSeed[0].orderId),
       },
     },
     status: {
@@ -24,7 +25,7 @@ export const queryOpenOffersByOrderId = {
   where: {
     serviceProcess: {
       orderId: {
-        equals: 'cm2uiedwn000108miftzcf209',
+        equals: ServiceProcessesSeed[0].orderId,
       },
     },
     status: {
@@ -41,5 +42,5 @@ export const queryOpenOffersByOrderId = {
 };
 
 export const queryUniqueOrThrow = {
-  where: { id: 'cm2agsjsk00019tf1urzymlqu' },
+  where: { id: OffersSeed[0].id },
 };

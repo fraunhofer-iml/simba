@@ -1,4 +1,4 @@
-import { CompanyAmqpDto } from '@ap3/amqp';
+import { CompanyAmqpDto, PaymentInformationAmqpDto } from '@ap3/amqp';
 import { PaymentInformationDto } from './payment-information.dto';
 
 export class CompanyDto {
@@ -11,27 +11,27 @@ export class CompanyDto {
   vatId: string;
   commercialRegisterNumber: string;
   paymentInformation: PaymentInformationDto[];
-  telephone: string;
-  emailAddress: string;
-  electronicAddress: string;
-  electronicAddressSchemeId: string;
+  telephone: string | null;
+  emailAddress: string | null;
+  electronicAddress: string | null;
+  electronicAddressSchemeId: string | null;
 
   public static fromAmqpDto(companyAmqp: CompanyAmqpDto): CompanyDto {
-    return <CompanyDto>{
-      id: companyAmqp.id,
-      name: companyAmqp.name,
-      city: companyAmqp.city,
-      countryCode: companyAmqp.countryCode,
-      address: companyAmqp.address,
-      zip: companyAmqp.zip,
-      vatId: companyAmqp.vatId,
-      commercialRegisterNumber: companyAmqp.commercialRegisterNumber,
-      paymentInformation: companyAmqp.paymentInformation,
-      telephone: companyAmqp.telephone,
-      emailAddress: companyAmqp.emailAddress,
-      electronicAddress: companyAmqp.electronicAddress,
-      electronicAddressSchemeId: companyAmqp.electronicAddressSchemeId,
-    };
+    return new CompanyDto(
+      companyAmqp.id,
+      companyAmqp.name,
+      companyAmqp.city,
+      companyAmqp.countryCode,
+      companyAmqp.address,
+      companyAmqp.zip,
+      companyAmqp.vatId,
+      companyAmqp.commercialRegisterNumber,
+      companyAmqp.paymentInformation.map((dto: PaymentInformationAmqpDto) => PaymentInformationDto.fromAmqpDto(dto)),
+      companyAmqp.telephone,
+      companyAmqp.emailAddress,
+      companyAmqp.electronicAddress,
+      companyAmqp.electronicAddressSchemeId
+    );
   }
 
   constructor(
@@ -44,10 +44,10 @@ export class CompanyDto {
     vatId: string,
     commercialRegisterNumber: string,
     paymentInformation: PaymentInformationDto[],
-    telephone: string,
-    emailAddress: string,
-    electronicAddress: string,
-    electronicAddressSchemeId: string
+    telephone: string | null,
+    emailAddress: string | null,
+    electronicAddress: string | null,
+    electronicAddressSchemeId: string | null
   ) {
     this.id = id;
     this.name = name;

@@ -1,26 +1,27 @@
 import { OfferStatesEnum, ServiceStatesEnum } from '@ap3/config';
 import { Prisma } from '@prisma/client';
+import { OffersSeed, ServiceProcessesSeed } from '../../../../seed';
 
 export const createOfferQuery = <Prisma.OfferCreateInput>{
-  creationDate: '2024-08-16T10:09:41.295Z',
+  creationDate: new Date('2024-08-16T10:09:41.295Z'),
   price: 0.4,
-  status: 'Open',
+  status: OfferStatesEnum.OPEN,
   serviceProcess: {
     connect: {
-      orderId: 'cm2uiedwn000108miftzcf209',
+      orderId: ServiceProcessesSeed[0].orderId,
     },
   },
 };
 
 export const setOrderStateToAcceptedQuery = <Prisma.OrderUpdateInput>{
-  where: { id: String('cm2agsjs500009tf1hc9f5guo') },
+  where: { id: String(ServiceProcessesSeed[0].orderId) },
   data: {
     status: ServiceStatesEnum.PLANNED,
   },
 };
 
 export const setOfferStateToAcceptedQuery = <Prisma.OfferUpdateInput>{
-  where: { id: 'cm2agsjsk00019tf1urzymlqu' },
+  where: { id: OffersSeed[0] },
   data: {
     states: {
       create: {
@@ -32,7 +33,7 @@ export const setOfferStateToAcceptedQuery = <Prisma.OfferUpdateInput>{
 };
 
 export const setOfferStateToDeclinedQuery = <Prisma.OfferUpdateInput>{
-  where: { id: 'cm2agsjsn00029tf1z3rqc7vp' },
+  where: { id: OffersSeed[3].id },
   data: {
     status: OfferStatesEnum.REFUSED,
   },

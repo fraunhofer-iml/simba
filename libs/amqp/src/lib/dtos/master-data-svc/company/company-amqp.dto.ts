@@ -1,5 +1,4 @@
 import { CompanyWithPaymentModalitiesTypes } from '@ap3/database';
-import { Company } from '@prisma/client';
 import { PaymentInformationAmqpDto } from './payment-information-amqp.dto';
 
 export class CompanyAmqpDto {

@@ -38,12 +38,7 @@ export class OrderAmqpDto {
     this.robots = [];
   }
 
-  public static fromPrismaEntity(order: OrderOverview): OrderAmqpDto {
-    const lastState: ServiceStatus | null = this.getLatestState(order.serviceProcess?.states);
-    const currentState = lastState
-      ? new ServiceStatusAmqpDto(lastState.status, new Date(lastState.timestamp).toISOString())
-      : new ServiceStatusAmqpDto('', '');
-
+  public static fromPrismaEntity(order: OrderOverview, currentState: ServiceStatusAmqpDto): OrderAmqpDto {
     return <OrderAmqpDto>{
       id: order.id,
       creationDate: order.documentIssueDate.toISOString(),
@@ -60,12 +55,13 @@ export class OrderAmqpDto {
     };
   }
 
-  private static getLatestState(states: ServiceStatus[] | undefined): ServiceStatus | null {
-    let retVal: ServiceStatus | null = null;
+  public static getLatestState(states: ServiceStatus[] | undefined): ServiceStatusAmqpDto | null {
+    let retVal: ServiceStatusAmqpDto | null = null;
     if (states && states.length > 0) {
-      retVal = states.reduce((latest, current) => {
+      const serviceStatePrisma: ServiceStatus = states.reduce((latest, current) => {
         return current.timestamp > latest.timestamp ? current : latest;
       });
+      retVal = new ServiceStatusAmqpDto(serviceStatePrisma.status, new Date(serviceStatePrisma.timestamp).toISOString());
     }
     return retVal;
   }

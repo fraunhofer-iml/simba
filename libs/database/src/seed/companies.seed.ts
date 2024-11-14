@@ -17,7 +17,7 @@ export const CompaniesSeed = <Company[]>[
   },
   {
     id: 'pt0002',
-    name: 'Test Participant 2',
+    name: 'Test Participant 02',
     city: 'Dortmund',
     countryCode: 'DE',
     address: 'Teststraße 3',
@@ -31,7 +31,7 @@ export const CompaniesSeed = <Company[]>[
   },
   {
     id: 'pt0003',
-    name: 'Test Participant 3',
+    name: 'Test Participant 03',
     city: 'Dortmund',
     countryCode: 'DE',
     address: 'Teststraße 3',

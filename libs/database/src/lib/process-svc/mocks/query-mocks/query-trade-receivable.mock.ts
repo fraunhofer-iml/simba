@@ -7,7 +7,7 @@ export const createTradeReceivableQuery = <Prisma.TradeReceivableCreateInput>{
   states: { create: { status: PaymentStatesEnum.OPEN, timestamp: new Date('2024-08-16T10:09:41.295Z') } },
 };
 
-export const QueryTradeReceivablesByDebtorQuery = {
+export const TradeReceivablesByDebtorQueryMock = {
   where: {
     invoice: {
       debtor: {
@@ -26,7 +26,7 @@ export const QueryTradeReceivablesByDebtorQuery = {
   },
 };
 
-export const QueryTradeReceivablesByCreditorQuery = {
+export const TradeReceivablesByCreditorQueryMock = {
   where: {
     invoice: {
       creditor: {
@@ -45,7 +45,7 @@ export const QueryTradeReceivablesByCreditorQuery = {
   },
 };
 
-export const QueryTradeReceivablesByOrderQuery = {
+export const TradeReceivablesByOrderQueryMock = {
   include: {
     invoice: {
       include: {
@@ -65,7 +65,7 @@ export const QueryTradeReceivablesByOrderQuery = {
   },
 };
 
-export const QueryTradeReceivableById = {
+export const TradeReceivableByIdQueryMock = {
   where: { id: 'TR001' },
   include: {
     states: true,

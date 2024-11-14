@@ -1,10 +1,11 @@
 import { Prisma } from '@prisma/client';
+import { OrderLinesSeed, OrdersSeed, ProductsSeed } from '../../../../seed';
 
 export const createOrderQueryMock = <Prisma.OrderCreateInput>{
-  totalAmountWithoutVat: null,
-  vatCurrency: 'Euro',
-  buyer: { connect: { id: 'cm349r6pw000408l8geee42b0' } },
-  seller: { connect: { id: 'cm35m1g4u000008jo6jfwd6c4' } },
+  totalAmountWithoutVat: OrdersSeed[0].totalAmountWithoutVat,
+  vatCurrency: OrdersSeed[0].vatCurrency,
+  buyer: { connect: { id: OrdersSeed[0].buyerId } },
+  seller: { connect: { id: OrdersSeed[0].sellerId } },
   serviceProcess: {
     create: { dueCalendarWeek: 7, dueYear: 2025 },
   },
@@ -13,7 +14,7 @@ export const createOrderQueryMock = <Prisma.OrderCreateInput>{
       requestedQuantity: 5,
       item: {
         connect: {
-          id: 'prod1',
+          id: OrderLinesSeed[0].itemId,
         },
       },
     },

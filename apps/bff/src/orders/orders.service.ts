@@ -45,6 +45,7 @@ export class OrdersService {
         const productRef = await this.productService.loadProductRefs(order);
         const offerRef = await this.offerService.loadOfferRef(order);
         const orderOverview = OrderOverviewDto.toOrderOverviewDto(order, productRef, offerRef);
+
         frontendDtos.push(orderOverview);
       }
     } catch (e) {

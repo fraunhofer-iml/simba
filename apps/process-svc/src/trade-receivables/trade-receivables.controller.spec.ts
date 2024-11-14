@@ -1,14 +1,14 @@
-import { CreateTradeReceivableAMQPMock, TradeReceivablesAMQPMock } from '@ap3/amqp';
+import { CreateTradeReceivableAMQPMock, TradeReceivableAmqpDto, TradeReceivablesAMQPMock } from '@ap3/amqp';
 import {
   createTradeReceivableQuery,
   DatabaseModule,
   InvoiceSeed,
   PaymentStatesSeed,
   PrismaService,
-  QueryTradeReceivableById,
-  QueryTradeReceivablesByCreditorQuery,
-  QueryTradeReceivablesByDebtorQuery,
-  QueryTradeReceivablesByOrderQuery,
+  TradeReceivableByIdQueryMock,
+  TradeReceivablesByCreditorQueryMock,
+  TradeReceivablesByDebtorQueryMock,
+  TradeReceivablesByOrderQueryMock,
   TradeReceivablesSeed,
 } from '@ap3/database';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -102,12 +102,12 @@ describe('OfferController', () => {
     prismaPSSpy.mockResolvedValueOnce([PaymentStatesSeed[2], PaymentStatesSeed[3]]);
 
     const retVal = await controller.findAllByDebtorId('pt0001');
-    expect(prisma.tradeReceivable.findMany).toHaveBeenCalledWith(QueryTradeReceivablesByDebtorQuery);
+    expect(prisma.tradeReceivable.findMany).toHaveBeenCalledWith(TradeReceivablesByDebtorQueryMock);
     expect(expectedReturn).toEqual(retVal);
   });
 
   it('findAllByCreditorId: should return trade receivables by creditor id', async () => {
-    const expectedReturn = TradeReceivablesAMQPMock;
+    const expectedReturn = <TradeReceivableAmqpDto[]>TradeReceivablesAMQPMock;
 
     const prismaTRSpy = jest.spyOn(prisma.tradeReceivable, 'findMany');
     prismaTRSpy.mockResolvedValue(TradeReceivablesSeed);
@@ -120,9 +120,9 @@ describe('OfferController', () => {
     prismaPSSpy.mockResolvedValueOnce([PaymentStatesSeed[0], PaymentStatesSeed[1]]);
     prismaPSSpy.mockResolvedValueOnce([PaymentStatesSeed[2], PaymentStatesSeed[3]]);
 
-    const retVal = await controller.findAllByCreditorId('pt0002');
-    expect(prisma.tradeReceivable.findMany).toHaveBeenCalledWith(QueryTradeReceivablesByCreditorQuery);
-    expect(expectedReturn).toEqual(retVal);
+    const retVal: TradeReceivableAmqpDto[] = await controller.findAllByCreditorId(InvoiceSeed[0].creditorId);
+    expect(prisma.tradeReceivable.findMany).toHaveBeenCalledWith(TradeReceivablesByCreditorQueryMock);
+    expect(retVal).toEqual(expectedReturn);
   });
 
   it('findAllByOrderId: should return trade receivables by order id', async () => {
@@ -140,7 +140,7 @@ describe('OfferController', () => {
     prismaPSSpy.mockResolvedValueOnce([PaymentStatesSeed[2], PaymentStatesSeed[3]]);
 
     const retVal = await controller.findAllByOrderId('o001');
-    expect(prisma.tradeReceivable.findMany).toHaveBeenCalledWith(QueryTradeReceivablesByOrderQuery);
+    expect(prisma.tradeReceivable.findMany).toHaveBeenCalledWith(TradeReceivablesByOrderQueryMock);
     expect(expectedReturn).toEqual(retVal);
   });
 
@@ -157,7 +157,7 @@ describe('OfferController', () => {
     prismaPSSpy.mockResolvedValueOnce([PaymentStatesSeed[0], PaymentStatesSeed[1]]);
 
     const retVal = await controller.findOneById(expectedReturn.id);
-    expect(prisma.tradeReceivable.findUnique).toHaveBeenCalledWith(QueryTradeReceivableById);
+    expect(prisma.tradeReceivable.findUnique).toHaveBeenCalledWith(TradeReceivableByIdQueryMock);
     expect(expectedReturn).toEqual(retVal);
   });
 });

@@ -1,5 +1,5 @@
 import { ProductAmqpDto, ProductAmqpMock } from '@ap3/amqp';
-import { DatabaseModule, GET_PRODUCT_BY_ID_QUERY_MOCK, PrismaService, productsMock } from '@ap3/database';
+import { DatabaseModule, GET_PRODUCT_BY_ID_QUERY_MOCK, PrismaService, ProductsSeed } from '@ap3/database';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
@@ -39,7 +39,7 @@ describe('ProductsController', () => {
     const expectedReturn: ProductAmqpDto[] = ProductAmqpMock;
 
     const prismaSpy = jest.spyOn(prisma.product, 'findMany');
-    prismaSpy.mockResolvedValue(productsMock);
+    prismaSpy.mockResolvedValue(ProductsSeed);
 
     const retVal = await controller.findAll();
     expect(prisma.product.findMany).toHaveBeenCalled();
@@ -50,9 +50,9 @@ describe('ProductsController', () => {
     const expectedReturn = ProductAmqpMock[0];
 
     const prismaSpy = jest.spyOn(prisma.product, 'findUnique');
-    prismaSpy.mockResolvedValue(productsMock[0]);
+    prismaSpy.mockResolvedValue(ProductsSeed[0]);
 
-    const retVal = await controller.findOne(productsMock[0].id);
+    const retVal = await controller.findOne(ProductsSeed[0].id);
     expect(prisma.product.findUnique).toHaveBeenCalledWith(GET_PRODUCT_BY_ID_QUERY_MOCK);
     expect(expectedReturn).toEqual(retVal);
   });
@@ -62,7 +62,7 @@ describe('ProductsController', () => {
     prismaSpy.mockResolvedValue(null);
 
     await expect(async () => {
-      await controller.findOne(productsMock[0].id);
+      await controller.findOne(ProductsSeed[0].id);
     }).rejects.toThrow();
     expect(prisma.product.findUnique).toHaveBeenCalledWith(GET_PRODUCT_BY_ID_QUERY_MOCK);
   });

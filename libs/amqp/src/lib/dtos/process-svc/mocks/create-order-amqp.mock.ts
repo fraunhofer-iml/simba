@@ -1,4 +1,4 @@
-import { createOrderQueryMock } from '@ap3/database';
+import { CompaniesSeed, createOrderQueryMock } from '@ap3/database';
 import { CreateOrderAmqpDto } from '../order/create-order-amqp.dto';
 
 export const createOrderAmqpDtoMock: any = <CreateOrderAmqpDto>{
@@ -8,8 +8,8 @@ export const createOrderAmqpDtoMock: any = <CreateOrderAmqpDto>{
   calendarWeek: 7,
   customerId: 'cm349r6pw000408l8geee42b0',
   vatCurrency: 'Euro',
-  buyerId: 'cm349r6pw000408l8geee42b0',
-  sellerId: 'cm35m1g4u000008jo6jfwd6c4',
+  buyerId: CompaniesSeed[0].id,
+  sellerId: CompaniesSeed[1].id,
   toPrismaCreateEntity() {
     return createOrderQueryMock;
   },

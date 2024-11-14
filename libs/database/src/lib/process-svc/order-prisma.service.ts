@@ -2,6 +2,7 @@ import * as util from 'node:util';
 import { Injectable, Logger } from '@nestjs/common';
 import { Order, Prisma, ServiceStatus } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
+import { OrderWithAcceptedOffer } from '../types';
 import { OrderOverview } from '../types/order-overview.types';
 
 @Injectable()
@@ -9,10 +10,11 @@ export class OrderPrismaService {
   private logger = new Logger(OrderPrismaService.name);
   constructor(private prisma: PrismaService) {}
 
-  async getOrder(id: string): Promise<Order | null> {
-    const order = await this.prisma.order.findUnique({
+  async getOrder(id: string): Promise<OrderWithAcceptedOffer | null> {
+    const order = <OrderWithAcceptedOffer>await this.prisma.order.findUnique({
       where: { id: String(id) },
       include: {
+        orderLines: true,
         serviceProcess: {
           include: {
             acceptedOffer: true,
@@ -24,11 +26,13 @@ export class OrderPrismaService {
     return order;
   }
 
-  async getOrders(states: string[]): Promise<Order[]> {
-    return this.prisma.order.findMany({
+  async getOrders(states: string[]): Promise<OrderWithAcceptedOffer[]> {
+    const orders = <OrderWithAcceptedOffer[]>await this.prisma.order.findMany({
       include: {
+        orderLines: true,
         serviceProcess: {
           include: {
+            acceptedOffer: true,
             states: {
               where: {
                 status: {
@@ -40,6 +44,7 @@ export class OrderPrismaService {
         },
       },
     });
+    return orders;
   }
 
   async getOverviewOrder(id: string): Promise<OrderOverview | null> {
@@ -126,25 +131,5 @@ export class OrderPrismaService {
     return this.prisma.order.delete({
       where: { id: String(id) },
     });
-  }
-
-  async getLatestServiceStatus(orderId: string): Promise<ServiceStatus | null> {
-    return this.prisma.serviceStatus.findFirst({
-      where: {
-        serviceProcess: {
-          orderId: orderId,
-        },
-      },
-      include: {
-        serviceProcess: {
-          select: {
-            orderId: true,
-          },
-        },
-      },
-      orderBy: {
-        timestamp: 'desc',
-      },
-    } as Prisma.ServiceStatusFindFirstArgs);
   }
 }

@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 
 export const findSingleOrderMock = <Prisma.OrderWhereInput>{
-  where: { id: String('cm2uiedwn000108miftzcf209') },
+  where: { id: String('o001') },
   select: {
     id: true,
     documentIssueDate: true,

@@ -3,14 +3,11 @@ import {
   createOrderQueryMock,
   DatabaseModule,
   findAllOrdersQueryMock,
-  findLatestServiceStatusQuery,
   findSingleOrderMock,
-  orderOverviewMock,
-  ordersMock,
+  OrderOverviewPrismaMock,
   OrdersSeed,
   PrismaService,
-  serviceProcessMock,
-  serviceStatusMock,
+  ServiceProcessesSeed,
 } from '@ap3/database';
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrdersController } from './orders.controller';
@@ -64,9 +61,9 @@ describe('OrdersService', () => {
     const prismaFindManySpy = jest.spyOn(prisma.order, 'findMany');
     const prismaUpdateServiceProcessSpy = jest.spyOn(prisma.serviceProcess, 'update');
 
-    prismaCreateOrderSpy.mockResolvedValue(ordersMock[0]);
-    prismaFindManySpy.mockResolvedValue([orderOverviewMock[0]]);
-    prismaUpdateServiceProcessSpy.mockResolvedValue(serviceProcessMock[0]);
+    prismaCreateOrderSpy.mockResolvedValue(OrdersSeed[0]);
+    prismaFindManySpy.mockResolvedValue([OrderOverviewPrismaMock[0]]);
+    prismaUpdateServiceProcessSpy.mockResolvedValue(ServiceProcessesSeed[0]);
 
     const retVal = await controller.create(createOrderAmqpDtoMock);
 
@@ -76,30 +73,26 @@ describe('OrdersService', () => {
   });
 
   it('should find all Orders with their specific ServiceStatus', async () => {
-    const expectedReturnValue = [OrderAmqpMock[0]];
+    const expectedReturnValue = [OrderAmqpMock[1]];
     const prismaFindManySpy = jest.spyOn(prisma.order, 'findMany');
-    const prismaFindLatestStatusSpy = jest.spyOn(prisma.serviceStatus, 'findFirst');
 
-    prismaFindManySpy.mockResolvedValue(orderOverviewMock);
-    prismaFindLatestStatusSpy.mockResolvedValueOnce(serviceStatusMock[0]).mockResolvedValueOnce(serviceStatusMock[1]);
+    prismaFindManySpy.mockResolvedValue(OrderOverviewPrismaMock);
 
     const res = await controller.findAll();
 
     expect(prisma.order.findMany).toHaveBeenCalledWith(findAllOrdersQueryMock);
-    expect(prismaFindLatestStatusSpy).toHaveBeenCalledTimes(2);
-    expect(prismaFindLatestStatusSpy).toHaveBeenLastCalledWith(findLatestServiceStatusQuery[1]);
-    expect(res).toEqual(expectedReturnValue);
+    expect(expectedReturnValue).toEqual(res);
   });
 
   it('should find one Order by Id', async () => {
     const expectedReturnValue = OrderAmqpMock[0];
     const prismaFindManySpy = jest.spyOn(prisma.order, 'findMany');
 
-    prismaFindManySpy.mockResolvedValue([orderOverviewMock[0]]);
+    prismaFindManySpy.mockResolvedValue([OrderOverviewPrismaMock[0]]);
 
-    const res = await controller.findOne(orderOverviewMock[0].id);
+    const res = await controller.findOne(OrderOverviewPrismaMock[0].id);
 
     expect(prisma.order.findMany).toHaveBeenCalledWith(findSingleOrderMock);
-    expect(res).toEqual(expectedReturnValue);
+    expect(expectedReturnValue).toEqual(res);
   });
 });

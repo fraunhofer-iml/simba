@@ -1,9 +1,9 @@
 import util from 'node:util';
-import { CreateOrderAmqpDto, OrderAmqpDto } from '@ap3/amqp';
+import { CreateOrderAmqpDto, OrderAmqpDto, ServiceStatusAmqpDto } from '@ap3/amqp';
 import { SERVICE_STATES_TO_SHOW, ServiceStatesEnum } from '@ap3/config';
 import { OrderOverview, OrderPrismaService, ServiceProcessPrismaService } from '@ap3/database';
 import { Injectable, Logger } from '@nestjs/common';
-import { Order, Prisma, ServiceStatus } from '@prisma/client';
+import { Order, Prisma } from '@prisma/client';
 
 @Injectable()
 export class OrdersService {
@@ -22,7 +22,10 @@ export class OrdersService {
       const newOrder: Order = await this.orderPrismaService.createOrder(createOrderEntity);
       await this.serviceProcessPrismaService.setServiceState(newOrder.id, ServiceStatesEnum.OPEN);
 
-      return OrderAmqpDto.fromPrismaEntity(await this.orderPrismaService.getOverviewOrder(newOrder.id));
+      const orderOverview: OrderOverview = await this.orderPrismaService.getOverviewOrder(newOrder.id);
+      const currentState: ServiceStatusAmqpDto = OrderAmqpDto.getLatestState(orderOverview.serviceProcess.states);
+
+      return OrderAmqpDto.fromPrismaEntity(orderOverview, currentState);
     } catch (e) {
       this.logger.error(e);
     }
@@ -32,10 +35,9 @@ export class OrdersService {
     const orderDtos: OrderAmqpDto[] = [];
     const orders: OrderOverview[] = await this.orderPrismaService.getOrdersForOverview();
     for (const order of orders) {
-      const latestServiceStatus: ServiceStatus = await this.orderPrismaService.getLatestServiceStatus(order.id);
-      if (SERVICE_STATES_TO_SHOW.includes(latestServiceStatus.status)) {
-        order.serviceProcess.states = [latestServiceStatus];
-        orderDtos.push(OrderAmqpDto.fromPrismaEntity(order));
+      const latestServiceStatus: ServiceStatusAmqpDto = OrderAmqpDto.getLatestState(order.serviceProcess.states);
+      if (SERVICE_STATES_TO_SHOW.includes(latestServiceStatus?.status)) {
+        orderDtos.push(OrderAmqpDto.fromPrismaEntity(order, latestServiceStatus));
       }
     }
     return orderDtos;
@@ -44,7 +46,8 @@ export class OrdersService {
   async findOne(id: string) {
     this.logger.debug(id);
     const order: OrderOverview = await this.orderPrismaService.getOverviewOrder(id);
-    return OrderAmqpDto.fromPrismaEntity(order);
+    const currentState: ServiceStatusAmqpDto = OrderAmqpDto.getLatestState(order.serviceProcess.states);
+    return OrderAmqpDto.fromPrismaEntity(order, currentState);
   }
 
   async updateOrderStatus(orderId: string, status: ServiceStatesEnum) {

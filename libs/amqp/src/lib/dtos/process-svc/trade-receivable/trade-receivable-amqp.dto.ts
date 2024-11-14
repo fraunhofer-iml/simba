@@ -32,9 +32,7 @@ export class TradeReceivableAmqpDto {
   }
 
   public static fromPrismaEntity(tradeReceivable: TradeReceivable, invoice: Invoice, states: PaymentStatus[]): TradeReceivableAmqpDto {
-    const firstState = this.getFirstState(states);
     const lastState = this.getLatestState(states);
-    const creationDate = firstState ? firstState.timestamp : null;
     const currentState = lastState
       ? new PaymentStatusAmqpDto(lastState.status, lastState.timestamp)
       : new PaymentStatusAmqpDto('', new Date());
@@ -47,7 +45,7 @@ export class TradeReceivableAmqpDto {
       +invoice.totalAmountWithoutVat,
       currentState,
       invoice.id,
-      creationDate ? creationDate : new Date()
+      invoice.creationDate
     );
   }
 
@@ -56,16 +54,6 @@ export class TradeReceivableAmqpDto {
     if (states && states.length > 0) {
       retVal = states.reduce((latest, current) => {
         return current.timestamp > latest.timestamp ? current : latest;
-      });
-    }
-    return retVal;
-  }
-
-  private static getFirstState(states: PaymentStatus[]): PaymentStatus | null {
-    let retVal: PaymentStatus | null = null;
-    if (states && states.length > 0) {
-      retVal = states.reduce((latest, current) => {
-        return current.timestamp < latest.timestamp ? current : latest;
       });
     }
     return retVal;

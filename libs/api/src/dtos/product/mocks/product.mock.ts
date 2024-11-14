@@ -1,12 +1,12 @@
 import { ProductDto } from '../product.dto';
 
-export const ProductMocks: ProductDto[] = [
+export const ProductDtoMocks: ProductDto[] = [
   {
     name: 'Quadrokopter',
-    id: 'prod1'
+    id: 'prod1',
   },
   {
     name: 'Hexakopter',
-    id: 'prod2'
-  }
-]
+    id: 'prod2',
+  },
+];

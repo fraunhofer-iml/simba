@@ -1,13 +1,14 @@
-import { OfferAmqpDto } from '@ap3/amqp';
+import { OfferAmqpDto, OfferAmqpMock } from '@ap3/amqp';
 import {
+  createOfferQuery,
   DatabaseModule,
-  offersAmqpMock,
-  offersMock,
-  ordersMock,
+  OffersSeed,
+  OrdersSeed,
   PrismaService,
   queryOffersToShowWithOrder,
   queryOpenOffersByOrderId,
-  serviceProcessMock,
+  queryUniqueOrThrow,
+  ServiceProcessesSeed,
   setOfferStateToDeclinedQuery,
 } from '@ap3/database';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -56,78 +57,83 @@ describe('OfferController', () => {
 
   it('create: should create new offers for an order id', async () => {
     const prismaSpy = jest.spyOn(prisma.offer, 'create');
-    prismaSpy.mockResolvedValue(offersMock[0]);
+    prismaSpy.mockResolvedValue(OffersSeed[0]);
 
     const expectedReturn = true;
-    const retVal = await controller.create(ordersMock[1].id);
+    const retVal = await controller.create(ServiceProcessesSeed[0].orderId);
 
-    /*     expect(prisma.offer.create).toHaveBeenCalledWith({ createOfferQuery }); */
-    expect(prisma.offer.create).toBeCalledTimes(offersMock.length);
+    expect(prisma.offer.create).toHaveBeenCalledWith({ data: createOfferQuery });
+    expect(prisma.offer.create).toBeCalledTimes(4);
     expect(expectedReturn).toEqual(retVal);
     //wird 4 mal mit unterschiedlichen werten aufgerufen, tohavebeencalledwith wirft error
   });
 
   it('findAll: should return all offers', async () => {
-    const expectedReturn = OfferAmqpDto.fromPrismaEntities(offersMock, ordersMock[1].id);
+    const expectedReturn = OfferAmqpMock;
     const prismaSpy = jest.spyOn(prisma.offer, 'findMany');
     const prismaServiceProcessSpy = jest.spyOn(prisma.serviceProcess, 'findUnique');
 
-    prismaServiceProcessSpy.mockResolvedValue(serviceProcessMock[1]);
-    prismaSpy.mockResolvedValue(offersMock);
+    prismaServiceProcessSpy
+      .mockResolvedValueOnce(ServiceProcessesSeed[0])
+      .mockResolvedValueOnce(ServiceProcessesSeed[0])
+      .mockResolvedValueOnce(ServiceProcessesSeed[0])
+      .mockResolvedValueOnce(ServiceProcessesSeed[0])
+      .mockResolvedValueOnce(ServiceProcessesSeed[1])
+      .mockResolvedValueOnce(ServiceProcessesSeed[1]);
+    prismaSpy.mockResolvedValue([OffersSeed[0], OffersSeed[1], OffersSeed[2], OffersSeed[3], OffersSeed[4], OffersSeed[5]]);
 
     const retVal = await controller.findAll();
     expect(prisma.offer.findMany).toHaveBeenCalled();
-    expect(expectedReturn).toEqual(retVal);
+    expect(retVal).toEqual(expectedReturn);
   });
 
   it('findAllByOrderId: should return offers by order id', async () => {
-    const expectedReturn = OfferAmqpDto.fromPrismaEntities(offersMock, ordersMock[1].id);
+    const expectedReturn = [OfferAmqpMock[0], OfferAmqpMock[1], OfferAmqpMock[2], OfferAmqpMock[3]];
     const prismaSpy = jest.spyOn(prisma.offer, 'findMany');
     const prismaServiceProcessSpy = jest.spyOn(prisma.serviceProcess, 'findUnique');
 
-    prismaServiceProcessSpy.mockResolvedValue(serviceProcessMock[1]);
-    prismaSpy.mockResolvedValue(offersMock);
-
-    const query = queryOffersToShowWithOrder;
+    prismaServiceProcessSpy.mockResolvedValue(ServiceProcessesSeed[0]);
+    prismaSpy.mockResolvedValue([OffersSeed[0], OffersSeed[1], OffersSeed[2], OffersSeed[3]]);
 
     const retVal = await controller.findAllByOrderId(expectedReturn[0].orderId);
-    expect(prisma.offer.findMany).toHaveBeenCalledWith(query);
-    expect(expectedReturn).toEqual(retVal);
+    expect(prisma.offer.findMany).toHaveBeenCalledWith(queryOffersToShowWithOrder);
+    expect(retVal).toEqual(expectedReturn);
   });
 
   it('findOne: should return a specific', async () => {
-    const expectedReturn = OfferAmqpDto.fromPrismaEntity(offersMock[0], ordersMock[1].id);
+    const expectedReturn = OfferAmqpMock[0];
     const prismaSpy = jest.spyOn(prisma.offer, 'findUniqueOrThrow');
     const prismaServiceProcessSpy = jest.spyOn(prisma.serviceProcess, 'findUnique');
 
-    prismaServiceProcessSpy.mockResolvedValue(serviceProcessMock[1]);
-    prismaSpy.mockResolvedValue(offersMock[0]);
+    prismaServiceProcessSpy.mockResolvedValue(ServiceProcessesSeed[0]);
+    prismaSpy.mockResolvedValue(OffersSeed[0]);
 
     const retVal = await controller.findOne(expectedReturn.id);
     expect(prisma.offer.findUniqueOrThrow).toHaveBeenCalled();
+    expect(prisma.offer.findUniqueOrThrow).toHaveBeenCalledWith(queryUniqueOrThrow);
     expect(expectedReturn).toEqual(retVal);
   });
 
   it('acceptOffer: should accept one offer and decline all other offers of an order', async () => {
-    const expectedReturn = offersAmqpMock[0];
+    const expectedReturn = OfferAmqpMock[0];
     const prismaOrderUpdateSpy = jest.spyOn(prisma.order, 'update');
     const prismaOfferUpdateSpy = jest.spyOn(prisma.offer, 'update');
     const prismaServiceProcessUpdateSpy = jest.spyOn(prisma.serviceProcess, 'update');
     const prismaFindManySpy = jest.spyOn(prisma.offer, 'findMany');
     const prismaServiceProcessFindUniqueSpy = jest.spyOn(prisma.serviceProcess, 'findUnique');
 
-    prismaServiceProcessUpdateSpy.mockResolvedValue(serviceProcessMock[0]);
-    prismaServiceProcessFindUniqueSpy.mockResolvedValue(serviceProcessMock[0]);
-    prismaFindManySpy.mockResolvedValue(offersMock.slice(1, 4));
-    prismaOrderUpdateSpy.mockResolvedValue(ordersMock[0]);
-    prismaOfferUpdateSpy.mockResolvedValue(offersMock[0]);
+    prismaServiceProcessUpdateSpy.mockResolvedValue(ServiceProcessesSeed[0]);
+    prismaServiceProcessFindUniqueSpy.mockResolvedValue(ServiceProcessesSeed[0]);
+    prismaFindManySpy.mockResolvedValue(OffersSeed.slice(1, 4));
+    prismaOrderUpdateSpy.mockResolvedValue(OrdersSeed[0]);
+    prismaOfferUpdateSpy.mockResolvedValue(OffersSeed[0]);
 
-    const retVal = await controller.acceptOffer(offersMock[0].id);
+    const retVal = await controller.acceptOffer(OffersSeed[0].id);
 
     expect(prismaOfferUpdateSpy).toHaveBeenLastCalledWith(setOfferStateToDeclinedQuery);
     expect(prismaFindManySpy).toHaveBeenCalledWith(queryOpenOffersByOrderId);
     expect(prismaOfferUpdateSpy).toHaveBeenCalledWith(setOfferStateToDeclinedQuery);
-    expect(prismaOfferUpdateSpy).toBeCalledTimes(offersMock.length);
+    expect(prismaOfferUpdateSpy).toBeCalledTimes(4);
     expect(retVal).toEqual(expectedReturn);
   });
 });

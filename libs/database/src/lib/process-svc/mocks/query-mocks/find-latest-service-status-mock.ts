@@ -4,7 +4,7 @@ export const findLatestServiceStatusQuery = <Prisma.ServiceStatusFindFirstArgs[]
   {
     where: {
       serviceProcess: {
-        orderId: 'cm2uiedwn000108miftzcf209',
+        orderId: 'o001',
       },
     },
     include: {
@@ -21,7 +21,7 @@ export const findLatestServiceStatusQuery = <Prisma.ServiceStatusFindFirstArgs[]
   {
     where: {
       serviceProcess: {
-        orderId: 'cm2uiild9000108mnf080gcp7',
+        orderId: 'o002',
       },
     },
     include: {

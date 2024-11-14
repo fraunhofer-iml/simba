@@ -7,7 +7,7 @@ import { OrdersSeed } from '../libs/database/src/seed/orders.seed';
 import { PaymentInformationSeed } from '../libs/database/src/seed/payment-information.seed';
 import { PaymentStatesSeed } from '../libs/database/src/seed/payment-states.seed';
 import { ProductsSeed } from '../libs/database/src/seed/products.seed';
-import { SerivceProcessStatesSeed } from '../libs/database/src/seed/service-process-states.seed';
+import { ServiceStatesSeed } from '../libs/database/src/seed/service-process-states.seed';
 import { ServiceProcessesSeed } from '../libs/database/src/seed/service-process.seed';
 import { TradeReceivablesSeed } from '../libs/database/src/seed/trade-receivables.seed';
 import { Entity, importEntities } from './data_import';
@@ -20,7 +20,7 @@ const paymentStates = PaymentStatesSeed;
 const tradeReceivables = TradeReceivablesSeed;
 const orderLines = OrderLinesSeed;
 const orders = OrdersSeed;
-const serviceProcessStates = SerivceProcessStatesSeed;
+const serviceProcessStates = ServiceStatesSeed;
 const serviceProcesses = ServiceProcessesSeed;
 const paymentInformations = PaymentInformationSeed;
 

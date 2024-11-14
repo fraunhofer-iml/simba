@@ -1,6 +1,6 @@
 import { ServiceStatus } from '@prisma/client';
 
-export const SerivceProcessStatesSeed = <ServiceStatus[]>[
+export const ServiceStatesSeed = <ServiceStatus[]>[
   {
     serviceProcessId: 'sp001',
     status: 'Open',

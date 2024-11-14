@@ -1,22 +1,67 @@
-import { BrokerAmqp } from '@ap3/amqp';
+import { AmqpBrokerQueues, CompanyAmqpDto, CompanyAmqpMock, CompanyMessagePatterns } from '@ap3/amqp';
+import { CompanyDto, CompanyDtoMock } from '@ap3/api';
+import { of } from 'rxjs';
+import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CompaniesController } from './companies.controller';
 import { CompaniesService } from './companies.service';
 
 describe('CompaniesController', () => {
   let controller: CompaniesController;
-
+  let clientProxy: ClientProxy;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [new BrokerAmqp().getMasterDataSvcBroker()],
+      imports: [],
       controllers: [CompaniesController],
-      providers: [CompaniesService],
+      providers: [
+        CompaniesService,
+        {
+          provide: AmqpBrokerQueues.MASTER_DATA_SVC_QUEUE,
+          useValue: {
+            send: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<CompaniesController>(CompaniesController);
+    clientProxy = module.get<ClientProxy>(AmqpBrokerQueues.MASTER_DATA_SVC_QUEUE) as ClientProxy;
   });
 
   it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
+  it('should create a Company', () => {
+    expect(controller).toBeDefined();
+  });
+  it('should find all Companys', async () => {
+    const expectedResult: CompanyDto[] = CompanyDtoMock;
+    const sendRequestSpy = jest.spyOn(clientProxy, 'send');
+    sendRequestSpy.mockImplementation((messagePattern: CompanyMessagePatterns, data: any) => {
+      return of(CompanyAmqpMock);
+    });
+
+    const res: CompanyAmqpDto[] = await controller.findAll();
+
+    expect(sendRequestSpy).toHaveBeenCalledWith(CompanyMessagePatterns.READ_ALL, {});
+    expect(res).toEqual(expectedResult);
+  });
+  it('should a specific Company by its Id', async () => {
+    const expectedResult: CompanyDto = CompanyDtoMock[0];
+    const sendRequestSpy = jest.spyOn(clientProxy, 'send');
+    sendRequestSpy.mockImplementation((messagePattern: CompanyMessagePatterns, data: any) => {
+      return of(CompanyAmqpMock[0]);
+    });
+
+    const res: CompanyAmqpDto = await controller.findOne(CompanyAmqpMock[0].id);
+
+    expect(sendRequestSpy).toHaveBeenCalledWith(CompanyMessagePatterns.READ_BY_ID, CompanyDtoMock[0].id);
+    expect(res).toEqual(expectedResult);
+  });
+  it('should update a company', () => {
+    expect(controller).toBeDefined();
+  });
+  it('should remove a company', () => {
     expect(controller).toBeDefined();
   });
 });

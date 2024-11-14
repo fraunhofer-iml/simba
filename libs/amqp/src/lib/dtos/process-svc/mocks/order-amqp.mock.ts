@@ -1,33 +1,35 @@
+import { OrderLinesSeed, OrdersSeed, ServiceProcessesSeed, ServiceStatesSeed } from '@ap3/database';
 import { ServiceStatusAmqpDto } from '../order';
 import { OrderAmqpDto } from '../order/order-amqp.dto';
+import { ServiceStatusAmqpDtoMock } from './service-status-amqp.mock';
 
 export const OrderAmqpMock = <OrderAmqpDto[]>[
   {
-    id: 'cm2uiedwn000108miftzcf209',
-    productId: 'prod1',
-    amount: 5,
-    year: 2024,
-    calendarWeek: 5,
-    creationDate: '2024-11-05T14:58:51.652Z',
-    status: new ServiceStatusAmqpDto('Planned', '2024-11-05T14:58:51.652Z'),
+    id: OrdersSeed[0].id,
+    productId: OrderLinesSeed[0].itemId,
+    amount: +OrderLinesSeed[0].requestedQuantity,
+    year: ServiceProcessesSeed[0].dueYear,
+    calendarWeek: ServiceProcessesSeed[0].dueCalendarWeek,
+    creationDate: new Date(ServiceStatesSeed[0].timestamp).toISOString(),
+    status: new ServiceStatusAmqpDto(ServiceStatesSeed[0].status, new Date(ServiceStatesSeed[0].timestamp).toISOString()),
     acceptedOfferId: undefined,
     offerIds: [],
-    robots: ['cm36zvaom000108jk75746j7j', 'cm36zxzwf000408jker5cfzgf'],
-    customerId: 'pt0001',
+    robots: ServiceProcessesSeed[0].machines,
+    customerId: OrdersSeed[0].buyerId,
     tradeReceivableId: undefined,
   },
   {
-    id: 'cm2uiild9000108mnf080gcp7',
-    productId: 'prod1',
-    amount: 4,
-    year: 2024,
-    calendarWeek: 40,
-    creationDate: '2024-08-30T13:24:16.595Z',
-    status: new ServiceStatusAmqpDto('Accepted', '2024-09-01T13:24:16.595Z'),
+    id: OrdersSeed[1].id,
+    productId: OrderLinesSeed[1].itemId,
+    amount: +OrderLinesSeed[1].requestedQuantity,
+    year: ServiceProcessesSeed[1].dueYear,
+    calendarWeek: ServiceProcessesSeed[1].dueCalendarWeek,
+    creationDate: new Date(ServiceStatesSeed[4].timestamp).toISOString(),
+    status: new ServiceStatusAmqpDto(ServiceStatesSeed[5].status, new Date(ServiceStatesSeed[5].timestamp).toISOString()),
     acceptedOfferId: undefined,
     offerIds: [],
-    robots: [],
-    customerId: 'cm35m1g4u000008jo6jfwd6c4',
+    robots: ServiceProcessesSeed[1].machines,
+    customerId: OrdersSeed[1].buyerId,
     tradeReceivableId: undefined,
   },
 ];
