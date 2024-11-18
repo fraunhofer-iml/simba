@@ -1,12 +1,9 @@
+import { ProductsSeed } from '@ap3/database';
 import { ProductDto } from '../product.dto';
 
 export const ProductDtoMocks: ProductDto[] = [
   {
-    name: 'Quadrokopter',
-    id: 'prod1',
-  },
-  {
-    name: 'Hexakopter',
-    id: 'prod2',
+    name: ProductsSeed[0].name,
+    id: ProductsSeed[0].id,
   },
 ];

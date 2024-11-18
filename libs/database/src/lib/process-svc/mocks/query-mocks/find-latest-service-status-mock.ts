@@ -1,10 +1,11 @@
 import { Prisma } from '@prisma/client';
+import { OrdersSeed } from '../../../../seed/orders.seed';
 
 export const findLatestServiceStatusQuery = <Prisma.ServiceStatusFindFirstArgs[]>[
   {
     where: {
       serviceProcess: {
-        orderId: 'o001',
+        orderId: OrdersSeed[0].id,
       },
     },
     include: {
@@ -21,7 +22,7 @@ export const findLatestServiceStatusQuery = <Prisma.ServiceStatusFindFirstArgs[]
   {
     where: {
       serviceProcess: {
-        orderId: 'o002',
+        orderId: OrdersSeed[1].id,
       },
     },
     include: {

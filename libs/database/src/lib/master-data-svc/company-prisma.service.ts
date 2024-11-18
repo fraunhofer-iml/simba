@@ -1,6 +1,5 @@
 import * as util from 'node:util';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Company, PaymentInformation } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import { CompanyWithPaymentModalitiesTypes } from '../types';
 

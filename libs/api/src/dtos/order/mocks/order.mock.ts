@@ -1,39 +1,75 @@
-import { MachinesSeed, OrdersSeed } from '@ap3/database';
+import {
+  CompaniesSeed,
+  MachinesSeed,
+  OffersSeed,
+  OrderLinesSeed,
+  OrdersSeed,
+  ProductsSeed,
+  ServiceProcessesSeed,
+  ServiceStatesSeed,
+  TradeReceivablesSeed,
+} from '@ap3/database';
 import { OpenOffersMock } from '../../offer';
 import { ProductDtoMocks } from '../../product';
 import { OrderOverviewDto } from '../order-overview.dto';
 import { OrderDto } from '../order.dto';
 
 export const OrderDtosMock: OrderDto[] = [
-  new OrderDto('O1', ProductDtoMocks[0].id, 1, 2024, 52, '2024-08-31T13:24:16.595Z', 'Accepted', '', [], ['M1', 'M2'], 'pt0001', ''),
-  new OrderDto('O2', ProductDtoMocks[1].id, 1, 2024, 52, '2024-08-30T13:24:16.595Z', 'Accepted', '', [], ['M1', 'M2'], 'pt0001', ''),
+  new OrderDto(
+    OrdersSeed[0].id,
+    ProductsSeed[0].id,
+    +OrderLinesSeed[0].requestedQuantity,
+    ServiceProcessesSeed[0].dueYear,
+    ServiceProcessesSeed[0].dueCalendarWeek,
+    OrdersSeed[0].documentIssueDate.toISOString(),
+    ServiceStatesSeed[1].status,
+    OffersSeed[0].id,
+    [OffersSeed[0].id, OffersSeed[1].id, OffersSeed[2].id, OffersSeed[3].id],
+    [MachinesSeed[0].id, MachinesSeed[1].id],
+    CompaniesSeed[0].id,
+    TradeReceivablesSeed[0].id
+  ),
+  new OrderDto(
+    OrdersSeed[1].id,
+    ProductsSeed[0].id,
+    +OrderLinesSeed[1].requestedQuantity,
+    ServiceProcessesSeed[1].dueYear,
+    ServiceProcessesSeed[1].dueCalendarWeek,
+    OrdersSeed[1].documentIssueDate.toISOString(),
+    ServiceStatesSeed[4].status,
+    '',
+    [],
+    [],
+    CompaniesSeed[0].id,
+    ''
+  ),
 ];
 
 export const OrderOverviewMock: OrderOverviewDto[] = [
   new OrderOverviewDto(
     OrdersSeed[0].id,
     ProductDtoMocks[0],
-    2,
-    2024,
-    50,
-    '2024-10-09T07:55:55.695Z',
-    'Open',
-    '2024-10-09T07:55:55.695Z',
+    +OrderLinesSeed[0].requestedQuantity,
+    ServiceProcessesSeed[0].dueYear,
+    ServiceProcessesSeed[0].dueCalendarWeek,
+    OrdersSeed[0].documentIssueDate.toISOString(),
+    ServiceStatesSeed[0].status,
+    ServiceStatesSeed[0].timestamp.toISOString(),
     OpenOffersMock[0].price,
-    [MachinesSeed[0].id, MachinesSeed[2].id],
-    'pt0001'
+    [MachinesSeed[0].id, MachinesSeed[1].id],
+    CompaniesSeed[0].id
   ),
   new OrderOverviewDto(
     OrdersSeed[1].id,
     ProductDtoMocks[0],
-    4,
-    2024,
-    52,
-    '2024-10-02T07:55:55.695Z',
-    'Planned',
-    '2024-10-02T08:55:55.695Z',
+    +OrderLinesSeed[1].requestedQuantity,
+    ServiceProcessesSeed[1].dueYear,
+    ServiceProcessesSeed[1].dueCalendarWeek,
+    OrdersSeed[1].documentIssueDate.toISOString(),
+    ServiceStatesSeed[5].status,
+    ServiceStatesSeed[5].timestamp.toISOString(),
     OpenOffersMock[1].price,
     [MachinesSeed[0].id, MachinesSeed[1].id],
-    'pt0001'
+    CompaniesSeed[0].id
   ),
 ];

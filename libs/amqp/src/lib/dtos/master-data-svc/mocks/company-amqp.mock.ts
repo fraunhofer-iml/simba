@@ -1,51 +1,52 @@
-import { PaymentInformationSeed } from '@ap3/database';
+import { CompaniesSeed, PaymentInformationSeed } from '@ap3/database';
+import { zip } from 'rxjs';
 import { PaymentInformationAmqpDto } from '../company';
 import { CompanyAmqpDto } from '../company/company-amqp.dto';
 
 export const CompanyAmqpMock = <CompanyAmqpDto[]>[
   new CompanyAmqpDto(
-    'pt0001',
-    'Test Participant 01',
-    'Dortmund',
-    'DE',
-    'Teststraße 3',
-    '44227',
-    '12/748/29384',
-    'HRA 5647',
+    CompaniesSeed[0].id,
+    CompaniesSeed[0].name,
+    CompaniesSeed[0].city,
+    CompaniesSeed[0].countryCode,
+    CompaniesSeed[0].address,
+    CompaniesSeed[0].zip,
+    CompaniesSeed[0].vatId,
+    CompaniesSeed[0].commercialRegisterNumber,
     [new PaymentInformationAmqpDto(PaymentInformationSeed[0].id, PaymentInformationSeed[0].IBAN, PaymentInformationSeed[0].BIC)],
-    '',
-    '',
-    '',
-    ''
+    CompaniesSeed[0].telephone,
+    CompaniesSeed[0].emailAddress,
+    CompaniesSeed[0].electronicAddress,
+    CompaniesSeed[0].electronicAddressSchemeId
   ),
   new CompanyAmqpDto(
-    'pt0002',
-    'Test Participant 02',
-    'Dortmund',
-    'DE',
-    'Teststraße 3',
-    '44227',
-    '12/748/29584',
-    'HRA 5648',
+    CompaniesSeed[1].id,
+    CompaniesSeed[1].name,
+    CompaniesSeed[1].city,
+    CompaniesSeed[1].countryCode,
+    CompaniesSeed[1].address,
+    CompaniesSeed[1].zip,
+    CompaniesSeed[1].vatId,
+    CompaniesSeed[1].commercialRegisterNumber,
     [new PaymentInformationAmqpDto(PaymentInformationSeed[1].id, PaymentInformationSeed[1].IBAN, PaymentInformationSeed[1].BIC)],
-    '',
-    '',
-    '',
-    ''
+    CompaniesSeed[1].telephone,
+    CompaniesSeed[1].emailAddress,
+    CompaniesSeed[1].electronicAddress,
+    CompaniesSeed[1].electronicAddressSchemeId
   ),
   new CompanyAmqpDto(
-    'pt0003',
-    'Test Participant 03',
-    'Dortmund',
-    'DE',
-    'Teststraße 3',
-    '44227',
-    '12/748/29484',
-    'HRA 5649',
+    CompaniesSeed[2].id,
+    CompaniesSeed[2].name,
+    CompaniesSeed[2].city,
+    CompaniesSeed[2].countryCode,
+    CompaniesSeed[2].address,
+    CompaniesSeed[2].zip,
+    CompaniesSeed[2].vatId,
+    CompaniesSeed[2].commercialRegisterNumber,
     [new PaymentInformationAmqpDto(PaymentInformationSeed[2].id, PaymentInformationSeed[2].IBAN, PaymentInformationSeed[2].BIC)],
-    '',
-    '',
-    '',
-    ''
+    CompaniesSeed[2].telephone,
+    CompaniesSeed[2].emailAddress,
+    CompaniesSeed[2].electronicAddress,
+    CompaniesSeed[2].electronicAddressSchemeId
   ),
 ];

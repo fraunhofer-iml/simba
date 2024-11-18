@@ -1,7 +1,6 @@
 import { OrderLinesSeed, OrdersSeed, ServiceProcessesSeed, ServiceStatesSeed } from '@ap3/database';
 import { ServiceStatusAmqpDto } from '../order';
 import { OrderAmqpDto } from '../order/order-amqp.dto';
-import { ServiceStatusAmqpDtoMock } from './service-status-amqp.mock';
 
 export const OrderAmqpMock = <OrderAmqpDto[]>[
   {

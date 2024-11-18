@@ -1,6 +1,7 @@
+import { ServiceStatesSeed } from '@ap3/database';
 import { ServiceStatusAmqpDto } from '../order';
 
 export const ServiceStatusAmqpDtoMock: ServiceStatusAmqpDto[] = [
-  new ServiceStatusAmqpDto('Open', '2024-10-09T07:55:55.695Z'),
-  new ServiceStatusAmqpDto('Planned', '2024-10-02T08:55:55.695Z'),
+  new ServiceStatusAmqpDto(ServiceStatesSeed[0].status, ServiceStatesSeed[0].timestamp.toISOString()),
+  new ServiceStatusAmqpDto(ServiceStatesSeed[1].status, ServiceStatesSeed[1].timestamp.toISOString()),
 ];

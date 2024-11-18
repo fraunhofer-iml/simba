@@ -1,18 +1,19 @@
+import { OffersSeed } from '@ap3/database';
 import { OfferDto } from '../offer.dto';
 
 export const OpenOffersMock: OfferDto[] = [
   {
-    id: 'OF1',
-    creationDate: '2024-08-31T13:24:16.595Z',
-    price: 340.5,
-    status: 'Open',
-    orderId: 'O1',
+    id: OffersSeed[2].id,
+    creationDate: OffersSeed[2].creationDate.toISOString(),
+    price: +OffersSeed[2].price,
+    status: OffersSeed[2].status,
+    orderId: 'o001',
   },
   {
-    id: 'OF2',
-    creationDate: '2024-08-31T13:24:16.595Z',
-    price: 250.5,
-    status: 'Open',
-    orderId: 'O1',
-  }
-]
+    id: OffersSeed[4].id,
+    creationDate: OffersSeed[4].creationDate.toISOString(),
+    price: +OffersSeed[4].price,
+    status: OffersSeed[4].status,
+    orderId: 'o001',
+  },
+];

@@ -1,10 +1,11 @@
 import { PaymentStatesEnum } from '@ap3/config';
 import { Prisma } from '@prisma/client';
+import { CompaniesSeed, InvoiceSeed, PaymentStatesSeed, TradeReceivablesSeed } from '../../../../seed';
 
 export const createTradeReceivableQuery = <Prisma.TradeReceivableCreateInput>{
-  nft: 'testnfthash',
-  invoice: { connect: { id: 'IV001' } },
-  states: { create: { status: PaymentStatesEnum.OPEN, timestamp: new Date('2024-08-16T10:09:41.295Z') } },
+  nft: TradeReceivablesSeed[0].nft,
+  invoice: { connect: { id: InvoiceSeed[0].id } },
+  states: { create: { status: PaymentStatesEnum.OPEN, timestamp: PaymentStatesSeed[3].timestamp } },
 };
 
 export const TradeReceivablesByDebtorQueryMock = {
@@ -12,7 +13,7 @@ export const TradeReceivablesByDebtorQueryMock = {
     invoice: {
       debtor: {
         id: {
-          equals: 'pt0001',
+          equals: CompaniesSeed[0].id,
         },
       },
     },
@@ -31,7 +32,7 @@ export const TradeReceivablesByCreditorQueryMock = {
     invoice: {
       creditor: {
         id: {
-          equals: 'pt0002',
+          equals: CompaniesSeed[1].id,
         },
       },
     },
@@ -66,7 +67,7 @@ export const TradeReceivablesByOrderQueryMock = {
 };
 
 export const TradeReceivableByIdQueryMock = {
-  where: { id: 'TR001' },
+  where: { id: TradeReceivablesSeed[0].id },
   include: {
     states: true,
   },

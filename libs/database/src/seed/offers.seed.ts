@@ -28,7 +28,7 @@ export const OffersSeed: Offer[] = <Offer[]>[
     decisionDate: new Date(),
     scheduledDate: null,
     price: new Decimal(7),
-    status: OfferStatesEnum.REFUSED,
+    status: OfferStatesEnum.OPEN,
     serviceProcessId: ServiceProcessesSeed[0].id,
   },
   {

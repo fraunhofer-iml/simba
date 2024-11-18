@@ -1,22 +1,23 @@
 import { PaymentInformation } from '@prisma/client';
+import { CompaniesSeed } from './companies.seed';
 
 export const PaymentInformationSeed = <PaymentInformation[]>[
   {
     id: 'pi001',
-    companyId: 'pt0001',
-    IBAN: 'DE68210501700012345678',
+    companyId: CompaniesSeed[0].id,
+    IBAN: 'DE1645684242240000000000',
     BIC: 'BELADEBEXXX',
   },
   {
     id: 'pi002',
-    companyId: 'pt0002',
-    IBAN: 'DE68210501700012345678',
+    companyId: CompaniesSeed[1].id,
+    IBAN: 'DE852587997913360000000000',
     BIC: 'BELADEBEXXX',
   },
   {
     id: 'pi003',
-    companyId: 'pt0003',
-    IBAN: 'DE68210501700012345678',
+    companyId: CompaniesSeed[2].id,
+    IBAN: 'DE437151193618770000000000',
     BIC: 'BELADEBEXXX',
   },
 ];

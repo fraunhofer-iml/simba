@@ -1,30 +1,32 @@
 import { Invoice, Prisma } from '@prisma/client';
+import { CompaniesSeed } from './companies.seed';
+import { ServiceProcessesSeed } from './service-process.seed';
 
 export const InvoiceSeed = <Invoice[]>[
   {
     id: 'IV001',
-    invoiceNumber: 'IV001',
+    invoiceNumber: 'INV-20241105-1',
     creationDate: new Date('2024-10-10T07:55:55.695Z'),
     contractCurrency: 'EUR',
     measuringUnit: 'Stück',
     netPricePerUnit: '10.0',
     totalAmountWithoutVat: new Prisma.Decimal(3),
     vat: new Prisma.Decimal(0.9),
-    debtorId: 'pt0001',
-    creditorId: 'pt0002',
-    serviceProcessId: 'sp001',
+    debtorId: CompaniesSeed[0].id,
+    creditorId: CompaniesSeed[1].id,
+    serviceProcessId: ServiceProcessesSeed[0].id,
   },
   {
     id: 'IV002',
-    invoiceNumber: 'IV002',
+    invoiceNumber: 'INV-20241105-2',
     creationDate: new Date('2024-10-10T07:55:55.695Z'),
     contractCurrency: 'EUR',
     measuringUnit: 'Stück',
     netPricePerUnit: '20.0',
     totalAmountWithoutVat: new Prisma.Decimal(6.0),
     vat: new Prisma.Decimal(2.8),
-    debtorId: 'pt0001',
-    creditorId: 'pt0002',
-    serviceProcessId: 'sp002',
+    debtorId: CompaniesSeed[0].id,
+    creditorId: CompaniesSeed[1].id,
+    serviceProcessId: ServiceProcessesSeed[1].id,
   },
 ];

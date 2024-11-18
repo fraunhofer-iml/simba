@@ -3,7 +3,11 @@ import { CreateTradeReceivableAmqpDto } from '../trade-receivable/create-trade-r
 import { PaymentStatusAmqpDto } from '../trade-receivable/payment-status-amqp.dto';
 import { TradeReceivableAmqpDto } from '../trade-receivable/trade-receivable-amqp.dto';
 
-export const CreateTradeReceivableAMQPMock = new CreateTradeReceivableAmqpDto(new Date('2024-08-16T10:09:41.295Z'), 'testnfthash', 'IV001');
+export const CreateTradeReceivableAMQPMock = new CreateTradeReceivableAmqpDto(
+  PaymentStatesSeed[3].timestamp,
+  TradeReceivablesSeed[0].nft,
+  TradeReceivablesSeed[0].invoiceId
+);
 
 export const TradeReceivablesAMQPMock = <TradeReceivableAmqpDto[]>[
   {
