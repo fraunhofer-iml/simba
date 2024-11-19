@@ -1,7 +1,6 @@
 import util from 'node:util';
 import { CreateOrderAmqpDto, OrderAmqpDto, ServiceStatusAmqpDto } from '@ap3/amqp';
-import { SERVICE_STATES_TO_SHOW, ServiceStatesEnum } from '@ap3/config';
-import { OrderOverview, OrderPrismaService, ServiceProcessPrismaService } from '@ap3/database';
+import { OrderOverview, OrderPrismaService, SERVICE_STATES_TO_SHOW, ServiceProcessPrismaService, ServiceStatesEnum } from '@ap3/database';
 import { Injectable, Logger } from '@nestjs/common';
 import { Order, Prisma } from '@prisma/client';
 

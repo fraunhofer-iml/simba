@@ -35,4 +35,15 @@ export const OrderLinesSeed = <OrderLine[]>[
     unitOfMeasureCodeAgreed: null,
     lineTotalAmount: new Prisma.Decimal(6),
   },
+  {
+    id: 'ol004',
+    netPrice: new Prisma.Decimal(2),
+    orderId: 'o004',
+    itemId: ProductsSeed[0].id,
+    requestedQuantity: new Prisma.Decimal(2),
+    partialDeliveryAllowed: false,
+    unitOfMeasureCodeRequested: null,
+    unitOfMeasureCodeAgreed: null,
+    lineTotalAmount: new Prisma.Decimal(4),
+  },
 ];

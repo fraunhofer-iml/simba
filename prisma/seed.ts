@@ -1,15 +1,18 @@
 import { PrismaClient } from '@prisma/client';
-import { CompaniesSeed } from '../libs/database/src/seed';
-import { InvoiceSeed } from '../libs/database/src/seed/invoices.seed';
-import { MachinesSeed } from '../libs/database/src/seed/machines.seed';
-import { OrderLinesSeed } from '../libs/database/src/seed/order-lines.seed';
-import { OrdersSeed } from '../libs/database/src/seed/orders.seed';
-import { PaymentInformationSeed } from '../libs/database/src/seed/payment-information.seed';
-import { PaymentStatesSeed } from '../libs/database/src/seed/payment-states.seed';
-import { ProductsSeed } from '../libs/database/src/seed/products.seed';
-import { ServiceStatesSeed } from '../libs/database/src/seed/service-process-states.seed';
-import { ServiceProcessesSeed } from '../libs/database/src/seed/service-process.seed';
-import { TradeReceivablesSeed } from '../libs/database/src/seed/trade-receivables.seed';
+import {
+  CompaniesSeed,
+  InvoiceSeed,
+  MachinesSeed,
+  OffersSeed,
+  OrderLinesSeed,
+  OrdersSeed,
+  PaymentInformationSeed,
+  PaymentStatesSeed,
+  ProductsSeed,
+  ServiceProcessesSeed,
+  ServiceStatesSeed,
+  TradeReceivablesSeed,
+} from '../libs/database/src/seed';
 import { Entity, importEntities } from './data_import';
 
 const machines = MachinesSeed;
@@ -22,7 +25,8 @@ const orderLines = OrderLinesSeed;
 const orders = OrdersSeed;
 const serviceProcessStates = ServiceStatesSeed;
 const serviceProcesses = ServiceProcessesSeed;
-const paymentInformations = PaymentInformationSeed;
+const paymentInformation = PaymentInformationSeed;
+const offers = OffersSeed;
 
 const dataSets: Entity[] = [
   {
@@ -32,7 +36,7 @@ const dataSets: Entity[] = [
   },
   {
     name: 'paymentInformation',
-    records: paymentInformations,
+    records: paymentInformation,
     createRecord: async (data: any) => await prisma.paymentInformation.create({ data }),
   },
   {
@@ -64,6 +68,11 @@ const dataSets: Entity[] = [
     name: 'serviceProcessStatus',
     records: serviceProcessStates,
     createRecord: async (data: any) => await prisma.serviceStatus.create({ data }),
+  },
+  {
+    name: 'offer',
+    records: offers,
+    createRecord: async (data: any) => await prisma.offer.create({ data }),
   },
   {
     name: 'invoice',

@@ -2,6 +2,7 @@ import * as util from 'node:util';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Invoice, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
+import { InvoiceCountAndDueMonth, InvoiceSumTotalAmountWithoutVatTypes } from '../types';
 
 @Injectable()
 export class InvoicePrismaService {
@@ -43,5 +44,37 @@ export class InvoicePrismaService {
       this.logger.error(util.inspect(e));
       throw e;
     }
+  }
+
+  async countInvoicesDueInMonth(year: number): Promise<InvoiceCountAndDueMonth[]> {
+    try {
+      const invoiceCount = <InvoiceCountAndDueMonth[]>await this.prismaService.$queryRaw`
+        SELECT COUNT(*) as invoice_count, TO_CHAR(DATE_TRUNC('month', iv."dueDate"), 'YYYY-MM') as due_month
+        FROM "Invoice" AS iv
+        GROUP BY due_month;
+      `;
+
+      return invoiceCount;
+    } catch (e) {
+      this.logger.error(e);
+      this.logger.error(`It was not possible to get trade receivable ids for ${year}`);
+      throw e;
+    }
+  }
+
+
+  async sumInvoiceAmountsForTradeReceivables(invoiceIds: string[]): Promise<InvoiceSumTotalAmountWithoutVatTypes> {
+    const totalSum = <InvoiceSumTotalAmountWithoutVatTypes>await this.prismaService.invoice.aggregate({
+      _sum: {
+        totalAmountWithoutVat: true,
+      },
+      where: {
+        id: {
+          in: invoiceIds,
+        },
+      },
+    });
+    this.logger.debug(util.inspect(totalSum));
+    return totalSum;
   }
 }

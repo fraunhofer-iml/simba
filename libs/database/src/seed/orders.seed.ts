@@ -42,4 +42,17 @@ export const OrdersSeed = <Order[]>[
     vatCurrency: 'Euro',
     buyerAccountingRefId: 'ACC-202410291551-363148',
   },
+  {
+    id: 'o004',
+    documentIssueDate: new Date('2024-10-02T07:55:55.695Z'),
+    buyerId: CompaniesSeed[0].id,
+    sellerId: CompaniesSeed[1].id,
+    noteContent: '',
+    referencedBuyerOrderLine: OrderLinesSeed[3].id,
+    buyerOrderRefDocumentId: '202410291549-726762',
+    sumOfLinesAmount: 1,
+    totalAmountWithoutVat: new Prisma.Decimal(4),
+    vatCurrency: 'Euro',
+    buyerAccountingRefId: 'ACC-202410291551-363148',
+  },
 ];

@@ -74,6 +74,7 @@ model Invoice {
   id                    String   @id @default(cuid())
   invoiceNumber         String
   creationDate          DateTime @default(now())
+  dueDate               DateTime @default(now())
   contractCurrency      String
   measuringUnit         String
   netPricePerUnit       String

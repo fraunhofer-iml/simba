@@ -1,3 +1,4 @@
+import { PaidTrStatisticsAmqpDto } from '@ap3/amqp';
 import { CreateTradeReceivableDto, TradeReceivableDto } from '@ap3/api';
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -77,5 +78,18 @@ export class TradeReceivablesController {
     @Query('orderId') orderId: string
   ): Promise<TradeReceivableDto[]> {
     return await this.tradeReceivableService.findAll(debtorId, creditorId, orderId);
+  }
+
+  @ApiOperation({
+    description: 'Get a statistic for all trade receivables paid in a given year, grouped by month. ',
+  })
+  @ApiParam({
+    name: 'year',
+    type: Number,
+    required: true,
+  })
+  @Get('/statistics/:year/paid')
+  async getStatisticPaidTradePerMonth(@Param('year') year: number): Promise<PaidTrStatisticsAmqpDto[]> {
+    return await this.tradeReceivableService.getStatisticPaidTradePerMonth(year);
   }
 }

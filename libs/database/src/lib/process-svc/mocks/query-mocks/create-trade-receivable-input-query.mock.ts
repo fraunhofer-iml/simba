@@ -1,6 +1,6 @@
-import { PaymentStatesEnum } from '@ap3/config';
 import { Prisma } from '@prisma/client';
 import { InvoiceSeed } from '../../../../seed/invoices.seed';
+import { PaymentStatesEnum } from '../../../constants';
 
 export const createTradeReceivablePrismaInputMock: Prisma.TradeReceivableCreateInput = <Prisma.TradeReceivableCreateInput>{
   nft: '',

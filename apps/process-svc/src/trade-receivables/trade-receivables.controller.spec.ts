@@ -1,8 +1,9 @@
 import { CreateTradeReceivableAMQPMock, TradeReceivableAmqpDto, TradeReceivablesAMQPMock } from '@ap3/amqp';
 import {
+  AggregationSumNovember, AggregationSumSeptember,
   createTradeReceivableQuery,
-  DatabaseModule,
-  InvoiceSeed,
+  DatabaseModule, DueInvoiceCount,
+  InvoiceSeed, PaidInvoiceIdsNovember, PaidInvoiceIdsSeptember, PaidOnTimeInvoiceCount,
   PaymentStatesSeed,
   PrismaService,
   TradeReceivableByIdQueryMock,
@@ -12,8 +13,12 @@ import {
   TradeReceivablesSeed,
 } from '@ap3/database';
 import { Test, TestingModule } from '@nestjs/testing';
+import { TradeReceivablesEvaluationService } from './trade-receivable-evaluation.service';
 import { TradeReceivablesController } from './trade-receivables.controller';
 import { TradeReceivablesService } from './trade-receivables.service';
+import {
+  PaidTrStatisticsAmqpMock
+} from "@ap3/amqp";
 
 describe('OfferController', () => {
   let controller: TradeReceivablesController;
@@ -25,6 +30,7 @@ describe('OfferController', () => {
       controllers: [TradeReceivablesController],
       providers: [
         TradeReceivablesService,
+        TradeReceivablesEvaluationService,
         {
           provide: PrismaService,
           useValue: {
@@ -38,7 +44,9 @@ describe('OfferController', () => {
             },
             invoice: {
               findUnique: jest.fn(),
+              aggregate: jest.fn(),
             },
+            $queryRaw: jest.fn(),
           },
         },
       ],
@@ -72,7 +80,7 @@ describe('OfferController', () => {
   it('findAll: should return all trs', async () => {
     const expectedReturn = TradeReceivablesAMQPMock;
     const prismaTRSpy = jest.spyOn(prisma.tradeReceivable, 'findMany');
-    prismaTRSpy.mockResolvedValue(TradeReceivablesSeed);
+    prismaTRSpy.mockResolvedValue([TradeReceivablesSeed[0], TradeReceivablesSeed[1]]);
 
     const prismaInvoiceSpy = jest.spyOn(prisma.invoice, 'findUnique');
     prismaInvoiceSpy.mockResolvedValueOnce(InvoiceSeed[0]);
@@ -91,7 +99,7 @@ describe('OfferController', () => {
     const expectedReturn = TradeReceivablesAMQPMock;
 
     const prismaTRSpy = jest.spyOn(prisma.tradeReceivable, 'findMany');
-    prismaTRSpy.mockResolvedValue(TradeReceivablesSeed);
+    prismaTRSpy.mockResolvedValue([TradeReceivablesSeed[0], TradeReceivablesSeed[1]]);
 
     const prismaInvoiceSpy = jest.spyOn(prisma.invoice, 'findUnique');
     prismaInvoiceSpy.mockResolvedValueOnce(InvoiceSeed[0]);
@@ -110,7 +118,7 @@ describe('OfferController', () => {
     const expectedReturn = <TradeReceivableAmqpDto[]>TradeReceivablesAMQPMock;
 
     const prismaTRSpy = jest.spyOn(prisma.tradeReceivable, 'findMany');
-    prismaTRSpy.mockResolvedValue(TradeReceivablesSeed);
+    prismaTRSpy.mockResolvedValue([TradeReceivablesSeed[0], TradeReceivablesSeed[1]]);
 
     const prismaInvoiceSpy = jest.spyOn(prisma.invoice, 'findUnique');
     prismaInvoiceSpy.mockResolvedValueOnce(InvoiceSeed[0]);
@@ -129,7 +137,7 @@ describe('OfferController', () => {
     const expectedReturn = TradeReceivablesAMQPMock;
 
     const prismaTRSpy = jest.spyOn(prisma.tradeReceivable, 'findMany');
-    prismaTRSpy.mockResolvedValue(TradeReceivablesSeed);
+    prismaTRSpy.mockResolvedValue([TradeReceivablesSeed[0], TradeReceivablesSeed[1]]);
 
     const prismaInvoiceSpy = jest.spyOn(prisma.invoice, 'findUnique');
     prismaInvoiceSpy.mockResolvedValueOnce(InvoiceSeed[0]);
@@ -158,6 +166,36 @@ describe('OfferController', () => {
 
     const retVal = await controller.findOneById(expectedReturn.id);
     expect(prisma.tradeReceivable.findUnique).toHaveBeenCalledWith(TradeReceivableByIdQueryMock);
+    expect(expectedReturn).toEqual(retVal);
+  });
+
+  it('calcPaidTradeReceivableVolumePerMonth: should create a statistic about paid and due trade receivables', async () => {
+    const expectedReturn = PaidTrStatisticsAmqpMock;
+
+    const prismaRawSpy = jest.spyOn(prisma, '$queryRaw');
+    prismaRawSpy.mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce(PaidInvoiceIdsSeptember)
+      .mockResolvedValueOnce(PaidInvoiceIdsNovember)
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([]);
+
+    prismaRawSpy.mockResolvedValueOnce(DueInvoiceCount);
+
+    prismaRawSpy.mockResolvedValueOnce(PaidOnTimeInvoiceCount);
+
+    const prismaInvoiceSpy = jest.spyOn(prisma.invoice, 'aggregate');
+    prismaInvoiceSpy
+      .mockResolvedValueOnce(AggregationSumSeptember)
+      .mockResolvedValueOnce(AggregationSumNovember);
+
+    const retVal = await controller.calcPaidTradeReceivableVolumePerMonth(2024);
     expect(expectedReturn).toEqual(retVal);
   });
 });

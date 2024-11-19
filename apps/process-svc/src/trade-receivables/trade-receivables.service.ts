@@ -92,7 +92,6 @@ export class TradeReceivablesService {
     const tradeReceivableDtos: TradeReceivableAmqpDto[] = [];
     for (const tr of tradeReceivables) {
       const relatedInvoice: Invoice = await this.invoicePrismaService.getInvoiceById(tr.invoiceId);
-      this.logger.debug('related invoice: ', util.inspect(relatedInvoice));
 
       const trStates: PaymentStatus[] = await this.tradeReceivablePrismaService.getPaymentStatesForTradeReceivable(tr.id);
       tradeReceivableDtos.push(TradeReceivableAmqpDto.fromPrismaEntity(tr, relatedInvoice, trStates));

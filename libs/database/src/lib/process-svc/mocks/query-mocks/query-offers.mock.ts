@@ -1,5 +1,5 @@
-import { OFFER_STATES_TO_SHOW, OfferStatesEnum } from '@ap3/config';
 import { OffersSeed, ServiceProcessesSeed } from '../../../../seed';
+import { OFFER_STATES_TO_SHOW, OfferStatesEnum } from '../../../constants';
 
 export const queryOffersToShowWithOrder = {
   where: {

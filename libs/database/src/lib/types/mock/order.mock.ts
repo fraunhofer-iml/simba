@@ -1,6 +1,6 @@
 import { CompaniesSeed, OrderLinesSeed, OrdersSeed, ServiceProcessesSeed, ServiceStatesSeed } from '../../../seed';
 import { ProductsSeed } from '../../../seed/products.seed';
-import { OrderOverview } from '../../types/order-overview.types';
+import { OrderOverview } from '../order-overview.types';
 
 export const OrderOverviewPrismaMock: any[] = <OrderOverview[]>[
   {

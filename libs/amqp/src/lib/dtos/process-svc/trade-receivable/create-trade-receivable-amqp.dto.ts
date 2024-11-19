@@ -1,4 +1,4 @@
-import { PaymentStatesEnum } from '@ap3/config';
+import { PaymentStatesEnum } from '@ap3/database';
 import { OmitType } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { TradeReceivableAmqpDto } from './trade-receivable-amqp.dto';

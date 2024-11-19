@@ -1,6 +1,6 @@
-import { OfferStatesEnum, ServiceStatesEnum } from '@ap3/config';
 import { Prisma } from '@prisma/client';
 import { OffersSeed, ServiceProcessesSeed } from '../../../../seed';
+import { OfferStatesEnum, ServiceStatesEnum } from '../../../constants';
 
 export const createOfferQuery = <Prisma.OfferCreateInput>{
   creationDate: new Date('2024-08-16T10:09:41.295Z'),

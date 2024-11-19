@@ -12,4 +12,14 @@ export const TradeReceivablesSeed = <TradeReceivable[]>[
     nft: 'AEF3122355213EFA2',
     invoiceId: InvoiceSeed[1].id,
   },
+  {
+    id: 'TR003',
+    nft: 'AEF3122355213EFA3',
+    invoiceId: InvoiceSeed[2].id,
+  },
+  {
+    id: 'TR004',
+    nft: 'AEF3122355213EFA4',
+    invoiceId: InvoiceSeed[3].id,
+  },
 ];

@@ -1,7 +1,7 @@
 import * as util from 'node:util';
-import { OfferStatesEnum } from '@ap3/config';
 import { Injectable, Logger } from '@nestjs/common';
 import { Offer, Prisma } from '@prisma/client';
+import { OfferStatesEnum } from '../constants';
 import { PrismaService } from '../prisma.service';
 import { ServiceProcessPrismaService } from './service-process-prisma.service';
 

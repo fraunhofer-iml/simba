@@ -1,7 +1,7 @@
 import * as util from 'node:util';
-import { ServiceStatesEnum } from '@ap3/config';
 import { Injectable, Logger } from '@nestjs/common';
 import { ServiceProcess } from '@prisma/client';
+import { ServiceStatesEnum } from '../constants';
 import { PrismaService } from '../prisma.service';
 
 @Injectable()

@@ -1,7 +1,7 @@
 interface Entity {
-  name: string,
-  records: any[],
-  createRecord: (record: any) => Promise<any>
+  name: string;
+  records: any[];
+  createRecord: (record: any) => Promise<any>;
 }
 
 async function importEntities(entities: Entity[]) {
@@ -19,4 +19,4 @@ async function importEntities(entities: Entity[]) {
   }
 }
 
-export {Entity, importEntities}
+export { Entity, importEntities };

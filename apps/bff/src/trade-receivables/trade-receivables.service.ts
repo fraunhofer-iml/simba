@@ -1,5 +1,11 @@
 import * as util from 'node:util';
-import { AmqpBrokerQueues, CreateTradeReceivableAmqpDto, TradeReceivableAmqpDto, TradeReceivableMessagePatterns } from '@ap3/amqp';
+import {
+  AmqpBrokerQueues,
+  CreateTradeReceivableAmqpDto,
+  PaidTrStatisticsAmqpDto,
+  TradeReceivableAmqpDto,
+  TradeReceivableMessagePatterns,
+} from '@ap3/amqp';
 import { CreateTradeReceivableDto, TradeReceivableDto } from '@ap3/api';
 import { defaultIfEmpty, firstValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -56,5 +62,12 @@ export class TradeReceivablesService {
       retVal.push(TradeReceivableDto.toTradeReceivableDto(tr, 'Kreditor', 'Debitor'));
     }
     return retVal;
+  }
+
+  async getStatisticPaidTradePerMonth(year: number): Promise<PaidTrStatisticsAmqpDto[]> {
+    const tradeReceivableAmqpDto = await firstValueFrom<PaidTrStatisticsAmqpDto[]>(
+      this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_TR_STATISTICS_PAID, year).pipe(defaultIfEmpty(null))
+    );
+    return tradeReceivableAmqpDto;
   }
 }

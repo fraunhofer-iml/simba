@@ -1,6 +1,12 @@
 import { CreateOfferAmqpDto, OfferAmqpDto } from '@ap3/amqp';
-import { OFFER_STATES_TO_SHOW, OfferStatesEnum, ServiceStatesEnum } from '@ap3/config';
-import { OfferPrismaService, OrderPrismaService, ServiceProcessPrismaService } from '@ap3/database';
+import {
+  OFFER_STATES_TO_SHOW,
+  OfferPrismaService,
+  OfferStatesEnum,
+  OrderPrismaService,
+  ServiceProcessPrismaService,
+  ServiceStatesEnum,
+} from '@ap3/database';
 import { Injectable, Logger } from '@nestjs/common';
 import { Offer } from '@prisma/client';
 

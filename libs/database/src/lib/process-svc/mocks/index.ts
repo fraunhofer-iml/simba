@@ -4,5 +4,4 @@ export * from './query-mocks/query-trade-receivable.mock';
 export * from './query-mocks/create-order-query.mock';
 export * from './query-mocks/find-latest-service-status-mock';
 export * from './query-mocks/query-orders.mock';
-export * from './order.mock';
 export * from './query-mocks/create-trade-receivable-input-query.mock';

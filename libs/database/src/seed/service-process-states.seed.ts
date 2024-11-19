@@ -1,5 +1,5 @@
-import { ServiceStatesEnum } from '@ap3/config';
 import { ServiceStatus } from '@prisma/client';
+import { ServiceStatesEnum } from '../lib/constants';
 
 export const ServiceStatesSeed = <ServiceStatus[]>[
   {
@@ -49,6 +49,16 @@ export const ServiceStatesSeed = <ServiceStatus[]>[
   },
   {
     serviceProcessId: 'sp003',
+    status: ServiceStatesEnum.PLANNED,
+    timestamp: new Date('2024-10-02T08:55:55.695Z'),
+  },
+  {
+    serviceProcessId: 'sp004',
+    status: ServiceStatesEnum.OPEN,
+    timestamp: new Date('2024-10-02T07:55:55.695Z'),
+  },
+  {
+    serviceProcessId: 'sp004',
     status: ServiceStatesEnum.PLANNED,
     timestamp: new Date('2024-10-02T08:55:55.695Z'),
   },
