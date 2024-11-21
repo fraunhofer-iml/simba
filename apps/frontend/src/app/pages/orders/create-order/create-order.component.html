@@ -36,7 +36,7 @@
         <mat-form-field class="order-field" id="order-week">
           <mat-select placeholder="{{ 'WeekInputField' | translate }}" formControlName="selectedCalendarWeek">
             @for (week of allCalendarWeeks; track week) {
-              <mat-option [value]="week">{{ 'CalenderWeek' | translate }} {{ week }}</mat-option>
+              <mat-option [value]="week">{{ 'CalendarWeek' | translate }} {{ week }}</mat-option>
             }
           </mat-select>
         </mat-form-field>

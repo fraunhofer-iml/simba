@@ -1,4 +1,6 @@
+import { OrderOverviewDto } from '@ap3/api';
 import { TranslateModule } from '@ngx-translate/core';
+import { DatePipe } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -18,11 +20,14 @@ import { MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
+import { OrderStatus } from './enum/orderStatus';
 import { OrdersOverviewComponent } from './orders-overview.component';
+
 
 describe('OrdersOverviewComponent', () => {
   let component: OrdersOverviewComponent;
   let fixture: ComponentFixture<OrdersOverviewComponent>;
+  let datePipe: DatePipe;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -46,16 +51,68 @@ describe('OrdersOverviewComponent', () => {
         RouterModule.forRoot([]),
         TranslateModule.forRoot(),
       ],
-      providers: [OrdersService, provideHttpClient()],
+      providers: [OrdersService, provideHttpClient(), DatePipe],
       declarations: [OrdersOverviewComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OrdersOverviewComponent);
+    datePipe = TestBed.inject(DatePipe);
+    datePipe = TestBed.inject(DatePipe);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+
+  it('should return calendarWeek for status planned', () => {
+    const order: OrderOverviewDto = new OrderOverviewDto(
+      '1234',
+      {
+        name: 'Quadrokopter',
+        id: 'prod1',
+      },
+      2,
+      2024,
+      50,
+      '2024-10-02T10:55:55.695Z',
+      OrderStatus.planned,
+      '2024-10-09T07:55:55.695Z',
+      2,
+      [],
+      'pt0001'
+    )
+
+    const result = component.getDateBasedOnStatus(order);
+    expect(result).toBe('CalendarWeek 50');
+  });
+
+  it('should return formatted date for status produced', () => {
+    const order: OrderOverviewDto = new OrderOverviewDto(
+      '1234',
+      {
+        name: 'Quadrokopter',
+        id: 'prod1',
+      },
+      2,
+      2024,
+      50,
+      '2024-10-02T10:55:55.695Z',
+      OrderStatus.produced,
+      '2024-10-09T07:55:55.695Z',
+      2,
+      [],
+      'pt0001'
+    )
+
+    const date = '2023-11-18 10:00';
+    jest.spyOn(datePipe, 'transform').mockReturnValue(date);
+
+    const result = component.getDateBasedOnStatus(order);
+
+    expect(result).toBe(date);
+    expect(datePipe.transform).toHaveBeenCalledWith(order.statusTimestamp, 'yyyy-MM-dd HH:mm');
   });
 });

@@ -15,7 +15,7 @@
   "DeclineAllOffers": "Alle Ablehnen",
   "OffersExpired": "Das tut uns leid, Ihre Angebote sind abgelaufen.",
   "Accept": "Akzeptieren",
-  "CalenderWeek": "KW",
+  "CalendarWeek": "KW",
   "OrderTableFirstRow": "Auftrags ID",
   "OrderTableSecondRow": "Datum",
   "OrderTableThirdRow": "Status",
@@ -23,7 +23,7 @@
   "OrderTableFifthRow": "Produkte",
   "OrderTableSixthRow": "Stück",
   "OrderTableSeventhRow": "Roboter",
-  "OrderTableEigthRow": "Kunden Id",
+  "OrderTableEigthRow": "Kunden ID",
 
   "WalletTitle": "Geldbeutel",
   "WalletTransactions": "Transaktionen",

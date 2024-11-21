@@ -15,7 +15,7 @@
   "DeclineAllOffers": "Decline all",
   "OffersExpired": "We're sorry, your offers have expired.",
   "Accept": "Accept",
-  "CalenderWeek": "CW",
+  "CalendarWeek": "CW",
   "OrderTableFirstRow": "Order ID",
   "OrderTableSecondRow": "Date",
   "OrderTableThirdRow": "Status",
@@ -23,7 +23,7 @@
   "OrderTableFifthRow": "Products",
   "OrderTableSixthRow": "Quantity",
   "OrderTableSeventhRow": "Robots",
-  "OrderTableEigthRow": "Customer Id",
+  "OrderTableEigthRow": "Customer ID",
 
   "WalletTitle": "Wallet",
   "WalletTransactions": "Transactions",
