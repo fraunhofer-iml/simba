@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import moment from 'moment';
 
 @Injectable()
 export class CalendarWeekService {
@@ -27,5 +28,15 @@ export class CalendarWeekService {
   public getFirstWeekday(year: number) {
     const firstDayOfYear: Date = new Date(year, 0, 1);
     return firstDayOfYear.getDay();
+  }
+
+  public getCalendarWeeks(selectedYear: number, lastCalendarWeek: number): number[] {
+    const currentYear = moment().year();
+    if (selectedYear === currentYear) {
+      const currentWeek = moment().isoWeek();
+      return Array.from({ length: lastCalendarWeek - currentWeek + 1 }, (_, index) => currentWeek + index);
+    } else {
+      return Array.from({ length: lastCalendarWeek }, (_, index) => index + 1);
+    }
   }
 }

@@ -9,7 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -33,8 +33,13 @@ describe('CreateOrderComponent', () => {
   let fixture: ComponentFixture<CreateOrderComponent>;
   let orderService: OrdersService;
   let offerService: OffersService;
+  let datepicker: MatDatepicker<moment.Moment>;
 
   beforeEach(async () => {
+    datepicker = {
+      close: jest.fn()
+    } as unknown as MatDatepicker<moment.Moment>;
+
     await TestBed.configureTestingModule({
       declarations: [CreateOrderComponent, DialogOffersExpiredComponent],
       imports: [
@@ -110,5 +115,16 @@ describe('CreateOrderComponent', () => {
     expect(orderService.createOrder).toHaveBeenCalled();
     expect(offerService.getOffersByOrderId).not.toHaveBeenCalled();
     expect(component.openOffers).toBe(false);
+  });
+
+  it('should set the year of the date value', () => {
+    const normalizedDate = moment().year(2025);
+    const initialDate = moment().year(2020);
+    component.orderForm.get('date')?.setValue(initialDate);
+
+    component.setYear(normalizedDate, datepicker);
+
+    const date = component.orderForm.get('date')?.value;
+    expect(date.year()).toBe(2025);
   });
 });
