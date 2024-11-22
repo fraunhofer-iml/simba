@@ -1,34 +1,36 @@
 import util from 'node:util';
-import { PaidTrStatisticsAmqpDto } from '@ap3/amqp';
+import { NotPaidTrStatisticsAmqpDto, PaidTrStatisticsAmqpDto } from '@ap3/amqp';
 import { MonthsEnum } from '@ap3/config';
 import {
   InvoiceCountAndDueMonth,
   InvoiceIdTypes,
   InvoicePrismaService,
   InvoiceSumTotalAmountWithoutVatTypes,
+  PaymentStatesEnum,
+  TradeReceivablePaymentStatusCount,
   TradeReceivablePrismaService,
 } from '@ap3/database';
 import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
-export class TradeReceivablesEvaluationService {
-  private readonly logger = new Logger(TradeReceivablesEvaluationService.name);
+export class TradeReceivablesStatisticsService {
+  private readonly logger = new Logger(TradeReceivablesStatisticsService.name);
   constructor(
     private readonly tradeReceivablePrismaService: TradeReceivablePrismaService,
     private readonly invoicePrismaService: InvoicePrismaService
   ) {}
 
-  async calcPaidTradeReceivableVolumePerMonth(year: number): Promise<PaidTrStatisticsAmqpDto[]> {
+  async calcPaidTradeReceivableVolumePerMonth(year: number, creditorId: string): Promise<PaidTrStatisticsAmqpDto[]> {
     const volumeOfPaidTradeReceivablesPerMonth: PaidTrStatisticsAmqpDto[] = [];
-    const paidInvoiceIdsPerMonth: { [key: string]: string[] } = await this.getInvoiceIdsForPaidTradeReceivablesPerMonth(year);
-    const dueInvoicesCountPerMonth: { [key: string]: number } = await this.getCountOfInvoicesDuePerMonth(year);
-    const paidOnTimeInvoicesCountPerMonth: {[key:string]: number} = await this.getCountOfPaidOnTimeInvoicesPerMonth(year);
+    const paidInvoiceIdsPerMonth: { [key: string]: string[] } = await this.getInvoiceIdsForPaidTradeReceivablesPerMonth(year, creditorId);
+    const dueInvoicesCountPerMonth: { [key: string]: number } = await this.getCountOfInvoicesDuePerMonth(year, creditorId);
+    const paidOnTimeInvoicesCountPerMonth: { [key: string]: number } = await this.getCountOfPaidOnTimeInvoicesPerMonth(year, creditorId);
 
     for (const key of Object.keys(paidInvoiceIdsPerMonth)) {
       let totalAmount = 0;
-      if(paidInvoiceIdsPerMonth[key] && paidInvoiceIdsPerMonth[key].length > 0){
+      if (paidInvoiceIdsPerMonth[key] && paidInvoiceIdsPerMonth[key].length > 0) {
         const totalAmountOfPaidTRs: InvoiceSumTotalAmountWithoutVatTypes =
-          await this.invoicePrismaService.sumInvoiceAmountsForTradeReceivables(paidInvoiceIdsPerMonth[key]);
+          await this.invoicePrismaService.sumInvoiceAmountsForTradeReceivables(paidInvoiceIdsPerMonth[key], creditorId);
         totalAmount = +totalAmountOfPaidTRs._sum.totalAmountWithoutVat;
       }
 
@@ -42,13 +44,14 @@ export class TradeReceivablesEvaluationService {
     return volumeOfPaidTradeReceivablesPerMonth;
   }
 
-  private async getInvoiceIdsForPaidTradeReceivablesPerMonth(year: number): Promise<{ [key: string]: string[] }> {
+  private async getInvoiceIdsForPaidTradeReceivablesPerMonth(year: number, creditorId: string): Promise<{ [key: string]: string[] }> {
     const paidInvoiceIdsPerMonth: { [key: string]: string[] } = {};
     for (const month in MonthsEnum) {
       const monthIndex = MonthsEnum[month as keyof typeof MonthsEnum];
       const invoiceIds: InvoiceIdTypes[] = await this.tradeReceivablePrismaService.getInvoiceIdsForPaidTradeReceivableIdsForMonth(
         monthIndex,
-        year
+        year,
+        creditorId
       );
       const invoiceIdsAsString: string[] = [];
 
@@ -62,9 +65,9 @@ export class TradeReceivablesEvaluationService {
     return paidInvoiceIdsPerMonth;
   }
 
-  private async getCountOfInvoicesDuePerMonth(year: number): Promise<{ [key: string]: number }> {
+  private async getCountOfInvoicesDuePerMonth(year: number, creditorId: string): Promise<{ [key: string]: number }> {
     const dueInvoicesPerMonth: { [key: string]: number } = {};
-    const dueInvoicesForMonth: InvoiceCountAndDueMonth[] = await this.invoicePrismaService.countInvoicesDueInMonth(year);
+    const dueInvoicesForMonth: InvoiceCountAndDueMonth[] = await this.invoicePrismaService.countInvoicesDueInMonth(year, creditorId);
 
     this.logger.debug(util.inspect(dueInvoicesForMonth));
     if (dueInvoicesForMonth && dueInvoicesForMonth.length > 0) {
@@ -76,9 +79,12 @@ export class TradeReceivablesEvaluationService {
     return dueInvoicesPerMonth;
   }
 
-  private async getCountOfPaidOnTimeInvoicesPerMonth(year: number): Promise<{ [key: string]: number }> {
+  private async getCountOfPaidOnTimeInvoicesPerMonth(year: number, creditorId: string): Promise<{ [key: string]: number }> {
     const countPaidOnTimeInvoicesPerMonth: { [key: string]: number } = {};
-    const paidOnTimeInvoicesPerMonth: InvoiceCountAndDueMonth[] = await this.tradeReceivablePrismaService.countPaidOnTimeInvoicesMonthly(year);
+    const paidOnTimeInvoicesPerMonth: InvoiceCountAndDueMonth[] = await this.tradeReceivablePrismaService.countPaidOnTimeInvoicesMonthly(
+      year,
+      creditorId
+    );
 
     this.logger.debug(util.inspect(paidOnTimeInvoicesPerMonth));
     if (paidOnTimeInvoicesPerMonth && paidOnTimeInvoicesPerMonth.length > 0) {
@@ -90,4 +96,24 @@ export class TradeReceivablesEvaluationService {
     return countPaidOnTimeInvoicesPerMonth;
   }
 
+  async getTradeReceivablesNotPaidStatisticsByCompanyId(companyId: string): Promise<NotPaidTrStatisticsAmqpDto> {
+    let overdue = 0;
+    let overdueValue = 0;
+    let outstanding = 0;
+    let outstandingValue = 0;
+
+    const tradeReceivablePaymentStatesCount: TradeReceivablePaymentStatusCount[] =
+      await this.tradeReceivablePrismaService.getTradeReceivableStateStatistics(companyId);
+    for (const trPaymentStateCount of tradeReceivablePaymentStatesCount) {
+      if (trPaymentStateCount.status == PaymentStatesEnum.OPEN) {
+        outstanding = Number(trPaymentStateCount.count);
+        outstandingValue = Number(trPaymentStateCount.total_value);
+      } else if (trPaymentStateCount.status == PaymentStatesEnum.EXCEEDED) {
+        overdue = Number(trPaymentStateCount.count);
+        overdueValue = Number(trPaymentStateCount.total_value);
+      }
+    }
+
+    return new NotPaidTrStatisticsAmqpDto(overdue, overdueValue, outstanding, outstandingValue);
+  }
 }

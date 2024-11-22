@@ -5,3 +5,4 @@ export * from './offers-amqp.mock';
 export * from './create-order-amqp-without-prismaconverter.mock';
 export * from './service-status-amqp.mock';
 export * from './paid-tr-statistics-amqp.mock';
+export * from './not-paid-tr-statistics-amqp.mock';

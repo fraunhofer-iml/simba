@@ -1,4 +1,4 @@
-import {InvoiceIdTypes} from "../invoice-literal.types";
+import {InvoiceIdTypes} from "../invoice.types";
 import {Prisma} from "@prisma/client";
 
 export const PaidInvoiceIdsSeptember: any[] = <InvoiceIdTypes[]>[{ id: 'IV004' }];

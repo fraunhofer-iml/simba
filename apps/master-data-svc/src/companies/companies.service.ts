@@ -1,7 +1,6 @@
 import { CompanyAmqpDto, CreateCompanyAmqpDto } from '@ap3/amqp';
 import { CompanyPrismaService } from '@ap3/database';
 import { Injectable } from '@nestjs/common';
-import { Company } from '@prisma/client';
 
 @Injectable()
 export class CompaniesService {

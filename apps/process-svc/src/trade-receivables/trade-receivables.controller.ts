@@ -1,14 +1,22 @@
-import { CreateTradeReceivableAmqpDto, PaidTrStatisticsAmqpDto, TradeReceivableAmqpDto, TradeReceivableMessagePatterns } from '@ap3/amqp';
+import {
+  CreateTradeReceivableAmqpDto,
+  NotPaidTrStatisticsAmqpDto,
+  PaidTrStatisticsAmqpDto,
+  TradeReceivableAmqpDto,
+  TradeReceivableMessagePatterns,
+  TRParamsCompanyIdAndPaymentState,
+  TRParamsCompanyIdAndYear,
+} from '@ap3/amqp';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { TradeReceivablesEvaluationService } from './trade-receivable-evaluation.service';
+import { TradeReceivablesStatisticsService } from './trade-receivable-statistics.service';
 import { TradeReceivablesService } from './trade-receivables.service';
 
 @Controller('trade-receivables')
 export class TradeReceivablesController {
   constructor(
     private readonly tradeReceivablesService: TradeReceivablesService,
-    private readonly tradeReceivableEvaluationService: TradeReceivablesEvaluationService
+    private readonly tradeReceivableStatisticsService: TradeReceivablesStatisticsService
   ) {}
 
   @MessagePattern(TradeReceivableMessagePatterns.CREATE)
@@ -42,7 +50,17 @@ export class TradeReceivablesController {
   }
 
   @MessagePattern(TradeReceivableMessagePatterns.READ_TR_STATISTICS_PAID)
-  async calcPaidTradeReceivableVolumePerMonth(@Payload() year: number): Promise<PaidTrStatisticsAmqpDto[]> {
-    return await this.tradeReceivableEvaluationService.calcPaidTradeReceivableVolumePerMonth(year);
+  async calcPaidTradeReceivableVolumePerMonth(@Payload() params: TRParamsCompanyIdAndYear): Promise<PaidTrStatisticsAmqpDto[]> {
+    return await this.tradeReceivableStatisticsService.calcPaidTradeReceivableVolumePerMonth(params.year, params.companyId);
+  }
+
+  @MessagePattern(TradeReceivableMessagePatterns.READ_ALL_BY_PAYMENT_STATE_AND_COMPANY_ID)
+  async findAllByPaymentStateAndCreditorId(@Payload() params: TRParamsCompanyIdAndPaymentState): Promise<TradeReceivableAmqpDto[]> {
+    return await this.tradeReceivablesService.findTRByPaymentStateAndCreditorId(params);
+  }
+
+  @MessagePattern(TradeReceivableMessagePatterns.READ_TR_STATISTICS_NOT_PAID)
+  async getTradeReceivableNotPaidStatistics(@Payload() companyId: string): Promise<NotPaidTrStatisticsAmqpDto> {
+    return await this.tradeReceivableStatisticsService.getTradeReceivablesNotPaidStatisticsByCompanyId(companyId);
   }
 }

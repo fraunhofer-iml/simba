@@ -33,7 +33,7 @@ export class TradeReceivableDto {
     this.paymentStatus = paymentStatus;
   }
 
-  public static toTradeReceivableDto(dto: TradeReceivableAmqpDto, creditor: string, debtor: string) {
+  public static toTradeReceivableDto(dto: TradeReceivableAmqpDto, creditor: string, debtor: string): TradeReceivableDto {
     return new TradeReceivableDto(
       dto.id,
       dto.invoiceId,

@@ -1,5 +1,5 @@
 import util from 'node:util';
-import { CreateTradeReceivableAmqpDto, TradeReceivableAmqpDto } from '@ap3/amqp';
+import { CreateTradeReceivableAmqpDto, TradeReceivableAmqpDto, TRParamsCompanyIdAndPaymentState } from '@ap3/amqp';
 import { InvoicePrismaService, TradeReceivablePrismaService } from '@ap3/database';
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { Invoice, PaymentStatus, TradeReceivable } from '@prisma/client';
@@ -7,6 +7,7 @@ import { Invoice, PaymentStatus, TradeReceivable } from '@prisma/client';
 @Injectable()
 export class TradeReceivablesService {
   private readonly logger = new Logger(TradeReceivablesService.name);
+
   constructor(
     private readonly tradeReceivablePrismaService: TradeReceivablePrismaService,
     private readonly invoicePrismaService: InvoicePrismaService
@@ -88,8 +89,16 @@ export class TradeReceivablesService {
     return TradeReceivableAmqpDto.fromPrismaEntity(tr, relatedInvoice, trStates);
   }
 
+  async findTRByPaymentStateAndCreditorId(params: TRParamsCompanyIdAndPaymentState): Promise<TradeReceivableAmqpDto[]> {
+    this.logger.verbose(`requesting all trade receivables with payment state #${params.paymentState}`);
+    return this.loadAssociatedDataAndConvertToDTO(
+      await this.tradeReceivablePrismaService.getTradeReceivableByPaymentStatus(params.paymentState, params.companyId)
+    );
+  }
+
   private async loadAssociatedDataAndConvertToDTO(tradeReceivables: TradeReceivable[]): Promise<TradeReceivableAmqpDto[]> {
     const tradeReceivableDtos: TradeReceivableAmqpDto[] = [];
+    this.logger.verbose(util.inspect(tradeReceivables));
     for (const tr of tradeReceivables) {
       const relatedInvoice: Invoice = await this.invoicePrismaService.getInvoiceById(tr.invoiceId);
 

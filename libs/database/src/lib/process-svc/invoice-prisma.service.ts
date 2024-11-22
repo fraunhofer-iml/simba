@@ -46,11 +46,12 @@ export class InvoicePrismaService {
     }
   }
 
-  async countInvoicesDueInMonth(year: number): Promise<InvoiceCountAndDueMonth[]> {
+  async countInvoicesDueInMonth(year: number, creditorId: string): Promise<InvoiceCountAndDueMonth[]> {
     try {
       const invoiceCount = <InvoiceCountAndDueMonth[]>await this.prismaService.$queryRaw`
         SELECT COUNT(*) as invoice_count, TO_CHAR(DATE_TRUNC('month', iv."dueDate"), 'YYYY-MM') as due_month
         FROM "Invoice" AS iv
+        where iv."creditorId" = ${creditorId}
         GROUP BY due_month;
       `;
 
@@ -62,8 +63,7 @@ export class InvoicePrismaService {
     }
   }
 
-
-  async sumInvoiceAmountsForTradeReceivables(invoiceIds: string[]): Promise<InvoiceSumTotalAmountWithoutVatTypes> {
+  async sumInvoiceAmountsForTradeReceivables(invoiceIds: string[], creditorId: string): Promise<InvoiceSumTotalAmountWithoutVatTypes> {
     const totalSum = <InvoiceSumTotalAmountWithoutVatTypes>await this.prismaService.invoice.aggregate({
       _sum: {
         totalAmountWithoutVat: true,
@@ -72,6 +72,7 @@ export class InvoicePrismaService {
         id: {
           in: invoiceIds,
         },
+        creditorId: creditorId,
       },
     });
     this.logger.debug(util.inspect(totalSum));

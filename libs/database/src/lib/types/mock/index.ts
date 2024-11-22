@@ -1,2 +1,3 @@
 export * from './order.mock';
-export * from './invoice-literal.mock';
+export * from './invoice.mock';
+export * from './trade-receivable.mock';
