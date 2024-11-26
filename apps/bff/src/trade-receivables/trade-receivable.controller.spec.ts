@@ -67,36 +67,6 @@ describe('OrdersController', () => {
     expect(res).toEqual(expectedReturnValue);
   });
 
-  it('should find all Tradereceivables by debtorId', async () => {
-    const expectedReturnValue = TradeReceivableMocks;
-    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
-    sendRequestSpy.mockImplementation((messagePattern: TradeReceivableMessagePatterns, data: any) => {
-      return of(TradeReceivablesAMQPMock);
-    });
-
-    const res: TradeReceivableDto[] = await controller.findAll('Debitor', '', '');
-    expect(sendRequestSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_BY_DEBTOR_ID, 'Debitor');
-    expect(sendRequestSpy).not.toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_BY_CREDITOR_ID, '');
-    expect(sendRequestSpy).not.toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_BY_ORDER_ID, '');
-    expect(sendRequestSpy).not.toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_ALL, {});
-    expect(res).toEqual(expectedReturnValue);
-  });
-
-  it('should find all Tradereceivables by CreditorId', async () => {
-    const expectedReturnValue = TradeReceivableMocks;
-    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
-    sendRequestSpy.mockImplementation((messagePattern: TradeReceivableMessagePatterns, data: any) => {
-      return of(TradeReceivablesAMQPMock);
-    });
-
-    const res: TradeReceivableDto[] = await controller.findAll('', 'Kreditor', '');
-    expect(sendRequestSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_BY_CREDITOR_ID, 'Kreditor');
-    expect(sendRequestSpy).not.toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_BY_DEBTOR_ID, '');
-    expect(sendRequestSpy).not.toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_BY_ORDER_ID, '');
-    expect(sendRequestSpy).not.toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_ALL, {});
-    expect(res).toEqual(expectedReturnValue);
-  });
-
   it('should find all Tradereceivables by OrderId', async () => {
     const expectedReturnValue = TradeReceivableMocks;
     const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
@@ -104,10 +74,8 @@ describe('OrdersController', () => {
       return of(TradeReceivablesAMQPMock);
     });
 
-    const res: TradeReceivableDto[] = await controller.findAll('', '', 'Order');
+    const res: TradeReceivableDto[] = await controller.findAll('Order');
     expect(sendRequestSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_BY_ORDER_ID, 'Order');
-    expect(sendRequestSpy).not.toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_BY_CREDITOR_ID, '');
-    expect(sendRequestSpy).not.toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_BY_DEBTOR_ID, '');
     expect(sendRequestSpy).not.toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_ALL, {});
     expect(res).toEqual(expectedReturnValue);
   });
@@ -119,10 +87,8 @@ describe('OrdersController', () => {
       return of(TradeReceivablesAMQPMock);
     });
 
-    const res: TradeReceivableDto[] = await controller.findAll('', '', '');
+    const res: TradeReceivableDto[] = await controller.findAll('');
     expect(sendRequestSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_ALL, {});
-    expect(sendRequestSpy).not.toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_BY_CREDITOR_ID, '');
-    expect(sendRequestSpy).not.toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_BY_DEBTOR_ID, '');
     expect(sendRequestSpy).not.toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_BY_ORDER_ID, '');
     expect(res).toEqual(expectedReturnValue);
   });
@@ -146,10 +112,10 @@ describe('OrdersController', () => {
       return of([TradeReceivablesAMQPMock[0], TradeReceivablesAMQPMock[1]]);
     });
 
-    const res = await controller.findAllByPaymentState(CompaniesSeed[0].id, PaymentStatesEnum.PAID);
+    const res = await controller.findAllByPaymentState(PaymentStatesEnum.PAID);
     expect(sendRequestSpy).toHaveBeenCalledWith(
-      TradeReceivableMessagePatterns.READ_ALL_BY_PAYMENT_STATE_AND_COMPANY_ID,
-      new TRParamsCompanyIdAndPaymentState(CompaniesSeed[0].id, PaymentStatesEnum.PAID)
+      TradeReceivableMessagePatterns.READ_ALL_BY_PAYMENT_STATE,
+      new TRParamsCompanyIdAndPaymentState(CompaniesSeed[1].id, PaymentStatesEnum.PAID)
     );
     expect(res).toEqual(expectedReturnValue);
   });
@@ -161,8 +127,8 @@ describe('OrdersController', () => {
       return of(NotPaidTrStatisticsAmqpMock);
     });
 
-    const res: UnpaidTrStatisticsDto = await controller.getStatisticUnpaidTrade(CompaniesSeed[0].id);
-    expect(sendRequestSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_TR_STATISTICS_NOT_PAID, CompaniesSeed[0].id);
+    const res: UnpaidTrStatisticsDto = await controller.getStatisticUnpaidTrade();
+    expect(sendRequestSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_TR_STATISTICS_NOT_PAID, CompaniesSeed[1].id);
     expect(res).toEqual(expectedReturnValue);
   });
 
@@ -173,10 +139,10 @@ describe('OrdersController', () => {
       return of(PaidTrStatisticsAmqpMock);
     });
 
-    const res = await controller.getStatisticPaidTradePerMonth(2024, CompaniesSeed[0].id);
+    const res = await controller.getStatisticPaidTradePerMonth(2024);
     expect(sendRequestSpy).toHaveBeenCalledWith(
       TradeReceivableMessagePatterns.READ_TR_STATISTICS_PAID,
-      new TRParamsCompanyIdAndYear(CompaniesSeed[0].id, 2024)
+      new TRParamsCompanyIdAndYear(CompaniesSeed[1].id, 2024)
     );
     expect(res).toEqual(expectedReturnValue);
   });

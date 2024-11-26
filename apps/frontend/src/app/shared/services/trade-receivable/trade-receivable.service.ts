@@ -9,9 +9,7 @@ import { ApiEndpoints } from '../endpoints/endpoints';
 export class TradeReceivableService {
   constructor(private httpClient: HttpClient) {}
 
-  getTradeReceivableByUserId(userId: string): Observable<TradeReceivableDto[]> {
-    return this.httpClient.get<TradeReceivableDto[]>(
-      `${BASE_URL}${ApiEndpoints.tradeReceivables.getAllTradeReceivablesForDebtor}${userId}`
-    );
+  getTradeReceivables(): Observable<TradeReceivableDto[]> {
+    return this.httpClient.get<TradeReceivableDto[]>(`${BASE_URL}${ApiEndpoints.tradeReceivables.getAllTradeReceivables}`);
   }
 }

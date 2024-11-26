@@ -50,21 +50,7 @@ export class TradeReceivablesController {
   }
 
   @ApiOperation({
-    description:
-      'Get all trade receivables corresponding to a debtor, a creditor or an order. ' +
-      'It is currently only possible to restrict the query to one query parameter',
-  })
-  @ApiQuery({
-    name: 'debtorId',
-    type: String,
-    description: 'Identifying debtor id; Required to identify the corresponding trade-receivables of a specific debtor.',
-    required: false,
-  })
-  @ApiQuery({
-    name: 'creditorId',
-    type: String,
-    description: 'Identifying creditor id; Required to identify the corresponding trade-receivables of a specific creditor.',
-    required: false,
+    description: 'Get all trade receivables corresponding to an order. ',
   })
   @ApiQuery({
     name: 'orderId',
@@ -73,22 +59,12 @@ export class TradeReceivablesController {
     required: false,
   })
   @Get()
-  async findAll(
-    @Query('debtorId') debtorId: string,
-    @Query('creditorId') creditorId: string,
-    @Query('orderId') orderId: string
-  ): Promise<TradeReceivableDto[]> {
-    return await this.tradeReceivableService.findAll(debtorId, creditorId, orderId);
+  async findAll(@Query('orderId') orderId: string): Promise<TradeReceivableDto[]> {
+    return await this.tradeReceivableService.findAll(orderId);
   }
 
   @ApiOperation({
     description: 'Get all trade receivables corresponding to a creditor and a specific financial state ',
-  })
-  @ApiQuery({
-    name: 'creditorId',
-    type: String,
-    description: 'Identifying creditor id; Required to identify the corresponding trade-receivables of a specific creditor.',
-    required: false,
   })
   @ApiQuery({
     name: 'financialState',
@@ -98,11 +74,8 @@ export class TradeReceivablesController {
     required: false,
   })
   @Get('/states/financial')
-  async findAllByPaymentState(
-    @Query('creditorId') creditorId: string,
-    @Query('financialState') paymentState: string
-  ): Promise<TradeReceivableDto[]> {
-    return await this.tradeReceivableService.findAllByCreditorAndPaymentState(creditorId, paymentState);
+  async findAllByPaymentState(@Query('financialState') paymentState: string): Promise<TradeReceivableDto[]> {
+    return await this.tradeReceivableService.findAllByPaymentState(paymentState);
   }
 
   @ApiOperation({
@@ -113,31 +86,16 @@ export class TradeReceivablesController {
     type: Number,
     required: true,
   })
-  @ApiQuery({
-    name: 'creditorId',
-    type: String,
-    description: 'Identifying creditor id; Required to identify the corresponding trade-receivables of a specific creditor.',
-    required: true,
-  })
   @Get('/statistics/paid')
-  async getStatisticPaidTradePerMonth(
-    @Query('year') year: number,
-    @Query('creditorId') creditorId: string
-  ): Promise<PaidTrStatisticsAmqpDto[]> {
-    return await this.tradeReceivableService.getStatisticPaidTRPerMonth(year, creditorId);
+  async getStatisticPaidTradePerMonth(@Query('year') year: number): Promise<PaidTrStatisticsAmqpDto[]> {
+    return await this.tradeReceivableService.getStatisticPaidTRPerMonth(year);
   }
 
   @ApiOperation({
     description: 'Get trade receivables statistics by companyId.',
   })
-  @ApiQuery({
-    name: 'creditorId',
-    type: String,
-    description: 'Identifying creditor id; Required to identify the corresponding trade-receivables of a specific creditor.',
-    required: true,
-  })
   @Get('/statistics/unpaid')
-  async getStatisticUnpaidTrade(@Query('creditorId') creditorId: string): Promise<UnpaidTrStatisticsDto> {
-    return await this.tradeReceivableService.getStatisticNotPaidTRPerMonth(creditorId);
+  async getStatisticUnpaidTrade(): Promise<UnpaidTrStatisticsDto> {
+    return await this.tradeReceivableService.getStatisticNotPaidTRPerMonth();
   }
 }

@@ -1,5 +1,6 @@
 import { KeycloakService } from 'keycloak-angular';
 import { Injectable } from '@angular/core';
+import { HARDCODEDVALUES } from '../../enums/hard-coded-values';
 
 @Injectable()
 export class AuthService {
@@ -23,5 +24,8 @@ export class AuthService {
       return this.keyCloakService.getUsername();
     }
     return '';
+  }
+  getCurrentlyLoggedInCompanyId() {
+    return HARDCODEDVALUES.COMPANYID;
   }
 }

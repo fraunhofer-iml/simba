@@ -17,8 +17,8 @@ export const TradeReceivablesAMQPMock = <TradeReceivableAmqpDto[]>[
     nft: TradeReceivablesSeed[0].nft,
     totalAmountWithoutVat: +InvoiceSeed[0].totalAmountWithoutVat,
     status: new PaymentStatusAmqpDto(PaymentStatesSeed[1].status, PaymentStatesSeed[1].timestamp),
-    invoiceId: TradeReceivablesSeed[0].invoiceId,
-    creationDate: InvoiceSeed[0].creationDate,
+    invoiceNumber: InvoiceSeed[0].invoiceNumber,
+    invoiceDueDate: InvoiceSeed[0].dueDate,
   },
   {
     id: TradeReceivablesSeed[1].id,
@@ -27,7 +27,7 @@ export const TradeReceivablesAMQPMock = <TradeReceivableAmqpDto[]>[
     nft: TradeReceivablesSeed[1].nft,
     totalAmountWithoutVat: +InvoiceSeed[1].totalAmountWithoutVat,
     status: new PaymentStatusAmqpDto(PaymentStatesSeed[3].status, PaymentStatesSeed[3].timestamp),
-    invoiceId: TradeReceivablesSeed[1].invoiceId,
-    creationDate: InvoiceSeed[1].creationDate,
+    invoiceNumber: InvoiceSeed[1].invoiceNumber,
+    invoiceDueDate: InvoiceSeed[1].dueDate,
   },
 ];

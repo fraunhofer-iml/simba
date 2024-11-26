@@ -1,4 +1,5 @@
 import { TranslateModule } from '@ngx-translate/core';
+import { KeycloakService } from 'keycloak-angular';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
@@ -12,6 +13,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterOutlet } from '@angular/router';
+import { AuthService } from '../../shared/services/auth/auth.service';
 import { TradeReceivableService } from '../../shared/services/trade-receivable/trade-receivable.service';
 import { WalletComponent } from './wallet.component';
 
@@ -21,7 +23,7 @@ describe('WalletComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      providers: [TradeReceivableService],
+      providers: [TradeReceivableService, AuthService, KeycloakService],
       imports: [
         MatGridListModule,
         MatDividerModule,

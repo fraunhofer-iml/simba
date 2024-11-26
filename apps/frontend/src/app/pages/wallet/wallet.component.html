@@ -33,28 +33,28 @@
       <table mat-table *ngIf="nftDatasourceObservable | async as source" [dataSource]="source" matSort>
         <ng-container matColumnDef="invoiceNo">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableFirstRow' | translate }}</th>
-          <td mat-cell *matCellDef="let row">{{ row.invoiceNo }}</td>
+          <td mat-cell *matCellDef="let row">{{ row.invoiceNumber }}</td>
         </ng-container>
         <ng-container matColumnDef="payee">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableSecondRow' | translate }}</th>
-          <td mat-cell *matCellDef="let row">{{ row.payee }}%</td>
+          <td mat-cell *matCellDef="let row">{{ row.creditor }}</td>
         </ng-container>
         <ng-container matColumnDef="invoiceAmount">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableThirdRow' | translate }}</th>
-          <td mat-cell *matCellDef="let row">{{ row.invoiceAmount }}</td>
+          <td mat-cell *matCellDef="let row">{{ row.totalAmountWithoutVat }}</td>
         </ng-container>
         <ng-container matColumnDef="invoiceDueDate">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableFourthRow' | translate }}</th>
-          <td mat-cell *matCellDef="let row">{{ row.invoiceDueDate }}</td>
+          <td mat-cell *matCellDef="let row">{{ row.invoiceDueDate | date }}</td>
         </ng-container>
 
         <ng-container matColumnDef="payer">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableFifthRow' | translate }}</th>
-          <td mat-cell *matCellDef="let row">{{ row.payer }}%</td>
+          <td mat-cell *matCellDef="let row">{{ row.debtor }}</td>
         </ng-container>
         <ng-container matColumnDef="financialStatus">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableSixthRow' | translate }}</th>
-          <td mat-cell *matCellDef="let row">{{ row.financialStatus }}</td>
+          <td mat-cell *matCellDef="let row">{{ row.paymentStatus }}</td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedNFTColumns"></tr>

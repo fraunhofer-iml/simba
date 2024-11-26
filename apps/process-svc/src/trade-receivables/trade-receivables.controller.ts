@@ -54,7 +54,7 @@ export class TradeReceivablesController {
     return await this.tradeReceivableStatisticsService.calcPaidTradeReceivableVolumePerMonth(params.year, params.companyId);
   }
 
-  @MessagePattern(TradeReceivableMessagePatterns.READ_ALL_BY_PAYMENT_STATE_AND_COMPANY_ID)
+  @MessagePattern(TradeReceivableMessagePatterns.READ_ALL_BY_PAYMENT_STATE)
   async findAllByPaymentStateAndCreditorId(@Payload() params: TRParamsCompanyIdAndPaymentState): Promise<TradeReceivableAmqpDto[]> {
     return await this.tradeReceivablesService.findTRByPaymentStateAndCreditorId(params);
   }

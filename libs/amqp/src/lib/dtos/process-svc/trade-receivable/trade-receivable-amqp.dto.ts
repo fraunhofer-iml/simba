@@ -8,8 +8,8 @@ export class TradeReceivableAmqpDto {
   nft: string;
   totalAmountWithoutVat: number;
   status: PaymentStatusAmqpDto;
-  invoiceId: string;
-  creationDate: Date;
+  invoiceNumber: string;
+  invoiceDueDate: Date;
 
   constructor(
     id: string,
@@ -18,8 +18,8 @@ export class TradeReceivableAmqpDto {
     nft: string,
     totalAmountWithoutVat: number,
     status: PaymentStatusAmqpDto,
-    invoiceId: string,
-    creationDate: Date
+    invoiceNumber: string,
+    invoiceDueDate: Date
   ) {
     this.id = id;
     this.debtorId = debtorId;
@@ -27,8 +27,8 @@ export class TradeReceivableAmqpDto {
     this.nft = nft;
     this.totalAmountWithoutVat = totalAmountWithoutVat;
     this.status = status;
-    this.invoiceId = invoiceId;
-    this.creationDate = creationDate;
+    this.invoiceNumber = invoiceNumber;
+    this.invoiceDueDate = invoiceDueDate;
   }
 
   public static fromPrismaEntity(tradeReceivable: TradeReceivable, invoice: Invoice, states: PaymentStatus[]): TradeReceivableAmqpDto {
@@ -44,8 +44,8 @@ export class TradeReceivableAmqpDto {
       tradeReceivable.nft,
       +invoice.totalAmountWithoutVat,
       currentState,
-      invoice.id,
-      invoice.creationDate
+      invoice.invoiceNumber,
+      invoice.dueDate
     );
   }
 

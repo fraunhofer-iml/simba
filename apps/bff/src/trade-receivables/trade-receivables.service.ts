@@ -10,6 +10,7 @@ import {
   TRParamsCompanyIdAndYear,
 } from '@ap3/amqp';
 import { CreateTradeReceivableDto, TradeReceivableDto, UnpaidTrStatisticsDto } from '@ap3/api';
+import { HARDCODEDBACKENDVALUES } from '@ap3/config';
 import { defaultIfEmpty, firstValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -17,6 +18,7 @@ import { ClientProxy } from '@nestjs/microservices';
 @Injectable()
 export class TradeReceivablesService {
   private readonly logger = new Logger(TradeReceivablesService.name);
+  creditorId = HARDCODEDBACKENDVALUES.creditorId;
 
   constructor(
     @Inject(AmqpBrokerQueues.PROCESS_SVC_QUEUE) private readonly processAMQPClient: ClientProxy,
@@ -31,18 +33,10 @@ export class TradeReceivablesService {
     return (await this.handleFrontendTradeReceivableDTOCreation([tradeReceivableAmqpDto]))[0];
   }
 
-  async findAll(debtorId: string, creditorId: string, orderId: string): Promise<TradeReceivableDto[]> {
-    this.logger.debug(`Requesting Tradereceivables debtor #${debtorId}, creditor #${creditorId}, order #${orderId}`);
+  async findAll(orderId: string): Promise<TradeReceivableDto[]> {
+    this.logger.debug(`Requesting Tradereceivables order #${orderId}`);
     let response: TradeReceivableAmqpDto[] = [];
-    if (debtorId) {
-      response = await firstValueFrom<TradeReceivableAmqpDto[]>(
-        this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_BY_DEBTOR_ID, debtorId)
-      );
-    } else if (creditorId) {
-      response = await firstValueFrom<TradeReceivableAmqpDto[]>(
-        this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_BY_CREDITOR_ID, creditorId)
-      );
-    } else if (orderId) {
+    if (orderId) {
       response = await firstValueFrom<TradeReceivableAmqpDto[]>(
         this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_BY_ORDER_ID, orderId)
       );
@@ -58,9 +52,9 @@ export class TradeReceivablesService {
     return (await this.handleFrontendTradeReceivableDTOCreation([retVal]))[0];
   }
 
-  async getStatisticNotPaidTRPerMonth(creditorId: string): Promise<UnpaidTrStatisticsDto> {
+  async getStatisticNotPaidTRPerMonth(): Promise<UnpaidTrStatisticsDto> {
     const notPaidTRStatistics: NotPaidTrStatisticsAmqpDto = await firstValueFrom<NotPaidTrStatisticsAmqpDto>(
-      this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_TR_STATISTICS_NOT_PAID, creditorId)
+      this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_TR_STATISTICS_NOT_PAID, this.creditorId)
     );
 
     return new UnpaidTrStatisticsDto(
@@ -71,20 +65,20 @@ export class TradeReceivablesService {
     );
   }
 
-  async getStatisticPaidTRPerMonth(year: number, creditorId: string): Promise<PaidTrStatisticsAmqpDto[]> {
+  async getStatisticPaidTRPerMonth(year: number): Promise<PaidTrStatisticsAmqpDto[]> {
     const tradeReceivableAmqpDto = await firstValueFrom<PaidTrStatisticsAmqpDto[]>(
       this.processAMQPClient
-        .send(TradeReceivableMessagePatterns.READ_TR_STATISTICS_PAID, new TRParamsCompanyIdAndYear(creditorId, year))
+        .send(TradeReceivableMessagePatterns.READ_TR_STATISTICS_PAID, new TRParamsCompanyIdAndYear(this.creditorId, year))
         .pipe(defaultIfEmpty(null))
     );
     return tradeReceivableAmqpDto;
   }
 
-  async findAllByCreditorAndPaymentState(creditorId: string, paymentState: string): Promise<TradeReceivableDto[]> {
+  async findAllByPaymentState(paymentState: string): Promise<TradeReceivableDto[]> {
     this.logger.debug(`Request all TRs with state ${paymentState}`);
-    const params = new TRParamsCompanyIdAndPaymentState(creditorId, paymentState);
+    const params = new TRParamsCompanyIdAndPaymentState(this.creditorId, paymentState);
     const response: TradeReceivableAmqpDto[] = await firstValueFrom<TradeReceivableAmqpDto[]>(
-      this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_ALL_BY_PAYMENT_STATE_AND_COMPANY_ID, params)
+      this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_ALL_BY_PAYMENT_STATE, params)
     );
 
     return await this.handleFrontendTradeReceivableDTOCreation(response);

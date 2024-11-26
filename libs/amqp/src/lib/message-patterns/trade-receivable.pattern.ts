@@ -7,5 +7,5 @@ export enum TradeReceivableMessagePatterns {
   READ_BY_ORDER_ID = 'trade-receivables/read-by-order-id',
   READ_TR_STATISTICS_PAID = 'trade-receivables/read-tr-statistics-paid',
   READ_TR_STATISTICS_NOT_PAID = 'trade-receivables/read-tr-statistics-not-paid',
-  READ_ALL_BY_PAYMENT_STATE_AND_COMPANY_ID = 'trade-receivables/read-all-by-payment-state-and-creditor-id',
+  READ_ALL_BY_PAYMENT_STATE = 'trade-receivables/read-all-by-payment-state-and-creditor-id',
 }

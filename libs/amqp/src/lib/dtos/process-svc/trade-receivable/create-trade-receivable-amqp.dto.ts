@@ -9,9 +9,11 @@ export class CreateTradeReceivableAmqpDto extends OmitType(TradeReceivableAmqpDt
   'creditorId',
   'totalAmountWithoutVat',
   'status',
-  'creationDate',
+  'invoiceNumber',
+  'invoiceDueDate',
 ] as const) {
   statusTimestamp: Date;
+  invoiceId: string;
 
   constructor(statusTimestamp: Date, nft: string, invoiceId: string) {
     super();
