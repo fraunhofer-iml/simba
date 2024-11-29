@@ -1,27 +1,33 @@
-import { CompaniesSeed, InvoiceSeed, PaymentStatesSeed, TradeReceivablesSeed } from '@ap3/database';
+import { PaymentStatesSeed, TradeReceivablesSeed } from '@ap3/database';
 import { TradeReceivableDto } from '../trade-receivable.dto';
 
-export const TradeReceivableMocks: TradeReceivableDto[] = [
-  new TradeReceivableDto(
-    TradeReceivablesSeed[0].id,
-    InvoiceSeed[0].invoiceNumber,
-    CompaniesSeed[1].id,
-    'Kreditor',
-    +InvoiceSeed[0].totalAmountWithoutVat,
-    InvoiceSeed[0].dueDate.toISOString(),
-    CompaniesSeed[0].id,
-    'Debitor',
-    PaymentStatesSeed[1].status
-  ),
-  new TradeReceivableDto(
-    TradeReceivablesSeed[1].id,
-    InvoiceSeed[1].invoiceNumber,
-    CompaniesSeed[1].id,
-    'Kreditor',
-    +InvoiceSeed[1].totalAmountWithoutVat,
-    InvoiceSeed[1].dueDate.toISOString(),
-    CompaniesSeed[0].id,
-    'Debitor',
-    PaymentStatesSeed[3].status
-  ),
+export const TradeReceivableMock = <TradeReceivableDto[]>[
+  {
+    id: TradeReceivablesSeed[0].id,
+    nft: TradeReceivablesSeed[0].nft,
+    status: [
+      {
+        status: PaymentStatesSeed[0].status,
+        timestamp: PaymentStatesSeed[0].timestamp,
+      },
+      {
+        status: PaymentStatesSeed[1].status,
+        timestamp: PaymentStatesSeed[1].timestamp,
+      },
+    ],
+  },
+  {
+    id: TradeReceivablesSeed[1].id,
+    nft: TradeReceivablesSeed[1].nft,
+    status: [
+      {
+        status: PaymentStatesSeed[2].status,
+        timestamp: PaymentStatesSeed[2].timestamp,
+      },
+      {
+        status: PaymentStatesSeed[3].status,
+        timestamp: PaymentStatesSeed[3].timestamp,
+      },
+    ],
+  },
 ];

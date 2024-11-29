@@ -1,4 +1,4 @@
-import { TradeReceivableDto } from '@ap3/api';
+import { InvoiceDto } from '@ap3/api';
 import { map, Observable } from 'rxjs';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -14,8 +14,8 @@ import { TradeReceivableService } from '../../shared/services/trade-receivable/t
 })
 export class WalletComponent implements AfterViewInit {
   displayedNFTColumns: string[] = ['invoiceNo', 'payee', 'invoiceAmount', 'invoiceDueDate', 'payer', 'financialStatus'];
-  nftDatasource: MatTableDataSource<TradeReceivableDto>;
-  nftDatasourceObservable: Observable<MatTableDataSource<TradeReceivableDto>>;
+  nftDatasource: MatTableDataSource<InvoiceDto>;
+  nftDatasourceObservable: Observable<MatTableDataSource<InvoiceDto>>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -24,7 +24,7 @@ export class WalletComponent implements AfterViewInit {
     private readonly tradeReceivableService: TradeReceivableService,
     private readonly authService: AuthService
   ) {
-    this.nftDatasource = new MatTableDataSource<TradeReceivableDto>();
+    this.nftDatasource = new MatTableDataSource<InvoiceDto>();
     this.nftDatasourceObservable = tradeReceivableService.getTradeReceivables().pipe(
       map((tradeReceivables) => {
         const dataSource = this.nftDatasource;

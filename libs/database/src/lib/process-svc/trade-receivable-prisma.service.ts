@@ -92,6 +92,15 @@ export class TradeReceivablePrismaService {
     });
   }
 
+  async getOneTRByInvoiceId(invoiceId: string): Promise<TradeReceivable | null> {
+    this.logger.verbose('Returning trade receivable for invoice : ', invoiceId);
+    return this.prismaService.tradeReceivable.findUnique({
+      where: {
+        invoiceId: invoiceId
+      }
+    });
+  }
+
   async getOneTradeReceivablesWithLatestStateById(trIds: string[]): Promise<TradeReceivable[]> {
     this.logger.verbose('Return trade receivable by id from database');
     try {

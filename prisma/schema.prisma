@@ -80,6 +80,7 @@ model Invoice {
   netPricePerUnit       String
   totalAmountWithoutVat Decimal  @db.Money
   vat                   Decimal  @db.Money
+  url                   String
 
   serviceProcess   ServiceProcess? @relation(fields: [serviceProcessId], references: [id])
   serviceProcessId String?         @unique
@@ -89,7 +90,7 @@ model Invoice {
   creditor   Company? @relation(name: "creditorRel", fields: [creditorId], references: [id])
   creditorId String?
 
-  tradeReceivable TradeReceivable[]
+  tradeReceivable TradeReceivable?
 }
 
 model TradeReceivable {
@@ -98,7 +99,7 @@ model TradeReceivable {
   states PaymentStatus[]
 
   invoice   Invoice @relation(fields: [invoiceId], references: [id])
-  invoiceId String
+  invoiceId String  @unique
 }
 
 model PaymentStatus {

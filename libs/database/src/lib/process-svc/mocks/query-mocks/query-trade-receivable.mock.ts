@@ -72,3 +72,7 @@ export const TradeReceivableByIdQueryMock = {
     states: true,
   },
 };
+
+export const TradeReceivableByInvoiceIdQueryMock = {
+  where: { invoiceId: InvoiceSeed[0].id }
+};

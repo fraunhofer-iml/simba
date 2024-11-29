@@ -2,11 +2,12 @@ import { ConfigurationModule, ConfigurationService, KeycloakConfigService } from
 import { AuthGuard, KeycloakConnectModule } from 'nest-keycloak-connect';
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import { CompaniesModule } from '../companies/companies.module';
-import { OffersModule } from '../offers/offers.module';
-import { OrdersModule } from '../orders/orders.module';
-import { ProductsModule } from '../products/products.module';
-import { TradeReceivablesModule } from '../trade-receivables/trade-receivables.module';
+import { CompaniesModule } from './companies/companies.module';
+import { InvoicesModule } from './invoices/invoices.module';
+import { OffersModule } from './offers/offers.module';
+import { OrdersModule } from './orders/orders.module';
+import { ProductsModule } from './products/products.module';
+import { TradeReceivablesModule } from './trade-receivables/trade-receivables.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { TradeReceivablesModule } from '../trade-receivables/trade-receivables.m
       useExisting: KeycloakConfigService,
       imports: [ConfigurationModule],
     }),
+    InvoicesModule,
   ],
   controllers: [],
   providers: [

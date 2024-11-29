@@ -1,4 +1,4 @@
-import { TradeReceivableDto } from '@ap3/api';
+import { InvoiceDto } from '@ap3/api';
 import { BASE_URL } from 'apps/frontend/src/environments/environment';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -9,7 +9,7 @@ import { ApiEndpoints } from '../endpoints/endpoints';
 export class TradeReceivableService {
   constructor(private httpClient: HttpClient) {}
 
-  getTradeReceivables(): Observable<TradeReceivableDto[]> {
-    return this.httpClient.get<TradeReceivableDto[]>(`${BASE_URL}${ApiEndpoints.tradeReceivables.getAllTradeReceivables}`);
+  getTradeReceivables(): Observable<InvoiceDto[]> {
+    return this.httpClient.get<InvoiceDto[]>(`${BASE_URL}${ApiEndpoints.tradeReceivables.getAllTradeReceivables}`);
   }
 }

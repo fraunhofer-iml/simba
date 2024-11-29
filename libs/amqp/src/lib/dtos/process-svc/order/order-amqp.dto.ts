@@ -51,7 +51,7 @@ export class OrderAmqpDto {
       customerId: order.buyer.id,
       acceptedOfferId: order.serviceProcess?.acceptedOffer?.id,
       offerIds: order.serviceProcess?.offers.map((offer) => offer.id),
-      tradeReceivableId: order.serviceProcess?.invoice?.tradeReceivable[0].id,
+      tradeReceivableId: order.serviceProcess?.invoice?.tradeReceivable?.id,
     };
   }
 

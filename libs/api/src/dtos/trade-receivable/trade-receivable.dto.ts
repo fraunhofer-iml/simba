@@ -1,49 +1,16 @@
-import { TradeReceivableAmqpDto } from '@ap3/amqp';
+import { PaymentStatusAmqpDto, TradeReceivableAmqpDto } from '@ap3/amqp';
 
 export class TradeReceivableDto {
   id: string;
-  invoiceNumber: string;
-  creditor: string;
-  creditorId: string;
-  totalAmountWithoutVat: number;
-  invoiceDueDate: string;
-  debtor: string;
-  debtorId: string;
-  paymentStatus: string;
+  nft: string;
+  status: PaymentStatusAmqpDto[];
 
-  constructor(
-    id: string,
-    invoiceNumber: string,
-    creditorId: string,
-    creditor: string,
-    totalAmountWithoutVat: number,
-    invoiceDueDate: string,
-    debtorId: string,
-    debtor: string,
-    paymentStatus: string
-  ) {
+  constructor(id: string, nft: string, states: PaymentStatusAmqpDto[]) {
     this.id = id;
-    this.invoiceNumber = invoiceNumber;
-    this.creditorId = creditorId;
-    this.creditor = creditor;
-    this.totalAmountWithoutVat = totalAmountWithoutVat;
-    this.invoiceDueDate = invoiceDueDate;
-    this.debtorId = debtorId;
-    this.debtor = debtor;
-    this.paymentStatus = paymentStatus;
+    this.nft = nft;
+    this.status = states;
   }
-
-  public static toTradeReceivableDto(dto: TradeReceivableAmqpDto, creditor: string, debtor: string): TradeReceivableDto {
-    return new TradeReceivableDto(
-      dto.id,
-      dto.invoiceNumber,
-      dto.creditorId,
-      creditor,
-      dto.totalAmountWithoutVat,
-      new Date(dto.invoiceDueDate).toISOString(),
-      dto.debtorId,
-      debtor,
-      dto.status.status
-    );
+  public static fromAmqpDto(tradeReceivable: TradeReceivableAmqpDto): TradeReceivableDto {
+    return new TradeReceivableDto(tradeReceivable.id, tradeReceivable.nft, tradeReceivable.status);
   }
 }

@@ -19,7 +19,7 @@ export type OrderOverview = { id: string; documentIssueDate: Date } & {
     invoice: {
       tradeReceivable: {
         id: string;
-      }[];
+      } | null;
     } | null;
   } | null;
 } & {

@@ -3,15 +3,7 @@ import { OmitType } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { TradeReceivableAmqpDto } from './trade-receivable-amqp.dto';
 
-export class CreateTradeReceivableAmqpDto extends OmitType(TradeReceivableAmqpDto, [
-  'id',
-  'debtorId',
-  'creditorId',
-  'totalAmountWithoutVat',
-  'status',
-  'invoiceNumber',
-  'invoiceDueDate',
-] as const) {
+export class CreateTradeReceivableAmqpDto extends OmitType(TradeReceivableAmqpDto, ['id', 'status'] as const) {
   statusTimestamp: Date;
   invoiceId: string;
 
