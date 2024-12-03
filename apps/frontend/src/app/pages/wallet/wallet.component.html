@@ -19,53 +19,71 @@
     </div>
   </mat-card>
 
-  <h1>{{ 'NFTDetails' | translate }}</h1>
-  <mat-divider></mat-divider>
+  <h1>{{ 'InvoiceDetails' | translate }}</h1>
 
-  <div class="searchbar-container">
+  <div class="searchbar-container card">
     <mat-form-field class="searchbar">
       <img matIconPrefix src="assets/icons/search.svg" alt="Icon" />
-      <input matInput (keyup)="applyFilter($event)" #input />
+      <input matInput (keyup)="convertInputAndResetPaginator($event)" #input />
     </mat-form-field>
+    <button mat-flat-button class="download-button" [disabled]="!selection.hasValue()">{{ 'DownloadInvoice' | translate }}</button>
   </div>
-  <div class="table-container">
-    <div class="mat-elevation-z8">
-      <table mat-table *ngIf="nftDatasourceObservable | async as source" [dataSource]="source" matSort>
-        <ng-container matColumnDef="invoiceNo">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableFirstRow' | translate }}</th>
-          <td mat-cell *matCellDef="let row">{{ row.invoiceNumber }}</td>
-        </ng-container>
-        <ng-container matColumnDef="payee">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableSecondRow' | translate }}</th>
-          <td mat-cell *matCellDef="let row">{{ row.creditor }}</td>
-        </ng-container>
-        <ng-container matColumnDef="invoiceAmount">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableThirdRow' | translate }}</th>
-          <td mat-cell *matCellDef="let row">{{ row.totalAmountWithoutVat }}</td>
-        </ng-container>
-        <ng-container matColumnDef="invoiceDueDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableFourthRow' | translate }}</th>
-          <td mat-cell *matCellDef="let row">{{ row.invoiceDueDate | date }}</td>
-        </ng-container>
 
-        <ng-container matColumnDef="payer">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableFifthRow' | translate }}</th>
-          <td mat-cell *matCellDef="let row">{{ row.debtor }}</td>
-        </ng-container>
-        <ng-container matColumnDef="financialStatus">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'NftTableSixthRow' | translate }}</th>
-          <td mat-cell *matCellDef="let row">{{ row.paymentStatus }}</td>
-        </ng-container>
+  <div class="table-container card">
+    <table mat-table *ngIf="dataSourceObservable | async as source" [dataSource]="source" class="background-white" matSort>
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox
+            (change)="$event ? toggleSelectionForAllRows() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+          >
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox
+            (click)="$event.stopPropagation()"
+            (keyup)="$event ? toggleSelectionForAllRows() : null"
+            (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)"
+          >
+          </mat-checkbox>
+        </td>
+      </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedNFTColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedNFTColumns"></tr>
+      <ng-container matColumnDef="invoiceNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="invoiceNumber">{{ 'NftTableFirstRow' | translate }}</th>
+        <td mat-cell *matCellDef="let row">{{ row.invoiceNumber }}</td>
+      </ng-container>
+      <ng-container matColumnDef="creditor">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="creditor">{{ 'NftTableSecondRow' | translate }}</th>
+        <td mat-cell *matCellDef="let row">{{ row.creditor }}</td>
+      </ng-container>
+      <ng-container matColumnDef="totalAmountWithoutVat">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="totalAmountWithoutVat">{{ 'NftTableThirdRow' | translate }}</th>
+        <td mat-cell class="center-row" *matCellDef="let row">{{ row.totalAmountWithoutVat | number: '1.2-2' }}€</td>
+      </ng-container>
+      <ng-container matColumnDef="invoiceDueDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="invoiceDueDate">{{ 'NftTableFourthRow' | translate }}</th>
+        <td mat-cell *matCellDef="let row">{{ row.invoiceDueDate | date }}</td>
+      </ng-container>
+      <ng-container matColumnDef="debtor">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="debtor">{{ 'NftTableFifthRow' | translate }}</th>
+        <td mat-cell *matCellDef="let row">{{ row.debtor }}</td>
+      </ng-container>
+      <ng-container matColumnDef="paymentStatus">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="paymentStatus">{{ 'NftTableSixthRow' | translate }}</th>
+        <td mat-cell *matCellDef="let row">{{ row.paymentStatus }}</td>
+      </ng-container>
 
-        <!-- Row shown when there is no matching data. -->
-        <tr class="mat-row" *matNoDataRow>
-          <td class="mat-cell" colspan="4">No data matching the filter "{{ input.value }}"</td>
-        </tr>
-      </table>
-      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
-    </div>
+      <tr mat-header-row *matHeaderRowDef="displayedNFTColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedNFTColumns"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">{{ 'NoMatchingData' | translate }}"{{ input.value }}"</td>
+      </tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users" class="background-white"></mat-paginator>
   </div>
 </div>

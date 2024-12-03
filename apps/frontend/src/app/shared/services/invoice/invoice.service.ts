@@ -6,10 +6,10 @@ import { Injectable } from '@angular/core';
 import { ApiEndpoints } from '../endpoints/endpoints';
 
 @Injectable()
-export class TradeReceivableService {
+export class InvoiceService {
   constructor(private httpClient: HttpClient) {}
 
-  getTradeReceivables(): Observable<InvoiceDto[]> {
-    return this.httpClient.get<InvoiceDto[]>(`${BASE_URL}${ApiEndpoints.tradeReceivables.getAllTradeReceivables}`);
+  getInvoices(): Observable<InvoiceDto[]> {
+    return this.httpClient.get<InvoiceDto[]>(`${BASE_URL}${ApiEndpoints.invoices.getAllInvoices}`);
   }
 }

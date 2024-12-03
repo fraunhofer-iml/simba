@@ -1,50 +1,79 @@
 import { InvoiceDto } from '@ap3/api';
 import { map, Observable } from 'rxjs';
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { AuthService } from '../../shared/services/auth/auth.service';
-import { TradeReceivableService } from '../../shared/services/trade-receivable/trade-receivable.service';
+import { InvoiceService } from '../../shared/services/invoice/invoice.service';
 
 @Component({
   selector: 'app-wallet',
   templateUrl: './wallet.component.html',
   styleUrl: './wallet.component.scss',
 })
-export class WalletComponent implements AfterViewInit {
-  displayedNFTColumns: string[] = ['invoiceNo', 'payee', 'invoiceAmount', 'invoiceDueDate', 'payer', 'financialStatus'];
-  nftDatasource: MatTableDataSource<InvoiceDto>;
-  nftDatasourceObservable: Observable<MatTableDataSource<InvoiceDto>>;
+export class WalletComponent {
+  displayedNFTColumns: string[] = [
+    'select',
+    'invoiceNumber',
+    'creditor',
+    'totalAmountWithoutVat',
+    'invoiceDueDate',
+    'debtor',
+    'paymentStatus',
+  ];
+  dataSource: MatTableDataSource<InvoiceDto>;
+  dataSourceObservable: Observable<MatTableDataSource<InvoiceDto>>;
+  selection = new SelectionModel<InvoiceDto>(true, []);
+  paginator?: MatPaginator;
+  sort?: MatSort;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.setDataSourceAttributes();
+  }
 
-  constructor(
-    private readonly tradeReceivableService: TradeReceivableService,
-    private readonly authService: AuthService
-  ) {
-    this.nftDatasource = new MatTableDataSource<InvoiceDto>();
-    this.nftDatasourceObservable = tradeReceivableService.getTradeReceivables().pipe(
-      map((tradeReceivables) => {
-        const dataSource = this.nftDatasource;
-        dataSource.data = tradeReceivables;
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.setDataSourceAttributes();
+  }
+
+  constructor(invoiceService: InvoiceService) {
+    this.dataSource = new MatTableDataSource<InvoiceDto>();
+    this.dataSourceObservable = invoiceService.getInvoices().pipe(
+      map((invoices) => {
+        const dataSource = this.dataSource;
+        dataSource.data = invoices;
         return dataSource;
       })
     );
   }
 
-  ngAfterViewInit() {
-    this.nftDatasource.paginator = this.paginator;
-    this.nftDatasource.sort = this.sort;
+  setDataSourceAttributes() {
+    this.dataSource.paginator = this.paginator ?? null;
+    this.dataSource.sort = this.sort ?? null;
   }
 
-  applyFilter(event: Event) {
+  convertInputAndResetPaginator(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.nftDatasource.filter = filterValue.trim().toLowerCase();
+    this.dataSource.filter = filterValue.trim().toLowerCase();
 
-    if (this.nftDatasource.paginator) {
-      this.nftDatasource.paginator.firstPage();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  isAllSelected(): boolean {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  toggleSelectionForAllRows() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    } else {
+      this.selection.select(...this.dataSource.data);
     }
   }
 }

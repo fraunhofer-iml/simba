@@ -10,12 +10,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from '../../shared/services/auth/auth.service';
-import { TradeReceivableService } from '../../shared/services/trade-receivable/trade-receivable.service';
+import { InvoiceService } from '../../shared/services/invoice/invoice.service';
 import { WalletComponent } from './wallet.component';
+import { InvoiceDto, InvoiceMocks } from '@ap3/api';
+import { SelectionModel } from '@angular/cdk/collections';
 
 describe('WalletComponent', () => {
   let component: WalletComponent;
@@ -23,7 +25,7 @@ describe('WalletComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      providers: [TradeReceivableService, AuthService, KeycloakService],
+      providers: [InvoiceService, AuthService, KeycloakService],
       imports: [
         MatGridListModule,
         MatDividerModule,
@@ -49,5 +51,22 @@ describe('WalletComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should apply a trimmed and lowercased filter value', () => {
+    const event = { target: { value: '  TEST  ' } } as unknown as Event;
+    component.convertInputAndResetPaginator(event);
+    expect(component.dataSource.filter).toBe('test');
+  });
+
+  it('should toggle all rows selection', () => {
+    const mockData: InvoiceDto[] = InvoiceMocks;
+    component.dataSource = new MatTableDataSource(mockData);
+    component.selection = new SelectionModel<InvoiceDto>(true, []);
+    expect(component.selection.selected.length).toBe(0);
+    component.toggleSelectionForAllRows();
+    expect(component.selection.selected.length).toBe(mockData.length);
+    component.toggleSelectionForAllRows();
+    expect(component.selection.selected.length).toBe(0);
   });
 });

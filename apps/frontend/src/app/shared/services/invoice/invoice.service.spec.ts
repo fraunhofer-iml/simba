@@ -1,15 +1,15 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { TradeReceivableService } from './trade-receivable.service';
+import { InvoiceService } from './invoice.service';
 
-describe('TradeReceivableService', () => {
-  let service: TradeReceivableService;
+describe('InvoiceService', () => {
+  let service: InvoiceService;
   let httpTestingController: HttpTestingController;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ imports: [HttpClientTestingModule], providers: [TradeReceivableService] });
+    TestBed.configureTestingModule({ imports: [HttpClientTestingModule], providers: [InvoiceService] });
 
-    service = TestBed.inject(TradeReceivableService);
+    service = TestBed.inject(InvoiceService);
     httpTestingController = TestBed.inject(HttpTestingController);
   });
 

@@ -14,4 +14,7 @@ export const ApiEndpoints = {
     getAllTradeReceivablesForOrder: '/trade-receivables?orderId=',
     getAllTradeReceivables: '/trade-receivables',
   },
+  invoices: {
+    getAllInvoices: '/invoices'
+  }
 };

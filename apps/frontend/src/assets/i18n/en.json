@@ -27,7 +27,7 @@
 
   "WalletTitle": "Wallet",
   "WalletTransactions": "Transactions",
-  "NFTDetails": "NFT Details",
+  "InvoiceDetails": "Invoice Details",
   "TransaktionQuantity": "Quantity",
   "TransaktionVolume": "Volume",
   "TransaktionPending": "Pending",
@@ -38,6 +38,8 @@
   "NftTableFourthRow": "Invoice Due Date",
   "NftTableFifthRow": "Payer",
   "NftTableSixthRow": "Financial Status",
+  "DownloadInvoice": "Download Invoice",
+  "NoMatchingData": "No data matching the filter ",
 
   "LanguageLabel": "Language"
 }

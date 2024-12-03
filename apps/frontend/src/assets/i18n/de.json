@@ -27,7 +27,7 @@
 
   "WalletTitle": "Geldbeutel",
   "WalletTransactions": "Transaktionen",
-  "NFTDetails": "NFT Detailansicht",
+  "InvoiceDetails": "Rechnungsdetails",
   "TransaktionQuantity": "Menge",
   "TransaktionVolume": "Volumen",
   "TransaktionPending": "Ausstehend",
@@ -38,6 +38,8 @@
   "NftTableFourthRow": "Fällig",
   "NftTableFifthRow": "Schuldner",
   "NftTableSixthRow": "Finanzstatus",
+  "DownloadInvoice": "Rechnung herunterladen",
+  "NoMatchingData": "Es wurden keine Daten gefunden, die dem Filter entsprechen ",
 
   "LanguageLabel": "Sprache"
 }
