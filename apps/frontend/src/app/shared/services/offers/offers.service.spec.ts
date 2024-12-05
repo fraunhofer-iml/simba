@@ -1,9 +1,10 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
-import { OffersService } from './offers.service';
 import { OfferDto, OpenOffersMock } from '@ap3/api';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 import { BASE_URL } from '../../../../environments/environment';
 import { ApiEndpoints } from '../endpoints/endpoints';
+import { OffersService } from './offers.service';
 
 describe('OffersService', () => {
   let service: OffersService;
@@ -11,8 +12,7 @@ describe('OffersService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [OffersService],
+      providers: [OffersService, provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     service = TestBed.inject(OffersService);
@@ -27,7 +27,7 @@ describe('OffersService', () => {
     const mockOffers: OfferDto[] = OpenOffersMock;
     const orderId = '123';
 
-    service.getOffersByOrderId(orderId).subscribe(offers => {
+    service.getOffersByOrderId(orderId).subscribe((offers) => {
       expect(offers).toEqual(mockOffers);
     });
 
@@ -40,7 +40,7 @@ describe('OffersService', () => {
     const mockOffer: OfferDto = OpenOffersMock[0];
     const offerId = '1';
 
-    service.getOfferById(offerId).subscribe(offer => {
+    service.getOfferById(offerId).subscribe((offer) => {
       expect(offer).toEqual(mockOffer);
     });
 
@@ -53,7 +53,7 @@ describe('OffersService', () => {
     const mockOffer: OfferDto = OpenOffersMock[0];
     const offerId = '1';
 
-    service.acceptOffer(offerId).subscribe(offer => {
+    service.acceptOffer(offerId).subscribe((offer) => {
       expect(offer).toEqual(mockOffer);
     });
 
@@ -72,7 +72,9 @@ describe('OffersService', () => {
       (error) => expect(error.message).toBe(errorMessage)
     );
 
-    const req = httpMock.expectOne(`${BASE_URL}${ApiEndpoints.offers.getAllOffers}${ApiEndpoints.offers.declineAllOffers}?orderId=${orderId}`);
+    const req = httpMock.expectOne(
+      `${BASE_URL}${ApiEndpoints.offers.getAllOffers}${ApiEndpoints.offers.declineAllOffers}?orderId=${orderId}`
+    );
     req.flush(errorMessage, { status: 500, statusText: 'Server Error' });
   });
 });

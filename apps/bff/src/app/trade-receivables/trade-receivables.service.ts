@@ -7,7 +7,7 @@ import {
   TradeReceivableMessagePatterns,
   TRParamsCompanyIdAndYear,
 } from '@ap3/amqp';
-import { CreateTradeReceivableDto, TradeReceivableDto, UnpaidTrStatisticsDto } from '@ap3/api';
+import { CreateTradeReceivableDto, PaidTrStatisticsDto, TradeReceivableDto, UnpaidTrStatisticsDto } from '@ap3/api';
 import { HARDCODEDBACKENDVALUES } from '@ap3/config';
 import { defaultIfEmpty, firstValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -36,20 +36,19 @@ export class TradeReceivablesService {
       this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_TR_STATISTICS_NOT_PAID, this.creditorId)
     );
 
-    return new UnpaidTrStatisticsDto(
-      notPaidTRStatistics.outstandingTradeReceivableCount,
-      notPaidTRStatistics.outstandingTradeReceivableValue,
-      notPaidTRStatistics.overdueTradeReceivableCount,
-      notPaidTRStatistics.overdueTradeReceivableValue
-    );
+    return UnpaidTrStatisticsDto.toUnpaidStatisticsDto(notPaidTRStatistics);
   }
 
-  async getStatisticPaidTRPerMonth(year: number): Promise<PaidTrStatisticsAmqpDto[]> {
-    const tradeReceivableAmqpDto = await firstValueFrom<PaidTrStatisticsAmqpDto[]>(
+  async getStatisticPaidTRPerMonth(year: number): Promise<PaidTrStatisticsDto[]> {
+    const tradeReceivableDtos: PaidTrStatisticsDto[] = [];
+    const tradeReceivableAmqpDtos: PaidTrStatisticsAmqpDto[] = await firstValueFrom<PaidTrStatisticsAmqpDto[]>(
       this.processAMQPClient
         .send(TradeReceivableMessagePatterns.READ_TR_STATISTICS_PAID, new TRParamsCompanyIdAndYear(this.creditorId, year))
         .pipe(defaultIfEmpty(null))
     );
-    return tradeReceivableAmqpDto;
+    for (const amqpTr of tradeReceivableAmqpDtos) {
+      tradeReceivableDtos.push(PaidTrStatisticsDto.toPaidTrStatisiticsDto(amqpTr));
+    }
+    return tradeReceivableDtos;
   }
 }

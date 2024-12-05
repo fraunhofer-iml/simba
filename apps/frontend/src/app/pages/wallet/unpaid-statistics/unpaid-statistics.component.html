@@ -1,0 +1,34 @@
+<div class="unpaid-statistics-wrapper card">
+  <h2>{{ 'UnpaidStatistics' | translate }}</h2>
+  <div class="data">
+    <div class="data-row">
+      <span class="text-data">{{ 'UnpaidStatisticsFirstRow' | translate }}</span>
+      <div>
+        <span class="number-data" *ngIf="statisticsDto$ | async as statDto">{{ statDto.outStandingReceivables }}</span>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="data-row">
+      <span class="text-data">{{ 'UnpaidStatisticsSecondRow' | translate }}</span>
+      <div>
+        <span class="number-data" *ngIf="statisticsDto$ | async as statDto">{{ statDto.outStandingReceivablesTotalValue }}</span
+        ><span>€</span>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="data-row">
+      <span class="text-data">{{ 'UnpaidStatisticsThirdRow' | translate }}</span>
+      <div>
+        <span class="number-data" *ngIf="statisticsDto$ | async as statDto">{{ statDto.overdueReceivables }}</span>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="data-row">
+      <span class="text-data">{{ 'UnpaidStatisticsFourthRow' | translate }}</span>
+      <div>
+        <span class="number-data" *ngIf="statisticsDto$ | async as statDto">{{ statDto.overdueReceivablesTotalValue }}</span
+        ><span>€</span>
+      </div>
+    </div>
+  </div>
+</div>

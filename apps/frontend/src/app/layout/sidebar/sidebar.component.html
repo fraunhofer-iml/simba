@@ -1,5 +1,5 @@
 <mat-drawer-container class="sidebar-container" autosize>
-  <mat-drawer mode="side" opened>
+  <mat-drawer mode="side" opened disableClose="true">
     <div class="drawer-content-container">
       <div class="title">
         <img src="./assets/logos/simba_logo.png" alt="simba logo" id="simba" />
@@ -13,8 +13,9 @@
           <mat-menu #menu="matMenu">
             @for (language of languages; track language) {
               <button mat-menu-item (click)="setLanguage(language.label)">
-                <img src="{{language.img}}" alt="flags" id="flags" />
-                {{ language.label }}</button>
+                <img src="{{ language.img }}" alt="flags" id="flags" />
+                {{ language.label }}
+              </button>
             }
           </mat-menu>
         </div>

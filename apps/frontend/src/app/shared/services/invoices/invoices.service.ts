@@ -7,7 +7,7 @@ import { ApiEndpoints } from '../endpoints/endpoints';
 
 @Injectable()
 export class InvoiceService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private readonly httpClient: HttpClient) {}
 
   getInvoices(): Observable<InvoiceDto[]> {
     return this.httpClient.get<InvoiceDto[]>(`${BASE_URL}${ApiEndpoints.invoices.getAllInvoices}`);

@@ -1,3 +1,5 @@
+import { NotPaidTrStatisticsAmqpDto } from '@ap3/amqp';
+
 export class UnpaidTrStatisticsDto {
   outStandingReceivables: number;
   outStandingReceivablesTotalValue: number;
@@ -14,5 +16,14 @@ export class UnpaidTrStatisticsDto {
     this.outStandingReceivablesTotalValue = outStandingReceivablesTotalValue;
     this.overdueReceivables = overdueReceivables;
     this.overdueReceivablesTotalValue = overdueReceivablesTotalValue;
+  }
+
+  public static toUnpaidStatisticsDto(unpaidDto: NotPaidTrStatisticsAmqpDto): UnpaidTrStatisticsDto {
+    return new UnpaidTrStatisticsDto(
+      unpaidDto.outstandingTradeReceivableCount,
+      unpaidDto.outstandingTradeReceivableValue,
+      unpaidDto.overdueTradeReceivableCount,
+      unpaidDto.overdueTradeReceivableValue
+    );
   }
 }

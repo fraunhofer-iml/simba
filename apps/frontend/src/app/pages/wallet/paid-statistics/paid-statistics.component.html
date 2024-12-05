@@ -1,0 +1,22 @@
+<div class="transactions-statistics-card card">
+  <div class="transactions-header">
+    <h2>{{ 'PaidStatistics' | translate }}</h2>
+    <div class="years-container">
+      <span class="year">{{ 'PaidStatisticsYear' | translate }}</span>
+      <span> {{ selectedYear }}</span>
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon><img src="assets/icons/calendar.svg" alt="Icon" /></mat-icon>
+      </button>
+      <mat-menu class="year-selector" #menu="matMenu" xPosition="before" cdkScrollable="true">
+        @for (year of selectableYears; track year) {
+          <button mat-menu-item (click)="onYearSelection(year)">
+            <span>{{ year }}</span>
+          </button>
+        }
+      </mat-menu>
+    </div>
+  </div>
+  <div class="chart-wrapper">
+    <canvas baseChart [data]="mixedChartData" [labels]="mixedChartData.labels" [options]="mixedChartOptions"> </canvas>
+  </div>
+</div>

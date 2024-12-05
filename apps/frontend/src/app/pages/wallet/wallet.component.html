@@ -1,25 +1,11 @@
 <div class="wallet-container">
   <h1>{{ 'WalletTitle' | translate }}</h1>
-  <mat-card appearance="outlined" class="details-card">
-    <div class="details-content">
-      <mat-card-title>{{ 'WalletTransactions' | translate }}</mat-card-title>
-      <div class="transaction-table-container">
-        <mat-grid-list cols="3" rowHeight="2:1" gutterSize="0">
-          <mat-grid-tile></mat-grid-tile>
-          <mat-grid-tile class="tile">{{ 'TransaktionQuantity' | translate }}</mat-grid-tile>
-          <mat-grid-tile class="tile">{{ 'TransaktionVolume' | translate }}</mat-grid-tile>
-          <mat-grid-tile class="tile">{{ 'TransaktionPending' | translate }}</mat-grid-tile>
-          <mat-grid-tile class="tile">5</mat-grid-tile>
-          <mat-grid-tile class="tile">6</mat-grid-tile>
-          <mat-grid-tile class="tile">{{ 'TransaktionOverdue' | translate }}</mat-grid-tile>
-          <mat-grid-tile class="tile">8</mat-grid-tile>
-          <mat-grid-tile class="tile">9</mat-grid-tile>
-        </mat-grid-list>
-      </div>
-    </div>
-  </mat-card>
-
-  <h1>{{ 'InvoiceDetails' | translate }}</h1>
+  <div class="statistics-wrapper">
+    <app-unpaid-statistics class="unpaid-statistics"></app-unpaid-statistics>
+    <app-paid-statistics class="paid-statistics"></app-paid-statistics>
+  </div>
+  <h1>{{ 'NFTDetails' | translate }}</h1>
+  <mat-divider></mat-divider>
 
   <div class="searchbar-container card">
     <mat-form-field class="searchbar">

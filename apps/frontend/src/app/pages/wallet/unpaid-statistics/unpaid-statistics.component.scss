@@ -1,0 +1,34 @@
+.unpaid-statistics-wrapper {
+  display: flex;
+  width: 95%;
+  flex-direction: column;
+}
+
+.unpaid-statistics {
+  display: flex;
+  flex-direction: column;
+}
+
+.data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+}
+.data-row {
+  display: grid;
+  grid-template-columns: 90% 10%;
+  margin: 0.25rem 0.5rem 0.25rem 0.5rem;
+  overflow: hidden;
+}
+.number-data {
+  margin-left: auto;
+}
+
+.text-data {
+  font-size: medium;
+}
+
+mat-divider {
+  border-top-color: greyisch;
+}

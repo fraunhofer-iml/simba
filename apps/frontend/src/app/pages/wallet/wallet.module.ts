@@ -1,8 +1,9 @@
 import { TranslateModule } from '@ngx-translate/core';
+import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { CommonModule } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
@@ -10,16 +11,20 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { InvoiceService } from '../../shared/services/invoice/invoice.service';
+import { InvoiceService } from '../../shared/services/invoices/invoices.service';
+import { TradeReceivableService } from '../../shared/services/trade-receivable/trade-receivable.service';
+import { PaidStatisticsComponent } from './paid-statistics/paid-statistics.component';
+import { UnpaidStatisticsComponent } from './unpaid-statistics/unpaid-statistics.component';
 import { WalletRoutingModule } from './wallet-routing.module';
 import { WalletComponent } from './wallet.component';
 
-
 @NgModule({
-  declarations: [WalletComponent],
+  declarations: [WalletComponent, PaidStatisticsComponent, UnpaidStatisticsComponent],
   imports: [
     CommonModule,
     MatDividerModule,
@@ -35,7 +40,16 @@ import { WalletComponent } from './wallet.component';
     TranslateModule,
     MatCheckbox,
     MatButton,
+    BaseChartDirective,
+    MatSelectModule,
+    MatMenuModule,
+    MatButtonModule,
   ],
-  providers: [InvoiceService, provideHttpClient(withInterceptorsFromDi())],
+  providers: [
+    provideHttpClient(withInterceptorsFromDi()),
+    provideCharts(withDefaultRegisterables()),
+    InvoiceService,
+    TradeReceivableService,
+  ],
 })
 export class WalletModule {}
