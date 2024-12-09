@@ -1,0 +1,21 @@
+.download-invoice-container {
+  position: relative;
+  flex-direction: column;
+  margin: 0 1em 0 1em;
+  height: 15vh;
+  width: 40vh;
+}
+
+#close {
+  position: absolute;
+  cursor: pointer;
+  margin-top: 1em;
+  top: 0;
+  right: 0;
+}
+
+.button-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}

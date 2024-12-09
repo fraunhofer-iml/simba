@@ -40,6 +40,12 @@
   margin-right: auto;
 }
 
+.searchbar-container{
+    display: flex;
+    justify-content: space-between;
+    gap: 10%;
+}
+
 /* Materials */
 .mat-mdc-card-content:first-child {
   padding-top: 0px;

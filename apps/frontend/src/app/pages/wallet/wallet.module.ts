@@ -22,9 +22,11 @@ import { PaidStatisticsComponent } from './paid-statistics/paid-statistics.compo
 import { UnpaidStatisticsComponent } from './unpaid-statistics/unpaid-statistics.component';
 import { WalletRoutingModule } from './wallet-routing.module';
 import { WalletComponent } from './wallet.component';
+import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
 
 @NgModule({
-  declarations: [WalletComponent, PaidStatisticsComponent, UnpaidStatisticsComponent],
+
+  declarations: [WalletComponent, PaidStatisticsComponent, UnpaidStatisticsComponent, DownloadInvoiceDialogComponent],
   imports: [
     CommonModule,
     MatDividerModule,

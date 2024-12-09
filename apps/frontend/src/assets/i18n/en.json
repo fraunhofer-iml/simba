@@ -49,6 +49,8 @@
   "NftTableSixthRow": "Financial Status",
   "DownloadInvoice": "Download Invoice",
   "NoMatchingData": "No data matching the filter ",
+  "Download": "Download",
+  "Cancel": "Cancel",
 
   "LanguageLabel": "Language"
 }

@@ -5,6 +5,8 @@ import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
 
 @Component({
@@ -38,7 +40,10 @@ export class WalletComponent {
     this.setDataSourceAttributes();
   }
 
-  constructor(invoiceService: InvoiceService) {
+  constructor(
+    public invoiceService: InvoiceService,
+    private readonly dialog: MatDialog
+  ) {
     this.dataSource = new MatTableDataSource<InvoiceDto>();
     this.dataSourceObservable = invoiceService.getInvoices().pipe(
       map((invoices) => {
@@ -75,5 +80,11 @@ export class WalletComponent {
     } else {
       this.selection.select(...this.dataSource.data);
     }
+  }
+
+  openDownloadInvoiceDialog() {
+    this.dialog.open(DownloadInvoiceDialogComponent, {
+      data: this.selection.selected.map((invoice: InvoiceDto) => invoice.id)
+    })
   }
 }

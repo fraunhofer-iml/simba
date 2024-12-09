@@ -4,15 +4,14 @@
     <app-unpaid-statistics class="unpaid-statistics"></app-unpaid-statistics>
     <app-paid-statistics class="paid-statistics"></app-paid-statistics>
   </div>
-  <h1>{{ 'NFTDetails' | translate }}</h1>
-  <mat-divider></mat-divider>
+  <h1>{{ 'InvoiceDetails' | translate }}</h1>
 
   <div class="searchbar-container card">
     <mat-form-field class="searchbar">
       <img matIconPrefix src="assets/icons/search.svg" alt="Icon" />
       <input matInput (keyup)="convertInputAndResetPaginator($event)" #input />
     </mat-form-field>
-    <button mat-flat-button class="download-button" [disabled]="!selection.hasValue()">{{ 'DownloadInvoice' | translate }}</button>
+    <button mat-flat-button class="download-button" [disabled]="!selection.hasValue()" (click)="openDownloadInvoiceDialog()">{{ 'DownloadInvoice' | translate }}</button>
   </div>
 
   <div class="table-container card">
