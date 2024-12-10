@@ -2,16 +2,16 @@
   margin: 0rem 1rem 0rem 1rem;
 }
 
-.tile {
-  border: 1px solid grey;
-  box-sizing: border-box;
-}
-
 .statistics-wrapper {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   min-height: 30vh;
+}
+
+.searchbar-container {
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .paid-statistics {
@@ -40,39 +40,14 @@
   margin-right: auto;
 }
 
-.searchbar-container{
-    display: flex;
-    justify-content: space-between;
-    gap: 10%;
-}
-
-/* Materials */
-.mat-mdc-card-content:first-child {
-  padding-top: 0px;
-}
-
-.mat-mdc-card-content:last-child {
-  padding-bottom: 0;
-}
-
-.transaction-table-container {
-  margin-top: 24px;
-  width: 60%;
-  margin-left: auto;
-  margin-right: auto;
+.searchbar-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10%;
 }
 
 .grid-list {
   gap: 0;
-}
-
-.tile {
-  border: 1px solid grey;
-  box-sizing: border-box;
-}
-
-.mat-mdc-header-cell {
-  font-weight: bold;
 }
 
 .background-white {
@@ -86,4 +61,18 @@
 .download-button {
   min-width: 150px;
   margin-top: 2em;
+  margin-left: auto;
+}
+
+/* Materials */
+.mat-mdc-card-content:first-child {
+  padding-top: 0px;
+}
+
+.mat-mdc-card-content:last-child {
+  padding-bottom: 0;
+}
+
+.mat-mdc-header-cell {
+  font-weight: bold;
 }

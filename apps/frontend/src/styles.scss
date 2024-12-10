@@ -54,7 +54,7 @@ h1 {
 }
 
 h2 {
-  font-size: x-large;
+  font-size: large;
   font-weight: bold;
   color: var(--dark-blue-color);
   overflow: hidden;
@@ -90,8 +90,8 @@ h2 {
 }
 
 /* Checkbox */
-.mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background,
-.mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background {
+.mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+.mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
   background-color: var(--dark-blue-color) !important;
   border-color: var(--dark-blue-color) !important;
 }
