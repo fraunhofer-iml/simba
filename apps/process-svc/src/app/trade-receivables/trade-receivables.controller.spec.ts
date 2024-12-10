@@ -1,11 +1,11 @@
 import {
+  CompanyIdAndPaymentState,
   CreateTradeReceivableAMQPMock,
   InvoiceAmqpDto,
   InvoicesAmqpMock,
   NotPaidTrStatisticsAmqpDto,
   NotPaidTrStatisticsAmqpMock,
   PaidTrStatisticsAmqpMock,
-  TRParamsCompanyIdAndPaymentState,
   TRParamsCompanyIdAndYear,
 } from '@ap3/amqp';
 import { UnpaidTradeReceivableStatisticsMock } from '@ap3/api';

@@ -1,5 +1,6 @@
 import { AmqpBrokerQueues, CompanyAmqpDto, CompanyAmqpMock, CompanyMessagePatterns } from '@ap3/amqp';
 import { CompanyDto, CompanyDtoMock } from '@ap3/api';
+import { CompaniesSeed } from '@ap3/database';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -9,6 +10,8 @@ import { CompaniesService } from './companies.service';
 describe('CompaniesController', () => {
   let controller: CompaniesController;
   let clientProxy: ClientProxy;
+  let request: any;
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
@@ -26,6 +29,14 @@ describe('CompaniesController', () => {
 
     controller = module.get<CompaniesController>(CompaniesController);
     clientProxy = module.get<ClientProxy>(AmqpBrokerQueues.MASTER_DATA_SVC_QUEUE) as ClientProxy;
+    request = {
+      user: {
+        company: CompaniesSeed[1].id,
+        realm_access: {
+          roles: ['ap3_admin'],
+        },
+      },
+    };
   });
 
   it('should be defined', () => {
@@ -53,7 +64,7 @@ describe('CompaniesController', () => {
       return of(CompanyAmqpMock[0]);
     });
 
-    const res: CompanyAmqpDto = await controller.findOne(CompanyAmqpMock[0].id);
+    const res: CompanyAmqpDto = await controller.findOne(request, CompanyAmqpMock[0].id);
 
     expect(sendRequestSpy).toHaveBeenCalledWith(CompanyMessagePatterns.READ_BY_ID, CompanyDtoMock[0].id);
     expect(res).toEqual(expectedResult);

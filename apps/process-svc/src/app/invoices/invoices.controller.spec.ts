@@ -1,4 +1,4 @@
-import { InvoiceAmqpDto, InvoicesAmqpMock, TRParamsCompanyIdAndPaymentState } from '@ap3/amqp';
+import { CompanyIdAndInvoiceId, CompanyIdAndPaymentState, InvoiceAmqpDto, InvoicesAmqpMock } from '@ap3/amqp';
 import {
   CompaniesSeed,
   DatabaseModule,
@@ -135,7 +135,7 @@ describe('InvoicesController', () => {
     const prismaPSSpy = jest.spyOn(prisma.paymentStatus, 'findMany');
     prismaPSSpy.mockResolvedValueOnce([PaymentStatesSeed[0], PaymentStatesSeed[1]]);
 
-    const retVal = await controller.findOneById(expectedReturn.id);
+    const retVal = await controller.findOneById(new CompanyIdAndInvoiceId(CompaniesSeed[1].id, expectedReturn.id));
     expect(prisma.tradeReceivable.findUnique).toHaveBeenCalledWith(TradeReceivableByInvoiceIdQueryMock);
     expect(expectedReturn).toEqual(retVal);
   });
@@ -151,7 +151,7 @@ describe('InvoicesController', () => {
     prismaPaymentStatusSpy.mockResolvedValue([PaymentStatesSeed[1]]);
 
     const retVal = await controller.findAllByPaymentStateAndCreditorId(
-      new TRParamsCompanyIdAndPaymentState(CompaniesSeed[0].id, PaymentStatesEnum.PAID)
+      new CompanyIdAndPaymentState(CompaniesSeed[0].id, PaymentStatesEnum.PAID)
     );
 
     expect(prisma.$queryRaw).toHaveBeenCalled();

@@ -1,6 +1,7 @@
-import { CompanyDto } from '@ap3/api';
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { AuthRolesEnum, CompanyDto, RolesEnum } from '@ap3/api';
+import { Roles } from 'nest-keycloak-connect';
+import { Body, Controller, Delete, ForbiddenException, Get, Param, Patch, Post, Request } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { CompaniesService } from './companies.service';
 
 @Controller('companies')
@@ -10,19 +11,25 @@ export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
   @Post()
-  create(@Body() createCompanyDto: CompanyDto) {
+  @Roles({ roles: [AuthRolesEnum.ADMIN] })
+  @ApiOperation({
+    description: 'Creates a new company and returns the assigned id.',
+  })
+  create(@Body() createCompanyDto: CompanyDto): Promise<string> {
     return this.companiesService.create(createCompanyDto);
   }
 
   @Get()
+  @Roles({ roles: [AuthRolesEnum.ADMIN] })
   @ApiOperation({
     description: 'Get all available companies.',
   })
-  findAll() {
+  findAll(): Promise<CompanyDto[]> {
     return this.companiesService.findAll();
   }
 
   @Get(':id')
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
   @ApiOperation({
     description: 'Get a company based on the corresponding company id.',
   })
@@ -32,16 +39,34 @@ export class CompaniesController {
     description: 'Identifying id; Required to identify the company.',
     required: true,
   })
-  findOne(@Param('id') id: string) {
+  findOne(@Request() req, @Param('id') id: string): Promise<CompanyDto> {
+    if (!req.user.realm_access.roles.includes(RolesEnum.ADMIN) && id !== req.user.company) {
+      throw new ForbiddenException();
+    }
     return this.companiesService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCompanyDto: CompanyDto) {
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
+  @ApiOperation({
+    description: 'Updates a company based on the given company data.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Identifying id; Required to identify the company.',
+    required: true,
+  })
+  @ApiBody({ type: CompanyDto })
+  update(@Request() req, @Param('id') id: string, @Body() updateCompanyDto: CompanyDto) {
+    if (!req.user.realm_access.roles.includes(RolesEnum.ADMIN) && id !== req.user.company) {
+      throw new ForbiddenException();
+    }
     return this.companiesService.update(id, updateCompanyDto);
   }
 
   @Delete(':id')
+  @Roles({ roles: [AuthRolesEnum.ADMIN] })
   remove(@Param('id') id: string) {
     return this.companiesService.remove(id);
   }

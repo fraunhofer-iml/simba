@@ -26,8 +26,8 @@ import { TradeReceivablesService } from './trade-receivables.service';
 
 describe('OrdersController', () => {
   let controller: TradeReceivablesController;
-  let masterDataSvcClientProxy: ClientProxy;
   let processSvcClientProxy: ClientProxy;
+  let request: any;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -51,8 +51,10 @@ describe('OrdersController', () => {
     }).compile();
 
     controller = module.get<TradeReceivablesController>(TradeReceivablesController) as TradeReceivablesController;
-    masterDataSvcClientProxy = module.get<ClientProxy>(AmqpBrokerQueues.MASTER_DATA_SVC_QUEUE) as ClientProxy;
     processSvcClientProxy = module.get<ClientProxy>(AmqpBrokerQueues.PROCESS_SVC_QUEUE) as ClientProxy;
+    request = { user: {
+      company: CompaniesSeed[1].id
+      }}
   });
 
   it('should create a Tradereceivable', async () => {
@@ -74,7 +76,7 @@ describe('OrdersController', () => {
       return of(NotPaidTrStatisticsAmqpMock);
     });
 
-    const res: UnpaidTrStatisticsDto = await controller.getStatisticUnpaidTrade();
+    const res: UnpaidTrStatisticsDto = await controller.getStatisticUnpaidTrade(request);
     expect(sendRequestSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_TR_STATISTICS_NOT_PAID, CompaniesSeed[1].id);
     expect(res).toEqual(expectedReturnValue);
   });
@@ -86,7 +88,7 @@ describe('OrdersController', () => {
       return of(PaidTrStatisticsAmqpMock);
     });
 
-    const res = await controller.getStatisticPaidTradePerMonth(2024);
+    const res = await controller.getStatisticPaidTradePerMonth(request, 2024);
     expect(sendRequestSpy).toHaveBeenCalledWith(
       TradeReceivableMessagePatterns.READ_TR_STATISTICS_PAID,
       new TRParamsCompanyIdAndYear(CompaniesSeed[1].id, 2024)

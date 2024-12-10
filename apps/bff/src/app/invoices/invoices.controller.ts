@@ -1,6 +1,7 @@
-import { InvoiceDto } from '@ap3/api';
+import { AuthRolesEnum, InvoiceDto } from '@ap3/api';
 import { PaymentStatesEnum } from '@ap3/database';
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Roles } from 'nest-keycloak-connect';
+import { Controller, Get, Param, Query, Request } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { InvoicesService } from './invoices.service';
 
@@ -13,6 +14,7 @@ export class InvoicesController {
   @ApiOperation({
     description: 'Get invoice by id.',
   })
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
   @ApiParam({
     name: 'id',
     type: String,
@@ -20,8 +22,8 @@ export class InvoicesController {
     required: true,
   })
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<InvoiceDto> {
-    return await this.invoicesService.findOne(id);
+  async findOne(@Request() req: any, @Param('id') id: string): Promise<InvoiceDto> {
+    return await this.invoicesService.findOne(req.user.company, id);
   }
 
   @ApiOperation({
@@ -33,9 +35,10 @@ export class InvoicesController {
     description: 'Identifying id; Required to identify the corresponding invoices of a specific order.',
     required: false,
   })
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
   @Get()
-  async findAll(@Query('orderId') orderId: string): Promise<InvoiceDto[]> {
-    return await this.invoicesService.findAll(orderId);
+  async findAllByOrderId(@Query('orderId') orderId: string): Promise<InvoiceDto[]> {
+    return await this.invoicesService.findAllByOrderId(orderId);
   }
 
   @ApiOperation({
@@ -48,8 +51,9 @@ export class InvoicesController {
     description: 'Identifying string; Required to identify the corresponding invoices of a specific payment state.',
     required: false,
   })
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
   @Get('/states/financial')
-  async findAllByPaymentState(@Query('financialState') paymentState: string): Promise<InvoiceDto[]> {
-    return await this.invoicesService.findAllByPaymentState(paymentState);
+  async findAllByPaymentState(@Request() req: any, @Query('financialState') paymentState: string): Promise<InvoiceDto[]> {
+    return await this.invoicesService.findAllByPaymentState(req.user.company, paymentState);
   }
 }

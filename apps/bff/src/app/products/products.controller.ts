@@ -1,4 +1,5 @@
-import { ProductDto } from '@ap3/api';
+import { AuthRolesEnum, ProductDto } from '@ap3/api';
+import { Roles } from 'nest-keycloak-connect';
 import { Controller, Get, Param } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
@@ -10,6 +11,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
   @ApiOperation({
     description: 'Get all available products.',
   })
@@ -18,6 +20,7 @@ export class ProductsController {
   }
 
   @Get(':id')
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
   @ApiOperation({
     description: 'Get a product based on the corresponding product id.',
   })

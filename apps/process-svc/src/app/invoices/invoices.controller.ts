@@ -1,4 +1,4 @@
-import { InvoiceAmqpDto, InvoiceMessagePatterns, TRParamsCompanyIdAndPaymentState } from '@ap3/amqp';
+import { CompanyIdAndInvoiceId, CompanyIdAndPaymentState, InvoiceAmqpDto, InvoiceMessagePatterns } from '@ap3/amqp';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { InvoicesService } from './invoices.service';
@@ -13,8 +13,8 @@ export class InvoicesController {
   }
 
   @MessagePattern(InvoiceMessagePatterns.READ_BY_ID)
-  async findOneById(@Payload() id: string): Promise<InvoiceAmqpDto> {
-    return await this.invoicesService.findOne(id);
+  async findOneById(@Payload() params: CompanyIdAndInvoiceId): Promise<InvoiceAmqpDto> {
+    return await this.invoicesService.findOne(params);
   }
 
   @MessagePattern(InvoiceMessagePatterns.READ_BY_DEBTOR_ID)
@@ -33,7 +33,7 @@ export class InvoicesController {
   }
 
   @MessagePattern(InvoiceMessagePatterns.READ_ALL_BY_PAYMENT_STATE)
-  async findAllByPaymentStateAndCreditorId(@Payload() params: TRParamsCompanyIdAndPaymentState): Promise<InvoiceAmqpDto[]> {
+  async findAllByPaymentStateAndCreditorId(@Payload() params: CompanyIdAndPaymentState): Promise<InvoiceAmqpDto[]> {
     return await this.invoicesService.findInvoiceByPaymentStateAndCreditorId(params);
   }
 }

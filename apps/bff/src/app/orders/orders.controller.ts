@@ -1,4 +1,5 @@
-import { CreateOrderDto, OrderOverviewDto } from '@ap3/api';
+import { AuthRolesEnum, CreateOrderDto, OrderOverviewDto } from '@ap3/api';
+import { Roles } from 'nest-keycloak-connect';
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { OrdersService } from './orders.service';
@@ -10,6 +11,7 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER] })
   @ApiOperation({
     description:
       'Creates an order and an corresponding process service, stores both entities in the database and transfers the order to the CPPS scheduler.',
@@ -27,6 +29,7 @@ export class OrdersController {
     },
     required: true,
   })
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER] })
   async create(@Body() createOrderDto: CreateOrderDto): Promise<OrderOverviewDto> {
     return await this.ordersService.create(createOrderDto);
   }
@@ -35,11 +38,13 @@ export class OrdersController {
   @ApiOperation({
     description: 'Get all active orders.',
   })
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
   async findAll(): Promise<OrderOverviewDto[]> {
     return await this.ordersService.findAll();
   }
 
   @Get(':id')
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
   @ApiOperation({
     description: 'Get an order based on the corresponding order id.',
   })
@@ -54,6 +59,7 @@ export class OrdersController {
   }
 
   @Delete(':id')
+  @Roles({ roles: [AuthRolesEnum.ADMIN] })
   @ApiOperation({
     description: 'Delete an order based on the corresponding order id.',
   })

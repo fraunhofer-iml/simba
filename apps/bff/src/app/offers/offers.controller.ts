@@ -1,4 +1,5 @@
-import { OfferDto } from '@ap3/api';
+import { AuthRolesEnum, OfferDto } from '@ap3/api';
+import { Roles } from 'nest-keycloak-connect';
 import { Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { OffersService } from './offers.service';
@@ -19,6 +20,7 @@ export class OffersController {
     description: 'Filter parameter; Only returns offers corresponding to given order id.',
     required: false,
   })
+  @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CUSTOMER] })
   async findAll(@Query('orderId') orderId?: string): Promise<OfferDto[]> {
     return await this.offersService.findAll(orderId);
   }
@@ -33,6 +35,7 @@ export class OffersController {
     description: 'Identifying id; Required to identify the offer.',
     required: true,
   })
+  @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CUSTOMER] })
   async findOne(@Param('id') id: string): Promise<OfferDto> {
     return await this.offersService.findOne(id);
   }
@@ -47,6 +50,7 @@ export class OffersController {
     description: 'Identifying id; Required to identify the order.',
     required: true,
   })
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER] })
   async createOffers(@Query('orderId') orderId: string): Promise<void> {
     await this.offersService.createOffer(orderId);
   }
@@ -61,6 +65,7 @@ export class OffersController {
     description: 'Identifying id; Required to identify the offer.',
     required: true,
   })
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER] })
   async acceptOffer(@Param('id') id: string): Promise<void> {
     await this.offersService.acceptOffer(id);
   }
@@ -75,6 +80,7 @@ export class OffersController {
     description: 'Identifying id; Required to identify the order.',
     required: true,
   })
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER] })
   async declineOffers(@Query('orderId') orderId: string): Promise<void> {
     await this.offersService.declineOffers(orderId);
   }

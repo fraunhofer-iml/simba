@@ -1,5 +1,5 @@
 import util from 'node:util';
-import { InvoiceAmqpDto, TRParamsCompanyIdAndPaymentState } from '@ap3/amqp';
+import { CompanyIdAndInvoiceId, CompanyIdAndPaymentState, InvoiceAmqpDto } from '@ap3/amqp';
 import { InvoicePrismaService, TradeReceivablePrismaService } from '@ap3/database';
 import { Injectable, Logger } from '@nestjs/common';
 import { Invoice, PaymentStatus, TradeReceivable } from '@prisma/client';
@@ -61,18 +61,18 @@ export class InvoicesService {
     }
   }
 
-  async findOne(id: string): Promise<InvoiceAmqpDto> {
-    const invoice: Invoice = await this.invoicePrismaService.getInvoiceById(id);
-    const tr: TradeReceivable = await this.tradeReceivablePrismaService.getOneTRByInvoiceId(id);
+  async findOne(params: CompanyIdAndInvoiceId): Promise<InvoiceAmqpDto> {
+    const invoice: Invoice = await this.invoicePrismaService.getInvoiceById(params.invoiceId);
+    const tr: TradeReceivable = await this.tradeReceivablePrismaService.getOneTRByInvoiceId(params.invoiceId);
     let trStates: PaymentStatus[] = [];
-    if(tr){
+    if (tr) {
       trStates = await this.tradeReceivablePrismaService.getPaymentStatesForTradeReceivable(tr.id);
     }
 
     return InvoiceAmqpDto.fromPrismaEntity(tr, invoice, trStates);
   }
 
-  async findInvoiceByPaymentStateAndCreditorId(params: TRParamsCompanyIdAndPaymentState): Promise<InvoiceAmqpDto[]> {
+  async findInvoiceByPaymentStateAndCreditorId(params: CompanyIdAndPaymentState): Promise<InvoiceAmqpDto[]> {
     this.logger.verbose(`requesting all trade receivables with payment state #${params.paymentState}`);
     return this.loadAssociatedDataAndConvertToDTO(
       await this.tradeReceivablePrismaService.getTradeReceivableByPaymentStatus(params.paymentState, params.companyId)

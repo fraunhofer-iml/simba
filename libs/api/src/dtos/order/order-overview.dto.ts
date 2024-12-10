@@ -1,18 +1,30 @@
 import { OrderAmqpDto } from '@ap3/amqp';
+import { ApiProperty } from '@nestjs/swagger';
 import { OfferDto } from '../offer';
 import { ProductDto } from '../product';
 
 export class OrderOverviewDto {
+  @ApiProperty()
   id: string;
+  @ApiProperty()
   product: ProductDto;
+  @ApiProperty()
   amount: number;
+  @ApiProperty()
   year: number;
+  @ApiProperty()
   calendarWeek: number;
+  @ApiProperty()
   creationDate: string;
+  @ApiProperty()
   status: string;
+  @ApiProperty()
   statusTimestamp: string;
+  @ApiProperty()
   price: number;
+  @ApiProperty()
   robots: string[];
+  @ApiProperty()
   customerId: string;
 
   constructor(

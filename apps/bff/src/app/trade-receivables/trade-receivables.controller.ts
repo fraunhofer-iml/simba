@@ -1,6 +1,7 @@
 import { PaidTrStatisticsAmqpDto } from '@ap3/amqp';
-import { CreateTradeReceivableDto, TradeReceivableDto, UnpaidTrStatisticsDto } from '@ap3/api';
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { AuthRolesEnum, CreateTradeReceivableDto, TradeReceivableDto, UnpaidTrStatisticsDto } from '@ap3/api';
+import { Roles } from 'nest-keycloak-connect';
+import { Body, Controller, Get, Post, Query, Request } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { TradeReceivablesService } from './trade-receivables.service';
 
@@ -30,6 +31,7 @@ export class TradeReceivablesController {
     required: true,
   })
   @Post()
+  @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
   async create(@Query('orderId') orderId: string, @Body() createTradeReceivableDto: CreateTradeReceivableDto): Promise<TradeReceivableDto> {
     return await this.tradeReceivableService.create(createTradeReceivableDto);
   }
@@ -43,15 +45,17 @@ export class TradeReceivablesController {
     required: true,
   })
   @Get('/statistics/paid')
-  async getStatisticPaidTradePerMonth(@Query('year') year: number): Promise<PaidTrStatisticsAmqpDto[]> {
-    return await this.tradeReceivableService.getStatisticPaidTRPerMonth(year);
+  @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
+  async getStatisticPaidTradePerMonth(@Request() req: any, @Query('year') year: number): Promise<PaidTrStatisticsAmqpDto[]> {
+    return await this.tradeReceivableService.getStatisticPaidTRPerMonth(req.user.company, year);
   }
 
   @ApiOperation({
     description: 'Get trade receivables statistics by companyId.',
   })
   @Get('/statistics/unpaid')
-  async getStatisticUnpaidTrade(): Promise<UnpaidTrStatisticsDto> {
-    return await this.tradeReceivableService.getStatisticNotPaidTRPerMonth();
+  @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
+  async getStatisticUnpaidTrade(@Request() req: any): Promise<UnpaidTrStatisticsDto> {
+    return await this.tradeReceivableService.getStatisticNotPaidTRPerMonth(req.user.company);
   }
 }
