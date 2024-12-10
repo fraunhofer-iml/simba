@@ -2,12 +2,13 @@ import { InvoiceDto } from '@ap3/api';
 import { map, Observable } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
-import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
+import { DateFormatService } from '../../shared/formats/date-format.service';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
+import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
 
 @Component({
   selector: 'app-wallet',
@@ -41,7 +42,8 @@ export class WalletComponent {
   }
 
   constructor(
-    public invoiceService: InvoiceService,
+    private readonly invoiceService: InvoiceService,
+    private readonly dateFormatService: DateFormatService,
     private readonly dialog: MatDialog
   ) {
     this.dataSource = new MatTableDataSource<InvoiceDto>();
@@ -82,9 +84,13 @@ export class WalletComponent {
     }
   }
 
+  getDateFormatOfCurrentLanguage(offer: InvoiceDto): string {
+    return this.dateFormatService.transformDateToCurrentLanguageFormat(offer.invoiceDueDate);
+  }
+
   openDownloadInvoiceDialog() {
     this.dialog.open(DownloadInvoiceDialogComponent, {
-      data: this.selection.selected.map((invoice: InvoiceDto) => invoice.id)
-    })
+      data: this.selection.selected.map((invoice: InvoiceDto) => invoice.id),
+    });
   }
 }

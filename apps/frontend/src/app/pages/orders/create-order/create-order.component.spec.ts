@@ -1,8 +1,9 @@
 import { CreateOrderDto, OrderOverviewMock } from '@ap3/api';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import moment from 'moment';
 import { CountdownEvent, CountdownModule } from 'ngx-countdown';
 import { of, throwError } from 'rxjs';
+import { DatePipe } from '@angular/common';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -22,6 +23,7 @@ import { MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { DialogOffersExpiredComponent } from '../../../layout/dialog-offers-expired/dialog-offers-expired.component';
+import { DateFormatService } from '../../../shared/formats/date-format.service';
 import { OffersService } from '../../../shared/services/offers/offers.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { ProductService } from '../../../shared/services/product/product.service';
@@ -37,7 +39,7 @@ describe('CreateOrderComponent', () => {
 
   beforeEach(async () => {
     datepicker = {
-      close: jest.fn()
+      close: jest.fn(),
     } as unknown as MatDatepicker<moment.Moment>;
 
     await TestBed.configureTestingModule({
@@ -61,7 +63,18 @@ describe('CreateOrderComponent', () => {
         NoopAnimationsModule,
         TranslateModule.forRoot(),
       ],
-      providers: [OffersService, OrdersService, ProductService, HttpClient, HttpHandler, Router, CalendarWeekService],
+      providers: [
+        OffersService,
+        OrdersService,
+        ProductService,
+        HttpClient,
+        HttpHandler,
+        Router,
+        CalendarWeekService,
+        TranslateService,
+        DatePipe,
+        DateFormatService,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CreateOrderComponent);

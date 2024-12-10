@@ -23,7 +23,7 @@
   "OrderTableFifthRow": "Produkte",
   "OrderTableSixthRow": "Stück",
   "OrderTableSeventhRow": "Roboter",
-  "OrderTableEigthRow": "Kunden ID",
+  "OrderTableEigthRow": "Kunde",
 
   "MonthLabels": ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
   "PaidStatistics": "Bezahlte Forderungen",

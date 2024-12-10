@@ -19,6 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { DialogOffersExpiredComponent } from '../../layout/dialog-offers-expired/dialog-offers-expired.component';
+import { DateFormatService } from '../../shared/formats/date-format.service';
 import { MY_FORMATS } from '../../shared/materials/formats/datepicker-format';
 import { OffersService } from '../../shared/services/offers/offers.service';
 import { OrdersService } from '../../shared/services/orders/orders.service';
@@ -57,8 +58,9 @@ import { OrdersRoutingModule } from './orders-routing.module';
     OrdersService,
     provideHttpClient(withInterceptorsFromDi()),
     ProductService,
-    DatePipe,
     CalendarWeekService,
+    DateFormatService,
+    DatePipe,
     provideMomentDateAdapter(MY_FORMATS),
   ],
 })

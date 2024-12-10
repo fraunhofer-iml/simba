@@ -19,10 +19,11 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
+import { DateFormatService } from '../../../shared/formats/date-format.service';
+import { LANGUAGEFORMATS } from '../../../shared/formats/formats';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { OrderStatus } from './enum/orderStatus';
 import { OrdersOverviewComponent } from './orders-overview.component';
-
 
 describe('OrdersOverviewComponent', () => {
   let component: OrdersOverviewComponent;
@@ -51,7 +52,7 @@ describe('OrdersOverviewComponent', () => {
         RouterModule.forRoot([]),
         TranslateModule.forRoot(),
       ],
-      providers: [OrdersService, provideHttpClient(), DatePipe],
+      providers: [OrdersService, provideHttpClient(), DatePipe, DateFormatService],
       declarations: [OrdersOverviewComponent],
     }).compileComponents();
 
@@ -65,7 +66,6 @@ describe('OrdersOverviewComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
 
   it('should return calendarWeek for status planned', () => {
     const order: OrderOverviewDto = new OrderOverviewDto(
@@ -83,7 +83,7 @@ describe('OrdersOverviewComponent', () => {
       2,
       [],
       'pt0001'
-    )
+    );
 
     const result = component.getDateBasedOnStatus(order);
     expect(result).toBe('CalendarWeek 50');
@@ -105,7 +105,7 @@ describe('OrdersOverviewComponent', () => {
       2,
       [],
       'pt0001'
-    )
+    );
 
     const date = '2023-11-18 10:00';
     jest.spyOn(datePipe, 'transform').mockReturnValue(date);
@@ -113,6 +113,6 @@ describe('OrdersOverviewComponent', () => {
     const result = component.getDateBasedOnStatus(order);
 
     expect(result).toBe(date);
-    expect(datePipe.transform).toHaveBeenCalledWith(order.statusTimestamp, 'yyyy-MM-dd HH:mm');
+    expect(datePipe.transform).toHaveBeenCalledWith(order.statusTimestamp, LANGUAGEFORMATS.DE);
   });
 });

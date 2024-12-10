@@ -23,7 +23,7 @@
   "OrderTableFifthRow": "Products",
   "OrderTableSixthRow": "Quantity",
   "OrderTableSeventhRow": "Robots",
-  "OrderTableEigthRow": "Customer ID",
+  "OrderTableEigthRow": "Customer",
 
   "MonthLabels": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
   "PaidStatistics": "Paid Receivables",

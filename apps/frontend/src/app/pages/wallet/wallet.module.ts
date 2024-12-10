@@ -1,6 +1,6 @@
 import { TranslateModule } from '@ngx-translate/core';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { MatButton, MatButtonModule } from '@angular/material/button';
@@ -16,6 +16,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { DateFormatService } from '../../shared/formats/date-format.service';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
 import { TradeReceivableService } from '../../shared/services/trade-receivable/trade-receivable.service';
 import { PaidStatisticsComponent } from './paid-statistics/paid-statistics.component';
@@ -52,6 +53,8 @@ import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/downlo
     provideCharts(withDefaultRegisterables()),
     InvoiceService,
     TradeReceivableService,
+    DateFormatService,
+    DatePipe,
   ],
 })
 export class WalletModule {}

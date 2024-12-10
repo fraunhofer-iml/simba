@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DialogOffersExpiredComponent } from '../../../layout/dialog-offers-expired/dialog-offers-expired.component';
 import { ROUTING } from '../../../routing/routing.enum';
+import { DateFormatService } from '../../../shared/formats/date-format.service';
 import { OffersService } from '../../../shared/services/offers/offers.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { ProductService } from '../../../shared/services/product/product.service';
@@ -46,7 +47,8 @@ export class CreateOrderComponent {
     private router: Router,
     private readonly dialog: MatDialog,
     private readonly productService: ProductService,
-    private readonly calendarWeekService: CalendarWeekService
+    private readonly calendarWeekService: CalendarWeekService,
+    private readonly dateFormatService: DateFormatService
   ) {
     this.orderForm = builder.group({
       date: new FormControl<Moment | null>(null, Validators.required),
@@ -136,5 +138,9 @@ export class CreateOrderComponent {
       this.openOffers = false;
       this.orderForm.enable();
     });
+  }
+
+  getDateFormatOfCurrentLanguage(offer: OfferDto): string {
+    return this.dateFormatService.transformDateToCurrentLanguageFormat(offer.creationDate);
   }
 }

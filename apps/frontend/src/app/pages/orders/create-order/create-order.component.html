@@ -63,7 +63,7 @@
         <div class="card offers">
           <div class="offerIdAndDate">
             <p id="offerId" class="grey">ID {{ offer.id }}</p>
-            <p id="offerDate" class="grey">{{ 'WeekInputField' | translate }}: {{ offer.creationDate | date }}</p>
+            <p id="offerDate" class="grey">{{ 'WeekInputField' | translate }}: {{ getDateFormatOfCurrentLanguage(offer) }}</p>
           </div>
           <p id="offerName">{{ orderForm.get('product')?.value.name }}</p>
           <p id="offerAmount">{{ 'AmountInputField' | translate }}: {{ orderForm.get('amount')?.value }}</p>
