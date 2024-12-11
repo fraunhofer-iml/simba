@@ -29,11 +29,11 @@ export class OrdersOverviewComponent implements AfterViewInit {
   }
 
   constructor(
-    orderService: OrdersService,
+    private readonly orderService: OrdersService,
     private readonly translate: TranslateService,
     private readonly dateFormatService: DateFormatService
   ) {
-    this.dataSourceObservable = orderService.getOrders().pipe(
+    this.dataSourceObservable = this.orderService.getOrders().pipe(
       map((orders) => {
         this.dataSource.data = orders;
         this.dataSource.data.reverse();

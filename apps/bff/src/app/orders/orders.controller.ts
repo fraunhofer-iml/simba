@@ -1,7 +1,7 @@
 import { AuthRolesEnum, CreateOrderDto, OrderOverviewDto } from '@ap3/api';
 import { Roles } from 'nest-keycloak-connect';
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OrdersService } from './orders.service';
 
 @Controller('orders')
@@ -17,30 +17,24 @@ export class OrdersController {
       'Creates an order and an corresponding process service, stores both entities in the database and transfers the order to the CPPS scheduler.',
   })
   @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        productId: { type: 'string' },
-        amount: { type: 'number' },
-        year: { type: 'number' },
-        calendarWeek: { type: 'number' },
-        customerId: { type: 'string' },
-      },
-    },
+    type: CreateOrderDto,
     required: true,
   })
-  @Roles({ roles: [AuthRolesEnum.CUSTOMER] })
+  @ApiResponse({ type: OrderOverviewDto })
   async create(@Body() createOrderDto: CreateOrderDto): Promise<OrderOverviewDto> {
     return await this.ordersService.create(createOrderDto);
   }
 
   @Get()
-  @ApiOperation({
-    description: 'Get all active orders.',
-  })
   @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
-  async findAll(): Promise<OrderOverviewDto[]> {
-    return await this.ordersService.findAll();
+  @ApiOperation({ description: 'Get all active orders.' })
+  @ApiQuery({
+    name: 'companyId',
+    type: String,
+  })
+  @ApiResponse({ type: [OrderOverviewDto] })
+  async findAll(@Query('companyId') companyId: string): Promise<OrderOverviewDto[]> {
+    return await this.ordersService.findAll(companyId);
   }
 
   @Get(':id')
@@ -54,6 +48,7 @@ export class OrdersController {
     description: 'Identifying id; Required to identify the offer.',
     required: true,
   })
+  @ApiResponse({ type: OrderOverviewDto })
   async findOne(@Param('id') id: string): Promise<OrderOverviewDto> {
     return await this.ordersService.findOne(id);
   }

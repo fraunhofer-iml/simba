@@ -1,5 +1,6 @@
 import { createOrderAmqpDtoMock, OrderAmqpMock } from '@ap3/amqp';
 import {
+  CompaniesSeed,
   createOrderQueryMock,
   DatabaseModule,
   findAllOrdersQueryMock,
@@ -78,7 +79,7 @@ describe('OrdersService', () => {
 
     prismaFindManySpy.mockResolvedValue(OrderOverviewPrismaMock);
 
-    const res = await controller.findAll();
+    const res = await controller.findAll(CompaniesSeed[0].id);
 
     expect(prisma.order.findMany).toHaveBeenCalledWith(findAllOrdersQueryMock);
     expect(expectedReturnValue).toEqual(res);

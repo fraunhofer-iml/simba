@@ -1,5 +1,9 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export class ProductDto {
+  @ApiProperty()
   id: string;
+  @ApiProperty()
   name: string;
 
   constructor(id: string, name: string) {

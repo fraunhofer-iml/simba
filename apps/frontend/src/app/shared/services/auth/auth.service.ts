@@ -1,6 +1,5 @@
 import { KeycloakService } from 'keycloak-angular';
 import { Injectable } from '@angular/core';
-import { HARDCODEDVALUES } from '../../enums/hard-coded-values';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +24,9 @@ export class AuthService {
     }
     return '';
   }
-  getCurrentlyLoggedInCompanyId() {
-    return HARDCODEDVALUES.COMPANYID;
+
+  getCurrentlyLoggedInCompanyId(): string {
+    const keycloakInstance = this.keyCloakService.getKeycloakInstance();
+    return <string>keycloakInstance.profile?.attributes?.['company'];
   }
 }

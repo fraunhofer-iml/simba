@@ -30,9 +30,9 @@ export class OrdersService {
     }
   }
 
-  async findAll(): Promise<OrderAmqpDto[]> {
+  async findAll(companyId: string): Promise<OrderAmqpDto[]> {
     const orderDtos: OrderAmqpDto[] = [];
-    const orders: OrderOverview[] = await this.orderPrismaService.getOrdersForOverview();
+    const orders: OrderOverview[] = await this.orderPrismaService.getOrdersForOverview(companyId);
     for (const order of orders) {
       const latestServiceStatus: ServiceStatusAmqpDto = OrderAmqpDto.getLatestState(order.serviceProcess.states);
       if (SERVICE_STATES_TO_SHOW.includes(latestServiceStatus?.status)) {

@@ -2,8 +2,7 @@ import * as util from 'node:util';
 import { Injectable, Logger } from '@nestjs/common';
 import { Order, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
-import { OrderWithAcceptedOffer } from '../types';
-import { OrderOverview } from '../types/order-overview.types';
+import { OrderOverview, OrderWithAcceptedOffer } from '../types';
 
 @Injectable()
 export class OrderPrismaService {
@@ -48,12 +47,19 @@ export class OrderPrismaService {
   }
 
   async getOverviewOrder(id: string): Promise<OrderOverview | null> {
-    const order = await this.getOrdersForOverview(id);
+    const whereClause: Prisma.OrderWhereInput = { id: String(id) };
+    const order = await this.getOverviewOrders(whereClause);
     return order && order.length == 1 ? order[0] : null;
   }
 
-  async getOrdersForOverview(id?: string): Promise<OrderOverview[] | null> {
-    const whereClause: Prisma.OrderWhereInput = id ? { id: String(id) } : {};
+  async getOrdersForOverview(companyId: string) {
+    const whereClause: Prisma.OrderWhereInput = {
+      OR: [{ buyerId: String(companyId) }, { sellerId: String(companyId) }],
+    };
+    return await this.getOverviewOrders(whereClause);
+  }
+
+  private async getOverviewOrders(whereClause: Prisma.OrderWhereInput): Promise<OrderOverview[] | null> {
     return this.prisma.order.findMany({
       where: whereClause,
       select: {

@@ -1,5 +1,6 @@
 import { CreateOrderDto, OrderOverviewMock } from '@ap3/api';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import moment from 'moment';
 import { CountdownEvent, CountdownModule } from 'ngx-countdown';
 import { of, throwError } from 'rxjs';
@@ -24,6 +25,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { DialogOffersExpiredComponent } from '../../../layout/dialog-offers-expired/dialog-offers-expired.component';
 import { DateFormatService } from '../../../shared/formats/date-format.service';
+import { AuthService } from '../../../shared/services/auth/auth.service';
 import { OffersService } from '../../../shared/services/offers/offers.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { ProductService } from '../../../shared/services/product/product.service';
@@ -62,6 +64,7 @@ describe('CreateOrderComponent', () => {
         MatPaginatorModule,
         NoopAnimationsModule,
         TranslateModule.forRoot(),
+        KeycloakAngularModule,
       ],
       providers: [
         OffersService,
@@ -74,6 +77,19 @@ describe('CreateOrderComponent', () => {
         TranslateService,
         DatePipe,
         DateFormatService,
+        AuthService,
+        {
+          provide: KeycloakService,
+          useValue: {
+            getKeycloakInstance: jest.fn().mockReturnValue({
+              profile: {
+                attributes: {
+                  company: ['pt0001'],
+                },
+              },
+            }),
+          },
+        },
       ],
     }).compileComponents();
 

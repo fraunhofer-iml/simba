@@ -1,6 +1,11 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export class PaidTrStatisticsAmqpDto {
+  @ApiProperty()
   yearAndMonth: string;
+  @ApiProperty()
   totalValuePaidTR: number;
+  @ApiProperty()
   percentageOfPaidDueTR: number;
 
   constructor(yearAndMonth: string, totalValuePaidTRPerMonth: number, percentageOfPaidDueTRPerMonth: number) {

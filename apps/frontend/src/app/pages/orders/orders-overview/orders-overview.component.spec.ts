@@ -1,5 +1,6 @@
 import { OrderOverviewDto } from '@ap3/api';
 import { TranslateModule } from '@ngx-translate/core';
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { DatePipe } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -21,6 +22,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { DateFormatService } from '../../../shared/formats/date-format.service';
 import { LANGUAGEFORMATS } from '../../../shared/formats/formats';
+import { AuthService } from '../../../shared/services/auth/auth.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { OrderStatus } from './enum/orderStatus';
 import { OrdersOverviewComponent } from './orders-overview.component';
@@ -51,8 +53,27 @@ describe('OrdersOverviewComponent', () => {
         NoopAnimationsModule,
         RouterModule.forRoot([]),
         TranslateModule.forRoot(),
+        KeycloakAngularModule,
       ],
-      providers: [OrdersService, provideHttpClient(), DatePipe, DateFormatService],
+      providers: [
+        OrdersService,
+        provideHttpClient(),
+        DatePipe,
+        DateFormatService,
+        AuthService,
+        {
+          provide: KeycloakService,
+          useValue: {
+            getKeycloakInstance: jest.fn().mockReturnValue({
+              profile: {
+                attributes: {
+                  company: ['pt0001'],
+                },
+              },
+            }),
+          },
+        },
+      ],
       declarations: [OrdersOverviewComponent],
     }).compileComponents();
 

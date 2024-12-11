@@ -13,8 +13,8 @@ export class OrdersController {
   }
 
   @MessagePattern(OrderMessagePatterns.READ_ALL)
-  async findAll(): Promise<OrderAmqpDto[]> {
-    return await this.ordersService.findAll();
+  async findAll(@Payload() companyId: string): Promise<OrderAmqpDto[]> {
+    return await this.ordersService.findAll(companyId);
   }
 
   @MessagePattern(OrderMessagePatterns.READ_BY_ID)

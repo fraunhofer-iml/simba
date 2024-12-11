@@ -35,11 +35,11 @@ export class OrdersService {
     }
   }
 
-  async findAll(): Promise<OrderOverviewDto[]> {
+  async findAll(companyId: string): Promise<OrderOverviewDto[]> {
     const frontendDtos: OrderOverviewDto[] = [];
     let orders: OrderAmqpDto[] = [];
     try {
-      orders = await firstValueFrom<OrderAmqpDto[]>(this.processAMQPClient.send(OrderMessagePatterns.READ_ALL, {}));
+      orders = await firstValueFrom<OrderAmqpDto[]>(this.processAMQPClient.send(OrderMessagePatterns.READ_ALL, companyId));
 
       for (const order of orders) {
         const productRef = await this.productService.loadProductRefs(order);

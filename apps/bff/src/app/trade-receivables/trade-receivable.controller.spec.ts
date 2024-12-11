@@ -52,9 +52,11 @@ describe('OrdersController', () => {
 
     controller = module.get<TradeReceivablesController>(TradeReceivablesController) as TradeReceivablesController;
     processSvcClientProxy = module.get<ClientProxy>(AmqpBrokerQueues.PROCESS_SVC_QUEUE) as ClientProxy;
-    request = { user: {
-      company: CompaniesSeed[1].id
-      }}
+    request = {
+      user: {
+        company: CompaniesSeed[1].id,
+      },
+    };
   });
 
   it('should create a Tradereceivable', async () => {
@@ -64,7 +66,7 @@ describe('OrdersController', () => {
       return of(TradeReceivableAMQPMock[0]);
     });
 
-    const res = await controller.create(OrderDtosMock[0].id, createTradeReceivableDtoMock);
+    const res = await controller.create(createTradeReceivableDtoMock);
     expect(sendRequestSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.CREATE, CreateTradeReceivableAMQPMock);
     expect(res).toEqual(expectedReturnValue);
   });

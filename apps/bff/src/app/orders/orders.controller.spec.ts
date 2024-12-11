@@ -1,5 +1,6 @@
 import { AmqpBrokerQueues, createOrderAmqpDtoWithoutPrismaConverterMock, OrderAmqpMock, OrderMessagePatterns } from '@ap3/amqp';
 import { createOrderMock, OpenOffersMock, OrderOverviewDto, OrderOverviewMock, ProductDtoMocks } from '@ap3/api';
+import { CompaniesSeed } from '@ap3/database';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -85,9 +86,9 @@ describe('OrdersController', () => {
       return of(OrderAmqpMock);
     });
 
-    const res: OrderOverviewDto[] = await controller.findAll();
+    const res: OrderOverviewDto[] = await controller.findAll(CompaniesSeed[0].id);
 
-    expect(sendRequestSpy).toHaveBeenCalledWith(OrderMessagePatterns.READ_ALL, {});
+    expect(sendRequestSpy).toHaveBeenCalledWith(OrderMessagePatterns.READ_ALL, CompaniesSeed[0].id);
     expect(res).toEqual(expectedReturnValue);
   });
   it('should find an Order by Id', async () => {

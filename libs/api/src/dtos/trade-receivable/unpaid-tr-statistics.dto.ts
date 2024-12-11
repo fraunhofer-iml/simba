@@ -1,9 +1,14 @@
 import { NotPaidTrStatisticsAmqpDto } from '@ap3/amqp';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UnpaidTrStatisticsDto {
+  @ApiProperty()
   outStandingReceivables: number;
+  @ApiProperty()
   outStandingReceivablesTotalValue: number;
+  @ApiProperty()
   overdueReceivables: number;
+  @ApiProperty()
   overdueReceivablesTotalValue: number;
 
   constructor(

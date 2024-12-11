@@ -56,7 +56,16 @@ export const findSingleOrderMock = <Prisma.OrderWhereInput>{
 };
 
 export const findAllOrdersQueryMock = <Prisma.OrderWhereInput>{
-  where: {},
+  where: {
+    OR: [
+      {
+        buyerId: 'pt0001',
+      },
+      {
+        sellerId: 'pt0001',
+      },
+    ],
+  },
   select: {
     id: true,
     documentIssueDate: true,

@@ -1,8 +1,12 @@
 import { PaymentInformationAmqpDto } from '@ap3/amqp';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class PaymentInformationDto {
+  @ApiProperty()
   id: string;
+  @ApiProperty()
   iBAN: string;
+  @ApiProperty()
   BIC: string;
 
   constructor(id: string, iBAN: string, BIC: string) {

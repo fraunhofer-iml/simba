@@ -1,7 +1,7 @@
 import { AuthRolesEnum, CompanyDto, RolesEnum } from '@ap3/api';
 import { Roles } from 'nest-keycloak-connect';
 import { Body, Controller, Delete, ForbiddenException, Get, Param, Patch, Post, Request } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CompaniesService } from './companies.service';
 
 @Controller('companies')
@@ -15,6 +15,9 @@ export class CompaniesController {
   @ApiOperation({
     description: 'Creates a new company and returns the assigned id.',
   })
+  @ApiBody({
+    type: CompanyDto,
+  })
   create(@Body() createCompanyDto: CompanyDto): Promise<string> {
     return this.companiesService.create(createCompanyDto);
   }
@@ -23,6 +26,9 @@ export class CompaniesController {
   @Roles({ roles: [AuthRolesEnum.ADMIN] })
   @ApiOperation({
     description: 'Get all available companies.',
+  })
+  @ApiResponse({
+    type: [CompanyDto],
   })
   findAll(): Promise<CompanyDto[]> {
     return this.companiesService.findAll();
@@ -38,6 +44,9 @@ export class CompaniesController {
     type: String,
     description: 'Identifying id; Required to identify the company.',
     required: true,
+  })
+  @ApiResponse({
+    type: CompanyDto,
   })
   findOne(@Request() req, @Param('id') id: string): Promise<CompanyDto> {
     if (!req.user.realm_access.roles.includes(RolesEnum.ADMIN) && id !== req.user.company) {
@@ -58,7 +67,7 @@ export class CompaniesController {
     required: true,
   })
   @ApiBody({ type: CompanyDto })
-  update(@Request() req, @Param('id') id: string, @Body() updateCompanyDto: CompanyDto) {
+  update(@Request() req, @Param('id') id: string, @Body() updateCompanyDto: CompanyDto): Promise<string> {
     if (!req.user.realm_access.roles.includes(RolesEnum.ADMIN) && id !== req.user.company) {
       throw new ForbiddenException();
     }
@@ -67,7 +76,7 @@ export class CompaniesController {
 
   @Delete(':id')
   @Roles({ roles: [AuthRolesEnum.ADMIN] })
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<string> {
     return this.companiesService.remove(id);
   }
 }

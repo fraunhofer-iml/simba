@@ -1,15 +1,26 @@
 import { InvoiceAmqpDto } from '@ap3/amqp';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class InvoiceDto {
+  @ApiProperty()
   id: string;
+  @ApiProperty()
   invoiceNumber: string;
+  @ApiProperty()
   creditor: string;
+  @ApiProperty()
   creditorId: string;
+  @ApiProperty()
   totalAmountWithoutVat: number;
+  @ApiProperty()
   invoiceDueDate: string;
+  @ApiProperty()
   debtor: string;
+  @ApiProperty()
   debtorId: string;
+  @ApiProperty()
   paymentStatus: string;
+  @ApiProperty()
   url: string;
 
   constructor(

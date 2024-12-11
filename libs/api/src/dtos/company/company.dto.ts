@@ -1,19 +1,35 @@
 import { CompanyAmqpDto, PaymentInformationAmqpDto } from '@ap3/amqp';
+import { ApiProperty } from '@nestjs/swagger';
 import { PaymentInformationDto } from './payment-information.dto';
 
 export class CompanyDto {
+  @ApiProperty()
   id: string;
+  @ApiProperty()
   name: string;
+  @ApiProperty()
   city: string;
+  @ApiProperty()
   countryCode: string;
+  @ApiProperty()
   address: string;
+  @ApiProperty()
   zip: string;
+  @ApiProperty()
   vatId: string;
+  @ApiProperty()
   commercialRegisterNumber: string;
+  @ApiProperty({
+    type: [PaymentInformationDto],
+  })
   paymentInformation: PaymentInformationDto[];
+  @ApiProperty()
   telephone: string | null;
+  @ApiProperty()
   emailAddress: string | null;
+  @ApiProperty()
   electronicAddress: string | null;
+  @ApiProperty()
   electronicAddressSchemeId: string | null;
 
   public static fromAmqpDto(companyAmqp: CompanyAmqpDto): CompanyDto {
