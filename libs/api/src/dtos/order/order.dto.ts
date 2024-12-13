@@ -1,4 +1,3 @@
-import { CreateOrderAmqpDto } from '@ap3/amqp';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class OrderDto {
@@ -53,39 +52,5 @@ export class OrderDto {
     this.robots = robots;
     this.customerId = customerId;
     this.tradeReceivableId = tradeReceivableId;
-  }
-
-  static toAMQPDto(createOrder: CreateOrderDto, vatCurrency: string, buyerId: string, sellerId: string): CreateOrderAmqpDto {
-    return <CreateOrderAmqpDto>{
-      vatCurrency: vatCurrency,
-      buyerId: buyerId,
-      sellerId: sellerId,
-      productId: createOrder.productId,
-      amount: createOrder.amount,
-      year: createOrder.year,
-      calendarWeek: createOrder.calendarWeek,
-      customerId: createOrder.customerId,
-    };
-  }
-}
-
-export class CreateOrderDto {
-  @ApiProperty()
-  productId: string;
-  @ApiProperty()
-  amount: number;
-  @ApiProperty()
-  year: number;
-  @ApiProperty()
-  calendarWeek: number;
-  @ApiProperty()
-  customerId: string;
-
-  constructor(productId: string, amount: number, year: number, calendarWeek: number, customerId: string) {
-    this.productId = productId;
-    this.amount = amount;
-    this.year = year;
-    this.calendarWeek = calendarWeek;
-    this.customerId = customerId;
   }
 }

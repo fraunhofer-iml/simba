@@ -14,6 +14,7 @@ export class OrdersService {
   ) {}
 
   public createOrder(order: CreateOrderDto): Observable<OrderOverviewDto> {
+    order.customerId = this.authService.getCurrentlyLoggedInCompanyId();
     return this.httpClient.post<OrderOverviewDto>(`${BASE_URL}${ApiEndpoints.orders.getAllOrders}`, order);
   }
 

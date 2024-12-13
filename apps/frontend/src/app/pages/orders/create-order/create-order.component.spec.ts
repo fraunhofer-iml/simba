@@ -118,12 +118,12 @@ describe('CreateOrderComponent', () => {
     component.orderForm.get('selectedCalendarWeek')?.setValue(2);
     component.orderForm.get('amount')?.setValue(4);
 
-    const createOrderFrontendDto: CreateOrderDto = {
+    const createOrderFrontendDto = <CreateOrderDto>{
       productId: component.orderForm.get('product')?.value.id,
       amount: component.orderForm.get('amount')?.value,
       year: component.orderForm.get('date')?.value.year(),
       calendarWeek: component.orderForm.get('selectedCalendarWeek')?.value,
-      customerId: 'pt0001',
+      customerId: '',
     };
 
     jest.spyOn(orderService, 'createOrder').mockReturnValue(of(OrderOverviewMock[0]));

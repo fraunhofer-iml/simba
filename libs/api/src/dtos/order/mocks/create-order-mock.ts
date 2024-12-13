@@ -1,10 +1,10 @@
 import { CompaniesSeed, OrderLinesSeed, ProductsSeed, ServiceProcessesSeed } from '@ap3/database';
-import { CreateOrderDto } from '../order.dto';
+import { CreateOrderDto } from '../create-order.dto';
 
-export const createOrderMock = <CreateOrderDto>{
-  productId: ProductsSeed[0].id,
-  amount: +OrderLinesSeed[0].requestedQuantity,
-  year: ServiceProcessesSeed[0].dueYear,
-  calendarWeek: ServiceProcessesSeed[0].dueCalendarWeek,
-  customerId: CompaniesSeed[0].id,
-};
+export const createOrderMock = new CreateOrderDto(
+  ProductsSeed[0].id,
+  +OrderLinesSeed[0].requestedQuantity,
+  ServiceProcessesSeed[0].dueYear,
+  ServiceProcessesSeed[0].dueCalendarWeek,
+  CompaniesSeed[0].id
+);

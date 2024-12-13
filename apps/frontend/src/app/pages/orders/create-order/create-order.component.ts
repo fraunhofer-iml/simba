@@ -76,15 +76,15 @@ export class CreateOrderComponent {
   }
 
   createOrder() {
-    const createOrderdDto: CreateOrderDto = {
+    const createOrderDto = <CreateOrderDto>{
       productId: this.orderForm.get('product')?.value.id,
       amount: this.orderForm.get('amount')?.value,
       year: this.orderForm.get('date')?.value.year(),
       calendarWeek: this.orderForm.get('selectedCalendarWeek')?.value,
-      customerId: 'pt0001',
+      customerId: '',
     };
     this.orderService
-      .createOrder(createOrderdDto)
+      .createOrder(createOrderDto)
       .pipe(
         catchError(() => {
           return of(null);

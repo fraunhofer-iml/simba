@@ -1,6 +1,7 @@
 import * as util from 'node:util';
 import { AmqpBrokerQueues, CreateOrderAmqpDto, OrderAmqpDto, OrderMessagePatterns } from '@ap3/amqp';
-import { CreateOrderDto, OrderDto, OrderOverviewDto } from '@ap3/api';
+import { CreateOrderDto, OrderOverviewDto } from '@ap3/api';
+import { ConfigurationService } from '@ap3/config';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -10,17 +11,20 @@ import { ProductsService } from '../products/products.service';
 @Injectable()
 export class OrdersService {
   private readonly logger = new Logger(OrdersService.name);
+  private readonly operator = this.configuration.getGeneralConfig().platformOperator;
+  private readonly currency = this.configuration.getGeneralConfig().platformCurrency;
 
   constructor(
     @Inject(AmqpBrokerQueues.PROCESS_SVC_QUEUE) private readonly processAMQPClient: ClientProxy,
     private readonly offerService: OffersService,
-    private readonly productService: ProductsService
+    private readonly productService: ProductsService,
+    private readonly configuration: ConfigurationService
   ) {}
 
   async create(createOrderDto: CreateOrderDto): Promise<OrderOverviewDto> {
     try {
-      //TODO: Implement Company Services and a Currency decision
-      const createOrder: CreateOrderAmqpDto = OrderDto.toAMQPDto(createOrderDto, 'Euro', 'pt0001', 'pt0002');
+      this.logger.verbose(`Create new order with dto: ${util.inspect(createOrderDto)}`);
+      const createOrder: CreateOrderAmqpDto = createOrderDto.toAMQPDto(this.operator, this.currency);
       const receivedOrder: OrderAmqpDto = await firstValueFrom<OrderAmqpDto>(
         this.processAMQPClient.send(OrderMessagePatterns.CREATE, createOrder)
       );
@@ -39,6 +43,7 @@ export class OrdersService {
     const frontendDtos: OrderOverviewDto[] = [];
     let orders: OrderAmqpDto[] = [];
     try {
+      this.logger.verbose(`Get all orders for company with id: ${companyId}`);
       orders = await firstValueFrom<OrderAmqpDto[]>(this.processAMQPClient.send(OrderMessagePatterns.READ_ALL, companyId));
 
       for (const order of orders) {

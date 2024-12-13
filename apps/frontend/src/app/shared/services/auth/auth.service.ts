@@ -27,6 +27,6 @@ export class AuthService {
 
   getCurrentlyLoggedInCompanyId(): string {
     const keycloakInstance = this.keyCloakService.getKeycloakInstance();
-    return <string>keycloakInstance.profile?.attributes?.['company'];
+    return (<string[]>keycloakInstance.profile?.attributes?.['company'])[0];
   }
 }

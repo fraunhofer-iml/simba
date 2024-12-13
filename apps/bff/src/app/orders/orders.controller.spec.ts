@@ -1,5 +1,6 @@
 import { AmqpBrokerQueues, createOrderAmqpDtoWithoutPrismaConverterMock, OrderAmqpMock, OrderMessagePatterns } from '@ap3/amqp';
 import { createOrderMock, OpenOffersMock, OrderOverviewDto, OrderOverviewMock, ProductDtoMocks } from '@ap3/api';
+import { ConfigurationModule, ConfigurationService } from '@ap3/config';
 import { CompaniesSeed } from '@ap3/database';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
@@ -17,7 +18,7 @@ describe('OrdersController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [],
+      imports: [ConfigurationModule],
       controllers: [OrdersController],
       providers: [
         OrdersService,
@@ -38,6 +39,15 @@ describe('OrdersController', () => {
           provide: AmqpBrokerQueues.PROCESS_SVC_QUEUE,
           useValue: {
             send: jest.fn(),
+          },
+        },
+        {
+          provide: ConfigurationService,
+          useValue: {
+            getGeneralConfig: jest.fn().mockReturnValue({
+              platformOperator: 'pt0002',
+              platformCurrency: 'Euro',
+            }),
           },
         },
       ],
@@ -71,6 +81,7 @@ describe('OrdersController', () => {
     expect(productServiceLoadSpy).toHaveBeenCalledWith(OrderAmqpMock[0]);
     expect(res).toEqual(expectedReturnValue);
   });
+
   it('should findAll Orders', async () => {
     const expectedReturnValue = OrderOverviewMock;
 
