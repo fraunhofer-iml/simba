@@ -21,6 +21,7 @@ import { MatTableModule } from '@angular/material/table';
 import { DialogOffersExpiredComponent } from '../../layout/dialog-offers-expired/dialog-offers-expired.component';
 import { DateFormatService } from '../../shared/formats/date-format.service';
 import { MY_FORMATS } from '../../shared/materials/formats/datepicker-format';
+import { AuthService } from '../../shared/services/auth/auth.service';
 import { OffersService } from '../../shared/services/offers/offers.service';
 import { OrdersService } from '../../shared/services/orders/orders.service';
 import { ProductService } from '../../shared/services/product/product.service';
@@ -62,6 +63,7 @@ import { OrdersRoutingModule } from './orders-routing.module';
     DateFormatService,
     DatePipe,
     provideMomentDateAdapter(MY_FORMATS),
+    AuthService,
   ],
 })
 export class OrdersModule {}

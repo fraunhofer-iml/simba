@@ -26,6 +26,7 @@ describe('OrdersService', () => {
                 },
               },
             }),
+            getUserRoles: jest.fn().mockReturnValue([]),
           },
         },
       ],

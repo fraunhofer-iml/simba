@@ -88,6 +88,7 @@ describe('CreateOrderComponent', () => {
                 },
               },
             }),
+            getUserRoles: jest.fn().mockReturnValue([]),
           },
         },
       ],

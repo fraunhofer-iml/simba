@@ -31,6 +31,11 @@ describe('OrdersOverviewComponent', () => {
   let component: OrdersOverviewComponent;
   let fixture: ComponentFixture<OrdersOverviewComponent>;
   let datePipe: DatePipe;
+  const mockKeyCloakService = {
+    isLoggedIn: jest.fn().mockResolvedValue(true),
+    hasResourceRole: jest.fn().mockReturnValue(true),
+    isUserInRole: jest.fn().mockReturnValue(true),
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -71,6 +76,7 @@ describe('OrdersOverviewComponent', () => {
                 },
               },
             }),
+            getUserRoles: jest.fn().mockReturnValue([]),
           },
         },
       ],

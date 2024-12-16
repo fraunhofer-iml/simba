@@ -1,15 +1,23 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { OrdersOverviewComponent } from './orders-overview/orders-overview.component';
+import { AuthGuard } from '../../guards/auth/auth.guard';
+import { RoleGuard } from '../../guards/role/role.guard';
+import { USERROLES } from '../../shared/enums/user-roles';
 import { CreateOrderComponent } from './create-order/create-order.component';
+import { OrdersOverviewComponent } from './orders-overview/orders-overview.component';
 
-const routes: Routes = [{path:'', redirectTo: 'orders',pathMatch: 'prefix'},
-  {path: '', component: OrdersOverviewComponent}, {
-  path: 'new', component: CreateOrderComponent
-}];
+const routes: Routes = [
+  { path: '', component: OrdersOverviewComponent, canActivate: [AuthGuard] },
+  {
+    path: 'new',
+    component: CreateOrderComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: [USERROLES.CUSTOMER] },
+  },
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class OrdersRoutingModule { }
+export class OrdersRoutingModule {}

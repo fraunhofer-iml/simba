@@ -11,7 +11,6 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { AppComponent } from './app.component';
 import { HttpLoaderFactory } from './app.config';
 import { appRoutes } from './app.routes';
-import { AuthGuard } from './guards/auth/auth.guard';
 import { initializeKeycloak } from './keycloak-initializer';
 import { LayoutModule } from './layout/layout.module';
 import { AuthService } from './shared/services/auth/auth.service';
@@ -38,7 +37,6 @@ import { AuthService } from './shared/services/auth/auth.service';
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'de-DE' },
-    AuthGuard,
     AuthService,
     {
       provide: APP_INITIALIZER,

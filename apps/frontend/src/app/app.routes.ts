@@ -2,7 +2,6 @@ import { Route } from '@angular/router';
 import { AuthGuard } from './guards/auth/auth.guard';
 import { PATH } from './routing/path.enum';
 
-
 export const appRoutes: Route[] = [
   {
     path: '',
@@ -12,16 +11,16 @@ export const appRoutes: Route[] = [
   {
     path: PATH.orders,
     loadChildren: () => import('./pages/orders/orders.module').then((m) => m.OrdersModule),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: PATH.production,
     loadChildren: () => import('./pages/production/production.module').then((m) => m.ProductionModule),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: PATH.wallet,
     loadChildren: () => import('./pages/wallet/wallet.module').then((m) => m.WalletModule),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
 ];
