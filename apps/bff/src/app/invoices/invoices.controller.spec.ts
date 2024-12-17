@@ -3,13 +3,14 @@ import {
   CompanyAmqpDto,
   CompanyAmqpMock,
   CompanyIdAndInvoiceId,
+  CompanyIdAndOrderId,
   CompanyIdAndPaymentState,
   CompanyMessagePatterns,
   InvoiceMessagePatterns,
   InvoicesAmqpMock,
 } from '@ap3/amqp';
 import { InvoiceDto, InvoiceMocks } from '@ap3/api';
-import { CompaniesSeed, PaymentStatesEnum } from '@ap3/database';
+import { CompaniesSeed, OrdersSeed, PaymentStatesEnum } from '@ap3/database';
 import { Observable, of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -51,6 +52,9 @@ describe('InvoicesController', () => {
     request = {
       user: {
         company: CompaniesSeed[1].id,
+        realm_access: {
+          roles: ['ap3_customer'],
+        },
       },
     };
     const sendMasterDataRequestSpy = jest.spyOn(masterDataSvcClientProxy, 'send');
@@ -70,8 +74,9 @@ describe('InvoicesController', () => {
       return of(InvoicesAmqpMock);
     });
 
-    const res: InvoiceDto[] = await controller.findAllByOrderId('Order');
-    expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.READ_BY_ORDER_ID, 'Order');
+    const res: InvoiceDto[] = await controller.findAllByOrderId(request, OrdersSeed[0].id, CompaniesSeed[0].id);
+    const params = new CompanyIdAndOrderId(CompaniesSeed[1].id, OrdersSeed[0].id);
+    expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.READ_BY_ORDER_ID, params);
     expect(sendRequestSpy).not.toHaveBeenCalledWith(InvoiceMessagePatterns.READ_ALL, {});
     expect(res).toEqual(expectedReturnValue);
   });
@@ -83,8 +88,8 @@ describe('InvoicesController', () => {
       return of(InvoicesAmqpMock);
     });
 
-    const res: InvoiceDto[] = await controller.findAllByOrderId('');
-    expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.READ_ALL, {});
+    const res: InvoiceDto[] = await controller.findAllByOrderId(request, '', '');
+    expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.READ_ALL, request.user.company);
     expect(sendRequestSpy).not.toHaveBeenCalledWith(InvoiceMessagePatterns.READ_BY_ORDER_ID, '');
     expect(res).toEqual(expectedReturnValue);
   });

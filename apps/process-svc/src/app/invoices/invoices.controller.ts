@@ -1,4 +1,4 @@
-import { CompanyIdAndInvoiceId, CompanyIdAndPaymentState, InvoiceAmqpDto, InvoiceMessagePatterns } from '@ap3/amqp';
+import { CompanyIdAndInvoiceId, CompanyIdAndOrderId, CompanyIdAndPaymentState, InvoiceAmqpDto, InvoiceMessagePatterns } from '@ap3/amqp';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { InvoicesService } from './invoices.service';
@@ -8,8 +8,8 @@ export class InvoicesController {
   constructor(private readonly invoicesService: InvoicesService) {}
 
   @MessagePattern(InvoiceMessagePatterns.READ_ALL)
-  async findAll(): Promise<InvoiceAmqpDto[]> {
-    return await this.invoicesService.findAll();
+  async findAll(@Payload() companyId: string): Promise<InvoiceAmqpDto[]> {
+    return await this.invoicesService.findAll(companyId);
   }
 
   @MessagePattern(InvoiceMessagePatterns.READ_BY_ID)
@@ -18,18 +18,18 @@ export class InvoicesController {
   }
 
   @MessagePattern(InvoiceMessagePatterns.READ_BY_DEBTOR_ID)
-  async findAllByDebtorId(@Payload() userId: string): Promise<InvoiceAmqpDto[]> {
-    return await this.invoicesService.findByDebtor(userId);
+  async findAllByDebtorId(@Payload() companyId: string): Promise<InvoiceAmqpDto[]> {
+    return await this.invoicesService.findByDebtor(companyId);
   }
 
   @MessagePattern(InvoiceMessagePatterns.READ_BY_CREDITOR_ID)
-  async findAllByCreditorId(@Payload() userId: string): Promise<InvoiceAmqpDto[]> {
-    return await this.invoicesService.findByCreditor(userId);
+  async findAllByCreditorId(@Payload() companyId: string): Promise<InvoiceAmqpDto[]> {
+    return await this.invoicesService.findByCreditor(companyId);
   }
 
   @MessagePattern(InvoiceMessagePatterns.READ_BY_ORDER_ID)
-  async findAllByOrderId(@Payload() orderId: string): Promise<InvoiceAmqpDto[]> {
-    return await this.invoicesService.findByOrder(orderId);
+  async findAllByOrderId(@Payload() params: CompanyIdAndOrderId): Promise<InvoiceAmqpDto[]> {
+    return await this.invoicesService.findByOrder(params);
   }
 
   @MessagePattern(InvoiceMessagePatterns.READ_ALL_BY_PAYMENT_STATE)

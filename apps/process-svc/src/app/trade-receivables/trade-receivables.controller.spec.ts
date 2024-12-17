@@ -1,14 +1,10 @@
 import {
-  CompanyIdAndPaymentState,
   CreateTradeReceivableAMQPMock,
-  InvoiceAmqpDto,
-  InvoicesAmqpMock,
-  NotPaidTrStatisticsAmqpDto,
   NotPaidTrStatisticsAmqpMock,
   PaidTrStatisticsAmqpMock,
+  TradeReceivableAMQPMock,
   TRParamsCompanyIdAndYear,
 } from '@ap3/amqp';
-import { UnpaidTradeReceivableStatisticsMock } from '@ap3/api';
 import {
   AggregationSumNovember,
   AggregationSumSeptember,
@@ -16,22 +12,15 @@ import {
   createTradeReceivableQuery,
   DatabaseModule,
   DueInvoiceCount,
-  InvoiceSeed,
   PaidInvoiceIdsNovember,
   PaidInvoiceIdsSeptember,
   PaidOnTimeInvoiceCount,
-  PaymentStatesEnum,
   PaymentStatesSeed,
   PrismaService,
-  TradeReceivableByIdQueryMock,
   TradeReceivablePaymentStatusCountMock,
-  TradeReceivablesByCreditorQueryMock,
-  TradeReceivablesByDebtorQueryMock,
-  TradeReceivablesByOrderQueryMock,
   TradeReceivablesSeed,
 } from '@ap3/database';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TradeReceivableAMQPMock } from '../../../../../libs/amqp/src/lib/dtos/process-svc/trade-receivable/mocks/trade-receivable-amqp.mock';
 import { TradeReceivablesStatisticsService } from './trade-receivable-statistics.service';
 import { TradeReceivablesController } from './trade-receivables.controller';
 import { TradeReceivablesService } from './trade-receivables.service';
@@ -87,7 +76,7 @@ describe('OfferController', () => {
     const retVal = await controller.create(CreateTradeReceivableAMQPMock);
 
     expect(prisma.tradeReceivable.create).toHaveBeenCalledWith({ data: createTradeReceivableQuery });
-    expect(prisma.tradeReceivable.create).toBeCalledTimes(1);
+    expect(prisma.tradeReceivable.create).toHaveBeenCalledTimes(1);
     expect(expectedReturn).toEqual(retVal);
   });
 

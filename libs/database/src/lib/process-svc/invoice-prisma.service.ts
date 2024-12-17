@@ -2,7 +2,7 @@ import * as util from 'node:util';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Invoice, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
-import { InvoiceCountAndDueMonth, InvoiceSumTotalAmountWithoutVatTypes } from '../types';
+import { InvoiceCountAndDueMonth, InvoiceSumTotalAmountWithoutVatTypes, InvoiceWithNFT } from '../types';
 
 @Injectable()
 export class InvoicePrismaService {
@@ -20,26 +20,77 @@ export class InvoicePrismaService {
     }
   }
 
-  async getInvoices(): Promise<Invoice[]> {
-    this.logger.verbose('Return all invoices from database');
-    try {
-      return await this.prismaService.invoice.findMany();
-    } catch (e) {
-      this.logger.error(util.inspect(e));
-      throw e;
+  async getInvoiceById(id: string, companyId: string): Promise<InvoiceWithNFT> {
+    this.logger.verbose('Return invoice by id from database');
+    const invoices: InvoiceWithNFT[] = await this.getInvoices({ creditorId: companyId, debtorId: companyId, invoiceId: id });
+    this.logger.verbose(invoices.length);
+    if (invoices && invoices.length == 1) {
+      return invoices[0];
+    } else {
+      const errorMsg = `Invoice with id ${id} was not found in database.`;
+      this.logger.error(errorMsg);
+      throw new NotFoundException(errorMsg);
     }
   }
 
-  async getInvoiceById(id: string): Promise<Invoice> {
-    this.logger.verbose('Return invoice by id from database');
+  async getInvoicesByCreditorId(creditorId: string): Promise<InvoiceWithNFT[]> {
+    return this.getInvoices({ creditorId });
+  }
+
+  async getInvoicesByDebtorId(debtorId: string): Promise<InvoiceWithNFT[]> {
+    return this.getInvoices({ debtorId });
+  }
+
+  async getInvoicesCorrespondingToCompany(companyId: string): Promise<InvoiceWithNFT[]> {
+    return this.getInvoices({ creditorId: companyId, debtorId: companyId });
+  }
+
+  async getInvoicesByOrderId(orderId: string, companyId: string): Promise<InvoiceWithNFT[]> {
+    return this.getInvoices({ orderId, debtorId: companyId, creditorId: companyId });
+  }
+
+  async getInvoices({
+    invoiceId,
+    orderId,
+    creditorId,
+    debtorId,
+  }: {
+    creditorId?: string;
+    debtorId?: string;
+    orderId?: string;
+    invoiceId?: string;
+  }): Promise<InvoiceWithNFT[]> {
+    this.logger.verbose('Return all invoices from database');
     try {
-      const invoice = await this.prismaService.invoice.findUnique({
-        where: { id: id },
+      const creditorFilter: Prisma.InvoiceWhereInput | undefined = creditorId ? { creditorId: String(creditorId) } : undefined;
+      const debtorFilter: Prisma.InvoiceWhereInput | undefined = debtorId ? { debtorId: String(debtorId) } : undefined;
+      const orFilters = [creditorFilter, debtorFilter].filter((filter) => filter !== undefined);
+
+      const orderFilter: Prisma.InvoiceWhereInput | undefined = orderId ? { serviceProcess: { orderId: String(orderId) } } : undefined;
+      const invoiceFilter: Prisma.InvoiceWhereInput | undefined = invoiceId ? { id: String(invoiceId) } : undefined;
+      const andFilters = [orderFilter, invoiceFilter].filter((filter) => filter !== undefined);
+
+      const where: Prisma.InvoiceWhereInput = {
+        ...(orFilters.length ? { OR: orFilters } : {}),
+        ...(andFilters.length ? { AND: andFilters } : {}),
+      };
+
+      return <InvoiceWithNFT[]>await this.prismaService.invoice.findMany({
+        where: where,
+        include: {
+          serviceProcess: {
+            select: {
+              orderId: true,
+            },
+          },
+          tradeReceivable: {
+            select: {
+              id: true,
+              nft: true,
+            },
+          },
+        },
       });
-      if (!invoice) {
-        throw new NotFoundException(`Invoice with id ${id} was not found in database.`);
-      }
-      return invoice;
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
@@ -75,7 +126,7 @@ export class InvoicePrismaService {
         creditorId: creditorId,
       },
     });
-    this.logger.debug(util.inspect(totalSum));
+    this.logger.verbose(util.inspect(`Total amount without vat of creditor ${creditorId}: ${totalSum}`));
     return totalSum;
   }
 }

@@ -20,6 +20,8 @@ stages:
     paths:
       - .npm
   before_script:
+    - apk update
+    - apk add openssl
     - npm install --cache .npm
 
 danger:

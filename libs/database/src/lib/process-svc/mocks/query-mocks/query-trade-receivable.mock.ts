@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { CompaniesSeed, InvoiceSeed, PaymentStatesSeed, TradeReceivablesSeed } from '../../../../seed';
+import { CompaniesSeed, InvoiceSeed, OrdersSeed, PaymentStatesSeed, TradeReceivablesSeed } from '../../../../seed';
 import { PaymentStatesEnum } from '../../../constants';
 
 export const createTradeReceivableQuery = <Prisma.TradeReceivableCreateInput>{
@@ -8,71 +8,80 @@ export const createTradeReceivableQuery = <Prisma.TradeReceivableCreateInput>{
   states: { create: { status: PaymentStatesEnum.OPEN, timestamp: PaymentStatesSeed[3].timestamp } },
 };
 
-export const TradeReceivablesByDebtorQueryMock = {
+export const InvoicesByDebtorQueryMock = {
   where: {
-    invoice: {
-      debtor: {
-        id: {
-          equals: CompaniesSeed[0].id,
-        },
-      },
-    },
+    OR: [{ debtorId: InvoiceSeed[0].debtorId }],
   },
   include: {
-    invoice: {
-      include: {
-        debtor: true,
+    serviceProcess: {
+      select: {
+        orderId: true,
+      },
+    },
+    tradeReceivable: {
+      select: {
+        id: true,
+        nft: true,
       },
     },
   },
 };
 
-export const TradeReceivablesByCreditorQueryMock = {
+export const InvoicesByCreditorQueryMock = {
   where: {
-    invoice: {
-      creditor: {
-        id: {
-          equals: CompaniesSeed[1].id,
-        },
-      },
-    },
+    OR: [{ creditorId: InvoiceSeed[0].creditorId }],
   },
   include: {
-    invoice: {
-      include: {
-        creditor: true,
+    serviceProcess: {
+      select: {
+        orderId: true,
       },
     },
-  },
-};
-
-export const TradeReceivablesByOrderQueryMock = {
-  include: {
-    invoice: {
-      include: {
-        serviceProcess: {
-          include: {
-            order: {
-              where: {
-                id: {
-                  equals: 'o001',
-                },
-              },
-            },
-          },
-        },
+    tradeReceivable: {
+      select: {
+        id: true,
+        nft: true,
       },
     },
   },
 };
 
-export const TradeReceivableByIdQueryMock = {
-  where: { id: TradeReceivablesSeed[0].id },
+export const InvoicesByOrderQueryMock = {
+  where: {
+    OR: [{ creditorId: InvoiceSeed[0].debtorId }, { debtorId: InvoiceSeed[0].debtorId }],
+    AND: [{ serviceProcess: { orderId: OrdersSeed[0].id } }],
+  },
   include: {
-    states: true,
+    serviceProcess: {
+      select: {
+        orderId: true,
+      },
+    },
+    tradeReceivable: {
+      select: {
+        id: true,
+        nft: true,
+      },
+    },
   },
 };
 
-export const TradeReceivableByInvoiceIdQueryMock = {
-  where: { invoiceId: InvoiceSeed[0].id }
+export const InvoiceIdQueryMock = {
+  where: {
+    OR: [{ creditorId: InvoiceSeed[0].debtorId }, { debtorId: InvoiceSeed[0].debtorId }],
+    AND: [{ id: InvoiceSeed[0].id }],
+  },
+  include: {
+    serviceProcess: {
+      select: {
+        orderId: true,
+      },
+    },
+    tradeReceivable: {
+      select: {
+        id: true,
+        nft: true,
+      },
+    },
+  },
 };

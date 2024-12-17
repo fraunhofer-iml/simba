@@ -1,6 +1,6 @@
 import util from 'node:util';
-import { CompanyIdAndInvoiceId, CompanyIdAndPaymentState, InvoiceAmqpDto } from '@ap3/amqp';
-import { InvoicePrismaService, TradeReceivablePrismaService } from '@ap3/database';
+import { CompanyIdAndInvoiceId, CompanyIdAndOrderId, CompanyIdAndPaymentState, InvoiceAmqpDto } from '@ap3/amqp';
+import { InvoicePrismaService, InvoiceWithNFT, TradeReceivablePrismaService } from '@ap3/database';
 import { Injectable, Logger } from '@nestjs/common';
 import { Invoice, PaymentStatus, TradeReceivable } from '@prisma/client';
 
@@ -12,12 +12,11 @@ export class InvoicesService {
     private readonly invoicePrismaService: InvoicePrismaService
   ) {}
 
-  async findAll(): Promise<InvoiceAmqpDto[]> {
-    this.logger.verbose('requesting all trade receivables');
-    let tradeReceivables: TradeReceivable[] = [];
+  async findAll(companyId: string): Promise<InvoiceAmqpDto[]> {
+    this.logger.verbose(`requesting all trade receivables for ${companyId}`);
     try {
-      tradeReceivables = await this.tradeReceivablePrismaService.getAll();
-      return this.loadAssociatedDataAndConvertToDTO(tradeReceivables);
+      const invoices: InvoiceWithNFT[] = await this.invoicePrismaService.getInvoicesCorrespondingToCompany(companyId);
+      return this.loadAssociatedDataAndConvertToDTO(invoices);
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
@@ -26,11 +25,9 @@ export class InvoicesService {
 
   async findByDebtor(debtorId: string): Promise<InvoiceAmqpDto[]> {
     this.logger.verbose(`requesting all trade receivables of debtor #${debtorId}`);
-    let tradeReceivables: TradeReceivable[] = [];
     try {
-      tradeReceivables = await this.tradeReceivablePrismaService.getAllTradeReceivableByDebtorId(debtorId);
-      this.logger.debug('Response from postgres database', util.inspect(tradeReceivables));
-      return this.loadAssociatedDataAndConvertToDTO(tradeReceivables);
+      const invoices: InvoiceWithNFT[] = await this.invoicePrismaService.getInvoicesByDebtorId(debtorId);
+      return this.loadAssociatedDataAndConvertToDTO(invoices);
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
@@ -39,22 +36,20 @@ export class InvoicesService {
 
   async findByCreditor(creditorId: string): Promise<InvoiceAmqpDto[]> {
     this.logger.verbose(`requesting all trade receivables of creditor #${creditorId}`);
-    let tradeReceivables: TradeReceivable[] = [];
     try {
-      tradeReceivables = await this.tradeReceivablePrismaService.getAllTradeReceivableByCreditorId(creditorId);
-      return this.loadAssociatedDataAndConvertToDTO(tradeReceivables);
+      const invoices: InvoiceWithNFT[] = await this.invoicePrismaService.getInvoicesByCreditorId(creditorId);
+      return this.loadAssociatedDataAndConvertToDTO(invoices);
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
     }
   }
 
-  async findByOrder(orderId: string): Promise<InvoiceAmqpDto[]> {
-    this.logger.verbose(`requesting all trade receivables of order #${orderId}`);
-    let tradeReceivables: TradeReceivable[] = [];
+  async findByOrder(params: CompanyIdAndOrderId): Promise<InvoiceAmqpDto[]> {
+    this.logger.verbose(`requesting all trade receivables of order #${util.inspect(params)}`);
     try {
-      tradeReceivables = await this.tradeReceivablePrismaService.getAllTradeReceivableByOrderId(orderId);
-      return this.loadAssociatedDataAndConvertToDTO(tradeReceivables);
+      const invoices: InvoiceWithNFT[] = await this.invoicePrismaService.getInvoicesByOrderId(params.orderId, params.companyId);
+      return this.loadAssociatedDataAndConvertToDTO(invoices);
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
@@ -62,31 +57,37 @@ export class InvoicesService {
   }
 
   async findOne(params: CompanyIdAndInvoiceId): Promise<InvoiceAmqpDto> {
-    const invoice: Invoice = await this.invoicePrismaService.getInvoiceById(params.invoiceId);
-    const tr: TradeReceivable = await this.tradeReceivablePrismaService.getOneTRByInvoiceId(params.invoiceId);
-    let trStates: PaymentStatus[] = [];
-    if (tr) {
-      trStates = await this.tradeReceivablePrismaService.getPaymentStatesForTradeReceivable(tr.id);
-    }
-
-    return InvoiceAmqpDto.fromPrismaEntity(tr, invoice, trStates);
+    const invoice: InvoiceWithNFT = await this.invoicePrismaService.getInvoiceById(params.invoiceId, params.companyId);
+    return (await this.loadAssociatedDataAndConvertToDTO([invoice]))[0];
   }
 
   async findInvoiceByPaymentStateAndCreditorId(params: CompanyIdAndPaymentState): Promise<InvoiceAmqpDto[]> {
     this.logger.verbose(`requesting all trade receivables with payment state #${params.paymentState}`);
-    return this.loadAssociatedDataAndConvertToDTO(
-      await this.tradeReceivablePrismaService.getTradeReceivableByPaymentStatus(params.paymentState, params.companyId)
+    return this.loadTRAssociatedDataAndConvertToDTO(
+      await this.tradeReceivablePrismaService.getTradeReceivableByPaymentStatus(params.paymentState, params.companyId),
+      params.companyId
     );
   }
 
-  private async loadAssociatedDataAndConvertToDTO(tradeReceivables: TradeReceivable[]): Promise<InvoiceAmqpDto[]> {
+  private async loadTRAssociatedDataAndConvertToDTO(tradeReceivables: TradeReceivable[], companyId: string): Promise<InvoiceAmqpDto[]> {
     const tradeReceivableDtos: InvoiceAmqpDto[] = [];
-    this.logger.verbose(util.inspect(tradeReceivables));
     for (const tr of tradeReceivables) {
-      const relatedInvoice: Invoice = await this.invoicePrismaService.getInvoiceById(tr.invoiceId);
+      const relatedInvoice: Invoice = await this.invoicePrismaService.getInvoiceById(tr.invoiceId, companyId);
 
       const trStates: PaymentStatus[] = await this.tradeReceivablePrismaService.getPaymentStatesForTradeReceivable(tr.id);
-      tradeReceivableDtos.push(InvoiceAmqpDto.fromPrismaEntity(tr, relatedInvoice, trStates));
+      tradeReceivableDtos.push(InvoiceAmqpDto.fromTRPrismaEntity(tr, relatedInvoice, trStates));
+    }
+    return tradeReceivableDtos;
+  }
+
+  private async loadAssociatedDataAndConvertToDTO(invoices: InvoiceWithNFT[]): Promise<InvoiceAmqpDto[]> {
+    const tradeReceivableDtos: InvoiceAmqpDto[] = [];
+    for (const invoice of invoices) {
+      const trStates: PaymentStatus[] = await this.tradeReceivablePrismaService.getPaymentStatesForTradeReceivable(
+        invoice.tradeReceivable.id
+      );
+
+      tradeReceivableDtos.push(InvoiceAmqpDto.fromPrismaEntity(invoice, trStates));
     }
     return tradeReceivableDtos;
   }

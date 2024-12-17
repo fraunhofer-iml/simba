@@ -25,6 +25,54 @@ export class TradeReceivablePrismaService {
     return this.prismaService.tradeReceivable.findMany();
   }
 
+  async getAllTradeReceivableByDebtorOrCreditorId(creditorId: string, debtorId: string, orderId: string): Promise<TradeReceivable[]> {
+    const debtor: Prisma.TradeReceivableWhereInput = {
+      invoice: {
+        debtor: {
+          id: {
+            equals: String(debtorId),
+          },
+        },
+      },
+    };
+    const creditor: Prisma.TradeReceivableWhereInput = {
+      invoice: {
+        creditor: {
+          id: {
+            equals: String(creditorId),
+          },
+        },
+      },
+    };
+    const order: Prisma.TradeReceivableWhereInput = {
+      invoice: {
+        serviceProcess: {
+          order: {
+            id: {
+              equals: String(orderId),
+            },
+          },
+        },
+      },
+    };
+
+    const where: Prisma.TradeReceivableWhereInput = {
+      OR: [creditor, debtor],
+      AND: [order],
+    };
+    this.logger.verbose('Returning all Trade Receivables for debtor : ', debtorId);
+    return this.prismaService.tradeReceivable.findMany({
+      where: where,
+      include: {
+        invoice: {
+          include: {
+            debtor: true,
+          },
+        },
+      },
+    });
+  }
+
   async getAllTradeReceivableByDebtorId(debtorId: string): Promise<TradeReceivable[]> {
     this.logger.verbose('Returning all Trade Receivables for debtor : ', debtorId);
     return this.prismaService.tradeReceivable.findMany({
@@ -96,8 +144,8 @@ export class TradeReceivablePrismaService {
     this.logger.verbose('Returning trade receivable for invoice : ', invoiceId);
     return this.prismaService.tradeReceivable.findUnique({
       where: {
-        invoiceId: invoiceId
-      }
+        invoiceId: invoiceId,
+      },
     });
   }
 

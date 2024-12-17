@@ -3,6 +3,7 @@ import {
   AmqpBrokerQueues,
   CompanyAmqpDto,
   CompanyIdAndInvoiceId,
+  CompanyIdAndOrderId,
   CompanyIdAndPaymentState,
   InvoiceAmqpDto,
   InvoiceMessagePatterns,
@@ -21,13 +22,14 @@ export class InvoicesService {
     private readonly companyService: CompaniesService
   ) {}
 
-  async findAllByOrderId(orderId: string): Promise<InvoiceDto[]> {
+  async findAllByCompanyAndOrderId(orderId: string, companyId: string): Promise<InvoiceDto[]> {
     this.logger.debug(`Requesting Tradereceivables order #${orderId}`);
     let response: InvoiceAmqpDto[] = [];
     if (orderId) {
-      response = await firstValueFrom<InvoiceAmqpDto[]>(this.processAMQPClient.send(InvoiceMessagePatterns.READ_BY_ORDER_ID, orderId));
+      const params = new CompanyIdAndOrderId(companyId, orderId);
+      response = await firstValueFrom<InvoiceAmqpDto[]>(this.processAMQPClient.send(InvoiceMessagePatterns.READ_BY_ORDER_ID, params));
     } else {
-      response = await firstValueFrom<InvoiceAmqpDto[]>(this.processAMQPClient.send(InvoiceMessagePatterns.READ_ALL, {}));
+      response = await firstValueFrom<InvoiceAmqpDto[]>(this.processAMQPClient.send(InvoiceMessagePatterns.READ_ALL, companyId));
     }
     return await this.handleFrontendTradeReceivableDTOCreation(response);
   }
