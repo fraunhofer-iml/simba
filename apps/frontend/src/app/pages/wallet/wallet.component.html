@@ -11,7 +11,9 @@
       <img matIconPrefix src="assets/icons/search.svg" alt="Icon" />
       <input matInput (keyup)="convertInputAndResetPaginator($event)" #input />
     </mat-form-field>
-    <button mat-flat-button class="download-button" [disabled]="!selection.hasValue()" (click)="openDownloadInvoiceDialog()">{{ 'DownloadInvoice' | translate }}</button>
+    <button mat-flat-button class="download-button" [disabled]="!selection.hasValue()" (click)="openDownloadInvoiceDialog()">
+      {{ 'ShowInvoice' | translate }}
+    </button>
   </div>
 
   <div class="table-container card">
