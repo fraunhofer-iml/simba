@@ -49,7 +49,6 @@
   width: 300px;
 }
 
-
 .title {
   font-size: large;
 }
@@ -126,24 +125,46 @@
   .offers-container {
     display: block;
   }
+
   .offers {
     max-width: 100%;
   }
+
   .order-content {
     flex-direction: column;
     align-items: center;
-    margin-bottom: 1em;
   }
+
   .year-picker .mat-calendar-body-cell-content {
     display: none;
   }
+
   .offerIdAndDate {
     display: block;
   }
+
   #order-year {
     width: 210px;
   }
+
   #order-week {
     width: auto;
+  }
+}
+
+@media (max-width: 95em) {
+  .order-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+  }
+
+  .order-content > * {
+    flex: 1 1 calc(50% - 1em);
+  }
+
+  .order-field {
+    display: flex;
+    justify-content: center;
   }
 }
