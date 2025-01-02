@@ -1,16 +1,15 @@
-import { Injectable, Logger, LogLevel } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-
-import { KEYCLOAK_IDENTIFIER, KeycloakConfig } from './configs/keycloak.config';
 import { BFF_IDENTIFIER, bffConfig } from './configs/bff.config';
 import { GENERAL_IDENTIFIER, generalConfig } from './configs/general.config';
+import { KEYCLOAK_IDENTIFIER, KeycloakConfig } from './configs/keycloak.config';
 
 @Injectable()
 export class ConfigurationService {
   logger = new Logger(ConfigurationService.name);
   constructor(private readonly configService: ConfigService) {}
 
-  public getGeneralConfig(): generalConfig{
+  public getGeneralConfig(): generalConfig {
     const generalConfig = this.configService.get<generalConfig>(GENERAL_IDENTIFIER);
     if (!generalConfig) {
       const msg = 'Environment variables for AMQP / RabbitMQ configuration missing!';
@@ -20,7 +19,7 @@ export class ConfigurationService {
     return generalConfig;
   }
 
-  public getBFFConfig(): bffConfig{
+  public getBFFConfig(): bffConfig {
     const bffConfig = this.configService.get<bffConfig>(BFF_IDENTIFIER);
     if (!bffConfig) {
       const msg = 'Environment variables for bff configuration missing!';

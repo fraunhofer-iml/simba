@@ -1,4 +1,4 @@
-import { OfferAmqpDto, OfferAmqpMock } from '@ap3/amqp';
+import { OfferAmqpMock } from '@ap3/amqp';
 import {
   createOfferQuery,
   DatabaseModule,
@@ -63,9 +63,8 @@ describe('OfferController', () => {
     const retVal = await controller.create(ServiceProcessesSeed[0].orderId);
 
     expect(prisma.offer.create).toHaveBeenCalledWith({ data: createOfferQuery });
-    expect(prisma.offer.create).toBeCalledTimes(4);
+    expect(prisma.offer.create).toHaveBeenCalledTimes(4);
     expect(expectedReturn).toEqual(retVal);
-    //wird 4 mal mit unterschiedlichen werten aufgerufen, tohavebeencalledwith wirft error
   });
 
   it('findAll: should return all offers', async () => {
@@ -133,7 +132,7 @@ describe('OfferController', () => {
     expect(prismaOfferUpdateSpy).toHaveBeenLastCalledWith(setOfferStateToDeclinedQuery);
     expect(prismaFindManySpy).toHaveBeenCalledWith(queryOpenOffersByOrderId);
     expect(prismaOfferUpdateSpy).toHaveBeenCalledWith(setOfferStateToDeclinedQuery);
-    expect(prismaOfferUpdateSpy).toBeCalledTimes(4);
+    expect(prismaOfferUpdateSpy).toHaveBeenCalledTimes(4);
     expect(retVal).toEqual(expectedReturn);
   });
 });

@@ -1,6 +1,5 @@
 import {
   AmqpBrokerQueues,
-  CompanyAmqpDto,
   CompanyAmqpMock,
   CompanyIdAndInvoiceId,
   CompanyIdAndOrderId,
@@ -11,7 +10,7 @@ import {
 } from '@ap3/amqp';
 import { InvoiceDto, InvoiceMocks } from '@ap3/api';
 import { CompaniesSeed, OrdersSeed, PaymentStatesEnum } from '@ap3/database';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CompaniesModule } from '../companies/companies.module';

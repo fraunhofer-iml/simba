@@ -34,7 +34,6 @@ export class OfferPrismaService {
     }
   }
 
-  //TODO: get latest state of order
   async getOffersByOrderId(orderId: string, states: string[]): Promise<Offer[]> {
     this.logger.verbose(`Return all offers by Id ${orderId} from database`);
     try {
@@ -66,10 +65,9 @@ export class OfferPrismaService {
   async getOffersById(id: string): Promise<Offer> {
     this.logger.verbose('Return offer by id from database');
     try {
-      const offer = await this.prisma.offer.findUniqueOrThrow({
+      return await this.prisma.offer.findUniqueOrThrow({
         where: { id: id },
       });
-      return offer;
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;

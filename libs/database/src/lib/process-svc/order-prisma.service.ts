@@ -2,49 +2,12 @@ import * as util from 'node:util';
 import { Injectable, Logger } from '@nestjs/common';
 import { Order, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
-import { OrderOverview, OrderWithAcceptedOffer } from '../types';
+import { OrderOverview } from '../types';
 
 @Injectable()
 export class OrderPrismaService {
   private logger = new Logger(OrderPrismaService.name);
   constructor(private prisma: PrismaService) {}
-
-  async getOrder(id: string): Promise<OrderWithAcceptedOffer | null> {
-    const order = <OrderWithAcceptedOffer>await this.prisma.order.findUnique({
-      where: { id: String(id) },
-      include: {
-        orderLines: true,
-        serviceProcess: {
-          include: {
-            acceptedOffer: true,
-            states: true,
-          },
-        },
-      },
-    });
-    return order;
-  }
-
-  async getOrders(states: string[]): Promise<OrderWithAcceptedOffer[]> {
-    const orders = <OrderWithAcceptedOffer[]>await this.prisma.order.findMany({
-      include: {
-        orderLines: true,
-        serviceProcess: {
-          include: {
-            acceptedOffer: true,
-            states: {
-              where: {
-                status: {
-                  in: states,
-                },
-              },
-            },
-          },
-        },
-      },
-    });
-    return orders;
-  }
 
   async getOverviewOrder(id: string): Promise<OrderOverview | null> {
     const whereClause: Prisma.OrderWhereInput = { id: String(id) };
