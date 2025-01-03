@@ -1,7 +1,10 @@
 import { CompanyIdAndInvoiceId, CompanyIdAndOrderId, CompanyIdAndPaymentState, InvoiceAmqpDto, InvoicesAmqpMock } from '@ap3/amqp';
+import { InvoiceMocks } from '@ap3/api';
+import { ConfigurationModule } from '@ap3/config';
 import {
   CompaniesSeed,
   DatabaseModule,
+  InvoiceForZugferdMock,
   InvoiceIdQueryMock,
   InvoiceNFTPrismaMock,
   InvoicesByCreditorQueryMock,
@@ -14,21 +17,32 @@ import {
   PrismaService,
   TradeReceivablesSeed,
 } from '@ap3/database';
+import { S3Module, S3Service } from '@ap3/s3';
+import { Client } from 'minio';
+import { MINIO_CONNECTION } from 'nestjs-minio';
 import { Test, TestingModule } from '@nestjs/testing';
 import { InvoicesController } from './invoices.controller';
 import { InvoicesService } from './invoices.service';
+import { InvoicesZugferdService } from './zugferd/invoices-zugferd.service';
 
 describe('InvoicesController', () => {
   let controller: InvoicesController;
   let prisma: PrismaService;
+  let minioClientMock: Partial<Client>;
   let prismaIVManySpy;
 
   beforeEach(async () => {
+    minioClientMock = {
+      putObject: jest.fn().mockResolvedValue('mock-put-object-result'),
+      getObject: jest.fn().mockResolvedValue('mock-fetch-result'),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
-      imports: [DatabaseModule],
+      imports: [DatabaseModule, S3Module, ConfigurationModule],
       controllers: [InvoicesController],
       providers: [
         InvoicesService,
+        InvoicesZugferdService,
         {
           provide: PrismaService,
           useValue: {
@@ -44,9 +58,15 @@ describe('InvoicesController', () => {
               findMany: jest.fn(),
               findUnique: jest.fn(),
               aggregate: jest.fn(),
+              findUniqueOrThrow: jest.fn(),
             },
             $queryRaw: jest.fn(),
           },
+        },
+        S3Service,
+        {
+          provide: MINIO_CONNECTION,
+          useValue: minioClientMock,
         },
       ],
     }).compile();
@@ -141,6 +161,24 @@ describe('InvoicesController', () => {
     expect(prisma.$queryRaw).toHaveBeenCalled();
     expect(prisma.invoice.findMany).toHaveBeenCalled();
     expect(prisma.paymentStatus.findMany).toHaveBeenCalled();
+
+    expect(expectedReturn).toEqual(retVal);
+  });
+
+  it('createAndUploadZugferdPDF: should return uploaded invoice pdf name', async () => {
+    const expectedReturn = 'INV_' + InvoiceMocks[0].invoiceNumber + '.pdf';
+
+    const prismaZugferdInvoiceSpy = jest.spyOn(prisma.invoice, 'findUniqueOrThrow');
+    prismaZugferdInvoiceSpy.mockResolvedValue(InvoiceForZugferdMock);
+
+    const prismaUpdateInvoiceSpy = jest.spyOn(prisma.invoice, 'update');
+    prismaUpdateInvoiceSpy.mockResolvedValue(InvoiceForZugferdMock);
+
+    const retVal = await controller.createAndUploadZugferdPDF(new CompanyIdAndInvoiceId(CompaniesSeed[0].id, InvoiceMocks[0].id));
+
+    expect(prisma.invoice.findUniqueOrThrow).toHaveBeenCalled();
+    expect(prisma.invoice.update).toHaveBeenCalled();
+    expect(minioClientMock.putObject).toHaveBeenCalled();
 
     expect(expectedReturn).toEqual(retVal);
   });

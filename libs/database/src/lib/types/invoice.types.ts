@@ -1,4 +1,4 @@
-import { Invoice } from '@prisma/client';
+import { Company, Invoice, OrderLine, PaymentInformation, Product, ServiceProcess } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 
 export type InvoiceIdTypes = { id: string };
@@ -15,4 +15,16 @@ export type InvoiceWithNFT = Invoice & {
     id: string;
     nft: string;
   } | null;
+};
+
+export type InvoiceForZugferd = Invoice & {
+  serviceProcess:
+    | (ServiceProcess & {
+        order: {
+          orderLines: (OrderLine & { item: Product })[];
+        } | null;
+      })
+    | null;
+  debtor: (Company & { paymentInformation: PaymentInformation[] }) | null;
+  creditor: (Company & { paymentInformation: PaymentInformation[] }) | null;
 };

@@ -71,4 +71,15 @@ export class InvoicesService {
     }
     return retVal;
   }
+
+  async createAndUploadZugferdPDF(companyId: string, id: string): Promise<string> {
+    try {
+      this.logger.verbose('Requesting zugferd pdf creation for invoice ', id);
+      const params = new CompanyIdAndInvoiceId(companyId, id);
+      return await firstValueFrom<string>(this.processAMQPClient.send(InvoiceMessagePatterns.CREATE_AND_UPLOAD_ZUGFERD_PDF, params));
+    } catch (e) {
+      this.logger.warn(e);
+      throw e;
+    }
+  }
 }

@@ -35,7 +35,7 @@ export class InvoiceAmqpDto {
     this.url = url;
   }
 
-  public static fromPrismaEntity(invoice: InvoiceWithNFT, states: PaymentStatus[]): InvoiceAmqpDto {
+  public static fromPrismaEntity(invoice: InvoiceWithNFT, states: PaymentStatus[], fileServerUrl: string): InvoiceAmqpDto {
     const lastState = this.getLatestState(states);
     const currentState = lastState
       ? new PaymentStatusAmqpDto(lastState.status, lastState.timestamp)
@@ -50,11 +50,16 @@ export class InvoiceAmqpDto {
       currentState,
       invoice.invoiceNumber,
       invoice.dueDate,
-      invoice.url
+      invoice.url ? fileServerUrl + invoice.url : ''
     );
   }
 
-  public static fromTRPrismaEntity(tradeReceivable: TradeReceivable, invoice: Invoice, states: PaymentStatus[]): InvoiceAmqpDto {
+  public static fromTRPrismaEntity(
+    tradeReceivable: TradeReceivable,
+    invoice: Invoice,
+    states: PaymentStatus[],
+    fileServerUrl: string
+  ): InvoiceAmqpDto {
     const lastState = this.getLatestState(states);
     const currentState = lastState
       ? new PaymentStatusAmqpDto(lastState.status, lastState.timestamp)
@@ -69,7 +74,7 @@ export class InvoiceAmqpDto {
       currentState,
       invoice.invoiceNumber,
       invoice.dueDate,
-      invoice.url
+      invoice.url ? fileServerUrl + invoice.url : ''
     );
   }
 

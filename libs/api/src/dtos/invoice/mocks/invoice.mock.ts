@@ -12,7 +12,7 @@ export const InvoiceMocks: InvoiceDto[] = [
     CompaniesSeed[0].id,
     CompaniesSeed[0].name,
     PaymentStatesSeed[1].status,
-    InvoiceSeed[0].url
+    process.env['OBJECT_STORAGE_URL'] + InvoiceSeed[0].url
   ),
   new InvoiceDto(
     InvoiceSeed[1].id,
@@ -24,6 +24,6 @@ export const InvoiceMocks: InvoiceDto[] = [
     CompaniesSeed[0].id,
     CompaniesSeed[0].name,
     PaymentStatesSeed[3].status,
-    InvoiceSeed[1].url
+    process.env['OBJECT_STORAGE_URL'] + InvoiceSeed[1].url
   ),
 ];

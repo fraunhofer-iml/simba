@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { BFF_IDENTIFIER, bffConfig } from './configs/bff.config';
 import { GENERAL_IDENTIFIER, generalConfig } from './configs/general.config';
 import { KEYCLOAK_IDENTIFIER, KeycloakConfig } from './configs/keycloak.config';
+import { MINIO_IDENTIFIER, MinioConfig } from './configs/minio.config';
 
 @Injectable()
 export class ConfigurationService {
@@ -37,5 +38,15 @@ export class ConfigurationService {
       throw new Error(msg);
     }
     return keycloakConfig;
+  }
+
+  public getMinioConfig(): MinioConfig {
+    const minioConfig = this.configService.get<MinioConfig>(MINIO_IDENTIFIER);
+    if (!minioConfig) {
+      const msg = 'Environment variables for minio configuration missing!';
+      this.logger.error(msg);
+      throw new Error(msg);
+    }
+    return minioConfig;
   }
 }

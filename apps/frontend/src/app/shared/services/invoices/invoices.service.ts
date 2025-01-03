@@ -12,4 +12,13 @@ export class InvoiceService {
   getInvoices(): Observable<InvoiceDto[]> {
     return this.httpClient.get<InvoiceDto[]>(`${BASE_URL}${ApiEndpoints.invoices.getAllInvoices}`);
   }
+
+  downloadInvoicePdf(invoiceUrl: string): Observable<Blob> {
+    return this.httpClient.get(invoiceUrl, {
+      headers: {
+        Accept: 'application/pdf',
+      },
+      responseType: 'blob',
+    });
+  }
 }

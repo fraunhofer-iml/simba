@@ -2,7 +2,7 @@ import * as util from 'node:util';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Invoice, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
-import { InvoiceCountAndDueMonth, InvoiceSumTotalAmountWithoutVatTypes, InvoiceWithNFT } from '../types';
+import { InvoiceCountAndDueMonth, InvoiceForZugferd, InvoiceSumTotalAmountWithoutVatTypes, InvoiceWithNFT } from '../types';
 
 @Injectable()
 export class InvoicePrismaService {
@@ -20,7 +20,69 @@ export class InvoicePrismaService {
     }
   }
 
-  async getInvoiceById(id: string, companyId: string): Promise<InvoiceWithNFT> {
+  async updateInvoice(invoiceId: string, data: Prisma.InvoiceUpdateInput) {
+    try {
+      await this.prismaService.invoice.update({ where: { id: invoiceId }, data: data });
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
+    }
+  }
+
+  async updateInvoiceURL(invoiceId: string, url: string) {
+    try {
+      const updateUrlData: Prisma.InvoiceUpdateInput = { url: url };
+      await this.updateInvoice(invoiceId, updateUrlData);
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
+    }
+  }
+
+  async getInvoiceByIdForZugferd(id: string, companyId: string): Promise<InvoiceForZugferd> {
+    try {
+      const companyFilter: Prisma.InvoiceWhereInput[] = companyId
+        ? [{ creditorId: String(companyId) }, { debtorId: String(companyId) }]
+        : [];
+
+      return this.prismaService.invoice.findUniqueOrThrow({
+        where: {
+          id: id,
+          ...(companyFilter.length ? { OR: companyFilter } : {}),
+        },
+        include: {
+          serviceProcess: {
+            include: {
+              order: {
+                include: {
+                  orderLines: {
+                    include: {
+                      item: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          debtor: {
+            include: {
+              paymentInformation: true,
+            },
+          },
+          creditor: {
+            include: {
+              paymentInformation: true,
+            },
+          },
+        },
+      });
+    } catch (e) {
+      this.logger.warn(e);
+      throw e;
+    }
+  }
+
+  async getInvoiceById(id: string, companyId?: string): Promise<InvoiceWithNFT> {
     this.logger.verbose('Return invoice by id from database');
     const invoices: InvoiceWithNFT[] = await this.getInvoices({ creditorId: companyId, debtorId: companyId, invoiceId: id });
     this.logger.verbose(invoices.length);

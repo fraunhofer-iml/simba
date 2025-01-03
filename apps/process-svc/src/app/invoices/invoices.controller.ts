@@ -36,4 +36,9 @@ export class InvoicesController {
   async findAllByPaymentStateAndCreditorId(@Payload() params: CompanyIdAndPaymentState): Promise<InvoiceAmqpDto[]> {
     return await this.invoicesService.findInvoiceByPaymentStateAndCreditorId(params);
   }
+
+  @MessagePattern(InvoiceMessagePatterns.CREATE_AND_UPLOAD_ZUGFERD_PDF)
+  async createAndUploadZugferdPDF(@Payload() params: CompanyIdAndInvoiceId): Promise<string> {
+    return await this.invoicesService.createAndUploadZugferdPDF(params);
+  }
 }

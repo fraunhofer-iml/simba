@@ -1,15 +1,21 @@
 import util from 'node:util';
 import { CompanyIdAndInvoiceId, CompanyIdAndOrderId, CompanyIdAndPaymentState, InvoiceAmqpDto } from '@ap3/amqp';
-import { InvoicePrismaService, InvoiceWithNFT, TradeReceivablePrismaService } from '@ap3/database';
+import { ConfigurationService } from '@ap3/config';
+import { InvoiceForZugferd, InvoicePrismaService, InvoiceWithNFT, TradeReceivablePrismaService } from '@ap3/database';
+import { S3Service } from '@ap3/s3';
 import { Injectable, Logger } from '@nestjs/common';
 import { Invoice, PaymentStatus, TradeReceivable } from '@prisma/client';
+import { InvoicesZugferdService } from './zugferd/invoices-zugferd.service';
 
 @Injectable()
 export class InvoicesService {
   private readonly logger = new Logger(InvoicesService.name);
   constructor(
     private readonly tradeReceivablePrismaService: TradeReceivablePrismaService,
-    private readonly invoicePrismaService: InvoicePrismaService
+    private readonly invoicePrismaService: InvoicePrismaService,
+    private readonly invoiceZugferdService: InvoicesZugferdService,
+    private readonly config: ConfigurationService,
+    private readonly s3Service: S3Service
   ) {}
 
   async findAll(companyId: string): Promise<InvoiceAmqpDto[]> {
@@ -58,6 +64,7 @@ export class InvoicesService {
 
   async findOne(params: CompanyIdAndInvoiceId): Promise<InvoiceAmqpDto> {
     const invoice: InvoiceWithNFT = await this.invoicePrismaService.getInvoiceById(params.invoiceId, params.companyId);
+
     return (await this.loadAssociatedDataAndConvertToDTO([invoice]))[0];
   }
 
@@ -69,13 +76,26 @@ export class InvoicesService {
     );
   }
 
+  async createAndUploadZugferdPDF(params: CompanyIdAndInvoiceId) {
+    const invoice: InvoiceForZugferd = await this.invoicePrismaService.getInvoiceByIdForZugferd(params.invoiceId, params.companyId);
+    const pdfFile: Uint8Array = await this.invoiceZugferdService.generatePdf(invoice);
+
+    const fileName = `${this.config.getMinioConfig().invoicePrefix}${invoice.invoiceNumber}.pdf`;
+    await this.s3Service.uploadPdf(Buffer.from(pdfFile.buffer), fileName);
+
+    await this.invoicePrismaService.updateInvoiceURL(params.invoiceId, fileName);
+    return fileName;
+  }
+
   private async loadTRAssociatedDataAndConvertToDTO(tradeReceivables: TradeReceivable[], companyId: string): Promise<InvoiceAmqpDto[]> {
     const tradeReceivableDtos: InvoiceAmqpDto[] = [];
     for (const tr of tradeReceivables) {
       const relatedInvoice: Invoice = await this.invoicePrismaService.getInvoiceById(tr.invoiceId, companyId);
 
       const trStates: PaymentStatus[] = await this.tradeReceivablePrismaService.getPaymentStatesForTradeReceivable(tr.id);
-      tradeReceivableDtos.push(InvoiceAmqpDto.fromTRPrismaEntity(tr, relatedInvoice, trStates));
+      tradeReceivableDtos.push(
+        InvoiceAmqpDto.fromTRPrismaEntity(tr, relatedInvoice, trStates, this.config.getMinioConfig().objectStorageURL)
+      );
     }
     return tradeReceivableDtos;
   }
@@ -87,7 +107,7 @@ export class InvoicesService {
         invoice.tradeReceivable.id
       );
 
-      tradeReceivableDtos.push(InvoiceAmqpDto.fromPrismaEntity(invoice, trStates));
+      tradeReceivableDtos.push(InvoiceAmqpDto.fromPrismaEntity(invoice, trStates, this.config.getMinioConfig().objectStorageURL));
     }
     return tradeReceivableDtos;
   }

@@ -1,9 +1,16 @@
-<div class="download-invoice-container">
-  <h1>{{ 'DownloadInvoice' | translate }}</h1>
+<mat-dialog-content class="download-invoice-container">
+  <h2>{{ 'DownloadInvoice' | translate }}</h2>
   <img src="assets/icons/close.svg" alt="Icon" id="close" (keyup)="dialogRef.close()" (click)="dialogRef.close()" />
-
-  <div class="button-container">
-    <button mat-flat-button class="button" (click)="dialogRef.close()">{{ 'Download' | translate }}</button>
-    <button mat-flat-button class="button" (click)="dialogRef.close()">{{ 'Cancel' | translate }}</button>
+  <div class="file-container">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+      @for (invoice of data; track invoice.id) {
+        <mat-tab [label]=invoice.invoiceNumber class="invoice-tab">
+          <object [attr.data]="getSource(invoice.url+'#view=FitH')" class="pdf-object" type="application/pdf">{{ 'InvoiceDetails' | translate }}</object>
+        </mat-tab>
+      }
+    </mat-tab-group>
   </div>
-</div>
+  <div class="button-container">
+    <button mat-flat-button class="button" (click)="downloadInvoices()">{{ 'Download' | translate }}</button>
+  </div>
+</mat-dialog-content>

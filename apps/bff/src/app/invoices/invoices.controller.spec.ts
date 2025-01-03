@@ -115,10 +115,25 @@ describe('InvoicesController', () => {
       return of([InvoicesAmqpMock[0], InvoicesAmqpMock[1]]);
     });
 
-    const res = await controller.findAllByPaymentState(request, PaymentStatesEnum.PAID);
+    const res = await controller.findAllByPaymentState(request, PaymentStatesEnum.PAID, '');
     expect(sendRequestSpy).toHaveBeenCalledWith(
       InvoiceMessagePatterns.READ_ALL_BY_PAYMENT_STATE,
       new CompanyIdAndPaymentState(CompaniesSeed[1].id, PaymentStatesEnum.PAID)
+    );
+    expect(res).toEqual(expectedReturnValue);
+  });
+
+  it('should get trigger creation of a new ZUGFeRD pdf', async () => {
+    const expectedReturnValue = 'INV_' + InvoiceMocks[0].invoiceNumber + '.pdf';
+    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
+    sendRequestSpy.mockImplementationOnce((messagePattern: InvoiceMessagePatterns, data: any) => {
+      return of(expectedReturnValue);
+    });
+
+    const res = await controller.createAndUploadZugferdPDF(request, InvoiceMocks[0].id);
+    expect(sendRequestSpy).toHaveBeenCalledWith(
+      InvoiceMessagePatterns.CREATE_AND_UPLOAD_ZUGFERD_PDF,
+      new CompanyIdAndInvoiceId(CompaniesSeed[1].id, InvoiceMocks[0].id)
     );
     expect(res).toEqual(expectedReturnValue);
   });

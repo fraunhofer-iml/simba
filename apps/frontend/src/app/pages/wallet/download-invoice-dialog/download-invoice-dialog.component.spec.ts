@@ -1,6 +1,9 @@
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatTabsModule } from '@angular/material/tabs';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 import { DownloadInvoiceDialogComponent } from './download-invoice-dialog.component';
 
@@ -11,9 +14,22 @@ describe('DownloadInvoiceDialogComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DownloadInvoiceDialogComponent],
-      imports: [MatDialogModule, TranslateModule.forRoot()],
+      imports: [MatDialogModule, MatTabsModule, TranslateModule.forRoot(), BrowserAnimationsModule],
 
-      providers: [InvoiceService, TranslateModule, { provide: MatDialogRef, useValue: {} }, { provide: MAT_DIALOG_DATA, useValue: {} }],
+      providers: [
+        InvoiceService,
+        TranslateModule,
+        provideHttpClient(),
+        { provide: MatDialogRef, useValue: {} },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: [
+            { invoiceNumber: 'INV001', url: 'path/to/invoice1.pdf' },
+            { invoiceNumber: 'INV002', url: 'path/to/invoice2.pdf' },
+          ],
+        },
+        { provide: TranslatePipe, useValue: jest.fn((value: string) => value) },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DownloadInvoiceDialogComponent);

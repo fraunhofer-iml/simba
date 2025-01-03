@@ -1,11 +1,14 @@
+import { ConfigurationModule } from '@ap3/config';
 import { DatabaseModule } from '@ap3/database';
+import { S3Module } from '@ap3/s3';
 import { Module } from '@nestjs/common';
 import { InvoicesController } from './invoices.controller';
 import { InvoicesService } from './invoices.service';
+import { InvoicesZugferdService } from './zugferd/invoices-zugferd.service';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, S3Module, ConfigurationModule],
   controllers: [InvoicesController],
-  providers: [InvoicesService],
+  providers: [InvoicesService, InvoicesZugferdService],
 })
 export class InvoicesModule {}

@@ -47,7 +47,7 @@ export class WalletComponent {
     private readonly dialog: MatDialog
   ) {
     this.dataSource = new MatTableDataSource<InvoiceDto>();
-    this.dataSourceObservable = invoiceService.getInvoices().pipe(
+    this.dataSourceObservable = this.invoiceService.getInvoices().pipe(
       map((invoices) => {
         const dataSource = this.dataSource;
         dataSource.data = invoices;
@@ -90,7 +90,9 @@ export class WalletComponent {
 
   openDownloadInvoiceDialog() {
     this.dialog.open(DownloadInvoiceDialogComponent, {
-      data: this.selection.selected.map((invoice: InvoiceDto) => invoice.id),
+      data: this.selection.selected,
+      panelClass: 'mat-dialog-container',
+      disableClose: true,
     });
   }
 }
