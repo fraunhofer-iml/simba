@@ -17,6 +17,7 @@
     "paths": {
       "@ap3/amqp": ["libs/amqp/src/index.ts"],
       "@ap3/api": ["libs/api/src/index.ts"],
+      "@ap3/blockchain-connector": ["libs/blockchain-connector/src/index.ts"],
       "@ap3/config": ["libs/config/src/index.ts"],
       "@ap3/database": ["libs/database/src/index.ts"],
       "@ap3/s3": ["libs/s3/src/index.ts"]
