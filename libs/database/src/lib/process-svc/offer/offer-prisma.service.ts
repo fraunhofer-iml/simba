@@ -1,9 +1,9 @@
 import * as util from 'node:util';
 import { Injectable, Logger } from '@nestjs/common';
 import { Offer, Prisma } from '@prisma/client';
-import { OfferStatesEnum } from '../constants';
-import { PrismaService } from '../prisma.service';
-import { ServiceProcessPrismaService } from './service-process-prisma.service';
+import { OfferStatesEnum } from '../../constants';
+import { PrismaService } from '../../prisma.service';
+import { ServiceProcessPrismaService } from '../service-process-prisma.service';
 
 @Injectable()
 export class OfferPrismaService {

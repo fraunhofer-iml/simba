@@ -1,26 +1,23 @@
 import {
   AmqpBrokerQueues,
   CreateTradeReceivableAMQPMock,
-  InvoicesAmqpMock,
   NotPaidTrStatisticsAmqpMock,
   PaidTrStatisticsAmqpMock,
+  TradeReceivableAMQPMock,
   TradeReceivableMessagePatterns,
-  TRParamsCompanyIdAndYear,
+  TRParamsCompanyIdAndYearAndFinancialRole,
 } from '@ap3/amqp';
 import {
   createTradeReceivableDtoMock,
-  InvoiceMocks,
-  OrderDtosMock,
   PaidTrStatisticsMock,
   TradeReceivableMock,
   UnpaidTradeReceivableStatisticsMock,
   UnpaidTrStatisticsDto,
 } from '@ap3/api';
-import { CompaniesSeed } from '@ap3/database';
+import { CompaniesSeed, FinancialRoles } from '@ap3/database';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TradeReceivableAMQPMock } from '../../../../../libs/amqp/src/lib/dtos/process-svc/trade-receivable/mocks/trade-receivable-amqp.mock';
 import { TradeReceivablesController } from './trade-receivables.controller';
 import { TradeReceivablesService } from './trade-receivables.service';
 
@@ -78,8 +75,11 @@ describe('OrdersController', () => {
       return of(NotPaidTrStatisticsAmqpMock);
     });
 
-    const res: UnpaidTrStatisticsDto = await controller.getStatisticUnpaidTrade(request);
-    expect(sendRequestSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_TR_STATISTICS_NOT_PAID, CompaniesSeed[1].id);
+    const res: UnpaidTrStatisticsDto = await controller.getStatisticUnpaidTrade(request, FinancialRoles.DEBTOR);
+    expect(sendRequestSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_TR_STATISTICS_NOT_PAID, {
+      companyId: CompaniesSeed[1].id,
+      financialRole: FinancialRoles.DEBTOR,
+    });
     expect(res).toEqual(expectedReturnValue);
   });
 
@@ -90,10 +90,10 @@ describe('OrdersController', () => {
       return of(PaidTrStatisticsAmqpMock);
     });
 
-    const res = await controller.getStatisticPaidTradePerMonth(request, 2024);
+    const res = await controller.getStatisticPaidTradePerMonth(request, 2024, FinancialRoles.DEBTOR);
     expect(sendRequestSpy).toHaveBeenCalledWith(
       TradeReceivableMessagePatterns.READ_TR_STATISTICS_PAID,
-      new TRParamsCompanyIdAndYear(CompaniesSeed[1].id, 2024)
+      new TRParamsCompanyIdAndYearAndFinancialRole(CompaniesSeed[1].id, 2024, FinancialRoles.DEBTOR)
     );
     expect(res).toEqual(expectedReturnValue);
   });

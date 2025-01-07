@@ -1,14 +1,18 @@
 import * as util from 'node:util';
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Invoice, Prisma } from '@prisma/client';
-import { PrismaService } from '../prisma.service';
-import { InvoiceCountAndDueMonth, InvoiceForZugferd, InvoiceSumTotalAmountWithoutVatTypes, InvoiceWithNFT } from '../types';
+import { PrismaService } from '../../prisma.service';
+import { InvoiceCountAndDueMonth, InvoiceForZugferd, InvoiceSumTotalAmountWithoutVatTypes, InvoiceWithNFT } from '../../types';
+import { QueryBuilderHelperService } from '../query-builder-helper.service';
 
 @Injectable()
 export class InvoicePrismaService {
   private logger = new Logger(InvoicePrismaService.name);
 
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly queryBuilderService: QueryBuilderHelperService
+  ) {}
 
   async createInvoice(data: Prisma.InvoiceCreateInput): Promise<Invoice | null> {
     this.logger.verbose(`Insert new invoice ${util.inspect(data)}`);
@@ -23,16 +27,6 @@ export class InvoicePrismaService {
   async updateInvoice(invoiceId: string, data: Prisma.InvoiceUpdateInput) {
     try {
       await this.prismaService.invoice.update({ where: { id: invoiceId }, data: data });
-    } catch (e) {
-      this.logger.error(e);
-      throw e;
-    }
-  }
-
-  async updateInvoiceURL(invoiceId: string, url: string) {
-    try {
-      const updateUrlData: Prisma.InvoiceUpdateInput = { url: url };
-      await this.updateInvoice(invoiceId, updateUrlData);
     } catch (e) {
       this.logger.error(e);
       throw e;
@@ -80,35 +74,6 @@ export class InvoicePrismaService {
       this.logger.warn(e);
       throw e;
     }
-  }
-
-  async getInvoiceById(id: string, companyId?: string): Promise<InvoiceWithNFT> {
-    this.logger.verbose('Return invoice by id from database');
-    const invoices: InvoiceWithNFT[] = await this.getInvoices({ creditorId: companyId, debtorId: companyId, invoiceId: id });
-    this.logger.verbose(invoices.length);
-    if (invoices && invoices.length == 1) {
-      return invoices[0];
-    } else {
-      const errorMsg = `Invoice with id ${id} was not found in database.`;
-      this.logger.error(errorMsg);
-      throw new NotFoundException(errorMsg);
-    }
-  }
-
-  async getInvoicesByCreditorId(creditorId: string): Promise<InvoiceWithNFT[]> {
-    return this.getInvoices({ creditorId });
-  }
-
-  async getInvoicesByDebtorId(debtorId: string): Promise<InvoiceWithNFT[]> {
-    return this.getInvoices({ debtorId });
-  }
-
-  async getInvoicesCorrespondingToCompany(companyId: string): Promise<InvoiceWithNFT[]> {
-    return this.getInvoices({ creditorId: companyId, debtorId: companyId });
-  }
-
-  async getInvoicesByOrderId(orderId: string, companyId: string): Promise<InvoiceWithNFT[]> {
-    return this.getInvoices({ orderId, debtorId: companyId, creditorId: companyId });
   }
 
   async getInvoices({
@@ -159,16 +124,14 @@ export class InvoicePrismaService {
     }
   }
 
-  async countInvoicesDueInMonth(year: number, creditorId: string): Promise<InvoiceCountAndDueMonth[]> {
+  async countInvoicesDueInMonth(year: number, whereQuery: Prisma.Sql): Promise<InvoiceCountAndDueMonth[]> {
     try {
-      const invoiceCount = <InvoiceCountAndDueMonth[]>await this.prismaService.$queryRaw`
+      return <InvoiceCountAndDueMonth[]>await this.prismaService.$queryRaw`
         SELECT COUNT(*) as invoice_count, TO_CHAR(DATE_TRUNC('month', iv."dueDate"), 'YYYY-MM') as due_month
         FROM "Invoice" AS iv
-        where iv."creditorId" = ${creditorId}
+        where ${whereQuery}
         GROUP BY due_month;
       `;
-
-      return invoiceCount;
     } catch (e) {
       this.logger.error(e);
       this.logger.error(`It was not possible to get trade receivable ids for ${year}`);
@@ -176,19 +139,14 @@ export class InvoicePrismaService {
     }
   }
 
-  async sumInvoiceAmountsForTradeReceivables(invoiceIds: string[], creditorId: string): Promise<InvoiceSumTotalAmountWithoutVatTypes> {
+  async sumInvoiceAmountsForTradeReceivables(whereQuery: Prisma.InvoiceWhereInput): Promise<InvoiceSumTotalAmountWithoutVatTypes> {
     const totalSum = <InvoiceSumTotalAmountWithoutVatTypes>await this.prismaService.invoice.aggregate({
       _sum: {
         totalAmountWithoutVat: true,
       },
-      where: {
-        id: {
-          in: invoiceIds,
-        },
-        creditorId: creditorId,
-      },
+      where: whereQuery,
     });
-    this.logger.verbose(util.inspect(`Total amount without vat of creditor ${creditorId}: ${totalSum}`));
+    this.logger.verbose(util.inspect(`Total amount without vat: ${totalSum}`));
     return totalSum;
   }
 }

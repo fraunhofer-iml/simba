@@ -59,6 +59,13 @@ h2 {
   color: var(--dark-blue-color);
 }
 
+h3 {
+  font-size: medium;
+  font-weight: bold;
+  color: var(--dark-blue-color);
+  overflow: hidden;
+}
+
 .card {
   background-color: white;
   border-radius: 1em;

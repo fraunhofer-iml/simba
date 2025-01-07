@@ -4,4 +4,4 @@ export * from './dtos/invoice';
 export * from './dtos/product';
 export * from './dtos/trade-receivable';
 export * from './dtos/company';
-export * from './auth-roles.enum';
+export * from './constants';

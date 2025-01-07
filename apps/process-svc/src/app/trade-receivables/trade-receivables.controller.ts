@@ -4,7 +4,8 @@ import {
   PaidTrStatisticsAmqpDto,
   TradeReceivableAmqpDto,
   TradeReceivableMessagePatterns,
-  TRParamsCompanyIdAndYear,
+  TRParamsCompanyIdAndFinancialRole,
+  TRParamsCompanyIdAndYearAndFinancialRole,
 } from '@ap3/amqp';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
@@ -24,12 +25,21 @@ export class TradeReceivablesController {
   }
 
   @MessagePattern(TradeReceivableMessagePatterns.READ_TR_STATISTICS_PAID)
-  async calcPaidTradeReceivableVolumePerMonth(@Payload() params: TRParamsCompanyIdAndYear): Promise<PaidTrStatisticsAmqpDto[]> {
-    return await this.tradeReceivableStatisticsService.calcPaidTradeReceivableVolumePerMonth(params.year, params.companyId);
+  async calcPaidTradeReceivableVolumePerMonth(
+    @Payload() params: TRParamsCompanyIdAndYearAndFinancialRole
+  ): Promise<PaidTrStatisticsAmqpDto[]> {
+    return await this.tradeReceivableStatisticsService.calcPaidTradeReceivableVolumePerMonth(
+      params.year,
+      params.companyId,
+      params.financialRole
+    );
   }
 
   @MessagePattern(TradeReceivableMessagePatterns.READ_TR_STATISTICS_NOT_PAID)
-  async getTradeReceivableNotPaidStatistics(@Payload() companyId: string): Promise<NotPaidTrStatisticsAmqpDto> {
-    return await this.tradeReceivableStatisticsService.getTradeReceivablesNotPaidStatisticsByCompanyId(companyId);
+  async getTradeReceivableNotPaidStatistics(@Payload() params: TRParamsCompanyIdAndFinancialRole): Promise<NotPaidTrStatisticsAmqpDto> {
+    return await this.tradeReceivableStatisticsService.getTradeReceivablesNotPaidStatisticsByCompanyId(
+      params.companyId,
+      params.financialRole
+    );
   }
 }

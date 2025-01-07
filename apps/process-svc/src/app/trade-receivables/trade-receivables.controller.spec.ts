@@ -3,7 +3,7 @@ import {
   NotPaidTrStatisticsAmqpMock,
   PaidTrStatisticsAmqpMock,
   TradeReceivableAMQPMock,
-  TRParamsCompanyIdAndYear,
+  TRParamsCompanyIdAndYearAndFinancialRole,
 } from '@ap3/amqp';
 import {
   AggregationSumNovember,
@@ -12,11 +12,13 @@ import {
   createTradeReceivableQuery,
   DatabaseModule,
   DueInvoiceCount,
+  FinancialRoles,
   PaidInvoiceIdsNovember,
   PaidInvoiceIdsSeptember,
   PaidOnTimeInvoiceCount,
   PaymentStatesSeed,
   PrismaService,
+  QueryBuilderHelperService,
   TradeReceivablePaymentStatusCountMock,
   TradeReceivablesSeed,
 } from '@ap3/database';
@@ -25,7 +27,7 @@ import { TradeReceivablesStatisticsService } from './trade-receivable-statistics
 import { TradeReceivablesController } from './trade-receivables.controller';
 import { TradeReceivablesService } from './trade-receivables.service';
 
-describe('OfferController', () => {
+describe('TradeReceivablesController', () => {
   let controller: TradeReceivablesController;
   let prisma: PrismaService;
 
@@ -34,6 +36,7 @@ describe('OfferController', () => {
       imports: [DatabaseModule],
       controllers: [TradeReceivablesController],
       providers: [
+        QueryBuilderHelperService,
         TradeReceivablesService,
         TradeReceivablesStatisticsService,
         {
@@ -105,7 +108,9 @@ describe('OfferController', () => {
     const prismaInvoiceSpy = jest.spyOn(prisma.invoice, 'aggregate');
     prismaInvoiceSpy.mockResolvedValueOnce(AggregationSumSeptember).mockResolvedValueOnce(AggregationSumNovember);
 
-    const retVal = await controller.calcPaidTradeReceivableVolumePerMonth(new TRParamsCompanyIdAndYear(CompaniesSeed[0].id, 2024));
+    const retVal = await controller.calcPaidTradeReceivableVolumePerMonth(
+      new TRParamsCompanyIdAndYearAndFinancialRole(CompaniesSeed[0].id, 2024, FinancialRoles.DEBTOR)
+    );
     expect(expectedReturn).toEqual(retVal);
   });
 
@@ -115,7 +120,10 @@ describe('OfferController', () => {
     const prismaRawSpy = jest.spyOn(prisma, '$queryRaw');
     prismaRawSpy.mockResolvedValue(TradeReceivablePaymentStatusCountMock);
 
-    const retVal = await controller.getTradeReceivableNotPaidStatistics(CompaniesSeed[0].id);
+    const retVal = await controller.getTradeReceivableNotPaidStatistics({
+      companyId: CompaniesSeed[0].id,
+      financialRole: FinancialRoles.DEBTOR,
+    });
 
     expect(prisma.$queryRaw).toHaveBeenCalled();
 

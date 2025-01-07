@@ -95,44 +95,44 @@ describe('OrdersOverviewComponent', () => {
   });
 
   it('should return calendarWeek for status planned', () => {
-    const order: OrderOverviewDto = new OrderOverviewDto(
-      '1234',
-      {
+    const order: OrderOverviewDto = <OrderOverviewDto>{
+      id: '1234',
+      product: {
         name: 'Quadrokopter',
         id: 'prod1',
       },
-      2,
-      2024,
-      50,
-      '2024-10-02T10:55:55.695Z',
-      OrderStatus.planned,
-      '2024-10-09T07:55:55.695Z',
-      2,
-      [],
-      'pt0001'
-    );
+      amount: 2,
+      year: 2024,
+      calendarWeek: 50,
+      creationDate: '2024-10-02T10:55:55.695Z',
+      status: OrderStatus.planned,
+      statusTimestamp: '2024-10-09T07:55:55.695Z',
+      price: 2,
+      robots: [],
+      customerId: 'pt0001',
+    };
 
     const result = component.getDateBasedOnStatus(order);
     expect(result).toBe('CalendarWeek 50');
   });
 
   it('should return formatted date for status produced', () => {
-    const order: OrderOverviewDto = new OrderOverviewDto(
-      '1234',
-      {
+    const order: OrderOverviewDto = <OrderOverviewDto>{
+      id: '1234',
+      product: {
         name: 'Quadrokopter',
         id: 'prod1',
       },
-      2,
-      2024,
-      50,
-      '2024-10-02T10:55:55.695Z',
-      OrderStatus.produced,
-      '2024-10-09T07:55:55.695Z',
-      2,
-      [],
-      'pt0001'
-    );
+      amount: 2,
+      year: 2024,
+      calendarWeek: 50,
+      creationDate: '2024-10-02T10:55:55.695Z',
+      status: OrderStatus.produced,
+      statusTimestamp: '2024-10-09T07:55:55.695Z',
+      price: 2,
+      robots: [],
+      customerId: 'pt0001',
+    };
 
     const date = '2023-11-18 10:00';
     jest.spyOn(datePipe, 'transform').mockReturnValue(date);

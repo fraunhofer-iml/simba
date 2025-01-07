@@ -15,14 +15,31 @@
   justify-content: center;
   flex-grow: 1;
 }
+
+.data-row-host {
+  display: grid;
+  grid-template-columns: 50% 25% 25%;
+  margin: 0.25rem 0.5rem 0.25rem 0.5rem;
+}
+
 .data-row {
   display: grid;
-  grid-template-columns: 90% 10%;
+  grid-template-columns: 85% 15%;
   margin: 0.25rem 0.5rem 0.25rem 0.5rem;
-  overflow: hidden;
 }
-.number-data {
+
+.column-and-items-host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.column-and-items {
   margin-left: auto;
+}
+
+.unpaid-statistics-column-title {
+  word-wrap: break-word;
 }
 
 .text-data {

@@ -9,13 +9,15 @@ import { ApiEndpoints } from '../endpoints/endpoints';
 export class TradeReceivableService {
   constructor(private readonly httpClient: HttpClient) {}
 
-  getPaidTradeReceivablesStatistics(year: number): Observable<PaidTrStatisticsDto[]> {
+  getPaidTradeReceivablesStatistics(financialRole: string, year: number): Observable<PaidTrStatisticsDto[]> {
     return this.httpClient.get<PaidTrStatisticsDto[]>(
-      `${BASE_URL}${ApiEndpoints.tradeReceivables.getPaidTradeReceivablesStatistics}?year=${year}`
+      `${BASE_URL}${ApiEndpoints.tradeReceivables.getPaidTradeReceivablesStatistics}?year=${year}&financialRole=${financialRole}`
     );
   }
 
-  getUnPaidTradeReceivablesStatistics(): Observable<UnpaidTrStatisticsDto> {
-    return this.httpClient.get<UnpaidTrStatisticsDto>(`${BASE_URL}${ApiEndpoints.tradeReceivables.getUnPaidTradeReceivablesStatistics}`);
+  getUnPaidTradeReceivablesStatistics(financialRole: string): Observable<UnpaidTrStatisticsDto> {
+    return this.httpClient.get<UnpaidTrStatisticsDto>(
+      `${BASE_URL}${ApiEndpoints.tradeReceivables.getUnPaidTradeReceivablesStatistics}?financialRole=${financialRole}`
+    );
   }
 }

@@ -7,6 +7,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DateFormatService } from '../../shared/formats/date-format.service';
+import { FinancialRoleService } from '../../shared/services/financial-role/financial-role.service';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
 import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
 
@@ -44,7 +45,8 @@ export class WalletComponent {
   constructor(
     private readonly invoiceService: InvoiceService,
     private readonly dateFormatService: DateFormatService,
-    private readonly dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private readonly financialRoleService: FinancialRoleService
   ) {
     this.dataSource = new MatTableDataSource<InvoiceDto>();
     this.dataSourceObservable = this.invoiceService.getInvoices().pipe(

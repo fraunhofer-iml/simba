@@ -1,34 +1,83 @@
 <div class="unpaid-statistics-wrapper card">
   <h2>{{ 'UnpaidStatistics' | translate }}</h2>
   <div class="data">
-    <div class="data-row">
+    @if (authService.isAdmin()) {
+      <div [ngClass]="{ 'data-row-host': authService.isAdmin(), 'data-row': !authService.isAdmin() }">
+        <span class="text-data"> </span>
+        <div [ngClass]="{ 'column-and-items-host': authService.isAdmin() }">
+          <h3 class="unpaid-statistics-column-title">{{ 'UnpaidStatisticsSecondColumn' | translate }}</h3>
+        </div>
+        <div [ngClass]="{ 'column-and-items-host': authService.isAdmin() }">
+          <h3 class="unpaid-statistics-column-title">{{ 'UnpaidStatisticsFirstColumn' | translate }}</h3>
+        </div>
+      </div>
+    }
+    <div [ngClass]="{ 'data-row-host': authService.isAdmin(), 'data-row': !authService.isAdmin() }">
       <span class="text-data">{{ 'UnpaidStatisticsFirstRow' | translate }}</span>
-      <div>
-        <span class="number-data" *ngIf="statisticsDto$ | async as statDto">{{ statDto.outStandingReceivables }}</span>
-      </div>
+      @if (authService.isCustomer() || authService.isAdmin()) {
+        <div [ngClass]="{ 'column-and-items-host': authService.isAdmin() }">
+          <span [ngClass]="{ 'column-and-items': !authService.isAdmin() }" *ngIf="debtorStatisticsDto$ | async as dStatDto">{{
+            dStatDto.outStandingReceivables
+          }}</span>
+        </div>
+      }
+      @if (authService.isContributor() || authService.isAdmin()) {
+        <div [ngClass]="{ 'column-and-items-host': authService.isAdmin() }">
+          <span *ngIf="creditorStatisticsDto$ | async as cStatDto">{{ cStatDto.outStandingReceivables }}</span>
+        </div>
+      }
     </div>
-    <mat-divider></mat-divider>
-    <div class="data-row">
+
+    <div [ngClass]="{ 'data-row-host': authService.isAdmin(), 'data-row': !authService.isAdmin() }">
       <span class="text-data">{{ 'UnpaidStatisticsSecondRow' | translate }}</span>
-      <div>
-        <span class="number-data" *ngIf="statisticsDto$ | async as statDto">{{ statDto.outStandingReceivablesTotalValue }}</span
-        ><span>€</span>
-      </div>
+      @if (authService.isCustomer() || authService.isAdmin()) {
+        <div [ngClass]="{ 'column-and-items-host': authService.isAdmin() }">
+          <span [ngClass]="{ 'column-and-items': !authService.isAdmin() }" *ngIf="debtorStatisticsDto$ | async as dStatDto">{{
+            dStatDto.outStandingReceivablesTotalValue
+          }}</span
+          ><span>€</span>
+        </div>
+      }
+      @if (authService.isContributor() || authService.isAdmin()) {
+        <div [ngClass]="{ 'column-and-items-host': authService.isAdmin() }">
+          <span *ngIf="creditorStatisticsDto$ | async as cStatDto">{{ cStatDto.outStandingReceivablesTotalValue }}</span
+          ><span>€</span>
+        </div>
+      }
     </div>
-    <mat-divider></mat-divider>
-    <div class="data-row">
+
+    <div [ngClass]="{ 'data-row-host': authService.isAdmin(), 'data-row': !authService.isAdmin() }">
       <span class="text-data">{{ 'UnpaidStatisticsThirdRow' | translate }}</span>
-      <div>
-        <span class="number-data" *ngIf="statisticsDto$ | async as statDto">{{ statDto.overdueReceivables }}</span>
-      </div>
+      @if (authService.isCustomer() || authService.isAdmin()) {
+        <div [ngClass]="{ 'column-and-items-host': authService.isAdmin() }">
+          <span [ngClass]="{ 'column-and-items': !authService.isAdmin() }" *ngIf="debtorStatisticsDto$ | async as dStatDto">{{
+            dStatDto.overdueReceivables
+          }}</span>
+        </div>
+      }
+      @if (authService.isContributor() || authService.isAdmin()) {
+        <div [ngClass]="{ 'column-and-items-host': authService.isAdmin() }">
+          <span *ngIf="creditorStatisticsDto$ | async as cStatDto">{{ cStatDto.overdueReceivables }}</span>
+        </div>
+      }
     </div>
-    <mat-divider></mat-divider>
-    <div class="data-row">
+
+    <div [ngClass]="{ 'data-row-host': authService.isAdmin(), 'data-row': !authService.isAdmin() }">
       <span class="text-data">{{ 'UnpaidStatisticsFourthRow' | translate }}</span>
-      <div>
-        <span class="number-data" *ngIf="statisticsDto$ | async as statDto">{{ statDto.overdueReceivablesTotalValue }}</span
-        ><span>€</span>
-      </div>
+      @if (authService.isCustomer() || authService.isAdmin()) {
+        <div [ngClass]="{ 'column-and-items-host': authService.isAdmin() }">
+          <span [ngClass]="{ 'column-and-items': !authService.isAdmin() }" *ngIf="debtorStatisticsDto$ | async as dStatDto">{{
+            dStatDto.overdueReceivablesTotalValue
+          }}</span
+          ><span>€</span>
+        </div>
+      }
+      @if (authService.isContributor() || authService.isAdmin()) {
+        <div [ngClass]="{ 'column-and-items-host': authService.isAdmin() }">
+          <span *ngIf="creditorStatisticsDto$ | async as cStatDto">{{ cStatDto.overdueReceivablesTotalValue }}</span
+          ><span>€</span>
+        </div>
+      }
     </div>
   </div>
 </div>

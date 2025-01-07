@@ -1,5 +1,5 @@
 import { PaidTrStatisticsAmqpDto } from '@ap3/amqp';
-import { AuthRolesEnum, CreateTradeReceivableDto, TradeReceivableDto, UnpaidTrStatisticsDto } from '@ap3/api';
+import { AuthRolesEnum, CreateTradeReceivableDto, FinancialRoles, TradeReceivableDto, UnpaidTrStatisticsDto } from '@ap3/api';
 import { Roles } from 'nest-keycloak-connect';
 import { Body, Controller, Get, Post, Query, Request } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -23,23 +23,40 @@ export class TradeReceivablesController {
   }
 
   @Get('/statistics/paid')
-  @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
+  @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR, AuthRolesEnum.CUSTOMER] })
   @ApiOperation({ description: 'Get a statistic for all trade receivables paid in a given year, grouped by month. ' })
   @ApiQuery({
     name: 'year',
     type: Number,
     required: true,
   })
+  @ApiQuery({
+    name: 'financialRole',
+    type: String,
+    required: true,
+  })
   @ApiResponse({ type: [PaidTrStatisticsAmqpDto] })
-  async getStatisticPaidTradePerMonth(@Request() req: any, @Query('year') year: number): Promise<PaidTrStatisticsAmqpDto[]> {
-    return await this.tradeReceivableService.getStatisticPaidTRPerMonth(req.user.company, year);
+  async getStatisticPaidTradePerMonth(
+    @Request() req: any,
+    @Query('year') year: number,
+    @Query('financialRole') financialRole: FinancialRoles
+  ): Promise<PaidTrStatisticsAmqpDto[]> {
+    return await this.tradeReceivableService.getStatisticPaidTRPerMonth(req.user.company, year, financialRole);
   }
 
   @Get('/statistics/unpaid')
-  @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
+  @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR, AuthRolesEnum.CUSTOMER] })
   @ApiOperation({ description: 'Get trade receivables statistics by companyId.' })
+  @ApiQuery({
+    name: 'financialRole',
+    type: String,
+    required: true,
+  })
   @ApiResponse({ type: UnpaidTrStatisticsDto })
-  async getStatisticUnpaidTrade(@Request() req: any): Promise<UnpaidTrStatisticsDto> {
-    return await this.tradeReceivableService.getStatisticNotPaidTRPerMonth(req.user.company);
+  async getStatisticUnpaidTrade(
+    @Request() req: any,
+    @Query('financialRole') financialRole: FinancialRoles
+  ): Promise<UnpaidTrStatisticsDto> {
+    return await this.tradeReceivableService.getStatisticNotPaidTRPerMonth(req.user.company, financialRole);
   }
 }

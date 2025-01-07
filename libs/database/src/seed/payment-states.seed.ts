@@ -37,5 +37,26 @@ export const PaymentStatesSeed = <PaymentStatus[]>[
     tradeReceivableId: TradeReceivablesSeed[3].id,
     status: PaymentStatesEnum.OPEN,
     timestamp: new Date('2024-09-11T07:55:55.695Z'),
-  }
+  },
+
+  {
+    tradeReceivableId: TradeReceivablesSeed[4].id,
+    status: PaymentStatesEnum.PAID,
+    timestamp: new Date('2024-09-11T07:55:55.695Z'),
+  },
+  {
+    tradeReceivableId: TradeReceivablesSeed[5].id,
+    status: PaymentStatesEnum.OPEN,
+    timestamp: new Date('2024-09-11T07:55:55.695Z'),
+  },
+  {
+    tradeReceivableId: TradeReceivablesSeed[6].id,
+    status: PaymentStatesEnum.PAID,
+    timestamp: new Date('2024-09-11T07:55:55.695Z'),
+  },
+  {
+    tradeReceivableId: TradeReceivablesSeed[7].id,
+    status: PaymentStatesEnum.OPEN,
+    timestamp: new Date('2024-09-11T07:55:55.695Z'),
+  },
 ];

@@ -5,6 +5,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { MatButton, MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -20,6 +21,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DateFormatService } from '../../shared/formats/date-format.service';
+import { AuthService } from '../../shared/services/auth/auth.service';
+import { FinancialRoleService } from '../../shared/services/financial-role/financial-role.service';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
 import { TradeReceivableService } from '../../shared/services/trade-receivable/trade-receivable.service';
 import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
@@ -52,6 +55,7 @@ import { WalletComponent } from './wallet.component';
     MatTabsModule,
     MatDialogModule,
     FileSaverModule,
+    MatButtonToggleModule,
   ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),
@@ -60,6 +64,8 @@ import { WalletComponent } from './wallet.component';
     TradeReceivableService,
     DateFormatService,
     DatePipe,
+    FinancialRoleService,
+    AuthService,
   ],
 })
 export class WalletModule {}

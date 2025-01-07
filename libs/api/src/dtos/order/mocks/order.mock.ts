@@ -46,30 +46,30 @@ export const OrderDtosMock: OrderDto[] = [
 ];
 
 export const OrderOverviewMock: OrderOverviewDto[] = [
-  new OrderOverviewDto(
-    OrdersSeed[0].id,
-    ProductDtoMocks[0],
-    +OrderLinesSeed[0].requestedQuantity,
-    ServiceProcessesSeed[0].dueYear,
-    ServiceProcessesSeed[0].dueCalendarWeek,
-    OrdersSeed[0].documentIssueDate.toISOString(),
-    ServiceStatesSeed[0].status,
-    ServiceStatesSeed[0].timestamp.toISOString(),
-    OpenOffersMock[0].price,
-    [MachinesSeed[0].id, MachinesSeed[1].id],
-    CompaniesSeed[0].id
-  ),
-  new OrderOverviewDto(
-    OrdersSeed[1].id,
-    ProductDtoMocks[0],
-    +OrderLinesSeed[1].requestedQuantity,
-    ServiceProcessesSeed[1].dueYear,
-    ServiceProcessesSeed[1].dueCalendarWeek,
-    OrdersSeed[1].documentIssueDate.toISOString(),
-    ServiceStatesSeed[5].status,
-    ServiceStatesSeed[5].timestamp.toISOString(),
-    OpenOffersMock[1].price,
-    [MachinesSeed[0].id, MachinesSeed[1].id],
-    CompaniesSeed[0].id
-  ),
+  <OrderOverviewDto>{
+    id:OrdersSeed[0].id,
+   product: ProductDtoMocks[0],
+    amount:+OrderLinesSeed[0].requestedQuantity,
+   year:  ServiceProcessesSeed[0].dueYear,
+   calendarWeek:  ServiceProcessesSeed[0].dueCalendarWeek,
+   creationDate: OrdersSeed[0].documentIssueDate.toISOString(),
+      status: ServiceStatesSeed[0].status,
+    statusTimestamp:ServiceStatesSeed[0].timestamp.toISOString(),
+     price: OpenOffersMock[0].price,
+    robots: [MachinesSeed[0].id, MachinesSeed[1].id],
+     customerId: CompaniesSeed[0].id
+  },
+  <OrderOverviewDto>{
+     id:OrdersSeed[1].id,
+    product:ProductDtoMocks[0],
+    amount:+OrderLinesSeed[1].requestedQuantity,
+    year: ServiceProcessesSeed[1].dueYear,
+    calendarWeek:ServiceProcessesSeed[1].dueCalendarWeek,
+    creationDate:OrdersSeed[1].documentIssueDate.toISOString(),
+    status:ServiceStatesSeed[5].status,
+    statusTimestamp:ServiceStatesSeed[5].timestamp.toISOString(),
+    price:OpenOffersMock[1].price,
+    robots:[MachinesSeed[0].id, MachinesSeed[1].id],
+   customerId: CompaniesSeed[0].id
+  },
 ];

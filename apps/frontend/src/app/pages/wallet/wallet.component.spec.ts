@@ -21,6 +21,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterOutlet } from '@angular/router';
 import { DateFormatService } from '../../shared/formats/date-format.service';
 import { AuthService } from '../../shared/services/auth/auth.service';
+import { FinancialRoleService } from '../../shared/services/financial-role/financial-role.service';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
 import { TradeReceivableService } from '../../shared/services/trade-receivable/trade-receivable.service';
 import { PaidStatisticsComponent } from './paid-statistics/paid-statistics.component';
@@ -34,6 +35,7 @@ jest.mock('ng2-charts', () => ({
     update: jest.fn(),
   })),
 }));
+
 describe('WalletComponent', () => {
   let component: WalletComponent;
   let fixture: ComponentFixture<WalletComponent>;
@@ -43,12 +45,25 @@ describe('WalletComponent', () => {
       providers: [
         InvoiceService,
         AuthService,
-        KeycloakService,
+        {
+          provide: KeycloakService,
+          useValue: {
+            getKeycloakInstance: jest.fn().mockReturnValue({
+              profile: {
+                attributes: {
+                  company: ['pt0001'],
+                },
+              },
+            }),
+            getUserRoles: jest.fn().mockReturnValue([]),
+          },
+        },
         InvoiceService,
         provideHttpClient(),
         TradeReceivableService,
         DatePipe,
         DateFormatService,
+        FinancialRoleService,
       ],
       imports: [
         MatGridListModule,
