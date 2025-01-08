@@ -3,7 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 import { DownloadInvoiceDialogComponent } from './download-invoice-dialog.component';
 
@@ -14,7 +14,7 @@ describe('DownloadInvoiceDialogComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DownloadInvoiceDialogComponent],
-      imports: [MatDialogModule, MatTabsModule, TranslateModule.forRoot(), BrowserAnimationsModule],
+      imports: [MatDialogModule, MatTabsModule, TranslateModule.forRoot(), NoopAnimationsModule],
 
       providers: [
         InvoiceService,

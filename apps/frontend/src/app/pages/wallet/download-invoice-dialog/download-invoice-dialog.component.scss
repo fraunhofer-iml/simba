@@ -1,6 +1,7 @@
 .download-invoice-container {
   padding:  1em;
   height: 90vh;
+  width: 50vw;
 }
 
 .file-container {
@@ -10,10 +11,10 @@
   flex-direction: column;
 }
 
-.pdf-object {
+.pdf-iframe {
   overflow: auto;
   min-height: 75vh;
-  min-width: 40vw;
+  width: 50vw;
 }
 
 .button-container {
