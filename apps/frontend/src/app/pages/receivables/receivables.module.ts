@@ -27,12 +27,12 @@ import { InvoiceService } from '../../shared/services/invoices/invoices.service'
 import { TradeReceivableService } from '../../shared/services/trade-receivable/trade-receivable.service';
 import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
 import { PaidStatisticsComponent } from './paid-statistics/paid-statistics.component';
+import { ReceivablesRoutingModule } from './receivables-routing.module';
+import { ReceivablesComponent } from './receivables.component';
 import { UnpaidStatisticsComponent } from './unpaid-statistics/unpaid-statistics.component';
-import { WalletRoutingModule } from './wallet-routing.module';
-import { WalletComponent } from './wallet.component';
 
 @NgModule({
-  declarations: [WalletComponent, PaidStatisticsComponent, UnpaidStatisticsComponent, DownloadInvoiceDialogComponent],
+  declarations: [ReceivablesComponent, PaidStatisticsComponent, UnpaidStatisticsComponent, DownloadInvoiceDialogComponent],
   imports: [
     CommonModule,
     MatDividerModule,
@@ -43,7 +43,7 @@ import { WalletComponent } from './wallet.component';
     MatSortModule,
     MatPaginatorModule,
     MatIconModule,
-    WalletRoutingModule,
+    ReceivablesRoutingModule,
     MatGridListModule,
     TranslateModule,
     MatCheckbox,
@@ -68,4 +68,4 @@ import { WalletComponent } from './wallet.component';
     AuthService,
   ],
 })
-export class WalletModule {}
+export class ReceivablesModule {}

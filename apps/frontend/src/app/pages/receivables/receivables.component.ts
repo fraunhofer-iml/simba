@@ -12,11 +12,11 @@ import { InvoiceService } from '../../shared/services/invoices/invoices.service'
 import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
 
 @Component({
-  selector: 'app-wallet',
-  templateUrl: './wallet.component.html',
-  styleUrl: './wallet.component.scss',
+  selector: 'app-receivables',
+  templateUrl: './receivables.component.html',
+  styleUrl: './receivables.component.scss',
 })
-export class WalletComponent {
+export class ReceivablesComponent {
   displayedNFTColumns: string[] = [
     'select',
     'invoiceNumber',

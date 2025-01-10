@@ -19,8 +19,8 @@ export const appRoutes: Route[] = [
     canActivate: [AuthGuard],
   },
   {
-    path: PATH.wallet,
-    loadChildren: () => import('./pages/wallet/wallet.module').then((m) => m.WalletModule),
+    path: PATH.receivables,
+    loadChildren: () => import('./pages/receivables/receivables.module').then((m) => m.ReceivablesModule),
     canActivate: [AuthGuard],
   },
 ];

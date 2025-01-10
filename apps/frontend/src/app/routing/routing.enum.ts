@@ -3,6 +3,6 @@ export enum ROUTING {
   login = '/login',
   accept = '/accept',
   orders = '/orders',
-  wallet = '/wallet',
+  receivables = '/receivables',
   production = '/production',
 }

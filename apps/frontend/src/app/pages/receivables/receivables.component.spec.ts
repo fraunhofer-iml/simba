@@ -25,8 +25,8 @@ import { FinancialRoleService } from '../../shared/services/financial-role/finan
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
 import { TradeReceivableService } from '../../shared/services/trade-receivable/trade-receivable.service';
 import { PaidStatisticsComponent } from './paid-statistics/paid-statistics.component';
+import { ReceivablesComponent } from './receivables.component';
 import { UnpaidStatisticsComponent } from './unpaid-statistics/unpaid-statistics.component';
-import { WalletComponent } from './wallet.component';
 
 jest.mock('ng2-charts', () => ({
   BaseChartDirective: jest.fn().mockImplementation(() => ({
@@ -36,9 +36,9 @@ jest.mock('ng2-charts', () => ({
   })),
 }));
 
-describe('WalletComponent', () => {
-  let component: WalletComponent;
-  let fixture: ComponentFixture<WalletComponent>;
+describe('ReceivablesComponent', () => {
+  let component: ReceivablesComponent;
+  let fixture: ComponentFixture<ReceivablesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -81,11 +81,11 @@ describe('WalletComponent', () => {
         MatMenuModule,
         TranslateModule.forRoot(),
       ],
-      declarations: [WalletComponent, UnpaidStatisticsComponent, PaidStatisticsComponent],
+      declarations: [ReceivablesComponent, UnpaidStatisticsComponent, PaidStatisticsComponent],
       schemas: [NO_ERRORS_SCHEMA], // From PaidStatistics spec
     }).compileComponents();
 
-    fixture = TestBed.createComponent(WalletComponent);
+    fixture = TestBed.createComponent(ReceivablesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
