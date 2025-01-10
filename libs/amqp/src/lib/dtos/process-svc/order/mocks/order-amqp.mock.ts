@@ -1,4 +1,4 @@
-import { OrderLinesSeed, OrdersSeed, ServiceProcessesSeed, ServiceStatesSeed } from '@ap3/database';
+import { MachinesSeed, OrderLinesSeed, OrdersSeed, ServiceProcessesSeed, ServiceStatesSeed } from '@ap3/database';
 import { ServiceStatusAmqpDto } from '../index';
 import { OrderAmqpDto } from '../order-amqp.dto';
 
@@ -13,7 +13,7 @@ export const OrderAmqpMock = <OrderAmqpDto[]>[
     status: new ServiceStatusAmqpDto(ServiceStatesSeed[0].status, new Date(ServiceStatesSeed[0].timestamp).toISOString()),
     acceptedOfferId: undefined,
     offerIds: [],
-    robots: ServiceProcessesSeed[0].machines,
+    robots: [MachinesSeed[0].id, MachinesSeed[1].id],
     customerId: OrdersSeed[0].buyerId,
     tradeReceivableId: undefined,
   },
@@ -27,7 +27,7 @@ export const OrderAmqpMock = <OrderAmqpDto[]>[
     status: new ServiceStatusAmqpDto(ServiceStatesSeed[5].status, new Date(ServiceStatesSeed[5].timestamp).toISOString()),
     acceptedOfferId: undefined,
     offerIds: [],
-    robots: ServiceProcessesSeed[1].machines,
+    robots: [MachinesSeed[0].id, MachinesSeed[1].id],
     customerId: OrdersSeed[1].buyerId,
     tradeReceivableId: undefined,
   },

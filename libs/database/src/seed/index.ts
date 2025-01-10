@@ -10,3 +10,5 @@ export * from './service-process.seed';
 export * from './trade-receivables.seed';
 export * from './payment-information.seed';
 export * from './offers.seed';
+export * from './machine-assignments.seed';
+export * from './products.seed';

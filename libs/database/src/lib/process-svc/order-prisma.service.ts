@@ -17,7 +17,11 @@ export class OrderPrismaService {
 
   async getOrdersForOverview(companyId: string) {
     const whereClause: Prisma.OrderWhereInput = {
-      OR: [{ buyerId: String(companyId) }, { sellerId: String(companyId) }],
+      OR: [
+        { buyerId: String(companyId) },
+        { sellerId: String(companyId) },
+        { serviceProcess: { machineAssignments: { some: { machine: { companyId: String(companyId) } } } } },
+      ],
     };
     return await this.getOverviewOrders(whereClause);
   }
@@ -35,22 +39,24 @@ export class OrderPrismaService {
           },
         },
         serviceProcess: {
-          select: {
-            dueCalendarWeek: true,
-            dueYear: true,
-            machines: true,
-            states: true,
-            offers: {
-              select: {
-                id: true,
-              },
-            },
+          include: {
             acceptedOffer: {
               select: {
                 id: true,
                 price: true,
               },
             },
+            machineAssignments: {
+              include: {
+                machine: true,
+              },
+            },
+            offers: {
+              select: {
+                id: true,
+              },
+            },
+            states: true,
             invoice: {
               select: {
                 tradeReceivable: {
@@ -86,14 +92,6 @@ export class OrderPrismaService {
       this.logger.error(util.inspect(e));
       throw e;
     }
-  }
-
-  async updateOrder(params: { where: Prisma.OrderWhereUniqueInput; data: Prisma.OrderUpdateInput }): Promise<Order | null> {
-    const { where, data } = params;
-    return this.prisma.order.update({
-      data,
-      where,
-    });
   }
 
   async deleteOrder(id: string): Promise<Order | null> {

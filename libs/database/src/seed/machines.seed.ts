@@ -6,17 +6,20 @@ export const MachinesSeed = <Machine[]>[
     cppsId: 'cpps1',
     description: 'test robot 1',
     minimalPrice: new Prisma.Decimal(1.3),
+    companyId: 'pt0003',
   },
   {
     id: 'rt002',
     cppsId: 'cpps2',
     description: 'test robot 2',
     minimalPrice: new Prisma.Decimal(1.15),
+    companyId: 'pt0003',
   },
   {
     id: 'rt003',
     cppsId: 'cpps3',
     description: 'test robot 3',
     minimalPrice: new Prisma.Decimal(1.45),
+    companyId: 'pt0003',
   },
 ];

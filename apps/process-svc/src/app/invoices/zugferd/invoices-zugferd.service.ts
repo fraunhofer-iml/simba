@@ -1,4 +1,4 @@
-import { InvoiceForZugferd } from '@ap3/database';
+import { DatabaseUtil, InvoiceForZugferd } from '@ap3/database';
 import { XMLBuilder } from 'fast-xml-parser';
 import { PDFDocument } from 'pdf-lib';
 import { Injectable, Logger } from '@nestjs/common';
@@ -42,7 +42,7 @@ export class InvoicesZugferdService {
     return builder.build(zugferdTemplate(invoice));
   }
 
-  private createZugferdEntity(invoice: any): InvoiceZugferdEntity {
+  private createZugferdEntity(invoice: InvoiceForZugferd): InvoiceZugferdEntity {
     const vat = Number(invoice.vat) > 1 ? Number(invoice.vat) / 100 : Number(invoice.vat);
     const orderLines: ItemZugferd[] = this.createItemsForZugferd(invoice, vat);
 
@@ -67,8 +67,8 @@ export class InvoicesZugferdService {
     });
 
     const invoiceZugferd: InvoiceZugferd = {
-      machineIds: invoice.serviceProcess.machines.toString(),
-      machineNames: invoice.serviceProcess.machines.toString(), //TODO AFFDS-199: PO abklären
+      machineIds: DatabaseUtil.ExtractMachineIdsFromServiceProcess(invoice.serviceProcess).toString(),
+      machineNames: DatabaseUtil.ExtractMachineIdsFromServiceProcess(invoice.serviceProcess).toString(), //TODO AFFDS-199: PO abklären
       contractReference: invoice.serviceProcess.order.id,
       date: invoice.creationDate,
       reference: invoice.invoiceNumber,

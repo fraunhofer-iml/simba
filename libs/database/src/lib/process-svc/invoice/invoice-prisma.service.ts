@@ -56,6 +56,11 @@ export class InvoicePrismaService {
                   },
                 },
               },
+              machineAssignments: {
+                include: {
+                  machine: true,
+                },
+              },
             },
           },
           debtor: {

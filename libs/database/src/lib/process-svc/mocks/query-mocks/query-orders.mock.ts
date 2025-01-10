@@ -1,119 +1,79 @@
 import { Prisma } from '@prisma/client';
-import { OrdersSeed } from '../../../../seed/orders.seed';
+import { OrdersSeed } from '../../../../seed';
 
-export const findSingleOrderMock = <Prisma.OrderWhereInput>{
-  where: { id: String(OrdersSeed[0].id) },
-  select: {
-    id: true,
-    documentIssueDate: true,
-    orderLines: {
-      select: {
-        item: true,
-        requestedQuantity: true,
-      },
+const ordersOverviewSelect = <Prisma.OrderSelect>{
+  id: true,
+  documentIssueDate: true,
+  orderLines: {
+    select: {
+      item: true,
+      requestedQuantity: true,
     },
-    serviceProcess: {
-      select: {
-        dueCalendarWeek: true,
-        dueYear: true,
-        machines: true,
-        states: true,
-        offers: {
-          select: {
-            id: true,
-          },
+  },
+  serviceProcess: {
+    include: {
+      machineAssignments: {
+        include: {
+          machine: true,
         },
-        acceptedOffer: {
-          select: {
-            id: true,
-            price: true,
-          },
+      },
+      states: true,
+      offers: {
+        select: {
+          id: true,
         },
-        invoice: {
-          select: {
-            tradeReceivable: {
-              select: {
-                id: true,
-              },
+      },
+      acceptedOffer: {
+        select: {
+          id: true,
+          price: true,
+        },
+      },
+      invoice: {
+        select: {
+          tradeReceivable: {
+            select: {
+              id: true,
             },
           },
         },
       },
     },
-    buyer: {
-      select: {
-        id: true,
-        name: true,
-      },
-    },
-    seller: {
-      select: {
-        id: true,
-        name: true,
-      },
+  },
+  buyer: {
+    select: {
+      id: true,
+      name: true,
     },
   },
+  seller: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
+};
+
+export const findSingleOrderMock = <Prisma.OrderWhereInput>{
+  where: { id: String(OrdersSeed[0].id) },
+  select: ordersOverviewSelect,
 };
 
 export const findAllOrdersQueryMock = <Prisma.OrderWhereInput>{
   where: {
     OR: [
+      { buyerId: 'pt0001' },
+      { sellerId: 'pt0001' },
       {
-        buyerId: 'pt0001',
-      },
-      {
-        sellerId: 'pt0001',
-      },
-    ],
-  },
-  select: {
-    id: true,
-    documentIssueDate: true,
-    orderLines: {
-      select: {
-        item: true,
-        requestedQuantity: true,
-      },
-    },
-    serviceProcess: {
-      select: {
-        dueCalendarWeek: true,
-        dueYear: true,
-        machines: true,
-        states: true,
-        offers: {
-          select: {
-            id: true,
-          },
-        },
-        acceptedOffer: {
-          select: {
-            id: true,
-            price: true,
-          },
-        },
-        invoice: {
-          select: {
-            tradeReceivable: {
-              select: {
-                id: true,
-              },
+        serviceProcess: {
+          machineAssignments: {
+            some: {
+              machine: { companyId: 'pt0001' },
             },
           },
         },
       },
-    },
-    buyer: {
-      select: {
-        id: true,
-        name: true,
-      },
-    },
-    seller: {
-      select: {
-        id: true,
-        name: true,
-      },
-    },
+    ],
   },
+  select: ordersOverviewSelect,
 };

@@ -1,18 +1,28 @@
-import { CompaniesSeed, OrderLinesSeed, OrdersSeed, ServiceProcessesSeed, ServiceStatesSeed } from '../../../seed';
-import { ProductsSeed } from '../../../seed/products.seed';
+import {
+  CompaniesSeed,
+  MachinesSeed,
+  OrderLinesSeed,
+  OrdersSeed,
+  ProductsSeed,
+  ServiceProcessesSeed,
+  ServiceStatesSeed,
+} from '../../../seed';
 import { OrderOverview } from '../order-overview.types';
 
 export const OrderOverviewPrismaMock: any[] = <OrderOverview[]>[
   {
     id: OrdersSeed[0].id,
     documentIssueDate: OrdersSeed[0].documentIssueDate,
-
     orderLines: [{ item: ProductsSeed[0], requestedQuantity: OrderLinesSeed[0].requestedQuantity }],
     serviceProcess: {
+      id: ServiceProcessesSeed[0].id,
+      orderId: ServiceProcessesSeed[0].orderId,
+      scheduledDate: null,
+      acceptedOfferId: null,
       dueCalendarWeek: ServiceProcessesSeed[0].dueCalendarWeek,
       states: [ServiceStatesSeed[0]],
       dueYear: ServiceProcessesSeed[0].dueYear,
-      machines: ServiceProcessesSeed[0].machines,
+      machineAssignments: [{ machine: MachinesSeed[0] }, { machine: MachinesSeed[1] }],
       offers: [],
       acceptedOffer: null,
       invoice: null,
@@ -26,10 +36,14 @@ export const OrderOverviewPrismaMock: any[] = <OrderOverview[]>[
 
     orderLines: [{ item: ProductsSeed[0], requestedQuantity: OrderLinesSeed[1].requestedQuantity }],
     serviceProcess: {
+      id: ServiceProcessesSeed[1].id,
+      orderId: ServiceProcessesSeed[1].orderId,
+      scheduledDate: null,
+      acceptedOfferId: null,
       dueCalendarWeek: ServiceProcessesSeed[1].dueCalendarWeek,
       dueYear: ServiceProcessesSeed[1].dueYear,
       states: [ServiceStatesSeed[4], ServiceStatesSeed[5]],
-      machines: ServiceProcessesSeed[1].machines,
+      machineAssignments: [{ machine: MachinesSeed[0] }, { machine: MachinesSeed[1] }],
       offers: [],
       acceptedOffer: null,
       invoice: null,

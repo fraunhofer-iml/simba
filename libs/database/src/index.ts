@@ -5,3 +5,4 @@ export * from './lib/types';
 export * from './lib/master-data-svc';
 export * from './lib/constants';
 export * from './seed';
+export * from './lib/util';

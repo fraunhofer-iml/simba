@@ -1,4 +1,4 @@
-import { OrderOverview } from '@ap3/database';
+import { DatabaseUtil, OrderOverview } from '@ap3/database';
 import { ServiceStatus } from '@prisma/client';
 import { ServiceStatusAmqpDto } from './service-status-amqp.dto';
 
@@ -47,7 +47,7 @@ export class OrderAmqpDto {
       year: order.serviceProcess?.dueYear,
       calendarWeek: order.serviceProcess?.dueCalendarWeek,
       productId: order.orderLines[0].item.id,
-      robots: order.serviceProcess?.machines,
+      robots: DatabaseUtil.ExtractMachineIdsFromServiceProcess(order.serviceProcess),
       customerId: order.buyer.id,
       acceptedOfferId: order.serviceProcess?.acceptedOffer?.id,
       offerIds: order.serviceProcess?.offers.map((offer) => offer.id),
