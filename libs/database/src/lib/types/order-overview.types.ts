@@ -13,7 +13,13 @@ export type OrderOverview = {
         }[];
         offers: { id: string }[];
         acceptedOffer: { id: string; price: Decimal } | null;
-        invoice: { tradeReceivable: { id: string } | null } | null;
+        invoices:
+        | {
+            tradeReceivable: {
+              id: string;
+            } | null;
+          }[]
+        | null;
       })
     | null;
   buyer: { id: string; name: string };

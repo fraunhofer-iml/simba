@@ -19,7 +19,16 @@ import { OrderStatus } from './enum/orderStatus';
 })
 export class OrdersOverviewComponent implements AfterViewInit {
   isCustomer: boolean;
-  displayedColumnsAdminContributor: string[] = ['orderId', 'status', 'productionDate', 'price', 'products', 'amount', 'robots', 'customerID'];
+  displayedColumnsAdminContributor: string[] = [
+    'orderId',
+    'status',
+    'productionDate',
+    'price',
+    'products',
+    'amount',
+    'robots',
+    'customerID',
+  ];
   displayedColumnsCustomer: string[] = ['orderId', 'status', 'productionDate', 'price', 'products', 'amount', 'customerID'];
   dataSource = new MatTableDataSource<OrderOverviewDto>();
   dataSourceObservable: Observable<MatTableDataSource<OrderOverviewDto>>;

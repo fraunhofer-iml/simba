@@ -38,7 +38,6 @@ export const PaymentStatesSeed = <PaymentStatus[]>[
     status: PaymentStatesEnum.OPEN,
     timestamp: new Date('2024-09-11T07:55:55.695Z'),
   },
-
   {
     tradeReceivableId: TradeReceivablesSeed[4].id,
     status: PaymentStatesEnum.PAID,
@@ -56,6 +55,11 @@ export const PaymentStatesSeed = <PaymentStatus[]>[
   },
   {
     tradeReceivableId: TradeReceivablesSeed[7].id,
+    status: PaymentStatesEnum.OPEN,
+    timestamp: new Date('2024-09-11T07:55:55.695Z'),
+  },
+  {
+    tradeReceivableId: TradeReceivablesSeed[8].id,
     status: PaymentStatesEnum.OPEN,
     timestamp: new Date('2024-09-11T07:55:55.695Z'),
   },

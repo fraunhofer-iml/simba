@@ -57,7 +57,7 @@ export class OrderPrismaService {
               },
             },
             states: true,
-            invoice: {
+            invoices: {
               select: {
                 tradeReceivable: {
                   select: {

@@ -29,7 +29,7 @@ const ordersOverviewSelect = <Prisma.OrderSelect>{
           price: true,
         },
       },
-      invoice: {
+      invoices: {
         select: {
           tradeReceivable: {
             select: {

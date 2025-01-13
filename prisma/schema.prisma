@@ -86,8 +86,8 @@ model Invoice {
   vat                   Decimal  @db.Money
   url                   String
 
-  serviceProcess   ServiceProcess? @relation(fields: [serviceProcessId], references: [id])
-  serviceProcessId String?         @unique
+  serviceProcess   ServiceProcess? @relation("InvoiceServiceProcess", fields: [serviceProcessId], references: [id])
+  serviceProcessId String?         
 
   debtor     Company? @relation(name: "deptorRel", fields: [debtorId], references: [id])
   debtorId   String?
@@ -125,10 +125,10 @@ model ServiceProcess {
   orderId String? @unique
 
   states             ServiceStatus[]
-  offers             Offer[]             @relation("OrderOffers")
-  acceptedOffer      Offer?              @relation("ProcessAcceptedOffer", fields: [acceptedOfferId], references: [id])
-  acceptedOfferId    String?             @unique
-  invoice            Invoice?
+  offers             Offer[]              @relation("OrderOffers")
+  acceptedOffer      Offer?               @relation("ProcessAcceptedOffer", fields: [acceptedOfferId], references: [id])
+  acceptedOfferId    String?              @unique
+  invoices        Invoice[] @relation("InvoiceServiceProcess")
   machineAssignments MachineAssignment[]
 }
 

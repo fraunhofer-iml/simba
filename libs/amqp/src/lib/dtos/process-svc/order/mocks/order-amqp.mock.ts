@@ -15,7 +15,7 @@ export const OrderAmqpMock = <OrderAmqpDto[]>[
     offerIds: [],
     robots: [MachinesSeed[0].id, MachinesSeed[1].id],
     customerId: OrdersSeed[0].buyerId,
-    tradeReceivableId: undefined,
+    tradeReceivableIds: [],
   },
   {
     id: OrdersSeed[1].id,
@@ -29,6 +29,6 @@ export const OrderAmqpMock = <OrderAmqpDto[]>[
     offerIds: [],
     robots: [MachinesSeed[0].id, MachinesSeed[1].id],
     customerId: OrdersSeed[1].buyerId,
-    tradeReceivableId: undefined,
+    tradeReceivableIds: [],
   },
 ];

@@ -14,7 +14,7 @@ export class OrderAmqpDto {
   offerIds: string[];
   robots: string[];
   customerId: string;
-  tradeReceivableId?: string;
+  tradeReceivableIds?: string[];
 
   constructor(
     id: string,
@@ -51,7 +51,9 @@ export class OrderAmqpDto {
       customerId: order.buyer.id,
       acceptedOfferId: order.serviceProcess?.acceptedOffer?.id,
       offerIds: order.serviceProcess?.offers.map((offer) => offer.id),
-      tradeReceivableId: order.serviceProcess?.invoice?.tradeReceivable?.id,
+      tradeReceivableIds: order.serviceProcess?.invoices?.map((invoice) => {
+        return invoice.tradeReceivable?.id;
+      }),
     };
   }
 

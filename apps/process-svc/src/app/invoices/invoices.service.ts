@@ -102,6 +102,7 @@ export class InvoicesService {
 
   private async loadAssociatedDataAndConvertToDTO(invoices: InvoiceWithNFT[]): Promise<InvoiceAmqpDto[]> {
     const tradeReceivableDtos: InvoiceAmqpDto[] = [];
+
     for (const invoice of invoices) {
       const trStates: PaymentStatus[] = await this.tradeReceivablePrismaService.getPaymentStatesForTradeReceivable(
         invoice.tradeReceivable.id
