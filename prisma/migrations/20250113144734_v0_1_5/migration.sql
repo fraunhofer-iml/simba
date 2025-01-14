@@ -2,9 +2,16 @@
   Warnings:
 
   - You are about to drop the column `machines` on the `ServiceProcess` table. All the data in the column will be lost.
+  - Added the required column `paymentTerms` to the `Invoice` table without a default value. This is not possible if the table is not empty.
   - Added the required column `companyId` to the `Machine` table without a default value. This is not possible if the table is not empty.
 
 */
+-- DropIndex
+DROP INDEX "Invoice_serviceProcessId_key";
+
+-- AlterTable
+ALTER TABLE "Invoice" ADD COLUMN     "paymentTerms" TEXT NOT NULL;
+
 -- AlterTable
 ALTER TABLE "Machine" ADD COLUMN     "companyId" TEXT NOT NULL;
 

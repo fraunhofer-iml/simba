@@ -47,16 +47,16 @@ export class InvoicesZugferdService {
     const orderLines: ItemZugferd[] = this.createItemsForZugferd(invoice, vat);
 
     const additional: AdditionalZugferd = {
-      paymentTerms: '10 Tage 2%; 60 Tage netto', //TODO AFFDS-199: Database
-      vat: Number(invoice.vat) * 100,
+      paymentTerms: invoice.paymentTerms,
+      vat: vat * 100,
     };
     const buyer: BuyerZugferd = {
       addressCity: invoice.debtor.city,
       addressStreet: invoice.debtor.address,
       addressZip: invoice.debtor.zip,
-      legalIdentifier: invoice.debtor.commercialRegisterNumber, //TODO AFFDS-199: tbd
+      legalIdentifier: invoice.debtor.commercialRegisterNumber,
       name: invoice.debtor.name,
-      countryCode: 'DE', //TODO AFFDS-199: database
+      countryCode: invoice.debtor.countryCode,
     };
 
     let totalNetValue = 0;
@@ -68,7 +68,7 @@ export class InvoicesZugferdService {
 
     const invoiceZugferd: InvoiceZugferd = {
       machineIds: DatabaseUtil.ExtractMachineIdsFromServiceProcess(invoice.serviceProcess).toString(),
-      machineNames: DatabaseUtil.ExtractMachineIdsFromServiceProcess(invoice.serviceProcess).toString(), //TODO AFFDS-199: PO abklären
+      machineNames: DatabaseUtil.ExtractMachineIdsFromServiceProcess(invoice.serviceProcess).toString(),
       contractReference: invoice.serviceProcess.order.id,
       date: invoice.creationDate,
       reference: invoice.invoiceNumber,
@@ -82,13 +82,13 @@ export class InvoicesZugferdService {
       addressStreet: invoice.creditor.address,
       addressZip: invoice.creditor.zip,
       email: invoice.creditor.emailAddress,
-      iban: invoice.creditor?.paymentInformation[0]?.IBAN, //TODO AFFDS-199: How to select payment information for invoice
-      legalIdentifier: invoice.creditor.commercialRegisterNumber, //TODO AFFDS-199: Whats that
+      iban: invoice.creditor?.paymentInformation[0]?.IBAN,
+      legalIdentifier: invoice.creditor.commercialRegisterNumber,
       name: invoice.creditor.name,
       phone: invoice.creditor.telephone,
       taxIdentifier: invoice.creditor.vatId,
       tradeRegisterNumber: invoice.creditor.commercialRegisterNumber,
-      countryCode: 'DE', //TODO AFFDS-199: database
+      countryCode: invoice.creditor.countryCode,
     };
 
     return new InvoiceZugferdEntity(additional, buyer, invoiceZugferd, orderLines, supplier);

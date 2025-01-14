@@ -85,6 +85,7 @@ model Invoice {
   totalAmountWithoutVat Decimal  @db.Money
   vat                   Decimal  @db.Money
   url                   String
+  paymentTerms          String
 
   serviceProcess   ServiceProcess? @relation("InvoiceServiceProcess", fields: [serviceProcessId], references: [id])
   serviceProcessId String?         
