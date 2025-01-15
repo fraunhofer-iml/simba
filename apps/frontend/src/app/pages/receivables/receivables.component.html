@@ -51,11 +51,11 @@
       </ng-container>
       <ng-container matColumnDef="totalAmountWithoutVat">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="totalAmountWithoutVat">{{ 'NftTableThirdRow' | translate }}</th>
-        <td mat-cell class="center-row" *matCellDef="let row">{{ row.totalAmountWithoutVat | number: '1.2-2' }}€</td>
+        <td mat-cell class="center-row" *matCellDef="let row">{{ row.totalAmountWithoutVat }}</td>
       </ng-container>
       <ng-container matColumnDef="invoiceDueDate">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="invoiceDueDate">{{ 'NftTableFourthRow' | translate }}</th>
-        <td mat-cell *matCellDef="let row">{{ getDateFormatOfCurrentLanguage(row) }}</td>
+        <td mat-cell *matCellDef="let row">{{ row.invoiceDueDate }}</td>
       </ng-container>
       <ng-container matColumnDef="debtor">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="debtor">{{ 'NftTableFifthRow' | translate }}</th>

@@ -3,14 +3,23 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BASE_URL } from '../../../../environments/environment';
+import { AuthService } from '../auth/auth.service';
 import { ApiEndpoints } from '../endpoints/endpoints';
 
 @Injectable()
 export class InvoiceService {
-  constructor(private readonly httpClient: HttpClient) {}
+  constructor(
+    private readonly httpClient: HttpClient,
+    private readonly authService: AuthService
+  ) {}
 
   getInvoices(): Observable<InvoiceDto[]> {
-    return this.httpClient.get<InvoiceDto[]>(`${BASE_URL}${ApiEndpoints.invoices.getAllInvoices}`);
+    const companyId = this.authService.getCurrentlyLoggedInCompanyId();
+    return this.httpClient.get<InvoiceDto[]>(`${BASE_URL}${ApiEndpoints.invoices.getAllInvoices}`, {
+      params: {
+        companyId: companyId,
+      },
+    });
   }
 
   downloadInvoicePdf(invoiceUrl: string): Observable<Blob> {

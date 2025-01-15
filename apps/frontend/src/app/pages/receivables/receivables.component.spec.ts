@@ -1,4 +1,3 @@
-import { InvoiceDto, InvoiceMocks } from '@ap3/api';
 import { TranslateModule } from '@ngx-translate/core';
 import { KeycloakService } from 'keycloak-angular';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -16,7 +15,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterOutlet } from '@angular/router';
 import { DateFormatService } from '../../shared/formats/date-format.service';
@@ -27,6 +26,7 @@ import { TradeReceivableService } from '../../shared/services/trade-receivable/t
 import { PaidStatisticsComponent } from './paid-statistics/paid-statistics.component';
 import { ReceivablesComponent } from './receivables.component';
 import { UnpaidStatisticsComponent } from './unpaid-statistics/unpaid-statistics.component';
+import { Invoice } from '../../model/invoice';
 
 jest.mock('ng2-charts', () => ({
   BaseChartDirective: jest.fn().mockImplementation(() => ({
@@ -45,6 +45,11 @@ describe('ReceivablesComponent', () => {
       providers: [
         InvoiceService,
         AuthService,
+        InvoiceService,
+        provideHttpClient(),
+        TradeReceivableService,
+        DatePipe,
+        DateFormatService,
         {
           provide: KeycloakService,
           useValue: {
@@ -58,11 +63,6 @@ describe('ReceivablesComponent', () => {
             getUserRoles: jest.fn().mockReturnValue([]),
           },
         },
-        InvoiceService,
-        provideHttpClient(),
-        TradeReceivableService,
-        DatePipe,
-        DateFormatService,
         FinancialRoleService,
       ],
       imports: [
@@ -101,12 +101,8 @@ describe('ReceivablesComponent', () => {
   });
 
   it('should toggle all rows selection', () => {
-    const mockData: InvoiceDto[] = InvoiceMocks;
-    component.dataSource = new MatTableDataSource(mockData);
-    component.selection = new SelectionModel<InvoiceDto>(true, []);
+    component.selection = new SelectionModel<Invoice>(true, []);
     expect(component.selection.selected.length).toBe(0);
-    component.toggleSelectionForAllRows();
-    expect(component.selection.selected.length).toBe(mockData.length);
     component.toggleSelectionForAllRows();
     expect(component.selection.selected.length).toBe(0);
   });

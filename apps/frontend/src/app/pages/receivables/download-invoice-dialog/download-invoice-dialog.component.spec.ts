@@ -6,6 +6,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 import { DownloadInvoiceDialogComponent } from './download-invoice-dialog.component';
+import { AuthService } from '../../../shared/services/auth/auth.service';
+import { KeycloakService } from 'keycloak-angular';
 
 describe('DownloadInvoiceDialogComponent', () => {
   let component: DownloadInvoiceDialogComponent;
@@ -19,6 +21,7 @@ describe('DownloadInvoiceDialogComponent', () => {
       providers: [
         InvoiceService,
         TranslateModule,
+        AuthService,
         provideHttpClient(),
         { provide: MatDialogRef, useValue: {} },
         {
@@ -29,6 +32,19 @@ describe('DownloadInvoiceDialogComponent', () => {
           ],
         },
         { provide: TranslatePipe, useValue: jest.fn((value: string) => value) },
+        {
+          provide: KeycloakService,
+          useValue: {
+            getKeycloakInstance: jest.fn().mockReturnValue({
+              profile: {
+                attributes: {
+                  company: ['pt0001'],
+                },
+              },
+            }),
+            getUserRoles: jest.fn().mockReturnValue([]),
+          },
+        },
       ],
     }).compileComponents();
 

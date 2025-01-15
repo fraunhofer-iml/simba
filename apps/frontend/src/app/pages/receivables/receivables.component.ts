@@ -1,4 +1,3 @@
-import { InvoiceDto } from '@ap3/api';
 import { map, Observable } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, ViewChild } from '@angular/core';
@@ -7,9 +6,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DateFormatService } from '../../shared/formats/date-format.service';
-import { FinancialRoleService } from '../../shared/services/financial-role/financial-role.service';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
 import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
+import { Invoice } from '../../model/invoice';
 
 @Component({
   selector: 'app-receivables',
@@ -26,9 +25,9 @@ export class ReceivablesComponent {
     'debtor',
     'paymentStatus',
   ];
-  dataSource: MatTableDataSource<InvoiceDto>;
-  dataSourceObservable: Observable<MatTableDataSource<InvoiceDto>>;
-  selection = new SelectionModel<InvoiceDto>(true, []);
+  dataSource: MatTableDataSource<Invoice>;
+  dataSourceObservable: Observable<MatTableDataSource<Invoice>>;
+  selection = new SelectionModel<Invoice>(true, []);
   paginator?: MatPaginator;
   sort?: MatSort;
 
@@ -46,14 +45,12 @@ export class ReceivablesComponent {
     private readonly invoiceService: InvoiceService,
     private readonly dateFormatService: DateFormatService,
     private readonly dialog: MatDialog,
-    private readonly financialRoleService: FinancialRoleService
   ) {
-    this.dataSource = new MatTableDataSource<InvoiceDto>();
+    this.dataSource = new MatTableDataSource<Invoice>();
     this.dataSourceObservable = this.invoiceService.getInvoices().pipe(
       map((invoices) => {
-        const dataSource = this.dataSource;
-        dataSource.data = invoices;
-        return dataSource;
+        this.dataSource.data = Invoice.convertToInvoice(invoices, this.dateFormatService);
+        return this.dataSource;
       })
     );
   }
@@ -84,10 +81,6 @@ export class ReceivablesComponent {
     } else {
       this.selection.select(...this.dataSource.data);
     }
-  }
-
-  getDateFormatOfCurrentLanguage(offer: InvoiceDto): string {
-    return this.dateFormatService.transformDateToCurrentLanguageFormat(offer.invoiceDueDate);
   }
 
   openDownloadInvoiceDialog() {
