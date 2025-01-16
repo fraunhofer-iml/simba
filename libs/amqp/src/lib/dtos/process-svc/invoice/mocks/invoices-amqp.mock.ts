@@ -13,6 +13,7 @@ export const InvoicesAmqpMock = <InvoiceAmqpDto[]>[
     invoiceNumber: InvoiceSeed[0].invoiceNumber,
     invoiceDueDate: InvoiceSeed[0].dueDate,
     url: process.env['OBJECT_STORAGE_URL'] + InvoiceSeed[0].url,
+    currency: InvoiceSeed[0].contractCurrency,
   },
   {
     id: InvoiceSeed[1].id,
@@ -24,5 +25,6 @@ export const InvoicesAmqpMock = <InvoiceAmqpDto[]>[
     invoiceNumber: InvoiceSeed[1].invoiceNumber,
     invoiceDueDate: InvoiceSeed[1].dueDate,
     url: process.env['OBJECT_STORAGE_URL'] + InvoiceSeed[1].url,
+    currency: InvoiceSeed[1].contractCurrency,
   },
 ];

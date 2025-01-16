@@ -12,6 +12,7 @@ export class InvoiceAmqpDto {
   invoiceNumber: string;
   invoiceDueDate: Date;
   url: string;
+  currency: string;
 
   constructor(
     id: string,
@@ -22,7 +23,8 @@ export class InvoiceAmqpDto {
     status: PaymentStatusAmqpDto,
     invoiceNumber: string,
     invoiceDueDate: Date,
-    url: string
+    url: string,
+    currency: string
   ) {
     this.id = id;
     this.debtorId = debtorId;
@@ -33,6 +35,7 @@ export class InvoiceAmqpDto {
     this.invoiceNumber = invoiceNumber;
     this.invoiceDueDate = invoiceDueDate;
     this.url = url;
+    this.currency = currency;
   }
 
   public static fromPrismaEntity(invoice: InvoiceWithNFT, states: PaymentStatus[], fileServerUrl: string): InvoiceAmqpDto {
@@ -50,7 +53,8 @@ export class InvoiceAmqpDto {
       currentState,
       invoice.invoiceNumber,
       invoice.dueDate,
-      invoice.url ? fileServerUrl + invoice.url : ''
+      invoice.url ? fileServerUrl + invoice.url : '',
+      invoice.contractCurrency
     );
   }
 
@@ -74,7 +78,8 @@ export class InvoiceAmqpDto {
       currentState,
       invoice.invoiceNumber,
       invoice.dueDate,
-      invoice.url ? fileServerUrl + invoice.url : ''
+      invoice.url ? fileServerUrl + invoice.url : '',
+      invoice.contractCurrency
     );
   }
 

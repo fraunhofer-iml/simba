@@ -22,6 +22,8 @@ export class InvoiceDto {
   paymentStatus: string;
   @ApiProperty()
   url: string;
+  @ApiProperty()
+  currency: string;
 
   constructor(
     id: string,
@@ -33,7 +35,8 @@ export class InvoiceDto {
     debtorId: string,
     debtor: string,
     paymentStatus: string,
-    url: string
+    url: string,
+    currency: string
   ) {
     this.id = id;
     this.invoiceNumber = invoiceNumber;
@@ -45,6 +48,7 @@ export class InvoiceDto {
     this.debtor = debtor;
     this.paymentStatus = paymentStatus;
     this.url = url;
+    this.currency = currency;
   }
 
   public static toTradeReceivableDto(dto: InvoiceAmqpDto, creditor: string, debtor: string): InvoiceDto {
@@ -58,7 +62,8 @@ export class InvoiceDto {
       dto.debtorId,
       debtor,
       dto.status.status,
-      dto.url
+      dto.url,
+      dto.currency
     );
   }
 }
