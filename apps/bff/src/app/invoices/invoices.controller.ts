@@ -15,25 +15,40 @@ export class InvoicesController {
   @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
   @ApiOperation({ description: 'Get all invoices.' })
   @ApiQuery({
-    name: 'orderId',
+    name: 'creditorId',
     type: String,
-    description: 'Identifying id; Required to identify the corresponding invoices of a specific order.',
+    description: 'Identifying id; Required to identify the corresponding invoices of a specific company, where company is creditor.',
     required: false,
   })
   @ApiQuery({
-    name: 'companyId',
+    name: 'debtorId',
     type: String,
-    description:
-      'Identifying id; Required to identify the corresponding invoices of a specific company. Company can be creditor or debtor.',
+    description: 'Identifying id; Required to identify the corresponding invoices of a specific company, where company is debtor.',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'paymentState',
+    type: String,
+    enum: PaymentStatesEnum,
+    description: 'Identifying string; Required to identify the corresponding invoices of a specific payment state.',
     required: false,
   })
   @ApiResponse({ type: [InvoiceDto] })
-  async findAllByOrderId(@Request() req, @Query('orderId') orderId: string, @Query('companyId') companyId = ''): Promise<InvoiceDto[]> {
+  async findAll(
+    @Request() req,
+    @Query('creditorId') creditorId = '',
+    @Query('debtorId') debtorId = '',
+    @Query('paymentState') paymentState = ''
+  ): Promise<InvoiceDto[]> {
     if (!req.user.realm_access.roles.includes(RolesEnum.ADMIN)) {
-      companyId = req.user.company;
+      if (!creditorId && !debtorId) {
+        creditorId = debtorId = req.user.company;
+      } else {
+        creditorId = creditorId ? req.user.company : '';
+        debtorId = debtorId ? req.user.company : '';
+      }
     }
-
-    return await this.invoicesService.findAllByCompanyAndOrderId(orderId, companyId);
+    return await this.invoicesService.findAllWithFilter(creditorId, debtorId, paymentState);
   }
 
   @Get(':id')
@@ -50,35 +65,6 @@ export class InvoicesController {
     const companyId = req.user.realm_access.roles.includes(RolesEnum.ADMIN) ? '' : req.user.company;
 
     return await this.invoicesService.findOne(companyId, id);
-  }
-
-  @Get('/states/financial')
-  @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
-  @ApiOperation({ description: 'Get all invoices corresponding to a creditor and a specific financial state ' })
-  @ApiQuery({
-    name: 'financialState',
-    type: String,
-    enum: PaymentStatesEnum,
-    description: 'Identifying string; Required to identify the corresponding invoices of a specific payment state.',
-    required: false,
-  })
-  @ApiQuery({
-    name: 'companyId',
-    type: String,
-    description:
-      'Identifying id; Required to identify the corresponding invoices of a specific company. Company can be creditor or debtor.',
-    required: false,
-  })
-  @ApiResponse({ type: [InvoiceDto] })
-  async findAllByPaymentState(
-    @Request() req: any,
-    @Query('financialState') paymentState: string,
-    @Query('companyId') companyId: string
-  ): Promise<InvoiceDto[]> {
-    if (!req.user.realm_access.roles.includes(RolesEnum.ADMIN)) {
-      companyId = req.user.company;
-    }
-    return await this.invoicesService.findAllByPaymentState(companyId, paymentState);
   }
 
   @Post(':id/zugferd')

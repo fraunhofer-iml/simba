@@ -122,15 +122,19 @@ export class TradeReceivablePrismaService {
     }
   }
 
-  async getTradeReceivableByPaymentStatus(paymentStatus: string, creditorId: string): Promise<TradeReceivable[]> {
+  async getTradeReceivableByPaymentStatus(paymentStatus: string, creditorId: string, debtorId: string): Promise<TradeReceivable[]> {
+    let companyWhere: Prisma.Sql = Prisma.sql`ps."status" = ${paymentStatus}`;
+    if (creditorId || debtorId) {
+      companyWhere = Prisma.sql`${companyWhere} AND (iv."creditorId" = ${creditorId} OR iv."debtorId" = ${debtorId})`;
+    }
+
     try {
       const res = <TradeReceivable[]>await this.prismaService.$queryRaw`
       SELECT tr."id", tr."nft", tr."invoiceId"
       FROM "TradeReceivable" AS tr
       JOIN "PaymentStatus" AS ps ON tr."id" = ps."tradeReceivableId"
       LEFT JOIN "Invoice" AS iv ON tr."invoiceId" = iv."id"
-      WHERE ps."status" = ${paymentStatus}
-      AND iv."creditorId" = ${creditorId}
+      WHERE ${companyWhere}
       AND ps."timestamp" =
         (
         SELECT MAX("timestamp")

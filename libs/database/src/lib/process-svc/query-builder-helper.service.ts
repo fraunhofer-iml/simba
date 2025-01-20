@@ -13,14 +13,4 @@ export class QueryBuilderHelperService {
       throw new NotFoundException('Received no CreditorId/DebtorId');
     }
   }
-
-  buildQueryForFinancialRole(financialRole: string, companyId: string, invoiceIds: string[]): Prisma.InvoiceWhereInput | null {
-    let query: Prisma.InvoiceWhereInput | null = null;
-    if (financialRole === FinancialRoles.CREDITOR) {
-      query = { id: { in: invoiceIds }, creditorId: companyId };
-    } else if (financialRole === FinancialRoles.DEBTOR) {
-      query = { id: { in: invoiceIds }, debtorId: companyId };
-    }
-    return query;
-  }
 }

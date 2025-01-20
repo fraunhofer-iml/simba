@@ -1,8 +1,8 @@
 import {
+  AllInvoicesFilter,
   AmqpBrokerQueues,
   CompanyAmqpMock,
   CompanyIdAndInvoiceId,
-  CompanyIdAndOrderId,
   CompanyIdAndPaymentState,
   CompanyMessagePatterns,
   InvoiceMessagePatterns,
@@ -66,20 +66,6 @@ describe('InvoicesController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should find all invoices by OrderId', async () => {
-    const expectedReturnValue = InvoiceMocks;
-    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
-    sendRequestSpy.mockImplementation((messagePattern: InvoiceMessagePatterns, data: any) => {
-      return of(InvoicesAmqpMock);
-    });
-
-    const res: InvoiceDto[] = await controller.findAllByOrderId(request, OrdersSeed[0].id, CompaniesSeed[0].id);
-    const params = new CompanyIdAndOrderId(CompaniesSeed[1].id, OrdersSeed[0].id);
-    expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.READ_BY_ORDER_ID, params);
-    expect(sendRequestSpy).not.toHaveBeenCalledWith(InvoiceMessagePatterns.READ_ALL, {});
-    expect(res).toEqual(expectedReturnValue);
-  });
-
   it('should find all invoices', async () => {
     const expectedReturnValue = InvoiceMocks;
     const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
@@ -87,9 +73,9 @@ describe('InvoicesController', () => {
       return of(InvoicesAmqpMock);
     });
 
-    const res: InvoiceDto[] = await controller.findAllByOrderId(request, '', '');
-    expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.READ_ALL, request.user.company);
-    expect(sendRequestSpy).not.toHaveBeenCalledWith(InvoiceMessagePatterns.READ_BY_ORDER_ID, '');
+    const res: InvoiceDto[] = await controller.findAll(request, '', '', 'Open');
+    const params = new AllInvoicesFilter(request.user.company, request.user.company, PaymentStatesEnum.OPEN);
+    expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.READ_ALL, params);
     expect(res).toEqual(expectedReturnValue);
   });
 
@@ -104,21 +90,6 @@ describe('InvoicesController', () => {
     expect(sendRequestSpy).toHaveBeenCalledWith(
       InvoiceMessagePatterns.READ_BY_ID,
       new CompanyIdAndInvoiceId(CompaniesSeed[1].id, InvoiceMocks[0].id)
-    );
-    expect(res).toEqual(expectedReturnValue);
-  });
-
-  it('should get all invoices by creditor Id and payment state', async () => {
-    const expectedReturnValue = [InvoiceMocks[0], InvoiceMocks[1]];
-    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
-    sendRequestSpy.mockImplementationOnce((messagePattern: InvoiceMessagePatterns, data: any) => {
-      return of([InvoicesAmqpMock[0], InvoicesAmqpMock[1]]);
-    });
-
-    const res = await controller.findAllByPaymentState(request, PaymentStatesEnum.PAID, '');
-    expect(sendRequestSpy).toHaveBeenCalledWith(
-      InvoiceMessagePatterns.READ_ALL_BY_PAYMENT_STATE,
-      new CompanyIdAndPaymentState(CompaniesSeed[1].id, PaymentStatesEnum.PAID)
     );
     expect(res).toEqual(expectedReturnValue);
   });

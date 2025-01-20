@@ -3,16 +3,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Invoice, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma.service';
 import { InvoiceCountAndDueMonth, InvoiceForZugferd, InvoiceSumTotalAmountWithoutVatTypes, InvoiceWithNFT } from '../../types';
-import { QueryBuilderHelperService } from '../query-builder-helper.service';
 
 @Injectable()
 export class InvoicePrismaService {
   private logger = new Logger(InvoicePrismaService.name);
 
-  constructor(
-    private readonly prismaService: PrismaService,
-    private readonly queryBuilderService: QueryBuilderHelperService
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async createInvoice(data: Prisma.InvoiceCreateInput): Promise<Invoice | null> {
     this.logger.verbose(`Insert new invoice ${util.inspect(data)}`);
@@ -82,7 +78,7 @@ export class InvoicePrismaService {
   }
 
   async getInvoices({
-    invoiceId,
+    invoiceIds,
     orderId,
     creditorId,
     debtorId,
@@ -90,7 +86,7 @@ export class InvoicePrismaService {
     creditorId?: string;
     debtorId?: string;
     orderId?: string;
-    invoiceId?: string;
+    invoiceIds?: string[];
   }): Promise<InvoiceWithNFT[]> {
     this.logger.verbose('Return all invoices from database');
     try {
@@ -99,7 +95,8 @@ export class InvoicePrismaService {
       const orFilters = [creditorFilter, debtorFilter].filter((filter) => filter !== undefined);
 
       const orderFilter: Prisma.InvoiceWhereInput | undefined = orderId ? { serviceProcess: { orderId: String(orderId) } } : undefined;
-      const invoiceFilter: Prisma.InvoiceWhereInput | undefined = invoiceId ? { id: String(invoiceId) } : undefined;
+      const invoiceFilter: Prisma.InvoiceWhereInput | undefined =
+        invoiceIds && invoiceIds.length > 0 ? { id: { in: invoiceIds } } : undefined;
       const andFilters = [orderFilter, invoiceFilter].filter((filter) => filter !== undefined);
 
       const where: Prisma.InvoiceWhereInput = {
@@ -144,12 +141,30 @@ export class InvoicePrismaService {
     }
   }
 
-  async sumInvoiceAmountsForTradeReceivables(whereQuery: Prisma.InvoiceWhereInput): Promise<InvoiceSumTotalAmountWithoutVatTypes> {
+  async sumInvoiceAmountsForTradeReceivables({
+    invoiceIds,
+    creditorId,
+    debtorId,
+  }: {
+    invoiceIds: string[];
+    creditorId?: string;
+    debtorId?: string;
+  }): Promise<InvoiceSumTotalAmountWithoutVatTypes> {
+    const invoiceFilter: Prisma.InvoiceWhereInput | undefined =
+      invoiceIds && invoiceIds.length > 0 ? { id: { in: invoiceIds } } : undefined;
+    const creditorFilter: Prisma.InvoiceWhereInput | undefined = creditorId ? { id: String(creditorId) } : undefined;
+    const debtorFilter: Prisma.InvoiceWhereInput | undefined = debtorId ? { id: String(debtorId) } : undefined;
+    const andFilters = [invoiceFilter, creditorFilter, debtorFilter].filter((filter) => filter !== undefined);
+
+    const where: Prisma.InvoiceWhereInput = {
+      ...(andFilters.length ? { AND: andFilters } : {}),
+    };
+
     const totalSum = <InvoiceSumTotalAmountWithoutVatTypes>await this.prismaService.invoice.aggregate({
       _sum: {
         totalAmountWithoutVat: true,
       },
-      where: whereQuery,
+      where: where,
     });
     this.logger.verbose(util.inspect(`Total amount without vat: ${totalSum}`));
     return totalSum;

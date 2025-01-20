@@ -1,6 +1,8 @@
+import { AllInvoicesFilter } from '@ap3/amqp';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
+import { FinancialRoles } from '../../constants';
 import { InvoiceCountAndDueMonth, InvoiceForZugferd, InvoiceSumTotalAmountWithoutVatTypes, InvoiceWithNFT } from '../../types';
 import { QueryBuilderHelperService } from '../query-builder-helper.service';
 import { InvoicePrismaService } from './invoice-prisma.service';
@@ -24,7 +26,7 @@ export class InvoicePrismaAdapterService {
     const invoices: InvoiceWithNFT[] = await this.invoicePrismaService.getInvoices({
       creditorId: companyId,
       debtorId: companyId,
-      invoiceId: id,
+      invoiceIds: [id],
     });
     if (invoices && invoices.length == 1) {
       return invoices[0];
@@ -43,8 +45,12 @@ export class InvoicePrismaAdapterService {
     return this.invoicePrismaService.getInvoices({ debtorId });
   }
 
-  async getInvoicesCorrespondingToCompany(companyId: string): Promise<InvoiceWithNFT[]> {
-    return this.invoicePrismaService.getInvoices({ creditorId: companyId, debtorId: companyId });
+  async getInvoicesCorrespondingToFilterParams(filterParams: AllInvoicesFilter, invoiceIds: string[]): Promise<InvoiceWithNFT[]> {
+    return this.invoicePrismaService.getInvoices({
+      creditorId: filterParams.creditorId,
+      debtorId: filterParams.debtorId,
+      invoiceIds: invoiceIds,
+    });
   }
 
   async getInvoicesByOrderId(orderId: string, companyId: string): Promise<InvoiceWithNFT[]> {
@@ -61,15 +67,16 @@ export class InvoicePrismaAdapterService {
     invoiceIds: string[],
     companyId: string
   ): Promise<InvoiceSumTotalAmountWithoutVatTypes> {
-    const query: Prisma.InvoiceWhereInput | null = this.queryBuilderService.buildQueryForFinancialRole(
-      financialRole,
-      companyId,
-      invoiceIds
-    );
-    if (!query) {
+    let invoiceSum: InvoiceSumTotalAmountWithoutVatTypes | null = null;
+    if (financialRole === FinancialRoles.CREDITOR) {
+      invoiceSum = await this.invoicePrismaService.sumInvoiceAmountsForTradeReceivables({ invoiceIds: invoiceIds, creditorId: companyId });
+    } else if (financialRole === FinancialRoles.DEBTOR) {
+      invoiceSum = await this.invoicePrismaService.sumInvoiceAmountsForTradeReceivables({ invoiceIds: invoiceIds, debtorId: companyId });
+    }
+    if (!invoiceSum) {
       return { _sum: { totalAmountWithoutVat: new Decimal(0) } };
     }
-    return this.invoicePrismaService.sumInvoiceAmountsForTradeReceivables(query);
+    return invoiceSum;
   }
 
   async getInvoiceByIdForZugferd(id: string, companyId: string): Promise<InvoiceForZugferd> {

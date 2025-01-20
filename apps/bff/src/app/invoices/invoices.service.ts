@@ -1,9 +1,9 @@
 import util from 'node:util';
 import {
+  AllInvoicesFilter,
   AmqpBrokerQueues,
   CompanyAmqpDto,
   CompanyIdAndInvoiceId,
-  CompanyIdAndOrderId,
   CompanyIdAndPaymentState,
   InvoiceAmqpDto,
   InvoiceMessagePatterns,
@@ -22,15 +22,13 @@ export class InvoicesService {
     private readonly companyService: CompaniesService
   ) {}
 
-  async findAllByCompanyAndOrderId(orderId: string, companyId: string): Promise<InvoiceDto[]> {
-    this.logger.debug(`Requesting Tradereceivables order #${orderId}`);
-    let response: InvoiceAmqpDto[] = [];
-    if (orderId) {
-      const params = new CompanyIdAndOrderId(companyId, orderId);
-      response = await firstValueFrom<InvoiceAmqpDto[]>(this.processAMQPClient.send(InvoiceMessagePatterns.READ_BY_ORDER_ID, params));
-    } else {
-      response = await firstValueFrom<InvoiceAmqpDto[]>(this.processAMQPClient.send(InvoiceMessagePatterns.READ_ALL, companyId));
-    }
+  async findAllWithFilter(creditorId: string, debtorId: string, paymentState: string): Promise<InvoiceDto[]> {
+    this.logger.debug(`Requesting Tradereceivables `);
+    const params = new AllInvoicesFilter(creditorId, debtorId, paymentState);
+    const response: InvoiceAmqpDto[] = await firstValueFrom<InvoiceAmqpDto[]>(
+      this.processAMQPClient.send(InvoiceMessagePatterns.READ_ALL, params)
+    );
+
     return await this.handleFrontendTradeReceivableDTOCreation(response);
   }
 
@@ -44,15 +42,6 @@ export class InvoicesService {
       this.logger.warn(e);
       throw e;
     }
-  }
-  async findAllByPaymentState(companyId: string, paymentState: string): Promise<InvoiceDto[]> {
-    this.logger.debug(`Request all TRs with state ${paymentState}`);
-    const params = new CompanyIdAndPaymentState(companyId, paymentState);
-    const response: InvoiceAmqpDto[] = await firstValueFrom<InvoiceAmqpDto[]>(
-      this.processAMQPClient.send(InvoiceMessagePatterns.READ_ALL_BY_PAYMENT_STATE, params)
-    );
-
-    return await this.handleFrontendTradeReceivableDTOCreation(response);
   }
 
   private async handleFrontendTradeReceivableDTOCreation(tradeReceivables: InvoiceAmqpDto[]): Promise<InvoiceDto[]> {
