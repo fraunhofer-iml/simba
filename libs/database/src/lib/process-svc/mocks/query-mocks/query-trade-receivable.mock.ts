@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { CompaniesSeed, InvoiceSeed, OrdersSeed, PaymentStatesSeed, TradeReceivablesSeed } from '../../../../seed';
+import { InvoiceSeed, OrdersSeed, PaymentStatesSeed, TradeReceivablesSeed } from '../../../../seed';
 import { PaymentStatesEnum } from '../../../constants';
 
 export const createTradeReceivableQuery = <Prisma.TradeReceivableCreateInput>{

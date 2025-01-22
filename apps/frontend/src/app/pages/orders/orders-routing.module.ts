@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../../guards/auth/auth.guard';
 import { RoleGuard } from '../../guards/role/role.guard';
-import { USERROLES } from '../../shared/enums/user-roles';
+import { USERROLES } from '../../shared/constants/user-roles';
 import { CreateOrderComponent } from './create-order/create-order.component';
 import { OrdersOverviewComponent } from './orders-overview/orders-overview.component';
 

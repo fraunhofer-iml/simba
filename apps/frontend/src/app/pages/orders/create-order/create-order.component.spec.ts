@@ -24,12 +24,12 @@ import { MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { DialogOffersExpiredComponent } from '../../../layout/dialog-offers-expired/dialog-offers-expired.component';
-import { DateFormatService } from '../../../shared/formats/date-format.service';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { OffersService } from '../../../shared/services/offers/offers.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { ProductService } from '../../../shared/services/product/product.service';
 import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
+import { DateFormatService } from '../../../shared/services/util/date-format.service';
 import { CreateOrderComponent } from './create-order.component';
 
 describe('CreateOrderComponent', () => {

@@ -1,6 +1,6 @@
 import { OrderOverviewMock } from '@ap3/api';
 import { TranslateService } from '@ngx-translate/core';
-import { DateFormatService } from '../shared/formats/date-format.service';
+import { DateFormatService } from '../shared/services/util/date-format.service';
 import { OrderOverview } from './orderOverview';
 
 describe('OrderOverview', () => {
@@ -28,7 +28,7 @@ describe('OrderOverview', () => {
     expect(result).toEqual([
       {
         amount: 2,
-        calendarWeek: undefined,
+        calendarWeek: 50,
         creationDate: '13.01.2023',
         customerId: 'pt0001',
         id: 'o001',
@@ -36,8 +36,8 @@ describe('OrderOverview', () => {
         product: 'Quadrocopter',
         robots: ['rt001', 'rt002'],
         status: 'Open',
-        statusTimestamp: undefined,
-        year: undefined,
+        statusTimestamp: '2024-10-09T07:55:55.695Z',
+        year: 2024,
       },
     ]);
   });

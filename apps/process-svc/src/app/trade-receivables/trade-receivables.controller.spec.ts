@@ -1,29 +1,14 @@
+import { CreateTradeReceivableAMQPMock, TradeReceivableAMQPMock } from '@ap3/amqp';
 import {
-  CreateTradeReceivableAMQPMock,
-  NotPaidTrStatisticsAmqpMock,
-  PaidTrStatisticsAmqpMock,
-  TradeReceivableAMQPMock,
-  TRParamsCompanyIdAndYearAndFinancialRole,
-} from '@ap3/amqp';
-import {
-  AggregationSumNovember,
-  AggregationSumSeptember,
-  CompaniesSeed,
   createTradeReceivableQuery,
   DatabaseModule,
-  DueInvoiceCount,
-  FinancialRoles,
-  PaidInvoiceIdsNovember,
-  PaidInvoiceIdsSeptember,
-  PaidOnTimeInvoiceCount,
   PaymentStatesSeed,
   PrismaService,
   QueryBuilderHelperService,
-  TradeReceivablePaymentStatusCountMock,
   TradeReceivablesSeed,
 } from '@ap3/database';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TradeReceivablesStatisticsService } from './trade-receivable-statistics.service';
+import { InvoicesStatisticsService } from '../invoices/statistics/invoices-statistics.service';
 import { TradeReceivablesController } from './trade-receivables.controller';
 import { TradeReceivablesService } from './trade-receivables.service';
 
@@ -38,23 +23,16 @@ describe('TradeReceivablesController', () => {
       providers: [
         QueryBuilderHelperService,
         TradeReceivablesService,
-        TradeReceivablesStatisticsService,
+        InvoicesStatisticsService,
         {
           provide: PrismaService,
           useValue: {
             tradeReceivable: {
-              findMany: jest.fn(),
-              findUnique: jest.fn(),
               create: jest.fn(),
             },
             paymentStatus: {
               findMany: jest.fn(),
             },
-            invoice: {
-              findUnique: jest.fn(),
-              aggregate: jest.fn(),
-            },
-            $queryRaw: jest.fn(),
           },
         },
       ],
@@ -80,53 +58,6 @@ describe('TradeReceivablesController', () => {
 
     expect(prisma.tradeReceivable.create).toHaveBeenCalledWith({ data: createTradeReceivableQuery });
     expect(prisma.tradeReceivable.create).toHaveBeenCalledTimes(1);
-    expect(expectedReturn).toEqual(retVal);
-  });
-
-  it('calcPaidTradeReceivableVolumePerMonth: should create a statistic about paid and due trade receivables', async () => {
-    const expectedReturn = PaidTrStatisticsAmqpMock;
-
-    const prismaRawSpy = jest.spyOn(prisma, '$queryRaw');
-    prismaRawSpy
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce(PaidInvoiceIdsSeptember)
-      .mockResolvedValueOnce(PaidInvoiceIdsNovember)
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([]);
-
-    prismaRawSpy.mockResolvedValueOnce(DueInvoiceCount);
-
-    prismaRawSpy.mockResolvedValueOnce(PaidOnTimeInvoiceCount);
-
-    const prismaInvoiceSpy = jest.spyOn(prisma.invoice, 'aggregate');
-    prismaInvoiceSpy.mockResolvedValueOnce(AggregationSumSeptember).mockResolvedValueOnce(AggregationSumNovember);
-
-    const retVal = await controller.calcPaidTradeReceivableVolumePerMonth(
-      new TRParamsCompanyIdAndYearAndFinancialRole(CompaniesSeed[0].id, 2024, FinancialRoles.DEBTOR)
-    );
-    expect(expectedReturn).toEqual(retVal);
-  });
-
-  it('findAllOverdueByCreditorId: should return outstanding trade receivables', async () => {
-    const expectedReturn = NotPaidTrStatisticsAmqpMock;
-
-    const prismaRawSpy = jest.spyOn(prisma, '$queryRaw');
-    prismaRawSpy.mockResolvedValue(TradeReceivablePaymentStatusCountMock);
-
-    const retVal = await controller.getTradeReceivableNotPaidStatistics({
-      companyId: CompaniesSeed[0].id,
-      financialRole: FinancialRoles.DEBTOR,
-    });
-
-    expect(prisma.$queryRaw).toHaveBeenCalled();
-
     expect(expectedReturn).toEqual(retVal);
   });
 });

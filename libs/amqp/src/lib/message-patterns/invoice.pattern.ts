@@ -6,4 +6,6 @@ export enum InvoiceMessagePatterns {
   READ_BY_CREDITOR_ID = 'invoices/read-by-creditor-id',
   READ_ALL_BY_PAYMENT_STATE = 'invoices/read-all-by-payment-state-and-creditor-id',
   CREATE_AND_UPLOAD_ZUGFERD_PDF = 'invoices/create-and-upload-zugferd-pdf',
+  READ_STATISTICS_PAID = 'invoices/read-statistics-paid',
+  READ_STATISTICS_NOT_PAID = 'invoices/read-statistics-not-paid',
 }

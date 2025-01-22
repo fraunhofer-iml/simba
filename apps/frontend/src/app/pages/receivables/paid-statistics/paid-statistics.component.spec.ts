@@ -5,8 +5,8 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenuModule } from '@angular/material/menu';
 import { AuthService } from '../../../shared/services/auth/auth.service';
-import { FinancialRoleService } from '../../../shared/services/financial-role/financial-role.service';
-import { TradeReceivableService } from '../../../shared/services/trade-receivable/trade-receivable.service';
+import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
+import { FinancialRoleService } from '../../../shared/services/util/financial-role.service';
 import { PaidStatisticsComponent } from './paid-statistics.component';
 
 jest.mock('ng2-charts', () => ({
@@ -25,7 +25,7 @@ describe('PaidStatisticsComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [PaidStatisticsComponent],
       providers: [
-        TradeReceivableService,
+        InvoiceService,
         provideHttpClient(),
         { provide: TranslatePipe, useValue: jest.fn((value: string) => value) },
         FinancialRoleService,

@@ -4,11 +4,11 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { OrderOverview } from '../../../model/orderOverview';
 import { ROUTING } from '../../../routing/routing.enum';
-import { DateFormatService } from '../../../shared/formats/date-format.service';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
-import { OrderOverview } from '../../../model/orderOverview';
+import { DateFormatService } from '../../../shared/services/util/date-format.service';
 
 @Component({
   selector: 'app-orders-overview',
@@ -44,7 +44,7 @@ export class OrdersOverviewComponent implements AfterViewInit {
     private readonly orderService: OrdersService,
     private readonly translate: TranslateService,
     private readonly dateFormatService: DateFormatService,
-    private readonly authService: AuthService,
+    private readonly authService: AuthService
   ) {
     this.isCustomer = authService.isCustomer();
     this.dataSourceObservable = this.orderService.getOrders().pipe(

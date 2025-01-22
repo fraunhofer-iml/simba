@@ -1,6 +1,6 @@
-import { PaidStatisticsDto } from '../../invoice/paid-statistics.dto';
+import { PaidStatisticsAmqpDto } from '../paid-statistics-amqp.dto';
 
-export const PaidTrStatisticsMock = <PaidStatisticsDto[]>[
+export const PaidStatisticsAmqpMock = <PaidStatisticsAmqpDto[]>[
   {
     yearAndMonth: '2024-01',
     totalValuePaid: 0,

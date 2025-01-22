@@ -88,7 +88,7 @@ model Invoice {
   paymentTerms          String
 
   serviceProcess   ServiceProcess? @relation("InvoiceServiceProcess", fields: [serviceProcessId], references: [id])
-  serviceProcessId String?         
+  serviceProcessId String?
 
   debtor     Company? @relation(name: "deptorRel", fields: [debtorId], references: [id])
   debtorId   String?
@@ -126,10 +126,10 @@ model ServiceProcess {
   orderId String? @unique
 
   states             ServiceStatus[]
-  offers             Offer[]              @relation("OrderOffers")
-  acceptedOffer      Offer?               @relation("ProcessAcceptedOffer", fields: [acceptedOfferId], references: [id])
-  acceptedOfferId    String?              @unique
-  invoices        Invoice[] @relation("InvoiceServiceProcess")
+  offers             Offer[]             @relation("OrderOffers")
+  acceptedOffer      Offer?              @relation("ProcessAcceptedOffer", fields: [acceptedOfferId], references: [id])
+  acceptedOfferId    String?             @unique
+  invoices           Invoice[]           @relation("InvoiceServiceProcess")
   machineAssignments MachineAssignment[]
 }
 
@@ -188,5 +188,5 @@ model MachineAssignment {
   serviceProcess ServiceProcess @relation(fields: [serviceProcessId], references: [id])
   machine        Machine        @relation(fields: [machineId], references: [id])
 
-  @@id([serviceProcessId, machineId])
+  @@id([serviceProcessId, machineId, start])
 }

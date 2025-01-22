@@ -1,4 +1,4 @@
-export class CompanyIdAndPaymentState {
+export class CompanyAndPaymentStateAmqpDto {
   companyId: string;
   paymentState: string;
 

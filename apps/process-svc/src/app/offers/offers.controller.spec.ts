@@ -5,7 +5,6 @@ import {
   OffersSeed,
   OrdersSeed,
   PrismaService,
-  QueryBuilderHelperService,
   queryOffersToShowWithOrder,
   queryOpenOffersByOrderId,
   queryUniqueOrThrow,

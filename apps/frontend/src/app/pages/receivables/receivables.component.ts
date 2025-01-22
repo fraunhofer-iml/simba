@@ -5,10 +5,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { DateFormatService } from '../../shared/formats/date-format.service';
-import { InvoiceService } from '../../shared/services/invoices/invoices.service';
-import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
 import { Invoice } from '../../model/invoice';
+import { InvoiceService } from '../../shared/services/invoices/invoices.service';
+import { DateFormatService } from '../../shared/services/util/date-format.service';
+import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
 
 @Component({
   selector: 'app-receivables',
@@ -44,7 +44,7 @@ export class ReceivablesComponent {
   constructor(
     private readonly invoiceService: InvoiceService,
     private readonly dateFormatService: DateFormatService,
-    private readonly dialog: MatDialog,
+    private readonly dialog: MatDialog
   ) {
     this.dataSource = new MatTableDataSource<Invoice>();
     this.dataSourceObservable = this.invoiceService.getInvoices().pipe(

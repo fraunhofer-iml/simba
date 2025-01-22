@@ -1,6 +1,6 @@
 import { KeycloakService } from 'keycloak-angular';
 import { Injectable } from '@angular/core';
-import { USERROLES } from '../../enums/user-roles';
+import { USERROLES } from '../../constants/user-roles';
 
 @Injectable()
 export class AuthService {

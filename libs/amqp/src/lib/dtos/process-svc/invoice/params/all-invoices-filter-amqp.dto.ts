@@ -1,4 +1,4 @@
-export class AllInvoicesFilter {
+export class AllInvoicesFilterAmqpDto {
   creditorId: string;
   debtorId: string;
   paymentState: string;

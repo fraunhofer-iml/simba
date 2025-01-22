@@ -152,8 +152,8 @@ export class InvoicePrismaService {
   }): Promise<InvoiceSumTotalAmountWithoutVatTypes> {
     const invoiceFilter: Prisma.InvoiceWhereInput | undefined =
       invoiceIds && invoiceIds.length > 0 ? { id: { in: invoiceIds } } : undefined;
-    const creditorFilter: Prisma.InvoiceWhereInput | undefined = creditorId ? { id: String(creditorId) } : undefined;
-    const debtorFilter: Prisma.InvoiceWhereInput | undefined = debtorId ? { id: String(debtorId) } : undefined;
+    const creditorFilter: Prisma.InvoiceWhereInput | undefined = creditorId ? { creditorId: String(creditorId) } : undefined;
+    const debtorFilter: Prisma.InvoiceWhereInput | undefined = debtorId ? { debtorId: String(debtorId) } : undefined;
     const andFilters = [invoiceFilter, creditorFilter, debtorFilter].filter((filter) => filter !== undefined);
 
     const where: Prisma.InvoiceWhereInput = {
@@ -166,7 +166,7 @@ export class InvoicePrismaService {
       },
       where: where,
     });
-    this.logger.verbose(util.inspect(`Total amount without vat: ${totalSum}`));
+    this.logger.verbose(util.inspect(`Total amount without vat: ${util.inspect(totalSum)}`));
     return totalSum;
   }
 }

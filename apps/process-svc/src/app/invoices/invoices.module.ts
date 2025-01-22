@@ -4,11 +4,12 @@ import { S3Module } from '@ap3/s3';
 import { Module } from '@nestjs/common';
 import { InvoicesController } from './invoices.controller';
 import { InvoicesService } from './invoices.service';
+import { InvoicesStatisticsService } from './statistics/invoices-statistics.service';
 import { InvoicesZugferdService } from './zugferd/invoices-zugferd.service';
 
 @Module({
   imports: [DatabaseModule, S3Module, ConfigurationModule],
   controllers: [InvoicesController],
-  providers: [InvoicesService, InvoicesZugferdService],
+  providers: [InvoicesService, InvoicesZugferdService, InvoicesStatisticsService],
 })
 export class InvoicesModule {}

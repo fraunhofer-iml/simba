@@ -18,15 +18,14 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterOutlet } from '@angular/router';
-import { DateFormatService } from '../../shared/formats/date-format.service';
+import { Invoice } from '../../model/invoice';
 import { AuthService } from '../../shared/services/auth/auth.service';
-import { FinancialRoleService } from '../../shared/services/financial-role/financial-role.service';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
-import { TradeReceivableService } from '../../shared/services/trade-receivable/trade-receivable.service';
+import { DateFormatService } from '../../shared/services/util/date-format.service';
+import { FinancialRoleService } from '../../shared/services/util/financial-role.service';
 import { PaidStatisticsComponent } from './paid-statistics/paid-statistics.component';
 import { ReceivablesComponent } from './receivables.component';
 import { UnpaidStatisticsComponent } from './unpaid-statistics/unpaid-statistics.component';
-import { Invoice } from '../../model/invoice';
 
 jest.mock('ng2-charts', () => ({
   BaseChartDirective: jest.fn().mockImplementation(() => ({
@@ -47,7 +46,6 @@ describe('ReceivablesComponent', () => {
         AuthService,
         InvoiceService,
         provideHttpClient(),
-        TradeReceivableService,
         DatePipe,
         DateFormatService,
         {

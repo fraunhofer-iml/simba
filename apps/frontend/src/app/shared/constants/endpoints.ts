@@ -12,10 +12,10 @@ export const ApiEndpoints = {
   },
   tradeReceivables: {
     getAllTradeReceivablesForOrder: '/trade-receivables?orderId=',
-    getPaidTradeReceivablesStatistics: '/trade-receivables/statistics/paid',
-    getUnPaidTradeReceivablesStatistics: '/trade-receivables/statistics/unpaid',
   },
   invoices: {
     getAllInvoices: '/invoices',
+    getPaidStatistics: '/invoices/statistics/paid',
+    getUnPaidStatistics: '/invoices/statistics/unpaid',
   },
 };

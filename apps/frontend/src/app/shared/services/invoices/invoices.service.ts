@@ -1,10 +1,10 @@
-import { InvoiceDto } from '@ap3/api';
+import { InvoiceDto, PaidStatisticsDto, UnpaidStatisticsDto } from '@ap3/api';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BASE_URL } from '../../../../environments/environment';
+import { ApiEndpoints } from '../../constants/endpoints';
 import { AuthService } from '../auth/auth.service';
-import { ApiEndpoints } from '../endpoints/endpoints';
 
 @Injectable()
 export class InvoiceService {
@@ -29,5 +29,16 @@ export class InvoiceService {
       },
       responseType: 'blob',
     });
+  }
+  getPaidStatistics(financialRole: string, year: number): Observable<PaidStatisticsDto[]> {
+    return this.httpClient.get<PaidStatisticsDto[]>(
+      `${BASE_URL}${ApiEndpoints.invoices.getPaidStatistics}?year=${year}&financialRole=${financialRole}`
+    );
+  }
+
+  getUnPaidStatistics(financialRole: string): Observable<UnpaidStatisticsDto> {
+    return this.httpClient.get<UnpaidStatisticsDto>(
+      `${BASE_URL}${ApiEndpoints.invoices.getUnPaidStatistics}?financialRole=${financialRole}`
+    );
   }
 }

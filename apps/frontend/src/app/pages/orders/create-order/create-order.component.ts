@@ -9,11 +9,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DialogOffersExpiredComponent } from '../../../layout/dialog-offers-expired/dialog-offers-expired.component';
 import { ROUTING } from '../../../routing/routing.enum';
-import { DateFormatService } from '../../../shared/formats/date-format.service';
 import { OffersService } from '../../../shared/services/offers/offers.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { ProductService } from '../../../shared/services/product/product.service';
 import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
+import { DateFormatService } from '../../../shared/services/util/date-format.service';
 import { Countdown } from './model/countdown';
 
 const moment = _rollupMoment || _moment;

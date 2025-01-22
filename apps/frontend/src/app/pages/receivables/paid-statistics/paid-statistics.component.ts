@@ -1,15 +1,15 @@
-import { PaidTrStatisticsDto } from '@ap3/api';
+import { PaidStatisticsDto } from '@ap3/api';
 import { TranslateService } from '@ngx-translate/core';
 import { ChartData, ChartOptions, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { forkJoin, map, Observable, Subscription } from 'rxjs';
 import { Component, ViewChild } from '@angular/core';
+import { DIAGRAMM_COLORS } from '../../../shared/constants/diagramm-colors';
 import { FinancialRoles } from '../../../shared/constants/financial-roles';
-import { DIAGRAMM_COLORS } from '../../../shared/enums/diagramm-colors';
-import { USERROLES } from '../../../shared/enums/user-roles';
+import { USERROLES } from '../../../shared/constants/user-roles';
 import { AuthService } from '../../../shared/services/auth/auth.service';
-import { FinancialRoleService } from '../../../shared/services/financial-role/financial-role.service';
-import { TradeReceivableService } from '../../../shared/services/trade-receivable/trade-receivable.service';
+import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
+import { FinancialRoleService } from '../../../shared/services/util/financial-role.service';
 import { DiagrammData } from './model/diagramm-data';
 
 @Component({
@@ -31,7 +31,7 @@ export class PaidStatisticsComponent {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   constructor(
-    private readonly tradeReceivableService: TradeReceivableService,
+    private readonly invoiceService: InvoiceService,
     private readonly translationService: TranslateService,
     private readonly financialRoleService: FinancialRoleService,
     private readonly authService: AuthService
@@ -54,13 +54,13 @@ export class PaidStatisticsComponent {
   }
 
   getPaidStatisticsForOthers(year: number) {
-    return this.tradeReceivableService.getPaidTradeReceivablesStatistics(this.financialRole, year).pipe(
+    return this.invoiceService.getPaidStatistics(this.financialRole, year).pipe(
       map((paidDtos) => {
         const percentages = paidDtos.map((paidDto) => {
-          return paidDto.percentageOfPaidDueTR;
+          return paidDto.percentageOfPaidDue;
         });
         const totalValues = paidDtos.map((paidDto) => {
-          return paidDto.totalValuePaidTR;
+          return paidDto.totalValuePaid;
         });
         return new DiagrammData(percentages, totalValues);
       })
@@ -69,24 +69,24 @@ export class PaidStatisticsComponent {
 
   getPaidStatisticsForHost(year: number) {
     return forkJoin({
-      creditorData: this.tradeReceivableService.getPaidTradeReceivablesStatistics(FinancialRoles.CREDITOR, year).pipe(
-        map((paidDtos: PaidTrStatisticsDto[]) => {
+      creditorData: this.invoiceService.getPaidStatistics(FinancialRoles.CREDITOR, year).pipe(
+        map((paidDtos: PaidStatisticsDto[]) => {
           const percentages = paidDtos.map((paidDto) => {
-            return paidDto.percentageOfPaidDueTR;
+            return paidDto.percentageOfPaidDue;
           });
           const totalValues = paidDtos.map((paidDto) => {
-            return paidDto.totalValuePaidTR;
+            return paidDto.totalValuePaid;
           });
           return new DiagrammData(percentages, totalValues);
         })
       ),
-      debtorData: this.tradeReceivableService.getPaidTradeReceivablesStatistics(FinancialRoles.DEBTOR, year).pipe(
-        map((paidDtos: PaidTrStatisticsDto[]) => {
+      debtorData: this.invoiceService.getPaidStatistics(FinancialRoles.DEBTOR, year).pipe(
+        map((paidDtos: PaidStatisticsDto[]) => {
           const percentages = paidDtos.map((paidDto) => {
-            return paidDto.percentageOfPaidDueTR;
+            return paidDto.percentageOfPaidDue;
           });
           const totalValues = paidDtos.map((paidDto) => {
-            return paidDto.totalValuePaidTR;
+            return paidDto.totalValuePaid;
           });
           return new DiagrammData(percentages, totalValues);
         })

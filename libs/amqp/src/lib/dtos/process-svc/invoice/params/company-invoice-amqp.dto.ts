@@ -1,4 +1,4 @@
-export class CompanyIdAndInvoiceId {
+export class CompanyAndInvoiceAmqpDto {
   companyId: string;
   invoiceId: string;
 

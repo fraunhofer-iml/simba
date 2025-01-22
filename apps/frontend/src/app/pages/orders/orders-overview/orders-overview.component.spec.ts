@@ -20,11 +20,10 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { DateFormatService } from '../../../shared/formats/date-format.service';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
+import { DateFormatService } from '../../../shared/services/util/date-format.service';
 import { OrdersOverviewComponent } from './orders-overview.component';
-
 
 describe('OrdersOverviewComponent', () => {
   let component: OrdersOverviewComponent;

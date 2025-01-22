@@ -1,45 +1,14 @@
-import {
-  CreateTradeReceivableAmqpDto,
-  NotPaidTrStatisticsAmqpDto,
-  PaidTrStatisticsAmqpDto,
-  TradeReceivableAmqpDto,
-  TradeReceivableMessagePatterns,
-  TRParamsCompanyIdAndFinancialRole,
-  TRParamsCompanyIdAndYearAndFinancialRole,
-} from '@ap3/amqp';
+import { CreateTradeReceivableAmqpDto, TradeReceivableAmqpDto, TradeReceivableMessagePatterns } from '@ap3/amqp';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { TradeReceivablesStatisticsService } from './trade-receivable-statistics.service';
 import { TradeReceivablesService } from './trade-receivables.service';
 
 @Controller('trade-receivables')
 export class TradeReceivablesController {
-  constructor(
-    private readonly tradeReceivablesService: TradeReceivablesService,
-    private readonly tradeReceivableStatisticsService: TradeReceivablesStatisticsService
-  ) {}
+  constructor(private readonly tradeReceivablesService: TradeReceivablesService) {}
 
   @MessagePattern(TradeReceivableMessagePatterns.CREATE)
   async create(@Payload() createTradeReceivableDto: CreateTradeReceivableAmqpDto): Promise<TradeReceivableAmqpDto> {
     return await this.tradeReceivablesService.create(createTradeReceivableDto);
-  }
-
-  @MessagePattern(TradeReceivableMessagePatterns.READ_TR_STATISTICS_PAID)
-  async calcPaidTradeReceivableVolumePerMonth(
-    @Payload() params: TRParamsCompanyIdAndYearAndFinancialRole
-  ): Promise<PaidTrStatisticsAmqpDto[]> {
-    return await this.tradeReceivableStatisticsService.calcPaidTradeReceivableVolumePerMonth(
-      params.year,
-      params.companyId,
-      params.financialRole
-    );
-  }
-
-  @MessagePattern(TradeReceivableMessagePatterns.READ_TR_STATISTICS_NOT_PAID)
-  async getTradeReceivableNotPaidStatistics(@Payload() params: TRParamsCompanyIdAndFinancialRole): Promise<NotPaidTrStatisticsAmqpDto> {
-    return await this.tradeReceivableStatisticsService.getTradeReceivablesNotPaidStatisticsByCompanyId(
-      params.companyId,
-      params.financialRole
-    );
   }
 }

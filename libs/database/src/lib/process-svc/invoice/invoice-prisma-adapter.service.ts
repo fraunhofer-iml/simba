@@ -1,4 +1,4 @@
-import { AllInvoicesFilter } from '@ap3/amqp';
+import { AllInvoicesFilterAmqpDto } from '@ap3/amqp';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
@@ -36,25 +36,12 @@ export class InvoicePrismaAdapterService {
       throw new NotFoundException(errorMsg);
     }
   }
-
-  async getInvoicesByCreditorId(creditorId: string): Promise<InvoiceWithNFT[]> {
-    return this.invoicePrismaService.getInvoices({ creditorId });
-  }
-
-  async getInvoicesByDebtorId(debtorId: string): Promise<InvoiceWithNFT[]> {
-    return this.invoicePrismaService.getInvoices({ debtorId });
-  }
-
-  async getInvoicesCorrespondingToFilterParams(filterParams: AllInvoicesFilter, invoiceIds: string[]): Promise<InvoiceWithNFT[]> {
+  async getInvoicesCorrespondingToFilterParams(filterParams: AllInvoicesFilterAmqpDto, invoiceIds: string[]): Promise<InvoiceWithNFT[]> {
     return this.invoicePrismaService.getInvoices({
       creditorId: filterParams.creditorId,
       debtorId: filterParams.debtorId,
       invoiceIds: invoiceIds,
     });
-  }
-
-  async getInvoicesByOrderId(orderId: string, companyId: string): Promise<InvoiceWithNFT[]> {
-    return this.invoicePrismaService.getInvoices({ orderId, debtorId: companyId, creditorId: companyId });
   }
 
   async countInvoicesDueInMonthByFinancialRole(financialRole: string, year: number, companyId: string): Promise<InvoiceCountAndDueMonth[]> {

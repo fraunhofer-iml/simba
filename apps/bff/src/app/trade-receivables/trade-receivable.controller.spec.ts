@@ -1,20 +1,6 @@
-import {
-  AmqpBrokerQueues,
-  CreateTradeReceivableAMQPMock,
-  NotPaidTrStatisticsAmqpMock,
-  PaidTrStatisticsAmqpMock,
-  TradeReceivableAMQPMock,
-  TradeReceivableMessagePatterns,
-  TRParamsCompanyIdAndYearAndFinancialRole,
-} from '@ap3/amqp';
-import {
-  createTradeReceivableDtoMock,
-  PaidTrStatisticsMock,
-  TradeReceivableMock,
-  UnpaidTradeReceivableStatisticsMock,
-  UnpaidTrStatisticsDto,
-} from '@ap3/api';
-import { CompaniesSeed, FinancialRoles } from '@ap3/database';
+import { AmqpBrokerQueues, CreateTradeReceivableAMQPMock, TradeReceivableAMQPMock, TradeReceivableMessagePatterns } from '@ap3/amqp';
+import { createTradeReceivableDtoMock, TradeReceivableMock } from '@ap3/api';
+import { CompaniesSeed } from '@ap3/database';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -65,36 +51,6 @@ describe('OrdersController', () => {
 
     const res = await controller.create(createTradeReceivableDtoMock);
     expect(sendRequestSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.CREATE, CreateTradeReceivableAMQPMock);
-    expect(res).toEqual(expectedReturnValue);
-  });
-
-  it('should get Tradereceivable unpaid TR statistics by its companyId', async () => {
-    const expectedReturnValue = UnpaidTradeReceivableStatisticsMock;
-    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
-    sendRequestSpy.mockImplementationOnce((messagePattern: TradeReceivableMessagePatterns, data: any) => {
-      return of(NotPaidTrStatisticsAmqpMock);
-    });
-
-    const res: UnpaidTrStatisticsDto = await controller.getStatisticUnpaidTrade(request, FinancialRoles.DEBTOR);
-    expect(sendRequestSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_TR_STATISTICS_NOT_PAID, {
-      companyId: CompaniesSeed[1].id,
-      financialRole: FinancialRoles.DEBTOR,
-    });
-    expect(res).toEqual(expectedReturnValue);
-  });
-
-  it('should get Tradereceivable paid TR statistics by its companyId', async () => {
-    const expectedReturnValue = PaidTrStatisticsMock;
-    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
-    sendRequestSpy.mockImplementationOnce((messagePattern: TradeReceivableMessagePatterns, data: any) => {
-      return of(PaidTrStatisticsAmqpMock);
-    });
-
-    const res = await controller.getStatisticPaidTradePerMonth(request, 2024, FinancialRoles.DEBTOR);
-    expect(sendRequestSpy).toHaveBeenCalledWith(
-      TradeReceivableMessagePatterns.READ_TR_STATISTICS_PAID,
-      new TRParamsCompanyIdAndYearAndFinancialRole(CompaniesSeed[1].id, 2024, FinancialRoles.DEBTOR)
-    );
     expect(res).toEqual(expectedReturnValue);
   });
 });

@@ -1,7 +1,7 @@
-import { NotPaidTrStatisticsAmqpDto } from '@ap3/amqp';
+import { NotPaidStatisticsAmqpDto } from '@ap3/amqp';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UnpaidTrStatisticsDto {
+export class UnpaidStatisticsDto {
   @ApiProperty()
   outStandingReceivables: number;
   @ApiProperty()
@@ -23,8 +23,8 @@ export class UnpaidTrStatisticsDto {
     this.overdueReceivablesTotalValue = overdueReceivablesTotalValue;
   }
 
-  public static toUnpaidStatisticsDto(unpaidDto: NotPaidTrStatisticsAmqpDto): UnpaidTrStatisticsDto {
-    return new UnpaidTrStatisticsDto(
+  public static toUnpaidStatisticsDto(unpaidDto: NotPaidStatisticsAmqpDto): UnpaidStatisticsDto {
+    return new UnpaidStatisticsDto(
       unpaidDto.outstandingTradeReceivableCount,
       unpaidDto.outstandingTradeReceivableValue,
       unpaidDto.overdueTradeReceivableCount,

@@ -1,6 +1,6 @@
 import { InvoiceMocks } from '@ap3/api';
+import { DateFormatService } from '../shared/services/util/date-format.service';
 import { Invoice } from './invoice';
-import { DateFormatService } from '../shared/formats/date-format.service';
 
 describe('Invoice', () => {
   let dateFormatServiceMock: Partial<DateFormatService>;

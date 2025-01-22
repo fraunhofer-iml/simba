@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BASE_URL } from '../../../../environments/environment';
-import { ApiEndpoints } from '../endpoints/endpoints';
+import { ApiEndpoints } from '../../constants/endpoints';
 
 @Injectable()
 export class OffersService {

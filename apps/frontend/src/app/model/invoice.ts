@@ -1,27 +1,35 @@
 import { InvoiceDto } from '@ap3/api';
-import { DateFormatService } from '../shared/formats/date-format.service';
+import { DateFormatService } from '../shared/services/util/date-format.service';
 
 export class Invoice {
-  id: string | undefined;
-  invoiceNumber: string | undefined;
-  creditor: string | undefined;
-  creditorId: string | undefined;
-  totalAmountWithoutVat: string | undefined;
-  invoiceDueDate: string | undefined;
-  debtor: string | undefined;
-  debtorId: string | undefined;
-  paymentStatus: string | undefined;
+  id: string;
+  invoiceNumber: string;
+  creditor: string;
+  creditorId: string;
+  totalAmountWithoutVat: string;
+  invoiceDueDate: string;
+  debtor: string;
+  debtorId: string;
+  paymentStatus: string;
+  url: string;
+
+  constructor(invoice: InvoiceDto, dateFormatService: DateFormatService) {
+    this.id = invoice.id;
+    this.invoiceNumber = invoice.invoiceNumber;
+    this.creditorId = invoice.creditorId;
+    this.creditor = invoice.creditor;
+    this.totalAmountWithoutVat = `${invoice.totalAmountWithoutVat.toFixed(2)}€`;
+    this.invoiceDueDate = dateFormatService.transformDateToCurrentLanguageFormat(invoice.invoiceDueDate);
+    this.debtor = invoice.debtor;
+    this.debtorId = invoice.debtorId;
+    this.paymentStatus = invoice.paymentStatus;
+    this.url = invoice.url;
+  }
 
   public static convertToInvoice(invoices: InvoiceDto[], dateFormatService: DateFormatService): Invoice[] {
     const flatInvoices: Invoice[] = [];
     invoices.forEach((invoice: InvoiceDto) => {
-      const temp: Invoice = new Invoice();
-      temp.invoiceNumber = invoice.invoiceNumber;
-      temp.creditor = invoice.creditor;
-      temp.totalAmountWithoutVat = `${invoice.totalAmountWithoutVat.toFixed(2)}€`;
-      temp.invoiceDueDate = dateFormatService.transformDateToCurrentLanguageFormat(invoice.invoiceDueDate);
-      temp.debtor = invoice.debtor;
-      temp.paymentStatus = invoice.paymentStatus;
+      const temp: Invoice = new Invoice(invoice, dateFormatService);
       flatInvoices.push(temp);
     });
     return flatInvoices;

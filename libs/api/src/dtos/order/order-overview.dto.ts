@@ -42,7 +42,6 @@ export class OrderOverviewDto {
   ) {
     this.id = id;
     this.product = product;
-    this.product = product;
     this.amount = amount;
     this.year = year;
     this.calendarWeek = calendarWeek;

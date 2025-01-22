@@ -4,7 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDividerModule } from '@angular/material/divider';
 import { AuthService } from '../../../shared/services/auth/auth.service';
-import { TradeReceivableService } from '../../../shared/services/trade-receivable/trade-receivable.service';
+import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 import { UnpaidStatisticsComponent } from './unpaid-statistics.component';
 
 describe('UnpaidStatisticsComponent', () => {
@@ -16,7 +16,7 @@ describe('UnpaidStatisticsComponent', () => {
       declarations: [UnpaidStatisticsComponent],
       imports: [TranslateModule.forRoot(), MatDividerModule],
       providers: [
-        TradeReceivableService,
+        InvoiceService,
         provideHttpClient(),
         { provide: TranslatePipe, useValue: jest.fn((value: string) => value) },
         AuthService,

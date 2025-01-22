@@ -1,9 +1,9 @@
-import { UnpaidTrStatisticsDto } from '@ap3/api';
+import { UnpaidStatisticsDto } from '@ap3/api';
 import { Observable } from 'rxjs';
 import { Component } from '@angular/core';
 import { FinancialRoles } from '../../../shared/constants/financial-roles';
 import { AuthService } from '../../../shared/services/auth/auth.service';
-import { TradeReceivableService } from '../../../shared/services/trade-receivable/trade-receivable.service';
+import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 
 @Component({
   selector: 'app-unpaid-statistics',
@@ -11,14 +11,14 @@ import { TradeReceivableService } from '../../../shared/services/trade-receivabl
   styleUrl: './unpaid-statistics.component.scss',
 })
 export class UnpaidStatisticsComponent {
-  creditorStatisticsDto$: Observable<UnpaidTrStatisticsDto>;
-  debtorStatisticsDto$: Observable<UnpaidTrStatisticsDto>;
+  creditorStatisticsDto$: Observable<UnpaidStatisticsDto>;
+  debtorStatisticsDto$: Observable<UnpaidStatisticsDto>;
 
   constructor(
-    private readonly tradeReceivablesService: TradeReceivableService,
+    private readonly invoiceService: InvoiceService,
     readonly authService: AuthService
   ) {
-    this.creditorStatisticsDto$ = tradeReceivablesService.getUnPaidTradeReceivablesStatistics(FinancialRoles.CREDITOR);
-    this.debtorStatisticsDto$ = tradeReceivablesService.getUnPaidTradeReceivablesStatistics(FinancialRoles.DEBTOR);
+    this.creditorStatisticsDto$ = invoiceService.getUnPaidStatistics(FinancialRoles.CREDITOR);
+    this.debtorStatisticsDto$ = invoiceService.getUnPaidStatistics(FinancialRoles.DEBTOR);
   }
 }

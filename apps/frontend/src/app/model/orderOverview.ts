@@ -1,20 +1,34 @@
 import { OrderOverviewDto } from '@ap3/api';
 import { TranslateService } from '@ngx-translate/core';
 import { OrderStatus } from '../pages/orders/orders-overview/enum/orderStatus';
-import { DateFormatService } from '../shared/formats/date-format.service';
+import { DateFormatService } from '../shared/services/util/date-format.service';
 
 export class OrderOverview {
-  id: string | undefined;
-  product: string | undefined;
-  amount: number | undefined;
-  year: number | undefined;
-  calendarWeek: number | undefined;
-  creationDate: string | undefined;
-  status: string | undefined;
-  statusTimestamp: string | undefined;
-  price: string | undefined;
-  robots: string[] | undefined;
-  customerId: string | undefined;
+  id: string;
+  product: string;
+  amount: number;
+  year: number;
+  calendarWeek: number;
+  creationDate: string;
+  status: string;
+  statusTimestamp: string;
+  price: string;
+  robots: string[];
+  customerId: string;
+
+  constructor(order: OrderOverviewDto, formattedCreationDate: string) {
+    this.id = order.id;
+    this.product = order.product.name;
+    this.amount = order.amount;
+    this.year = order.year;
+    this.calendarWeek = order.calendarWeek;
+    this.creationDate = formattedCreationDate;
+    this.status = order.status;
+    this.statusTimestamp = order.statusTimestamp;
+    this.price = `${order.price.toFixed(2)}€`;
+    this.robots = order.robots.flat();
+    this.customerId = order.customerId;
+  }
 
   public static convertToOrderOverview(
     orders: OrderOverviewDto[],
@@ -23,16 +37,7 @@ export class OrderOverview {
   ): OrderOverview[] {
     const flatOrders: OrderOverview[] = [];
     orders.forEach((order: OrderOverviewDto) => {
-      const temp: OrderOverview = new OrderOverview();
-      temp.id = order.id;
-      temp.status = order.status;
-      temp.creationDate = this.getDateBasedOnStatus(order, dateFormatService, translate);
-      temp.robots = order.robots.flat();
-      temp.price = `${order.price.toFixed(2)}€`;
-      temp.product = order.product.name;
-      temp.amount = order.amount;
-      temp.robots = order.robots;
-      temp.customerId = order.customerId;
+      const temp: OrderOverview = new OrderOverview(order, this.getDateBasedOnStatus(order, dateFormatService, translate));
       flatOrders.push(temp);
     });
     return flatOrders;

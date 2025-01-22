@@ -1,4 +1,5 @@
-import { AuthRolesEnum, InvoiceDto, RolesEnum } from '@ap3/api';
+import { PaidStatisticsAmqpDto } from '@ap3/amqp';
+import { AuthRolesEnum, FinancialRoles, InvoiceDto, RolesEnum, UnpaidStatisticsDto } from '@ap3/api';
 import { PaymentStatesEnum } from '@ap3/database';
 import { Roles } from 'nest-keycloak-connect';
 import { Controller, Get, Param, Post, Query, Request } from '@nestjs/common';
@@ -17,20 +18,20 @@ export class InvoicesController {
   @ApiQuery({
     name: 'creditorId',
     type: String,
-    description: 'Identifying id; Required to identify the corresponding invoices of a specific company, where company is creditor.',
+    description: 'Company id; Required to identify the corresponding creditor.',
     required: false,
   })
   @ApiQuery({
     name: 'debtorId',
     type: String,
-    description: 'Identifying id; Required to identify the corresponding invoices of a specific company, where company is debtor.',
+    description: 'Company id; Required to identify the corresponding debtor.',
     required: false,
   })
   @ApiQuery({
     name: 'paymentState',
     type: String,
     enum: PaymentStatesEnum,
-    description: 'Identifying string; Required to identify the corresponding invoices of a specific payment state.',
+    description: 'Necessary to filter for a specific payment status.',
     required: false,
   })
   @ApiResponse({ type: [InvoiceDto] })
@@ -81,5 +82,40 @@ export class InvoicesController {
     const companyId = req.user.realm_access.roles.includes(RolesEnum.ADMIN) ? '' : req.user.company;
 
     return await this.invoicesService.createAndUploadZugferdPDF(companyId, id);
+  }
+
+  @Get('/statistics/paid')
+  @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR, AuthRolesEnum.CUSTOMER] })
+  @ApiOperation({ description: 'Get a statistic for all trade receivables paid in a given year, grouped by month. ' })
+  @ApiQuery({
+    name: 'year',
+    type: Number,
+    required: true,
+  })
+  @ApiQuery({
+    name: 'financialRole',
+    type: String,
+    required: true,
+  })
+  @ApiResponse({ type: [PaidStatisticsAmqpDto] })
+  async getStatisticPaidTradePerMonth(
+    @Request() req: any,
+    @Query('year') year: number,
+    @Query('financialRole') financialRole: FinancialRoles
+  ): Promise<PaidStatisticsAmqpDto[]> {
+    return await this.invoicesService.getStatisticPaidPerMonth(req.user.company, year, financialRole);
+  }
+
+  @Get('/statistics/unpaid')
+  @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR, AuthRolesEnum.CUSTOMER] })
+  @ApiOperation({ description: 'Get trade receivables statistics by companyId.' })
+  @ApiQuery({
+    name: 'financialRole',
+    type: String,
+    required: true,
+  })
+  @ApiResponse({ type: UnpaidStatisticsDto })
+  async getStatisticUnpaid(@Request() req: any, @Query('financialRole') financialRole: FinancialRoles): Promise<UnpaidStatisticsDto> {
+    return await this.invoicesService.getStatisticNotPaidPerMonth(req.user.company, financialRole);
   }
 }

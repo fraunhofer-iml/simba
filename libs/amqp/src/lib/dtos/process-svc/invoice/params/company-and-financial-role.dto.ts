@@ -1,4 +1,4 @@
-export class TRParamsCompanyIdAndFinancialRole {
+export class CompanyAndFinancialRole {
   companyId: string;
   financialRole: string;
 

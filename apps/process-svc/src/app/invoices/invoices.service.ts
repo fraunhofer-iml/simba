@@ -1,10 +1,10 @@
 import util from 'node:util';
-import { AllInvoicesFilter, CompanyIdAndInvoiceId, CompanyIdAndPaymentState, InvoiceAmqpDto } from '@ap3/amqp';
+import { AllInvoicesFilterAmqpDto, CompanyAndInvoiceAmqpDto, InvoiceAmqpDto } from '@ap3/amqp';
 import { ConfigurationService } from '@ap3/config';
 import { InvoiceForZugferd, InvoicePrismaAdapterService, InvoiceWithNFT, TradeReceivablePrismaService } from '@ap3/database';
 import { S3Service } from '@ap3/s3';
 import { Injectable, Logger } from '@nestjs/common';
-import { Invoice, PaymentStatus, TradeReceivable } from '@prisma/client';
+import { PaymentStatus, TradeReceivable } from '@prisma/client';
 import { InvoicesZugferdService } from './zugferd/invoices-zugferd.service';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class InvoicesService {
     private readonly s3Service: S3Service
   ) {}
 
-  async findAll(filterParams: AllInvoicesFilter): Promise<InvoiceAmqpDto[]> {
+  async findAll(filterParams: AllInvoicesFilterAmqpDto): Promise<InvoiceAmqpDto[]> {
     this.logger.verbose(`requesting all trade receivables for ${util.inspect(filterParams)}`);
     try {
       const possibleInvoiceIds: string[] = [];
@@ -47,43 +47,13 @@ export class InvoicesService {
     }
   }
 
-  async findByDebtor(debtorId: string): Promise<InvoiceAmqpDto[]> {
-    this.logger.verbose(`requesting all trade receivables of debtor #${debtorId}`);
-    try {
-      const invoices: InvoiceWithNFT[] = await this.invoicePrismaService.getInvoicesByDebtorId(debtorId);
-      return this.loadAssociatedDataAndConvertToDTO(invoices);
-    } catch (e) {
-      this.logger.error(util.inspect(e));
-      throw e;
-    }
-  }
-
-  async findByCreditor(creditorId: string): Promise<InvoiceAmqpDto[]> {
-    this.logger.verbose(`requesting all trade receivables of creditor #${creditorId}`);
-    try {
-      const invoices: InvoiceWithNFT[] = await this.invoicePrismaService.getInvoicesByCreditorId(creditorId);
-      return this.loadAssociatedDataAndConvertToDTO(invoices);
-    } catch (e) {
-      this.logger.error(util.inspect(e));
-      throw e;
-    }
-  }
-
-  async findOne(params: CompanyIdAndInvoiceId): Promise<InvoiceAmqpDto> {
+  async findOne(params: CompanyAndInvoiceAmqpDto): Promise<InvoiceAmqpDto> {
     const invoice: InvoiceWithNFT = await this.invoicePrismaService.getInvoiceById(params.invoiceId, params.companyId);
 
     return (await this.loadAssociatedDataAndConvertToDTO([invoice]))[0];
   }
 
-  async findInvoiceByPaymentStateAndCreditorId(params: CompanyIdAndPaymentState): Promise<InvoiceAmqpDto[]> {
-    this.logger.verbose(`requesting all trade receivables with payment state #${params.paymentState}`);
-    return this.loadTRAssociatedDataAndConvertToDTO(
-      await this.tradeReceivablePrismaService.getTradeReceivableByPaymentStatus(params.paymentState, params.companyId, ''),
-      params.companyId
-    );
-  }
-
-  async createAndUploadZugferdPDF(params: CompanyIdAndInvoiceId) {
+  async createAndUploadZugferdPDF(params: CompanyAndInvoiceAmqpDto) {
     const invoice: InvoiceForZugferd = await this.invoicePrismaService.getInvoiceByIdForZugferd(params.invoiceId, params.companyId);
     const pdfFile: Uint8Array = await this.invoiceZugferdService.generatePdf(invoice);
 
@@ -92,19 +62,6 @@ export class InvoicesService {
 
     await this.invoicePrismaService.updateInvoiceURL(params.invoiceId, fileName);
     return fileName;
-  }
-
-  private async loadTRAssociatedDataAndConvertToDTO(tradeReceivables: TradeReceivable[], companyId: string): Promise<InvoiceAmqpDto[]> {
-    const tradeReceivableDtos: InvoiceAmqpDto[] = [];
-    for (const tr of tradeReceivables) {
-      const relatedInvoice: Invoice = await this.invoicePrismaService.getInvoiceById(tr.invoiceId, companyId);
-
-      const trStates: PaymentStatus[] = await this.tradeReceivablePrismaService.getPaymentStatesForTradeReceivable(tr.id);
-      tradeReceivableDtos.push(
-        InvoiceAmqpDto.fromTRPrismaEntity(tr, relatedInvoice, trStates, this.config.getMinioConfig().objectStorageURL)
-      );
-    }
-    return tradeReceivableDtos;
   }
 
   private async loadAssociatedDataAndConvertToDTO(invoices: InvoiceWithNFT[]): Promise<InvoiceAmqpDto[]> {

@@ -20,11 +20,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
-import { DateFormatService } from '../../shared/formats/date-format.service';
 import { AuthService } from '../../shared/services/auth/auth.service';
-import { FinancialRoleService } from '../../shared/services/financial-role/financial-role.service';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
-import { TradeReceivableService } from '../../shared/services/trade-receivable/trade-receivable.service';
+import { DateFormatService } from '../../shared/services/util/date-format.service';
+import { FinancialRoleService } from '../../shared/services/util/financial-role.service';
 import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
 import { PaidStatisticsComponent } from './paid-statistics/paid-statistics.component';
 import { ReceivablesRoutingModule } from './receivables-routing.module';
@@ -61,7 +60,6 @@ import { UnpaidStatisticsComponent } from './unpaid-statistics/unpaid-statistics
     provideHttpClient(withInterceptorsFromDi()),
     provideCharts(withDefaultRegisterables()),
     InvoiceService,
-    TradeReceivableService,
     DateFormatService,
     DatePipe,
     FinancialRoleService,

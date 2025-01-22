@@ -1,15 +1,17 @@
 import {
-  AllInvoicesFilter,
+  AllInvoicesFilterAmqpDto,
   AmqpBrokerQueues,
   CompanyAmqpMock,
-  CompanyIdAndInvoiceId,
-  CompanyIdAndPaymentState,
+  CompanyAndInvoiceAmqpDto,
   CompanyMessagePatterns,
   InvoiceMessagePatterns,
   InvoicesAmqpMock,
+  NotPaidStatisticsAmqpMock,
+  PaidStatisticsAmqpMock,
+  TRParamsCompanyIdAndYearAndFinancialRole,
 } from '@ap3/amqp';
-import { InvoiceDto, InvoiceMocks } from '@ap3/api';
-import { CompaniesSeed, OrdersSeed, PaymentStatesEnum } from '@ap3/database';
+import { InvoiceDto, InvoiceMocks, PaidTrStatisticsMock, UnpaidStatisticsDto, UnpaidTradeReceivableStatisticsMock } from '@ap3/api';
+import { CompaniesSeed, FinancialRoles, PaymentStatesEnum } from '@ap3/database';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -74,7 +76,7 @@ describe('InvoicesController', () => {
     });
 
     const res: InvoiceDto[] = await controller.findAll(request, '', '', 'Open');
-    const params = new AllInvoicesFilter(request.user.company, request.user.company, PaymentStatesEnum.OPEN);
+    const params = new AllInvoicesFilterAmqpDto(request.user.company, request.user.company, PaymentStatesEnum.OPEN);
     expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.READ_ALL, params);
     expect(res).toEqual(expectedReturnValue);
   });
@@ -89,7 +91,7 @@ describe('InvoicesController', () => {
     const res: InvoiceDto = await controller.findOne(request, InvoiceMocks[0].id);
     expect(sendRequestSpy).toHaveBeenCalledWith(
       InvoiceMessagePatterns.READ_BY_ID,
-      new CompanyIdAndInvoiceId(CompaniesSeed[1].id, InvoiceMocks[0].id)
+      new CompanyAndInvoiceAmqpDto(CompaniesSeed[1].id, InvoiceMocks[0].id)
     );
     expect(res).toEqual(expectedReturnValue);
   });
@@ -104,7 +106,37 @@ describe('InvoicesController', () => {
     const res = await controller.createAndUploadZugferdPDF(request, InvoiceMocks[0].id);
     expect(sendRequestSpy).toHaveBeenCalledWith(
       InvoiceMessagePatterns.CREATE_AND_UPLOAD_ZUGFERD_PDF,
-      new CompanyIdAndInvoiceId(CompaniesSeed[1].id, InvoiceMocks[0].id)
+      new CompanyAndInvoiceAmqpDto(CompaniesSeed[1].id, InvoiceMocks[0].id)
+    );
+    expect(res).toEqual(expectedReturnValue);
+  });
+
+  it('should get Tradereceivable unpaid TR statistics by its companyId', async () => {
+    const expectedReturnValue = UnpaidTradeReceivableStatisticsMock;
+    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
+    sendRequestSpy.mockImplementationOnce((messagePattern: InvoiceMessagePatterns, data: any) => {
+      return of(NotPaidStatisticsAmqpMock);
+    });
+
+    const res: UnpaidStatisticsDto = await controller.getStatisticUnpaid(request, FinancialRoles.DEBTOR);
+    expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.READ_STATISTICS_NOT_PAID, {
+      companyId: CompaniesSeed[1].id,
+      financialRole: FinancialRoles.DEBTOR,
+    });
+    expect(res).toEqual(expectedReturnValue);
+  });
+
+  it('should get Tradereceivable paid TR statistics by its companyId', async () => {
+    const expectedReturnValue = PaidTrStatisticsMock;
+    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
+    sendRequestSpy.mockImplementationOnce((messagePattern: InvoiceMessagePatterns, data: any) => {
+      return of(PaidStatisticsAmqpMock);
+    });
+
+    const res = await controller.getStatisticPaidTradePerMonth(request, 2024, FinancialRoles.DEBTOR);
+    expect(sendRequestSpy).toHaveBeenCalledWith(
+      InvoiceMessagePatterns.READ_STATISTICS_PAID,
+      new TRParamsCompanyIdAndYearAndFinancialRole(CompaniesSeed[1].id, 2024, FinancialRoles.DEBTOR)
     );
     expect(res).toEqual(expectedReturnValue);
   });

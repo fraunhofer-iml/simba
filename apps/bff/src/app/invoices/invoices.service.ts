@@ -1,15 +1,18 @@
 import util from 'node:util';
 import {
-  AllInvoicesFilter,
+  AllInvoicesFilterAmqpDto,
   AmqpBrokerQueues,
   CompanyAmqpDto,
-  CompanyIdAndInvoiceId,
-  CompanyIdAndPaymentState,
+  CompanyAndFinancialRole,
+  CompanyAndInvoiceAmqpDto,
   InvoiceAmqpDto,
   InvoiceMessagePatterns,
+  NotPaidStatisticsAmqpDto,
+  PaidStatisticsAmqpDto,
+  TRParamsCompanyIdAndYearAndFinancialRole,
 } from '@ap3/amqp';
-import { InvoiceDto } from '@ap3/api';
-import { firstValueFrom } from 'rxjs';
+import { FinancialRoles, InvoiceDto, PaidStatisticsDto, UnpaidStatisticsDto } from '@ap3/api';
+import { defaultIfEmpty, firstValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { CompaniesService } from '../companies/companies.service';
@@ -24,7 +27,7 @@ export class InvoicesService {
 
   async findAllWithFilter(creditorId: string, debtorId: string, paymentState: string): Promise<InvoiceDto[]> {
     this.logger.debug(`Requesting Tradereceivables `);
-    const params = new AllInvoicesFilter(creditorId, debtorId, paymentState);
+    const params = new AllInvoicesFilterAmqpDto(creditorId, debtorId, paymentState);
     const response: InvoiceAmqpDto[] = await firstValueFrom<InvoiceAmqpDto[]>(
       this.processAMQPClient.send(InvoiceMessagePatterns.READ_ALL, params)
     );
@@ -35,9 +38,20 @@ export class InvoicesService {
   async findOne(companyId: string, id: string): Promise<InvoiceDto> {
     try {
       this.logger.verbose('Requesting trade receivable ', id);
-      const params = new CompanyIdAndInvoiceId(companyId, id);
+      const params = new CompanyAndInvoiceAmqpDto(companyId, id);
       const retVal = await firstValueFrom<InvoiceAmqpDto>(this.processAMQPClient.send(InvoiceMessagePatterns.READ_BY_ID, params));
       return (await this.handleFrontendTradeReceivableDTOCreation([retVal]))[0];
+    } catch (e) {
+      this.logger.warn(e);
+      throw e;
+    }
+  }
+
+  async createAndUploadZugferdPDF(companyId: string, id: string): Promise<string> {
+    try {
+      this.logger.verbose('Requesting zugferd pdf creation for invoice ', id);
+      const params = new CompanyAndInvoiceAmqpDto(companyId, id);
+      return await firstValueFrom<string>(this.processAMQPClient.send(InvoiceMessagePatterns.CREATE_AND_UPLOAD_ZUGFERD_PDF, params));
     } catch (e) {
       this.logger.warn(e);
       throw e;
@@ -61,14 +75,24 @@ export class InvoicesService {
     return retVal;
   }
 
-  async createAndUploadZugferdPDF(companyId: string, id: string): Promise<string> {
-    try {
-      this.logger.verbose('Requesting zugferd pdf creation for invoice ', id);
-      const params = new CompanyIdAndInvoiceId(companyId, id);
-      return await firstValueFrom<string>(this.processAMQPClient.send(InvoiceMessagePatterns.CREATE_AND_UPLOAD_ZUGFERD_PDF, params));
-    } catch (e) {
-      this.logger.warn(e);
-      throw e;
+  async getStatisticNotPaidPerMonth(companyId: string, financialRole: FinancialRoles): Promise<UnpaidStatisticsDto> {
+    const notPaidTRStatistics: NotPaidStatisticsAmqpDto = await firstValueFrom<NotPaidStatisticsAmqpDto>(
+      this.processAMQPClient.send(InvoiceMessagePatterns.READ_STATISTICS_NOT_PAID, new CompanyAndFinancialRole(companyId, financialRole))
+    );
+
+    return UnpaidStatisticsDto.toUnpaidStatisticsDto(notPaidTRStatistics);
+  }
+
+  async getStatisticPaidPerMonth(companyId: string, year: number, financialRole: FinancialRoles): Promise<PaidStatisticsDto[]> {
+    const tradeReceivableDtos: PaidStatisticsDto[] = [];
+    const tradeReceivableAmqpDtos: PaidStatisticsAmqpDto[] = await firstValueFrom<PaidStatisticsAmqpDto[]>(
+      this.processAMQPClient
+        .send(InvoiceMessagePatterns.READ_STATISTICS_PAID, new TRParamsCompanyIdAndYearAndFinancialRole(companyId, year, financialRole))
+        .pipe(defaultIfEmpty(null))
+    );
+    for (const amqpTr of tradeReceivableAmqpDtos) {
+      tradeReceivableDtos.push(PaidStatisticsDto.toPaidStatisticsDto(amqpTr));
     }
+    return tradeReceivableDtos;
   }
 }

@@ -3,7 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { BASE_URL } from '../../../../environments/environment';
-import { ApiEndpoints } from '../endpoints/endpoints';
+import { ApiEndpoints } from '../../constants/endpoints';
 import { OffersService } from './offers.service';
 
 describe('OffersService', () => {

@@ -1,5 +1,5 @@
 import util from 'node:util';
-import { NotPaidTrStatisticsAmqpDto, PaidTrStatisticsAmqpDto } from '@ap3/amqp';
+import { NotPaidStatisticsAmqpDto, PaidStatisticsAmqpDto } from '@ap3/amqp';
 import { MonthsEnum } from '@ap3/config';
 import {
   InvoiceCountAndDueMonth,
@@ -13,15 +13,16 @@ import {
 import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
-export class TradeReceivablesStatisticsService {
-  private readonly logger = new Logger(TradeReceivablesStatisticsService.name);
+export class InvoicesStatisticsService {
+  private readonly logger = new Logger(InvoicesStatisticsService.name);
   constructor(
     private readonly tradeReceivablePrismaService: TradeReceivablePrismaService,
     private readonly invoicePrismaService: InvoicePrismaAdapterService
   ) {}
 
-  async calcPaidTradeReceivableVolumePerMonth(year: number, companyId: string, financialRole: string): Promise<PaidTrStatisticsAmqpDto[]> {
-    const volumeOfPaidTradeReceivablesPerMonth: PaidTrStatisticsAmqpDto[] = [];
+  async calcPaidInvoicesVolumePerMonth(year: number, companyId: string, financialRole: string): Promise<PaidStatisticsAmqpDto[]> {
+    this.logger.debug(`Paid per month for ${companyId} in ${year} and ${financialRole}`);
+    const volumeOfPaidTradeReceivablesPerMonth: PaidStatisticsAmqpDto[] = [];
     const paidInvoiceIdsPerMonth: Map<string, string[]> = await this.getInvoiceIdsForPaidTradeReceivablesPerMonth(
       year,
       companyId,
@@ -51,12 +52,12 @@ export class TradeReceivablesStatisticsService {
         percentageOfPaidOnTimeTRs = Number(paidOnTimeInvoicesCountPerMonth.get(key)) / Number(dueInvoicesCountPerMonth.get(key));
       }
 
-      volumeOfPaidTradeReceivablesPerMonth.push(new PaidTrStatisticsAmqpDto(key, totalAmount, percentageOfPaidOnTimeTRs));
+      volumeOfPaidTradeReceivablesPerMonth.push(new PaidStatisticsAmqpDto(key, totalAmount, percentageOfPaidOnTimeTRs));
     }
     return volumeOfPaidTradeReceivablesPerMonth;
   }
 
-  async getTradeReceivablesNotPaidStatisticsByCompanyId(companyId: string, financialRole: string): Promise<NotPaidTrStatisticsAmqpDto> {
+  async getInvoicesNotPaidStatisticsByCompanyId(companyId: string, financialRole: string): Promise<NotPaidStatisticsAmqpDto> {
     let overdue = 0;
     let overdueValue = 0;
     let outstanding = 0;
@@ -74,7 +75,7 @@ export class TradeReceivablesStatisticsService {
       }
     }
 
-    return new NotPaidTrStatisticsAmqpDto(overdue, overdueValue, outstanding, outstandingValue);
+    return new NotPaidStatisticsAmqpDto(overdue, overdueValue, outstanding, outstandingValue);
   }
 
   private async getInvoiceIdsForPaidTradeReceivablesPerMonth(
