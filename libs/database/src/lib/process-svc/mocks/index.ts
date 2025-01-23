@@ -5,3 +5,4 @@ export * from './query-mocks/create-order-query.mock';
 export * from './query-mocks/find-latest-service-status-mock';
 export * from './query-mocks/query-orders.mock';
 export * from './query-mocks/create-trade-receivable-input-query.mock';
+export * from './query-mocks/add-machine-assignments-query.mock';

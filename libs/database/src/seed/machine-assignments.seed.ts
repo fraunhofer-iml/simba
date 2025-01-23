@@ -8,7 +8,7 @@ export const MachineAssignmentSeed = <MachineAssignment[]>[
     end: new Date('2024-10-09T08:55:55.695Z'),
   },
   {
-    serviceProcessId: 'sp002',
+    serviceProcessId: 'sp001',
     machineId: 'rt002',
     start: new Date('2024-10-09T07:55:55.695Z'),
     end: new Date('2024-10-09T08:55:55.695Z'),

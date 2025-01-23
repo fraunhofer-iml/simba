@@ -1,7 +1,7 @@
 import { AmqpBrokerQueues, CompanyAmqpDto, CompanyMessagePatterns } from '@ap3/amqp';
 import { CompanyDto } from '@ap3/api';
 import { firstValueFrom } from 'rxjs';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotImplementedException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
@@ -9,7 +9,7 @@ export class CompaniesService {
   constructor(@Inject(AmqpBrokerQueues.MASTER_DATA_SVC_QUEUE) private readonly masterDataAMQPClient: ClientProxy) {}
 
   async create(createCompanyDto: CompanyDto) {
-    return 'This action adds a new company';
+    throw new NotImplementedException();
   }
 
   async findAll(): Promise<CompanyDto[]> {
@@ -27,10 +27,12 @@ export class CompaniesService {
   }
 
   async update(id: string, updateCompanyDto: CompanyDto) {
+    throw new NotImplementedException();
     return `This action updates a #${id} company`;
   }
 
   async remove(id: string) {
+    throw new NotImplementedException();
     return `This action removes a #${id} company`;
   }
 }

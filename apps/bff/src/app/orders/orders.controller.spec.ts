@@ -1,4 +1,4 @@
-import { AmqpBrokerQueues, createOrderAmqpDtoWithoutPrismaConverterMock, OrderAmqpMock, OrderMessagePatterns } from '@ap3/amqp';
+import { AmqpBrokerQueues, CreateOrderAmqpDtoWithoutPrismaConverterMock, OrderAmqpMock, OrderMessagePatterns } from '@ap3/amqp';
 import { createOrderMock, OpenOffersMock, OrderOverviewDto, OrderOverviewMock, ProductDtoMocks } from '@ap3/api';
 import { ConfigurationModule, ConfigurationService } from '@ap3/config';
 import { CompaniesSeed } from '@ap3/database';
@@ -76,7 +76,7 @@ describe('OrdersController', () => {
 
     const res: OrderOverviewDto = await controller.create(createOrderMock);
 
-    expect(sendRequestSpy).toHaveBeenCalledWith(OrderMessagePatterns.CREATE, createOrderAmqpDtoWithoutPrismaConverterMock);
+    expect(sendRequestSpy).toHaveBeenCalledWith(OrderMessagePatterns.CREATE, CreateOrderAmqpDtoWithoutPrismaConverterMock);
     expect(offersServiceLoadSpy).toHaveBeenCalledWith(OrderAmqpMock[0]);
     expect(productServiceLoadSpy).toHaveBeenCalledWith(OrderAmqpMock[0]);
     expect(res).toEqual(expectedReturnValue);

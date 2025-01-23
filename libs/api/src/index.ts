@@ -5,3 +5,4 @@ export * from './dtos/product';
 export * from './dtos/trade-receivable';
 export * from './dtos/company';
 export * from './constants';
+export * from './dtos/service-process';

@@ -8,6 +8,7 @@ import { OffersModule } from './offers/offers.module';
 import { OrdersModule } from './orders/orders.module';
 import { ProductsModule } from './products/products.module';
 import { TradeReceivablesModule } from './trade-receivables/trade-receivables.module';
+import { ServiceProcessModule } from './service-process/service-process.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { TradeReceivablesModule } from './trade-receivables/trade-receivables.mo
       imports: [ConfigurationModule],
     }),
     InvoicesModule,
+    ServiceProcessModule,
   ],
   controllers: [],
   providers: [

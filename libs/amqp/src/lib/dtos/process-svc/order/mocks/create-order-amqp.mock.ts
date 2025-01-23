@@ -1,7 +1,7 @@
 import { CompaniesSeed, createOrderQueryMock, OrderLinesSeed, OrdersSeed, ProductsSeed, ServiceProcessesSeed } from '@ap3/database';
 import { CreateOrderAmqpDto } from '../create-order-amqp.dto';
 
-export const createOrderAmqpDtoMock: any = <CreateOrderAmqpDto>{
+export const CreateOrderAmqpDtoMock: any = <CreateOrderAmqpDto>{
   productId: ProductsSeed[0].id,
   amount: +OrderLinesSeed[0].requestedQuantity,
   year: ServiceProcessesSeed[0].dueYear,

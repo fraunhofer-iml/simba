@@ -1,4 +1,4 @@
-import { createOrderAmqpDtoMock, OrderAmqpMock } from '@ap3/amqp';
+import { CreateOrderAmqpDtoMock, OrderAmqpMock } from '@ap3/amqp';
 import {
   CompaniesSeed,
   createOrderQueryMock,
@@ -66,7 +66,7 @@ describe('OrdersService', () => {
     prismaFindManySpy.mockResolvedValue([OrderOverviewPrismaMock[0]]);
     prismaUpdateServiceProcessSpy.mockResolvedValue(ServiceProcessesSeed[0]);
 
-    const retVal = await controller.create(createOrderAmqpDtoMock);
+    const retVal = await controller.create(CreateOrderAmqpDtoMock);
 
     expect(prisma.order.create).toHaveBeenCalledWith({ data: createOrderQueryMock });
     expect(prisma.order.findMany).toHaveBeenCalledWith(findSingleOrderMock);

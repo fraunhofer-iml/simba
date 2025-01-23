@@ -1,4 +1,5 @@
 import * as util from 'node:util';
+import { MachineAssignmentAmqpDto } from '@ap3/amqp';
 import { Injectable, Logger } from '@nestjs/common';
 import { ServiceProcess } from '@prisma/client';
 import { ServiceStatesEnum } from '../constants';
@@ -12,7 +13,9 @@ export class ServiceProcessPrismaService {
 
   async getServiceProcessById(id: string): Promise<ServiceProcess | null> {
     try {
-      return await this.prismaService.serviceProcess.findUnique({ where: { id: id } });
+      return await this.prismaService.serviceProcess.findUnique({
+        where: { id: id },
+      });
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
@@ -21,7 +24,10 @@ export class ServiceProcessPrismaService {
 
   async setServiceProcessAcceptedOffer(id: string, offerId: string): Promise<ServiceProcess | null> {
     try {
-      return await this.prismaService.serviceProcess.update({ where: { id: id }, data: { acceptedOfferId: offerId } });
+      return await this.prismaService.serviceProcess.update({
+        where: { id: id },
+        data: { acceptedOfferId: offerId },
+      });
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
@@ -30,17 +36,30 @@ export class ServiceProcessPrismaService {
 
   async setServiceState(orderId: string, state: ServiceStatesEnum): Promise<ServiceProcess> {
     return this.prismaService.serviceProcess.update({
-      where: {
-        orderId: String(orderId),
-      },
-      include: {
-        order: true,
-      },
+      where: { orderId: String(orderId) },
+      include: { order: true },
       data: {
         states: {
           create: {
             status: state.toString(),
             timestamp: new Date(),
+          },
+        },
+      },
+    });
+  }
+
+  async updateMachineAssignment(assignment: MachineAssignmentAmqpDto[], orderId: string): Promise<ServiceProcess> {
+    return this.prismaService.serviceProcess.update({
+      where: { orderId: String(orderId) },
+      data: {
+        machineAssignments: {
+          createMany: {
+            data: assignment.map((assign) => ({
+              machineId: assign.machineId,
+              start: assign.start,
+              end: assign.end,
+            })),
           },
         },
       },

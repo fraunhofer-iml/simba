@@ -1,7 +1,7 @@
 import { CompaniesSeed, OrderLinesSeed, OrdersSeed, ProductsSeed, ServiceProcessesSeed } from '@ap3/database';
 import { CreateOrderAmqpDto } from '../index';
 
-export const createOrderAmqpDtoWithoutPrismaConverterMock: CreateOrderAmqpDto = <CreateOrderAmqpDto>{
+export const CreateOrderAmqpDtoWithoutPrismaConverterMock: CreateOrderAmqpDto = <CreateOrderAmqpDto>{
   productId: ProductsSeed[0].id,
   amount: +OrderLinesSeed[0].requestedQuantity,
   year: ServiceProcessesSeed[0].dueYear,

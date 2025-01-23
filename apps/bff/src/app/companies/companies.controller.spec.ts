@@ -2,6 +2,7 @@ import { AmqpBrokerQueues, CompanyAmqpDto, CompanyAmqpMock, CompanyMessagePatter
 import { CompanyDto, CompanyDtoMock } from '@ap3/api';
 import { CompaniesSeed } from '@ap3/database';
 import { of } from 'rxjs';
+import { NotImplementedException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CompaniesController } from './companies.controller';
@@ -27,7 +28,7 @@ describe('CompaniesController', () => {
       ],
     }).compile();
 
-    controller = module.get<CompaniesController>(CompaniesController);
+    controller = module.get<CompaniesController>(CompaniesController) as CompaniesController;
     clientProxy = module.get<ClientProxy>(AmqpBrokerQueues.MASTER_DATA_SVC_QUEUE) as ClientProxy;
     request = {
       user: {
@@ -42,9 +43,13 @@ describe('CompaniesController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
-  it('should create a Company', () => {
-    expect(controller).toBeDefined();
+
+  it('should create a Company', async () => {
+    await expect(async () => {
+      await controller.create(CompanyDtoMock[0]);
+    }).rejects.toThrow(NotImplementedException);
   });
+
   it('should find all Companys', async () => {
     const expectedResult: CompanyDto[] = CompanyDtoMock;
     const sendRequestSpy = jest.spyOn(clientProxy, 'send');
@@ -57,7 +62,8 @@ describe('CompaniesController', () => {
     expect(sendRequestSpy).toHaveBeenCalledWith(CompanyMessagePatterns.READ_ALL, {});
     expect(res).toEqual(expectedResult);
   });
-  it('should a specific Company by its Id', async () => {
+
+  it('should find a specific Company by its Id', async () => {
     const expectedResult: CompanyDto = CompanyDtoMock[0];
     const sendRequestSpy = jest.spyOn(clientProxy, 'send');
     sendRequestSpy.mockImplementation((messagePattern: CompanyMessagePatterns, data: any) => {
@@ -69,10 +75,14 @@ describe('CompaniesController', () => {
     expect(sendRequestSpy).toHaveBeenCalledWith(CompanyMessagePatterns.READ_BY_ID, CompanyDtoMock[0].id);
     expect(res).toEqual(expectedResult);
   });
-  it('should update a company', () => {
-    expect(controller).toBeDefined();
+  it('should update a company', async () => {
+    await expect(async () => {
+      await controller.update(request, CompanyDtoMock[0].id, CompanyDtoMock[0]);
+    }).rejects.toThrow(NotImplementedException);
   });
-  it('should remove a company', () => {
-    expect(controller).toBeDefined();
+  it('should remove a company', async () => {
+    await expect(async () => {
+      await controller.remove(CompanyDtoMock[0].id);
+    }).rejects.toThrow(NotImplementedException);
   });
 });

@@ -18,8 +18,8 @@ export class CompaniesController {
   @ApiBody({
     type: CompanyDto,
   })
-  create(@Body() createCompanyDto: CompanyDto): Promise<string> {
-    return this.companiesService.create(createCompanyDto);
+  async create(@Body() createCompanyDto: CompanyDto): Promise<void> {
+    await this.companiesService.create(createCompanyDto);
   }
 
   @Get()
