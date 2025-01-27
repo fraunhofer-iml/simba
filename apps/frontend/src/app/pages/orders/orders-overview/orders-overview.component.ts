@@ -26,9 +26,9 @@ export class OrdersOverviewComponent implements AfterViewInit {
     'products',
     'amount',
     'robots',
-    'customerID',
+    'customerName',
   ];
-  displayedColumnsCustomer: string[] = ['orderId', 'status', 'productionDate', 'price', 'currency', 'products', 'amount', 'customerID'];
+  displayedColumnsCustomer: string[] = ['orderId', 'status', 'productionDate', 'price', 'currency', 'products', 'amount', 'customerName'];
   dataSource = new MatTableDataSource<OrderOverview>();
   dataSourceObservable: Observable<MatTableDataSource<OrderOverview>>;
   sort?: MatSort;

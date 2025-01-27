@@ -58,6 +58,7 @@ export const OrderOverviewMock: OrderOverviewDto[] = [
     price: OpenOffersMock[0].price,
     robots: [MachinesSeed[0].id, MachinesSeed[1].id],
     customerId: CompaniesSeed[0].id,
+    customerName: CompaniesSeed[0].name,
     currency: OrdersSeed[0].vatCurrency,
   },
   <OrderOverviewDto>{
@@ -71,7 +72,8 @@ export const OrderOverviewMock: OrderOverviewDto[] = [
     statusTimestamp: ServiceStatesSeed[5].timestamp.toISOString(),
     price: OpenOffersMock[1].price,
     robots: [MachinesSeed[0].id, MachinesSeed[1].id],
-    customerId: CompaniesSeed[0].id,
-    currency: OrdersSeed[0].vatCurrency,
+    customerId: OrdersSeed[1].buyerId,
+    customerName: CompaniesSeed[1].name,
+    currency: OrdersSeed[1].vatCurrency,
   },
 ];

@@ -27,6 +27,8 @@ export class OrderOverviewDto {
   @ApiProperty()
   customerId: string;
   @ApiProperty()
+  customerName: string;
+  @ApiProperty()
   currency: string;
 
   constructor(
@@ -41,6 +43,7 @@ export class OrderOverviewDto {
     price: number,
     robots: string[],
     customerId: string,
+    customerName: string,
     currency: string
   ) {
     this.id = id;
@@ -54,10 +57,11 @@ export class OrderOverviewDto {
     this.price = price;
     this.robots = robots;
     this.customerId = customerId;
+    this.customerName = customerName;
     this.currency = currency;
   }
 
-  public static toOrderOverviewDto(dto: OrderAmqpDto, productDto: ProductDto, offerDto: OfferDto): OrderOverviewDto {
+  public static toOrderOverviewDto(dto: OrderAmqpDto, productDto: ProductDto, offerDto: OfferDto, customerName: string): OrderOverviewDto {
     return new OrderOverviewDto(
       dto.id,
       productDto,
@@ -70,6 +74,7 @@ export class OrderOverviewDto {
       offerDto ? offerDto.price : 0,
       dto.robots ? dto.robots : [],
       dto.customerId,
+      customerName,
       dto.currency
     );
   }

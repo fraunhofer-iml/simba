@@ -47,9 +47,9 @@
           <td mat-cell *matCellDef="let row">{{ row.robots }}</td>
         </ng-container>
       }
-      <ng-container matColumnDef="customerID">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="customerId" class="bold">{{ 'OrderTableNinthRow' | translate }}</th>
-        <td mat-cell *matCellDef="let row">{{ row.customerId }}</td>
+      <ng-container matColumnDef="customerName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="customerName" class="bold">{{ 'OrderTableNinthRow' | translate }}</th>
+        <td mat-cell *matCellDef="let row">{{ row.customerName }}</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="isCustomer ? displayedColumnsCustomer : displayedColumnsAdminContributor"></tr>

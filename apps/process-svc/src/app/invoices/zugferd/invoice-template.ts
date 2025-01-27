@@ -40,17 +40,12 @@ export function invoiceTemplate(params: InvoiceZugferdEntity): jsPDF {
   });
 
   currentHeight += pdfConfig.subLineHeight * 2;
-  doc.text(params.supplier.phone, docWidth - 10, currentHeight, {
+  doc.text(`Phone: ${params.supplier.phone}`, docWidth - 10, currentHeight, {
     align: 'right',
   });
 
   currentHeight += pdfConfig.subLineHeight;
-  doc.text(params.supplier.email, docWidth - 10, currentHeight, {
-    align: 'right',
-  });
-
-  currentHeight += pdfConfig.subLineHeight;
-  doc.text(params.supplier.legalIdentifier, docWidth - 10, currentHeight, {
+  doc.text(`E-Mail: ${params.supplier.email}`, docWidth - 10, currentHeight, {
     align: 'right',
   });
 
@@ -70,18 +65,10 @@ export function invoiceTemplate(params: InvoiceZugferdEntity): jsPDF {
 
   currentHeight += pdfConfig.subLineHeight;
   doc.text(`${params.buyer.addressZip} ${params.buyer.addressCity}`, 10, currentHeight);
-  doc.text(`Contract No.: ${params.invoice.contractReference}`, docWidth - 10, currentHeight, { align: 'right' });
+  doc.text(`Order No.: ${params.invoice.contractReference}`, docWidth - 10, currentHeight, { align: 'right' });
 
   currentHeight += pdfConfig.subLineHeight;
-  doc.text(`Legal Entity Identifier: ${params.buyer.legalIdentifier}`, 10, currentHeight);
-  doc.text(`Machines: ${params.invoice.machineNames}`, docWidth - 10, currentHeight, {
-    align: 'right',
-  });
-
   currentHeight += pdfConfig.subLineHeight;
-  doc.text(`Machine ID: ${params.invoice.machineIds}`, docWidth - 10, currentHeight, {
-    align: 'right',
-  });
 
   currentHeight += pdfConfig.lineHeight * 2;
   const itemsArray = params.items.map((item) => [

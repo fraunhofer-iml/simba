@@ -13,7 +13,7 @@ export const OrdersSeed = <Order[]>[
     buyerOrderRefDocumentId: '202410291549-726762',
     sumOfLinesAmount: 5,
     totalAmountWithoutVat: new Prisma.Decimal(3.5),
-    vatCurrency: 'Euro',
+    vatCurrency: 'EUR',
     buyerAccountingRefId: 'ACC-202410291551-363148',
   },
   {

@@ -1,10 +1,11 @@
 import { AmqpBrokerQueues, CreateOrderAmqpDtoWithoutPrismaConverterMock, OrderAmqpMock, OrderMessagePatterns } from '@ap3/amqp';
-import { createOrderMock, OpenOffersMock, OrderOverviewDto, OrderOverviewMock, ProductDtoMocks } from '@ap3/api';
+import { CompanyDtoMock, createOrderMock, OpenOffersMock, OrderOverviewDto, OrderOverviewMock, ProductDtoMocks } from '@ap3/api';
 import { ConfigurationModule, ConfigurationService } from '@ap3/config';
 import { CompaniesSeed } from '@ap3/database';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
+import { CompaniesService } from '../companies/companies.service';
 import { OffersService } from '../offers/offers.service';
 import { ProductsService } from '../products/products.service';
 import { OrdersController } from './orders.controller';
@@ -15,6 +16,12 @@ describe('OrdersController', () => {
   let processSvcClientProxy: ClientProxy;
   let productsService: ProductsService;
   let offersService: OffersService;
+  let companiesService: CompaniesService;
+
+  let companiesServiceSpy;
+  let offersServiceLoadSpy;
+  let sendRequestSpy;
+  let productServiceLoadSpy;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,6 +29,12 @@ describe('OrdersController', () => {
       controllers: [OrdersController],
       providers: [
         OrdersService,
+        {
+          provide: CompaniesService,
+          useValue: {
+            findOne: jest.fn(),
+          },
+        },
         {
           provide: ProductsService,
           useValue: {
@@ -46,7 +59,7 @@ describe('OrdersController', () => {
           useValue: {
             getGeneralConfig: jest.fn().mockReturnValue({
               platformOperator: 'pt0002',
-              platformCurrency: 'Euro',
+              platformCurrency: 'EUR',
             }),
           },
         },
@@ -57,19 +70,23 @@ describe('OrdersController', () => {
     processSvcClientProxy = module.get<ClientProxy>(AmqpBrokerQueues.PROCESS_SVC_QUEUE) as ClientProxy;
     productsService = module.get<ProductsService>(ProductsService) as ProductsService;
     offersService = module.get<OffersService>(OffersService) as OffersService;
+    companiesService = module.get<CompaniesService>(CompaniesService) as CompaniesService;
+
+    companiesServiceSpy = jest.spyOn(companiesService, 'findOne');
+    companiesServiceSpy.mockResolvedValue(CompanyDtoMock[0]);
+    offersServiceLoadSpy = jest.spyOn(offersService, 'loadOfferRef');
+    offersServiceLoadSpy.mockResolvedValue(OpenOffersMock[0]);
+    productServiceLoadSpy = jest.spyOn(productsService, 'loadProductRefs');
+    productServiceLoadSpy.mockResolvedValue(ProductDtoMocks[0]);
+    sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
   });
 
   it('should create an Order', async () => {
     const expectedReturnValue = OrderOverviewMock[0];
 
     const offersServiceCreateSpy = jest.spyOn(offersService, 'createOffer');
-    const offersServiceLoadSpy = jest.spyOn(offersService, 'loadOfferRef');
-    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
-    const productServiceLoadSpy = jest.spyOn(productsService, 'loadProductRefs');
-
     offersServiceCreateSpy.mockResolvedValue(true);
-    offersServiceLoadSpy.mockResolvedValue(OpenOffersMock[0]);
-    productServiceLoadSpy.mockResolvedValue(ProductDtoMocks[0]);
+
     sendRequestSpy.mockImplementation((messagePattern: OrderMessagePatterns, data: any) => {
       return of(OrderAmqpMock[0]);
     });
@@ -85,14 +102,15 @@ describe('OrdersController', () => {
   it('should findAll Orders', async () => {
     const expectedReturnValue = OrderOverviewMock;
 
-    const offersServiceLoadSpy = jest.spyOn(offersService, 'loadOfferRef');
-    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
-    const productServiceSpy = jest.spyOn(productsService, 'loadProductRefs');
+    companiesServiceSpy.mockResolvedValueOnce(CompanyDtoMock[0]);
+    companiesServiceSpy.mockResolvedValueOnce(CompanyDtoMock[1]);
 
     offersServiceLoadSpy.mockResolvedValueOnce(OpenOffersMock[0]);
     offersServiceLoadSpy.mockResolvedValueOnce(OpenOffersMock[1]);
-    productServiceSpy.mockResolvedValueOnce(ProductDtoMocks[0]);
-    productServiceSpy.mockResolvedValueOnce(ProductDtoMocks[0]);
+
+    productServiceLoadSpy.mockResolvedValueOnce(ProductDtoMocks[0]);
+    productServiceLoadSpy.mockResolvedValueOnce(ProductDtoMocks[0]);
+
     sendRequestSpy.mockImplementation((messagePattern: OrderMessagePatterns, data: any) => {
       return of(OrderAmqpMock);
     });
@@ -102,15 +120,10 @@ describe('OrdersController', () => {
     expect(sendRequestSpy).toHaveBeenCalledWith(OrderMessagePatterns.READ_ALL, CompaniesSeed[0].id);
     expect(res).toEqual(expectedReturnValue);
   });
+
   it('should find an Order by Id', async () => {
     const expectedReturnValue = OrderOverviewMock[0];
 
-    const offersServiceLoadSpy = jest.spyOn(offersService, 'loadOfferRef');
-    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
-    const productServiceSpy = jest.spyOn(productsService, 'loadProductRefs');
-
-    offersServiceLoadSpy.mockResolvedValueOnce(OpenOffersMock[0]);
-    productServiceSpy.mockResolvedValueOnce(ProductDtoMocks[0]);
     sendRequestSpy.mockImplementation((messagePattern: OrderMessagePatterns, data: any) => {
       return of(OrderAmqpMock[0]);
     });
@@ -120,9 +133,8 @@ describe('OrdersController', () => {
     expect(sendRequestSpy).toHaveBeenCalledWith(OrderMessagePatterns.READ_BY_ID, OrderOverviewMock[0].id);
     expect(res).toEqual(expectedReturnValue);
   });
-  it('should delete an Order', async () => {
-    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
 
+  it('should delete an Order', async () => {
     sendRequestSpy.mockImplementation((messagePattern: OrderMessagePatterns, data: any) => {
       return of(true);
     });
