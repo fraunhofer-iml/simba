@@ -15,6 +15,7 @@ export class OrderAmqpDto {
   robots: string[];
   customerId: string;
   tradeReceivableIds?: string[];
+  currency: string;
 
   constructor(
     id: string,
@@ -24,7 +25,8 @@ export class OrderAmqpDto {
     calendarWeek: number,
     creationDate: string,
     status: ServiceStatusAmqpDto,
-    customerId: string
+    customerId: string,
+    currency: string
   ) {
     this.id = id;
     this.productId = productId;
@@ -36,6 +38,7 @@ export class OrderAmqpDto {
     this.customerId = customerId;
     this.offerIds = [];
     this.robots = [];
+    this.currency = currency;
   }
 
   public static fromPrismaEntity(order: OrderOverview, currentState: ServiceStatusAmqpDto): OrderAmqpDto {
@@ -54,6 +57,7 @@ export class OrderAmqpDto {
       tradeReceivableIds: order.serviceProcess?.invoices?.map((invoice) => {
         return invoice.tradeReceivable?.id;
       }),
+      currency: order.vatCurrency,
     };
   }
 

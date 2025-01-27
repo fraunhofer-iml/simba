@@ -26,7 +26,7 @@ export const OrdersSeed = <Order[]>[
     buyerOrderRefDocumentId: '202410291548-168990',
     sumOfLinesAmount: 1,
     totalAmountWithoutVat: new Prisma.Decimal(3),
-    vatCurrency: 'Euro',
+    vatCurrency: 'EUR',
     buyerAccountingRefId: 'ACC-202410291549-279246',
   },
   {
@@ -39,7 +39,7 @@ export const OrdersSeed = <Order[]>[
     buyerOrderRefDocumentId: '202410291549-726762',
     sumOfLinesAmount: 1,
     totalAmountWithoutVat: new Prisma.Decimal(4),
-    vatCurrency: 'Euro',
+    vatCurrency: 'EUR',
     buyerAccountingRefId: 'ACC-202410291551-363148',
   },
   {
@@ -52,7 +52,7 @@ export const OrdersSeed = <Order[]>[
     buyerOrderRefDocumentId: '202410291549-726762',
     sumOfLinesAmount: 1,
     totalAmountWithoutVat: new Prisma.Decimal(4),
-    vatCurrency: 'Euro',
+    vatCurrency: 'EUR',
     buyerAccountingRefId: 'ACC-202410291551-363148',
   },
   {
@@ -65,7 +65,7 @@ export const OrdersSeed = <Order[]>[
     buyerOrderRefDocumentId: '202410291549-726762',
     sumOfLinesAmount: 1,
     totalAmountWithoutVat: new Prisma.Decimal(22),
-    vatCurrency: 'Euro',
+    vatCurrency: 'EUR',
     buyerAccountingRefId: 'ACC-202410291551-363148',
   },
   {
@@ -78,7 +78,7 @@ export const OrdersSeed = <Order[]>[
     buyerOrderRefDocumentId: '202410291549-726762',
     sumOfLinesAmount: 1,
     totalAmountWithoutVat: new Prisma.Decimal(5),
-    vatCurrency: 'Euro',
+    vatCurrency: 'EUR',
     buyerAccountingRefId: 'ACC-202410291551-363148',
   },
   {
@@ -91,7 +91,7 @@ export const OrdersSeed = <Order[]>[
     buyerOrderRefDocumentId: '202410291549-726762',
     sumOfLinesAmount: 1,
     totalAmountWithoutVat: new Prisma.Decimal(7),
-    vatCurrency: 'Euro',
+    vatCurrency: 'EUR',
     buyerAccountingRefId: 'ACC-202410291551-363148',
   },
   {
@@ -104,7 +104,7 @@ export const OrdersSeed = <Order[]>[
     buyerOrderRefDocumentId: '202410291549-726762',
     sumOfLinesAmount: 1,
     totalAmountWithoutVat: new Prisma.Decimal(12),
-    vatCurrency: 'Euro',
+    vatCurrency: 'EUR',
     buyerAccountingRefId: 'ACC-202410291551-363148',
   },
 ];

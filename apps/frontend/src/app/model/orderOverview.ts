@@ -15,6 +15,7 @@ export class OrderOverview {
   price: string;
   robots: string[];
   customerId: string;
+  currency: string;
 
   constructor(order: OrderOverviewDto, formattedCreationDate: string) {
     this.id = order.id;
@@ -28,6 +29,7 @@ export class OrderOverview {
     this.price = `${order.price.toFixed(2)}€`;
     this.robots = order.robots.flat();
     this.customerId = order.customerId;
+    this.currency = order.currency;
   }
 
   public static convertToOrderOverview(

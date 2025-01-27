@@ -30,6 +30,7 @@ describe('OrderOverview', () => {
         amount: 2,
         calendarWeek: 50,
         creationDate: '13.01.2023',
+        currency: 'Euro',
         customerId: 'pt0001',
         id: 'o001',
         price: '7.00€',

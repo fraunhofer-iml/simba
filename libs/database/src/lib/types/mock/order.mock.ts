@@ -13,6 +13,7 @@ export const OrderOverviewPrismaMock: any[] = <OrderOverview[]>[
   {
     id: OrdersSeed[0].id,
     documentIssueDate: OrdersSeed[0].documentIssueDate,
+    vatCurrency: OrdersSeed[0].vatCurrency,
     orderLines: [{ item: ProductsSeed[0], requestedQuantity: OrderLinesSeed[0].requestedQuantity }],
     serviceProcess: {
       id: ServiceProcessesSeed[0].id,
@@ -33,7 +34,7 @@ export const OrderOverviewPrismaMock: any[] = <OrderOverview[]>[
   {
     id: OrdersSeed[1].id,
     documentIssueDate: OrdersSeed[1].documentIssueDate,
-
+    vatCurrency: OrdersSeed[0].vatCurrency,
     orderLines: [{ item: ProductsSeed[0], requestedQuantity: OrderLinesSeed[1].requestedQuantity }],
     serviceProcess: {
       id: ServiceProcessesSeed[1].id,

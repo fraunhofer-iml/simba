@@ -141,7 +141,7 @@ model Order {
   buyerOrderRefDocumentId  String?
   sumOfLinesAmount         Int?
   totalAmountWithoutVat    Decimal? @db.Money
-  vatCurrency              String?
+  vatCurrency              String
   buyerAccountingRefId     String?
 
   buyerId String

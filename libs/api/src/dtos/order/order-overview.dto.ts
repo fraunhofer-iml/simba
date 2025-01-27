@@ -26,6 +26,8 @@ export class OrderOverviewDto {
   robots: string[];
   @ApiProperty()
   customerId: string;
+  @ApiProperty()
+  currency: string;
 
   constructor(
     id: string,
@@ -38,7 +40,8 @@ export class OrderOverviewDto {
     statusTimestamp: string,
     price: number,
     robots: string[],
-    customerId: string
+    customerId: string,
+    currency: string
   ) {
     this.id = id;
     this.product = product;
@@ -51,6 +54,7 @@ export class OrderOverviewDto {
     this.price = price;
     this.robots = robots;
     this.customerId = customerId;
+    this.currency = currency;
   }
 
   public static toOrderOverviewDto(dto: OrderAmqpDto, productDto: ProductDto, offerDto: OfferDto): OrderOverviewDto {
@@ -65,7 +69,8 @@ export class OrderOverviewDto {
       dto.status.timestamp,
       offerDto ? offerDto.price : 0,
       dto.robots ? dto.robots : [],
-      dto.customerId
+      dto.customerId,
+      dto.currency
     );
   }
 }

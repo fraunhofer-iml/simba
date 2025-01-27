@@ -4,6 +4,7 @@ import { Decimal } from '@prisma/client/runtime/library';
 export type OrderOverview = {
   id: string;
   documentIssueDate: Date;
+  vatCurrency: string;
   orderLines: { item: Product; requestedQuantity: Decimal }[];
   serviceProcess:
     | (ServiceProcess & {
@@ -14,12 +15,12 @@ export type OrderOverview = {
         offers: { id: string }[];
         acceptedOffer: { id: string; price: Decimal } | null;
         invoices:
-        | {
-            tradeReceivable: {
-              id: string;
-            } | null;
-          }[]
-        | null;
+          | {
+              tradeReceivable: {
+                id: string;
+              } | null;
+            }[]
+          | null;
       })
     | null;
   buyer: { id: string; name: string };
