@@ -1,6 +1,6 @@
 import { Company, OrderLine, PaymentInformation, Product, ServiceProcess } from '@prisma/client';
-import { CompaniesSeed, InvoiceSeed, OrderLinesSeed, PaymentInformationSeed, ProductsSeed, ServiceProcessesSeed } from '../../../seed';
-import { InvoiceForZugferd } from '../invoice.types';
+import { CompaniesSeed, InvoiceSeed, OrderLinesSeed, PaymentInformationSeed, ProductsSeed, ServiceProcessesSeed } from '../../../../seed';
+import { InvoiceForZugferd } from '../types/invoice.types';
 
 export const InvoiceForZugferdMock: any = <InvoiceForZugferd>{
   id: InvoiceSeed[0].id,

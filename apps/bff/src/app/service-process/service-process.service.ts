@@ -1,6 +1,12 @@
 import util from 'node:util';
-import { AmqpBrokerQueues, MachineAssignmentAmqpDto, ServiceProcessPattern } from '@ap3/amqp';
-import { MachineAssignmentDto } from '@ap3/api';
+import {
+  AmqpBrokerQueues,
+  GetMachineAssignmentAmqpDto,
+  MachineAssignmentAmqpDto,
+  ServiceProcessPattern,
+  ServiceProcessStatusAmqpDto,
+} from '@ap3/amqp';
+import { GetMachineAssignmentDto, MachineAssignmentDto, ServiceProcessStatusDto } from '@ap3/api';
 import { firstValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -17,6 +23,30 @@ export class ServiceProcessService {
         return assignment.toAMQPDto();
       });
       await firstValueFrom(this.processAMQPClient.send(ServiceProcessPattern.ADD_MACHINE_ASSIGNMENT, machineAssignmentsAMQP));
+    } catch (e) {
+      this.logger.error(util.inspect(e));
+      throw e;
+    }
+  }
+
+  async getMachineAssignments(orderId: string): Promise<GetMachineAssignmentDto[]> {
+    try {
+      const machineAssignmentsAMQP: GetMachineAssignmentAmqpDto[] = await firstValueFrom(
+        this.processAMQPClient.send(ServiceProcessPattern.GET_MACHINE_ASSIGNMENT, orderId)
+      );
+      return GetMachineAssignmentDto.fromAmqpDtos(machineAssignmentsAMQP);
+    } catch (e) {
+      this.logger.error(util.inspect(e));
+      throw e;
+    }
+  }
+
+  async getServiceStates(orderId: string): Promise<ServiceProcessStatusDto[]> {
+    try {
+      const serviceStatesAMQP: ServiceProcessStatusAmqpDto[] = await firstValueFrom(
+        this.processAMQPClient.send(ServiceProcessPattern.GET_SERVICE_STATES, orderId)
+      );
+      return ServiceProcessStatusDto.fromAmqpDtos(serviceStatesAMQP);
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;

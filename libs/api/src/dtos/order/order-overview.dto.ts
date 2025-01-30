@@ -1,4 +1,6 @@
 import { OrderAmqpDto } from '@ap3/amqp';
+import { CurrenciesEnum } from '@ap3/config';
+import { ServiceStatesEnum } from '@ap3/database';
 import { ApiProperty } from '@nestjs/swagger';
 import { OfferDto } from '../offer';
 import { ProductDto } from '../product';
@@ -14,11 +16,22 @@ export class OrderOverviewDto {
   year: number;
   @ApiProperty()
   calendarWeek: number;
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: '2025-04-05T14:30:00Z',
+    description: 'Timestamp in ISO 8601 format',
+  })
   creationDate: string;
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    enum: ServiceStatesEnum,
+  })
   status: string;
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: '2025-04-05T14:30:00Z',
+    description: 'Timestamp in ISO 8601 format',
+  })
   statusTimestamp: string;
   @ApiProperty()
   price: number;
@@ -28,7 +41,10 @@ export class OrderOverviewDto {
   customerId: string;
   @ApiProperty()
   customerName: string;
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    enum: CurrenciesEnum,
+  })
   currency: string;
 
   constructor(

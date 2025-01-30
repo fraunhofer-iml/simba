@@ -1,4 +1,4 @@
-import { AuthRolesEnum, CreateOrderDto, OrderOverviewDto } from '@ap3/api';
+import { AuthRolesEnum, CreateOrderDto, OrderDetailsDto, OrderOverviewDto } from '@ap3/api';
 import { Roles } from 'nest-keycloak-connect';
 import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -45,12 +45,28 @@ export class OrdersController {
   @ApiParam({
     name: 'id',
     type: String,
-    description: 'Identifying id; Required to identify the offer.',
+    description: 'Identifying id; Required to identify the order.',
     required: true,
   })
   @ApiResponse({ type: OrderOverviewDto })
   async findOne(@Param('id') id: string): Promise<OrderOverviewDto> {
     return await this.ordersService.findOne(id);
+  }
+
+  @Get(':id/details')
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
+  @ApiOperation({
+    description: 'Get an order based on the corresponding order id.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Identifying id; Required to identify the order.',
+    required: true,
+  })
+  @ApiResponse({ type: OrderDetailsDto })
+  async findOneDetails(@Param('id') id: string): Promise<OrderDetailsDto> {
+    return await this.ordersService.findOneDetails(id);
   }
 
   @Delete(':id')
@@ -61,7 +77,7 @@ export class OrdersController {
   @ApiParam({
     name: 'id',
     type: String,
-    description: 'Identifying id; Required to identify the offer.',
+    description: 'Identifying id; Required to identify the order.',
     required: true,
   })
   async deleteOne(@Param('id') id: string): Promise<void> {

@@ -3,9 +3,9 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import { FinancialRoles } from '../../constants';
-import { InvoiceCountAndDueMonth, InvoiceForZugferd, InvoiceSumTotalAmountWithoutVatTypes, InvoiceWithNFT } from '../../types';
 import { QueryBuilderHelperService } from '../query-builder-helper.service';
 import { InvoicePrismaService } from './invoice-prisma.service';
+import { InvoiceCountAndDueMonth, InvoiceForZugferd, InvoiceSumTotalAmountWithoutVatTypes, InvoiceWithNFT } from './types';
 
 @Injectable()
 export class InvoicePrismaAdapterService {

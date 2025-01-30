@@ -1,6 +1,6 @@
 import * as util from 'node:util';
 import { AmqpBrokerQueues, CreateOrderAmqpDto, OrderAmqpDto, OrderMessagePatterns } from '@ap3/amqp';
-import { CreateOrderDto, OrderOverviewDto } from '@ap3/api';
+import { CreateOrderDto, GetMachineAssignmentDto, OrderDetailsDto, OrderOverviewDto, ServiceProcessStatusDto } from '@ap3/api';
 import { ConfigurationService } from '@ap3/config';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -8,6 +8,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { CompaniesService } from '../companies/companies.service';
 import { OffersService } from '../offers/offers.service';
 import { ProductsService } from '../products/products.service';
+import { ServiceProcessService } from '../service-process/service-process.service';
 
 @Injectable()
 export class OrdersService {
@@ -20,7 +21,8 @@ export class OrdersService {
     private readonly offerService: OffersService,
     private readonly productService: ProductsService,
     private readonly configuration: ConfigurationService,
-    private readonly companiesService: CompaniesService
+    private readonly companiesService: CompaniesService,
+    private readonly serviceProcessService: ServiceProcessService
   ) {}
 
   async create(createOrderDto: CreateOrderDto): Promise<OrderOverviewDto> {
@@ -31,7 +33,7 @@ export class OrdersService {
         this.processAMQPClient.send(OrderMessagePatterns.CREATE, createOrder)
       );
       await this.offerService.createOffer(receivedOrder.id);
-      return this.loadOrderDetails(receivedOrder);
+      return this.loadOrderReferences(receivedOrder);
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
@@ -39,15 +41,16 @@ export class OrdersService {
   }
 
   async findAll(companyId: string): Promise<OrderOverviewDto[]> {
-    const frontendDtos: OrderOverviewDto[] = [];
+    let frontendDtos: OrderOverviewDto[] = [];
     let orders: OrderAmqpDto[] = [];
     try {
       this.logger.verbose(`Get all orders for company with id: ${companyId}`);
       orders = await firstValueFrom<OrderAmqpDto[]>(this.processAMQPClient.send(OrderMessagePatterns.READ_ALL, companyId));
-
-      for (const order of orders) {
-        frontendDtos.push(await this.loadOrderDetails(order));
-      }
+      frontendDtos = await Promise.all(
+        orders.map(async (order) => {
+          return await this.loadOrderReferences(order);
+        })
+      );
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
@@ -60,7 +63,18 @@ export class OrdersService {
     let order: OrderAmqpDto;
     try {
       order = await firstValueFrom<OrderAmqpDto>(this.processAMQPClient.send(OrderMessagePatterns.READ_BY_ID, id));
-      return this.loadOrderDetails(order);
+      return this.loadOrderReferences(order);
+    } catch (e) {
+      this.logger.error(util.inspect(e));
+      throw e;
+    }
+  }
+
+  async findOneDetails(id: string): Promise<OrderDetailsDto> {
+    let orderOverviewDto: OrderOverviewDto;
+    try {
+      orderOverviewDto = await this.findOne(id);
+      return this.loadOrderProcessDetails(orderOverviewDto);
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
@@ -76,10 +90,16 @@ export class OrdersService {
     }
   }
 
-  private async loadOrderDetails(order: OrderAmqpDto): Promise<OrderOverviewDto> {
+  private async loadOrderReferences(order: OrderAmqpDto): Promise<OrderOverviewDto> {
     const productRef = await this.productService.loadProductRefs(order);
     const offerRef = await this.offerService.loadOfferRef(order);
     const customer = await this.companiesService.findOne(order.customerId);
     return OrderOverviewDto.toOrderOverviewDto(order, productRef, offerRef, customer.name);
+  }
+
+  private async loadOrderProcessDetails(order: OrderOverviewDto): Promise<OrderDetailsDto> {
+    const machineAssignments: GetMachineAssignmentDto[] = await this.serviceProcessService.getMachineAssignments(order.id);
+    const serviceProcessStatus: ServiceProcessStatusDto[] = await this.serviceProcessService.getServiceStates(order.id);
+    return new OrderDetailsDto(order, serviceProcessStatus, machineAssignments);
   }
 }

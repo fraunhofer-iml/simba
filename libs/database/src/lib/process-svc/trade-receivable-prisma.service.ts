@@ -3,7 +3,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PaymentStatus, Prisma, TradeReceivable } from '@prisma/client';
 import { PaymentStatesEnum } from '../constants';
 import { PrismaService } from '../prisma.service';
-import { InvoiceCountAndDueMonth, InvoiceIdTypes, TradeReceivablePaymentStatusCount } from '../types';
+import { TradeReceivablePaymentStatusCount } from '../types';
+import { InvoiceCountAndDueMonth, InvoiceIdTypes } from './invoice';
 import { QueryBuilderHelperService } from './query-builder-helper.service';
 
 @Injectable()

@@ -4,6 +4,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ServiceProcess } from '@prisma/client';
 import { ServiceStatesEnum } from '../constants';
 import { PrismaService } from '../prisma.service';
+import { MachineAssignmentWithOwner } from '../types/machine-assignment-with-owner.types';
+import { ServiceStatusWithOrderTypes } from '../types/service-status-with-order.types';
 
 @Injectable()
 export class ServiceProcessPrismaService {
@@ -62,6 +64,29 @@ export class ServiceProcessPrismaService {
             })),
           },
         },
+      },
+    });
+  }
+
+  async getMachineAssignments(orderId: string): Promise<MachineAssignmentWithOwner[]> {
+    return this.prismaService.machineAssignment.findMany({
+      where: { serviceProcess: { orderId: String(orderId) } },
+      include: {
+        serviceProcess: { select: { orderId: true } },
+        machine: {
+          select: {
+            company: { select: { id: true, name: true } },
+          },
+        },
+      },
+    });
+  }
+
+  async getServiceProcessStates(orderId: string): Promise<ServiceStatusWithOrderTypes[]> {
+    return this.prismaService.serviceStatus.findMany({
+      where: { serviceProcess: { orderId: String(orderId) } },
+      include: {
+        serviceProcess: { select: { orderId: true } },
       },
     });
   }

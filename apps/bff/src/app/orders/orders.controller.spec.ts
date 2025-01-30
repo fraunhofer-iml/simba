@@ -1,13 +1,31 @@
-import { AmqpBrokerQueues, CreateOrderAmqpDtoWithoutPrismaConverterMock, OrderAmqpMock, OrderMessagePatterns } from '@ap3/amqp';
-import { CompanyDtoMock, createOrderMock, OpenOffersMock, OrderOverviewDto, OrderOverviewMock, ProductDtoMocks } from '@ap3/api';
+import {
+  AmqpBrokerQueues,
+  CreateOrderAmqpDtoWithoutPrismaConverterMock,
+  GetMachineAssignmentAMQPMock,
+  OrderAmqpMock,
+  OrderMessagePatterns,
+  ServiceProcessPattern,
+} from '@ap3/amqp';
+import {
+  CompanyDtoMock,
+  createOrderMock,
+  OpenOffersMock,
+  OrderDetailsDto,
+  OrderDetailsMock,
+  OrderOverviewDto,
+  OrderOverviewMock,
+  ProductDtoMocks,
+} from '@ap3/api';
 import { ConfigurationModule, ConfigurationService } from '@ap3/config';
 import { CompaniesSeed } from '@ap3/database';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ServiceProcessStatesAmqpMock } from '../../../../../libs/amqp/src/lib/dtos/process-svc/service-process/mocks/service-process-states-amqp.mock';
 import { CompaniesService } from '../companies/companies.service';
 import { OffersService } from '../offers/offers.service';
 import { ProductsService } from '../products/products.service';
+import { ServiceProcessService } from '../service-process/service-process.service';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
 
@@ -29,6 +47,7 @@ describe('OrdersController', () => {
       controllers: [OrdersController],
       providers: [
         OrdersService,
+        ServiceProcessService,
         {
           provide: CompaniesService,
           useValue: {
@@ -129,6 +148,25 @@ describe('OrdersController', () => {
     });
 
     const res: OrderOverviewDto = await controller.findOne(OrderOverviewMock[0].id);
+
+    expect(sendRequestSpy).toHaveBeenCalledWith(OrderMessagePatterns.READ_BY_ID, OrderOverviewMock[0].id);
+    expect(res).toEqual(expectedReturnValue);
+  });
+
+  it('should find order details by Id', async () => {
+    const expectedReturnValue = OrderDetailsMock[0];
+
+    sendRequestSpy.mockImplementationOnce((messagePattern: OrderMessagePatterns.READ_BY_ID, data: any) => {
+      return of(OrderAmqpMock[0]);
+    });
+    sendRequestSpy.mockImplementationOnce((messagePattern: ServiceProcessPattern.GET_MACHINE_ASSIGNMENT, data: any) => {
+      return of([GetMachineAssignmentAMQPMock[0], GetMachineAssignmentAMQPMock[1]]);
+    });
+    sendRequestSpy.mockImplementationOnce((messagePattern: ServiceProcessPattern.GET_SERVICE_STATES, data: any) => {
+      return of([ServiceProcessStatesAmqpMock[0], ServiceProcessStatesAmqpMock[1]]);
+    });
+
+    const res: OrderDetailsDto = await controller.findOneDetails(OrderOverviewMock[0].id);
 
     expect(sendRequestSpy).toHaveBeenCalledWith(OrderMessagePatterns.READ_BY_ID, OrderOverviewMock[0].id);
     expect(res).toEqual(expectedReturnValue);

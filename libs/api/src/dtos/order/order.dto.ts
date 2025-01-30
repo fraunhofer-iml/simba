@@ -1,3 +1,4 @@
+import { ServiceStatesEnum } from '@ap3/database';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class OrderDto {
@@ -13,7 +14,10 @@ export class OrderDto {
   calendarWeek: number;
   @ApiProperty()
   creationDate: string;
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    enum: ServiceStatesEnum,
+  })
   status: string;
   @ApiProperty()
   acceptedOfferId: string;

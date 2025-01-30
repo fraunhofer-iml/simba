@@ -1,5 +1,5 @@
-import { InvoiceSeed, OrdersSeed, TradeReceivablesSeed } from '../../../seed';
-import { InvoiceWithNFT } from '../invoice.types';
+import { InvoiceSeed, OrdersSeed, TradeReceivablesSeed } from '../../../../seed';
+import { InvoiceWithNFT } from '../types/invoice.types';
 
 export const InvoiceNFTPrismaMock: any[] = <InvoiceWithNFT[]>[
   {

@@ -2,7 +2,7 @@ import * as util from 'node:util';
 import { Injectable, Logger } from '@nestjs/common';
 import { Invoice, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma.service';
-import { InvoiceCountAndDueMonth, InvoiceForZugferd, InvoiceSumTotalAmountWithoutVatTypes, InvoiceWithNFT } from '../../types';
+import { InvoiceCountAndDueMonth, InvoiceForZugferd, InvoiceSumTotalAmountWithoutVatTypes, InvoiceWithNFT } from './types';
 
 @Injectable()
 export class InvoicePrismaService {

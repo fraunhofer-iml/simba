@@ -1,4 +1,5 @@
 import { InvoiceAmqpDto } from '@ap3/amqp';
+import { CurrenciesEnum } from '@ap3/config';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class InvoiceDto {
@@ -22,7 +23,10 @@ export class InvoiceDto {
   paymentStatus: string;
   @ApiProperty()
   url: string;
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    enum: CurrenciesEnum,
+  })
   currency: string;
 
   constructor(

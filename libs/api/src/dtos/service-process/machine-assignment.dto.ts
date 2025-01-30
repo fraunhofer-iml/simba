@@ -6,9 +6,17 @@ export class MachineAssignmentDto {
   orderId: string;
   @ApiProperty()
   machineId: string;
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: '2025-04-05T14:30:00Z',
+    description: 'Timestamp in ISO 8601 format',
+  })
   start: Date;
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: '2025-04-05T14:30:00Z',
+    description: 'Timestamp in ISO 8601 format',
+  })
   end: Date;
 
   constructor(orderId: string, machineId: string, start: Date, end: Date) {
