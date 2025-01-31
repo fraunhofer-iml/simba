@@ -1,5 +1,5 @@
 import { TranslateService } from '@ngx-translate/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -9,6 +9,7 @@ import { ROUTING } from '../../../routing/routing.enum';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { DateFormatService } from '../../../shared/services/util/date-format.service';
+import { OrderOverviewDto } from '@ap3/api';
 
 @Component({
   selector: 'app-orders-overview',
@@ -32,6 +33,7 @@ export class OrdersOverviewComponent implements AfterViewInit {
   dataSource = new MatTableDataSource<OrderOverview>();
   dataSourceObservable: Observable<MatTableDataSource<OrderOverview>>;
   sort?: MatSort;
+  translationStream: Subscription;
   protected readonly ROUTING = ROUTING;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -49,12 +51,21 @@ export class OrdersOverviewComponent implements AfterViewInit {
   ) {
     this.isCustomer = authService.isCustomer();
     this.dataSourceObservable = this.orderService.getOrders().pipe(
-      map((orders) => {
-        this.dataSource.data = OrderOverview.convertToOrderOverview(orders, this.dateFormatService, this.translate);
-        this.dataSource.data.reverse();
-        return this.dataSource;
+      map((orders: OrderOverviewDto[]) => {
+        return this.buildDatasourceOrders(orders);
       })
     );
+    this.translationStream = translate.onLangChange.subscribe(() => {
+      this.orderService.getOrders().subscribe((orders: OrderOverviewDto[]) => {
+        this.buildDatasourceOrders(orders);
+      });
+    });
+  }
+
+  private buildDatasourceOrders(orders: OrderOverviewDto[]) {
+    this.dataSource.data = OrderOverview.convertToOrderOverview(orders, this.dateFormatService, this.translate)
+      .sort((a: OrderOverview, b: OrderOverview) => Number(b.id) - Number(a.id)).reverse();
+    return this.dataSource;
   }
 
   ngAfterViewInit() {

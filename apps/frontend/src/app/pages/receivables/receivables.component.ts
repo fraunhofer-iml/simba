@@ -1,4 +1,6 @@
-import { map, Observable } from 'rxjs';
+import { InvoiceDto } from '@ap3/api';
+import { TranslateService } from '@ngx-translate/core';
+import { map, Observable, Subscription } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,6 +23,7 @@ export class ReceivablesComponent {
     'invoiceNumber',
     'creditor',
     'totalAmountWithoutVat',
+    'currency',
     'invoiceDueDate',
     'debtor',
     'paymentStatus',
@@ -28,8 +31,33 @@ export class ReceivablesComponent {
   dataSource: MatTableDataSource<Invoice>;
   dataSourceObservable: Observable<MatTableDataSource<Invoice>>;
   selection = new SelectionModel<Invoice>(true, []);
+  translationStream: Subscription;
   paginator?: MatPaginator;
   sort?: MatSort;
+
+  constructor(
+    private readonly invoiceService: InvoiceService,
+    private readonly dateFormatService: DateFormatService,
+    private readonly dialog: MatDialog,
+    private readonly translateService: TranslateService
+  ) {
+    this.dataSource = new MatTableDataSource<Invoice>();
+    this.dataSourceObservable = this.invoiceService.getInvoices().pipe(
+      map((invoices: InvoiceDto[]) => {
+        return this.buildDatasourceInvoices(invoices);
+      })
+    );
+    this.translationStream = translateService.onLangChange.subscribe(() => {
+      this.invoiceService.getInvoices().subscribe((invoices: InvoiceDto[]) => {
+        this.buildDatasourceInvoices(invoices);
+      });
+    });
+  }
+
+  private buildDatasourceInvoices(invoices: InvoiceDto[]) {
+    this.dataSource.data = Invoice.convertToInvoice(invoices, this.dateFormatService, this.translateService);
+    return this.dataSource;
+  }
 
   @ViewChild(MatSort) set matSort(ms: MatSort) {
     this.sort = ms;
@@ -39,20 +67,6 @@ export class ReceivablesComponent {
   @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
     this.paginator = mp;
     this.setDataSourceAttributes();
-  }
-
-  constructor(
-    private readonly invoiceService: InvoiceService,
-    private readonly dateFormatService: DateFormatService,
-    private readonly dialog: MatDialog
-  ) {
-    this.dataSource = new MatTableDataSource<Invoice>();
-    this.dataSourceObservable = this.invoiceService.getInvoices().pipe(
-      map((invoices) => {
-        this.dataSource.data = Invoice.convertToInvoice(invoices, this.dateFormatService);
-        return this.dataSource;
-      })
-    );
   }
 
   setDataSourceAttributes() {

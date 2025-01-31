@@ -14,17 +14,24 @@ describe('OrderOverview', () => {
 
     translateServiceMock = {
       instant: jest.fn(),
+      stream: jest.fn(),
     };
   });
 
-  it('should convert OrderOverviewDto to OrderOverview correctly', () => {
+  it('should convert OrderOverviewDto to OrderOverview correctly', async () => {
     (dateFormatServiceMock.transformDateToCurrentLanguageFormat as jest.Mock).mockReturnValue('13.01.2023');
-    (translateServiceMock.instant as jest.Mock).mockReturnValue('CalendarWeek');
+    (translateServiceMock.stream as jest.Mock).mockImplementation((key: string) => ({
+      subscribe: (callback: (translation: string) => void) => {
+        if (key === 'OrderStatus.Open') callback('Open');
+      },
+    }));
+
     const result = OrderOverview.convertToOrderOverview(
       [OrderOverviewMock[0]],
       dateFormatServiceMock as DateFormatService,
       translateServiceMock as TranslateService
     );
+
     expect(result).toEqual([
       {
         amount: 2,
@@ -34,10 +41,10 @@ describe('OrderOverview', () => {
         customerId: 'pt0001',
         customerName: 'Test Company 01',
         id: 'o001',
-        price: '7.00€',
+        price: '7.00',
         product: 'Quadrocopter',
         robots: ['rt001', 'rt002'],
-        status: 'Open',
+        status: "Open",
         statusTimestamp: '2024-10-09T07:55:55.695Z',
         year: 2024,
       },

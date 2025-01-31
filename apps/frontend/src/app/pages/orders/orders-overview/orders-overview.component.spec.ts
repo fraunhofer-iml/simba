@@ -1,4 +1,3 @@
-import { OrderOverviewDto, OrderOverviewMock } from '@ap3/api';
 import { TranslateModule } from '@ngx-translate/core';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { DatePipe } from '@angular/common';
@@ -56,8 +55,8 @@ describe('OrdersOverviewComponent', () => {
         OrdersService,
         provideHttpClient(),
         DatePipe,
-        DateFormatService,
         AuthService,
+        DateFormatService,
         {
           provide: KeycloakService,
           useValue: {

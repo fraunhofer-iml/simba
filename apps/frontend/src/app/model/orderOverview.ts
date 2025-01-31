@@ -18,16 +18,16 @@ export class OrderOverview {
   customerName: string;
   currency: string;
 
-  constructor(order: OrderOverviewDto, formattedCreationDate: string) {
+  constructor(order: OrderOverviewDto, translate: TranslateService, formattedCreationDate: string) {
     this.id = order.id;
     this.product = order.product.name;
     this.amount = order.amount;
     this.year = order.year;
     this.calendarWeek = order.calendarWeek;
     this.creationDate = formattedCreationDate;
-    this.status = order.status;
+    this.status = translate.instant(`OrderStatus.${order.status}`) || order.status;
     this.statusTimestamp = order.statusTimestamp;
-    this.price = `${order.price.toFixed(2)}€`;
+    this.price = `${order.price.toFixed(2)}`;
     this.robots = order.robots.flat();
     this.customerId = order.customerId;
     this.customerName = order.customerName;
@@ -41,15 +41,14 @@ export class OrderOverview {
   ): OrderOverview[] {
     const flatOrders: OrderOverview[] = [];
     orders.forEach((order: OrderOverviewDto) => {
-      const temp: OrderOverview = new OrderOverview(order, this.getDateBasedOnStatus(order, dateFormatService, translate));
-      flatOrders.push(temp);
+      flatOrders.push(new OrderOverview(order, translate, this.getDateBasedOnStatus(order, dateFormatService, translate)));
     });
     return flatOrders;
   }
 
   private static getDateBasedOnStatus(order: OrderOverviewDto, dateFormatService: DateFormatService, translate: TranslateService): string {
     if (order.status === OrderStatus.planned) {
-      return `${translate.instant('CalendarWeek')} ${order.calendarWeek}`;
+      return `${translate.instant('CalendarWeek')} ${order.calendarWeek}, ${order.year}`;
     } else {
       return dateFormatService.transformDateToCurrentLanguageFormat(order.statusTimestamp);
     }

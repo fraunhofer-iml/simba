@@ -42,27 +42,31 @@
       </ng-container>
 
       <ng-container matColumnDef="invoiceNumber">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="invoiceNumber">{{ 'NftTableFirstRow' | translate }}</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="invoiceNumber">{{ 'NftTableFirstColumn' | translate }}</th>
         <td mat-cell *matCellDef="let row">{{ row.invoiceNumber }}</td>
       </ng-container>
       <ng-container matColumnDef="creditor">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="creditor">{{ 'NftTableSecondRow' | translate }}</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="creditor">{{ 'NftTableSecondColumn' | translate }}</th>
         <td mat-cell *matCellDef="let row">{{ row.creditor }}</td>
       </ng-container>
       <ng-container matColumnDef="totalAmountWithoutVat">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="totalAmountWithoutVat">{{ 'NftTableThirdRow' | translate }}</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="totalAmountWithoutVat">{{ 'NftTableThirdColumn' | translate }}</th>
         <td mat-cell class="center-row" *matCellDef="let row">{{ row.totalAmountWithoutVat }}</td>
       </ng-container>
+      <ng-container matColumnDef="currency">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="currency">{{ 'NftTableFourthColumn' | translate }}</th>
+        <td mat-cell *matCellDef="let row">{{ row.currency }}</td>
+      </ng-container>
       <ng-container matColumnDef="invoiceDueDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="invoiceDueDate">{{ 'NftTableFourthRow' | translate }}</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="invoiceDueDate">{{ 'NftTableFifthColumn' | translate }}</th>
         <td mat-cell *matCellDef="let row">{{ row.invoiceDueDate }}</td>
       </ng-container>
       <ng-container matColumnDef="debtor">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="debtor">{{ 'NftTableFifthRow' | translate }}</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="debtor">{{ 'NftTableSixthColumn' | translate }}</th>
         <td mat-cell *matCellDef="let row">{{ row.debtor }}</td>
       </ng-container>
       <ng-container matColumnDef="paymentStatus">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="paymentStatus">{{ 'NftTableSixthRow' | translate }}</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="paymentStatus">{{ 'NftTableSeventhColumn' | translate }}</th>
         <td mat-cell *matCellDef="let row">{{ row.paymentStatus }}</td>
       </ng-container>
 
