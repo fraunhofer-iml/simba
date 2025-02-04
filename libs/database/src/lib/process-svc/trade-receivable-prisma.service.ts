@@ -31,6 +31,12 @@ export class TradeReceivablePrismaService {
     });
   }
 
+  async getTradeReceivable(trId: string): Promise<TradeReceivable | null> {
+    return this.prismaService.tradeReceivable.findUnique({
+      where: { id: trId },
+    });
+  }
+
   async getInvoiceIdsForPaidTradeReceivableIdsForMonthByFinancialRole(
     financialRole: string,
     month: string,

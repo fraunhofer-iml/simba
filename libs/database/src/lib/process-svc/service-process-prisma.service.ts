@@ -1,11 +1,11 @@
 import * as util from 'node:util';
 import { MachineAssignmentAmqpDto } from '@ap3/amqp';
 import { Injectable, Logger } from '@nestjs/common';
-import { ServiceProcess } from '@prisma/client';
+import { MachineAssignment, ServiceProcess, ServiceStatus } from '@prisma/client';
 import { ServiceStatesEnum } from '../constants';
 import { PrismaService } from '../prisma.service';
-import { MachineAssignmentWithOwner } from '../types/machine-assignment-with-owner.types';
-import { ServiceStatusWithOrderTypes } from '../types/service-status-with-order.types';
+import { MachineAssignmentWithOwner } from '../types';
+import { ServiceStatusWithOrderTypes } from '../types';
 
 @Injectable()
 export class ServiceProcessPrismaService {
@@ -88,6 +88,18 @@ export class ServiceProcessPrismaService {
       include: {
         serviceProcess: { select: { orderId: true } },
       },
+    });
+  }
+
+  async getMachineAssignment(serviceProcessId: string): Promise<MachineAssignment[]> {
+    return this.prismaService.machineAssignment.findMany({
+      where: { serviceProcessId: serviceProcessId },
+    });
+  }
+
+  async getServiceStatus(serviceProcessId: string): Promise<ServiceStatus[]> {
+    return this.prismaService.serviceStatus.findMany({
+      where: { serviceProcessId: serviceProcessId },
     });
   }
 }

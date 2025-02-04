@@ -16,6 +16,12 @@ export class S3Service {
     });
   }
 
+  uploadJson(file: Buffer, name: string) {
+    return this.minioClient.putObject(this.config.getMinioConfig().bucket, name, file, file.length, {
+      'Content-Type': 'application/json',
+    });
+  }
+
   fetchFile(fileName: string) {
     return this.minioClient.getObject(this.config.getMinioConfig().bucket, fileName);
   }

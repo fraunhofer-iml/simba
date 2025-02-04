@@ -1,8 +1,14 @@
-import { AmqpBrokerQueues, CreateTradeReceivableAmqpDto, TradeReceivableAmqpDto, TradeReceivableMessagePatterns } from '@ap3/amqp';
+import {
+  AmqpBrokerQueues,
+  CreateTradeReceivableAmqpDto,
+  TradeReceivableAmqpDto,
+  TradeReceivableMessagePatterns,
+} from '@ap3/amqp';
 import { CreateTradeReceivableDto, TradeReceivableDto } from '@ap3/api';
 import { defaultIfEmpty, firstValueFrom } from 'rxjs';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { TokenReadDto } from '@fraunhofer-iml/nft-folder-blockchain-connector';
 
 @Injectable()
 export class TradeReceivablesService {
@@ -17,5 +23,17 @@ export class TradeReceivablesService {
       this.processAMQPClient.send(TradeReceivableMessagePatterns.CREATE, createTradeReceivableAmqpDto).pipe(defaultIfEmpty(null))
     );
     return TradeReceivableDto.fromAmqpDto(tradeReceivableAmqpDto);
+  }
+
+  async readAllNfts(): Promise<TokenReadDto[]> {
+    return await firstValueFrom<TokenReadDto[]>(
+      this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_ALL, []).pipe(defaultIfEmpty(null))
+    );
+  }
+
+  async getNftByTradeReceivableId(tradeReceivableId: string): Promise<TokenReadDto[]> {
+    return await firstValueFrom<TokenReadDto[]>(
+      this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_BY_ID, tradeReceivableId).pipe(defaultIfEmpty(null))
+    );
   }
 }

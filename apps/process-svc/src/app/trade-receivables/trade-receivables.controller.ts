@@ -1,7 +1,12 @@
-import { CreateTradeReceivableAmqpDto, TradeReceivableAmqpDto, TradeReceivableMessagePatterns } from '@ap3/amqp';
+import {
+  CreateTradeReceivableAmqpDto,
+  TradeReceivableAmqpDto,
+  TradeReceivableMessagePatterns,
+} from '@ap3/amqp';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { TradeReceivablesService } from './trade-receivables.service';
+import { TokenReadDto } from '@fraunhofer-iml/nft-folder-blockchain-connector';
 
 @Controller('trade-receivables')
 export class TradeReceivablesController {
@@ -10,5 +15,20 @@ export class TradeReceivablesController {
   @MessagePattern(TradeReceivableMessagePatterns.CREATE)
   async create(@Payload() createTradeReceivableDto: CreateTradeReceivableAmqpDto): Promise<TradeReceivableAmqpDto> {
     return await this.tradeReceivablesService.create(createTradeReceivableDto);
+  }
+
+  @MessagePattern(TradeReceivableMessagePatterns.CREATE_NFT)
+  async createNft(@Payload() invoiceId: string): Promise<TokenReadDto> {
+    return this.tradeReceivablesService.createNft(invoiceId);
+  }
+
+  @MessagePattern(TradeReceivableMessagePatterns.READ_ALL)
+  async readAllNfts(): Promise<TokenReadDto[]> {
+    return this.tradeReceivablesService.returnAllNFTs();
+  }
+
+  @MessagePattern(TradeReceivableMessagePatterns.READ_BY_ID)
+  async readNftByTradeReceivableId(@Payload() tradeReceivableId: string): Promise<TokenReadDto> {
+    return this.tradeReceivablesService.getNftByTradeReceivableId(tradeReceivableId);
   }
 }

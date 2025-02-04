@@ -10,8 +10,8 @@ import {
   TokenReadService,
   TokenUpdateDto,
   TokenUpdateService,
-} from '@nft-folder/blockchain-connector';
-import { TokenMetadataDto } from '@nft-folder/blockchain-connector/dist/token/dto/token.metadata.dto';
+  TokenMetadataDto
+} from '@fraunhofer-iml/nft-folder-blockchain-connector';
 import { ServiceProcess } from '@prisma/client';
 import { AdditionalDataDto } from './additional.data.dto';
 import { PaymentStatesEnum } from '@ap3/database';
@@ -33,7 +33,6 @@ describe('BlockchainConnectorService', () => {
     dueYear: 0,
     scheduledDate: new Date(0),
     orderId: 'orderId',
-    machines: ['machineA'],
     acceptedOfferId: 'offerId'
   };
 
@@ -151,6 +150,7 @@ describe('BlockchainConnectorService', () => {
     expect(
       await service.mintNFT(
         serviceProcess,
+        'test invoice number',
         'test',
         'test uri',
         'test',

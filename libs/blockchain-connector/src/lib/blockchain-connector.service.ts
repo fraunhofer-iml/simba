@@ -7,9 +7,9 @@ import {
   TokenReadService,
   TokenUpdateDto,
   TokenUpdateService,
-} from '@nft-folder/blockchain-connector';
+  TokenMetadataDto
+} from '@fraunhofer-iml/nft-folder-blockchain-connector';
 import { AdditionalDataDto } from './additional.data.dto';
-import { TokenMetadataDto } from '@nft-folder/blockchain-connector/dist/token/dto/token.metadata.dto';
 import { PaymentStatesEnum } from '@ap3/database';
 
 @Injectable()
@@ -25,19 +25,20 @@ export class BlockchainConnectorService {
   /**
    * Creates a new NFT from the data of an order. To do this, the serviceProcess object of the order is required to store the hash and the id of the object in the NFT. Invoice and metadata are required to also be stored as a hash in the NFT. The storage locations of the invoice and metadata are also stored.
    * @param serviceProcess The serviceProcess object of the order whose id and hash are to be included in the NFT.
-   * @param invoice The invoice in ZUGFeRD format, which is to be stored as a hash in the NFT.
+   * @param invoiceNumber The invoice number to be used for the remote id.
+   * @param invoicePdf The invoice in ZUGFeRD format, which is to be stored as a hash in the NFT.
    * @param invoiceURL The storage location of the invoice.
    * @param metadata The metadata of the order that is to be stored as a hash in the NFT.
    * @param metadataURL The storage location of the metadata.
    */
-  public async mintNFT(serviceProcess: ServiceProcess, invoice: any, invoiceURL: string, metadata: any, metadataURL: string): Promise<TokenReadDto> {
+  public async mintNFT(serviceProcess: ServiceProcess, invoiceNumber: string, invoicePdf: any, invoiceURL: string, metadata: any, metadataURL: string): Promise<TokenReadDto> {
 
     const serviceProcessHash: string = this.dataIntegrityService.hashData(Buffer.from(JSON.stringify(serviceProcess)));
-    const invoiceHash: string = this.dataIntegrityService.hashData(Buffer.from(JSON.stringify(invoice)));
+    const invoiceHash: string = this.dataIntegrityService.hashData(Buffer.from(invoicePdf.toString()));
     const metadataHash: string = this.dataIntegrityService.hashData(Buffer.from(JSON.stringify(metadata)));
 
     return this.tokenMintService.mintToken({
-      remoteId: serviceProcess.id,
+      remoteId: invoiceNumber,
       asset: new TokenAssetDto(
         invoiceURL,
         invoiceHash,
