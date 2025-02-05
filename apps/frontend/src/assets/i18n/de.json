@@ -51,6 +51,7 @@
   "PaidStatisticsYear": "Jahr",
   "InvoiceDetails": "Rechnungsdetails",
   "StatisticsTitle": "Analyse der Rechnungen",
+  "PaymentStatusChangesButtonTitle": "Änderungen anwenden",
   "TransaktionQuantity": "Menge",
   "TransaktionVolume": "Volumen",
   "TransaktionPending": "Ausstehend",
@@ -75,5 +76,7 @@
   "Download": "Herunterladen",
   "Cancel": "Abbrechen",
 
-  "LanguageLabel": "Sprache"
+  "PaymentStateChangeSuccessfulSnackBarMessage": "Der Status wurden erfolgreich geändert",
+  "PaymentStateErrorSnackBarMessage": "Etwas ist schiefgelaufen. Der Status konnte nicht geändert werden. :(",
+  "CloseSnackBarAction": "Schließen"
 }

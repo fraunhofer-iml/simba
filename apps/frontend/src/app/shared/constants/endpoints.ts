@@ -15,6 +15,7 @@ export const ApiEndpoints = {
   },
   invoices: {
     getAllInvoices: '/invoices',
+    updatePaymentStatus: '/invoices/payment-status',
     getPaidStatistics: '/invoices/statistics/paid',
     getUnPaidStatistics: '/invoices/statistics/unpaid',
   },

@@ -20,6 +20,11 @@
   </div>
 
   <div class="table-container card">
+    <div class="apply-changes-button-container">
+      <button mat-flat-button class="buttons" *ngIf="paymentStatusChanges.length !== 0" (click)="sendChangeRequest()">
+        ({{ paymentStatusChanges.length }}) {{ 'PaymentStatusChangesButtonTitle' | translate }}
+      </button>
+    </div>
     <table mat-table *ngIf="dataSourceObservable | async as source" [dataSource]="source" class="background-white" matSort>
       <ng-container matColumnDef="select">
         <th mat-header-cell *matHeaderCellDef>
@@ -67,7 +72,40 @@
       </ng-container>
       <ng-container matColumnDef="paymentStatus">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="paymentStatus">{{ 'NftTableSeventhColumn' | translate }}</th>
-        <td mat-cell *matCellDef="let row">{{ row.paymentStatus }}</td>
+        <td mat-cell *matCellDef="let row">
+          <div class="paymentStatus-container">
+            <span [ngClass]="{ 'paymentStatus-changed': isChanged(row.id), 'paymentStatus-unchanged': !isChanged(row.id) }">
+              {{ "PaymentStatus." + row.displayedStatus | translate }}</span
+            >
+            @if (
+              !authService.isCustomer() &&
+              authService.isCurrentlyLoggedInCompany(row.creditorId) &&
+              !paymentStates.includes(row.paymentStatus)
+            ) {
+              <button class="paymentStatus-options-button" mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon><img src="assets/icons/arrow_down.svg" alt="Icon" /></mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                @if (row.paymentStatus !== row.displayedStatus) {
+                  <mat-option
+                    (click)="changePaymentStatus(row.paymentStatus, row)"
+                  >
+                    {{ "PaymentStatus." + row.paymentStatus | translate }}
+                  </mat-option>
+                }
+                @for (state of paymentStates; track state) {
+                  @if (state !== row.displayedStatus && state !== row.paymentStatus) {
+                    <mat-option
+                      (click)="changePaymentStatus(state, row)"
+                    >
+                      {{ "PaymentStatus." + state | translate }}
+                    </mat-option>
+                  }
+                }
+              </mat-menu>
+            }
+          </div>
+        </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedNFTColumns"></tr>

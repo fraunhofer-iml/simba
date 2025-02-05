@@ -13,6 +13,7 @@ export class Invoice {
   debtorId: string;
   paymentStatus: string;
   url: string;
+  displayedStatus: string;
   currency: string;
 
   constructor(invoice: InvoiceDto, dateFormatService: DateFormatService, translate: TranslateService) {
@@ -24,8 +25,9 @@ export class Invoice {
     this.invoiceDueDate = dateFormatService.transformDateToCurrentLanguageFormat(invoice.invoiceDueDate);
     this.debtor = invoice.debtor;
     this.debtorId = invoice.debtorId;
-    this.paymentStatus = translate.instant(`PaymentStatus.${invoice.paymentStatus}`) || invoice.paymentStatus;
+    this.paymentStatus = invoice.paymentStatus;
     this.url = invoice.url;
+    this.displayedStatus = invoice.paymentStatus;
     this.currency = invoice.currency;
   }
 

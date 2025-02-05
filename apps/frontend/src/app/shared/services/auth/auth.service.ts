@@ -63,4 +63,8 @@ export class AuthService {
   isCustomer() {
     return this.userRoles.some((role: string) => role === USERROLES.CUSTOMER);
   }
+
+  isCurrentlyLoggedInCompany(companyId: string) {
+    return this.getCurrentlyLoggedInCompanyId() === companyId;
+  }
 }

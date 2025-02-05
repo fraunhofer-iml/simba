@@ -1,9 +1,9 @@
 import util from 'node:util';
-import { AllInvoicesFilterAmqpDto, CompanyAndInvoiceAmqpDto, InvoiceAmqpDto } from '@ap3/amqp';
+import { AllInvoicesFilterAmqpDto, CompanyAndInvoiceAmqpDto, InvoiceAmqpDto, InvoiceIdAndPaymentStateAmqpDto } from '@ap3/amqp';
 import { ConfigurationService } from '@ap3/config';
 import { InvoiceForZugferd, InvoicePrismaAdapterService, InvoiceWithNFT, TradeReceivablePrismaService } from '@ap3/database';
 import { S3Service } from '@ap3/s3';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PaymentStatus, TradeReceivable } from '@prisma/client';
 import { InvoicesZugferdService } from './zugferd/invoices-zugferd.service';
 
@@ -75,5 +75,28 @@ export class InvoicesService {
       tradeReceivableDtos.push(InvoiceAmqpDto.fromPrismaEntity(invoice, trStates, this.config.getMinioConfig().objectStorageURL));
     }
     return tradeReceivableDtos;
+  }
+
+  async createPaymentStatusForInvoice(statusChanges: InvoiceIdAndPaymentStateAmqpDto[]): Promise<boolean> {
+    try {
+      for (const statusChange of statusChanges) {
+        const convertedDto = new InvoiceIdAndPaymentStateAmqpDto(statusChange.invoiceId, statusChange.paymentStatus);
+        const relatedTradeReceivable: TradeReceivable = await this.tradeReceivablePrismaService.getTradeReceivableByInvoiceId(
+          convertedDto.invoiceId
+        );
+        if (relatedTradeReceivable) {
+          await this.tradeReceivablePrismaService.createPaymentState(
+            convertedDto.toPrismaCreatePaymentStatusQuery(relatedTradeReceivable.id, new Date())
+          );
+          this.logger.debug('Updated PaymentState for invoice: ', convertedDto.invoiceId);
+        } else {
+          throw new NotFoundException(convertedDto.invoiceId);
+        }
+      }
+      return true;
+    } catch (e) {
+      this.logger.error(util.inspect(e));
+      throw e;
+    }
   }
 }

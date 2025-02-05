@@ -8,4 +8,5 @@ export enum InvoiceMessagePatterns {
   CREATE_AND_UPLOAD_ZUGFERD_PDF = 'invoices/create-and-upload-zugferd-pdf',
   READ_STATISTICS_PAID = 'invoices/read-statistics-paid',
   READ_STATISTICS_NOT_PAID = 'invoices/read-statistics-not-paid',
+  CREATE_NEW_PAYMENT_STATUS_FOR_INVOICE = 'invoices/payment-status',
 }

@@ -1,9 +1,9 @@
 import { PaidStatisticsAmqpDto } from '@ap3/amqp';
-import { AuthRolesEnum, FinancialRoles, InvoiceDto, RolesEnum, UnpaidStatisticsDto } from '@ap3/api';
+import { AuthRolesEnum, FinancialRoles, InvoiceDto, InvoiceIdAndPaymentStateDto, RolesEnum, UnpaidStatisticsDto } from '@ap3/api';
 import { PaymentStatesEnum } from '@ap3/database';
 import { Roles } from 'nest-keycloak-connect';
-import { Controller, Get, Param, Post, Query, Request } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Post, Query, Request } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { InvoicesService } from './invoices.service';
 
 @Controller('invoices')
@@ -64,7 +64,6 @@ export class InvoicesController {
   @ApiResponse({ type: InvoiceDto })
   async findOne(@Request() req: any, @Param('id') id: string): Promise<InvoiceDto> {
     const companyId = req.user.realm_access.roles.includes(RolesEnum.ADMIN) ? '' : req.user.company;
-
     return await this.invoicesService.findOne(companyId, id);
   }
 
@@ -80,7 +79,6 @@ export class InvoicesController {
   @ApiResponse({ type: String, description: 'File name of uploaded zugferd pdf document.' })
   async createAndUploadZugferdPDF(@Request() req: any, @Param('id') id: string): Promise<string> {
     const companyId = req.user.realm_access.roles.includes(RolesEnum.ADMIN) ? '' : req.user.company;
-
     return await this.invoicesService.createAndUploadZugferdPDF(companyId, id);
   }
 
@@ -117,5 +115,16 @@ export class InvoicesController {
   @ApiResponse({ type: UnpaidStatisticsDto })
   async getStatisticUnpaid(@Request() req: any, @Query('financialRole') financialRole: FinancialRoles): Promise<UnpaidStatisticsDto> {
     return await this.invoicesService.getStatisticNotPaidPerMonth(req.user.company, financialRole);
+  }
+
+  @Post('/payment-status')
+  @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
+  @ApiOperation({ description: 'Create a new PaymentStatus manually for invoice ' })
+  @ApiBody({
+    type: [InvoiceIdAndPaymentStateDto],
+    required: true,
+  })
+  async createPaymentStatusForInvoice(@Body() statusChanges: InvoiceIdAndPaymentStateDto[]): Promise<void> {
+    await this.invoicesService.createNewPaymentStatusForInvoice(statusChanges);
   }
 }

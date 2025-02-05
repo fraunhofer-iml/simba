@@ -113,7 +113,7 @@ model PaymentStatus {
   timestamp         DateTime        @default(now())
   tradeReceivable   TradeReceivable @relation(fields: [tradeReceivableId], references: [id])
 
-  @@id([tradeReceivableId, status])
+  @@id([tradeReceivableId,timestamp,status])
 }
 
 model ServiceProcess {

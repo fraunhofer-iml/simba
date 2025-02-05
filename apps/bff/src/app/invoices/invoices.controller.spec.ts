@@ -4,13 +4,21 @@ import {
   CompanyAmqpMock,
   CompanyAndInvoiceAmqpDto,
   CompanyMessagePatterns,
+  InvoiceAndPaymentStatusDtoAmqpMock,
   InvoiceMessagePatterns,
   InvoicesAmqpMock,
   NotPaidStatisticsAmqpMock,
   PaidStatisticsAmqpMock,
   TRParamsCompanyIdAndYearAndFinancialRole,
 } from '@ap3/amqp';
-import { InvoiceDto, InvoiceMocks, PaidTrStatisticsMock, UnpaidStatisticsDto, UnpaidTradeReceivableStatisticsMock } from '@ap3/api';
+import {
+  InvoiceAndPaymentStatusDtoMock,
+  InvoiceDto,
+  InvoiceMocks,
+  PaidTrStatisticsMock,
+  UnpaidStatisticsDto,
+  UnpaidTradeReceivableStatisticsMock,
+} from '@ap3/api';
 import { CompaniesSeed, FinancialRoles, PaymentStatesEnum } from '@ap3/database';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
@@ -139,5 +147,18 @@ describe('InvoicesController', () => {
       new TRParamsCompanyIdAndYearAndFinancialRole(CompaniesSeed[1].id, 2024, FinancialRoles.DEBTOR)
     );
     expect(res).toEqual(expectedReturnValue);
+  });
+
+  it('should update the Paymentstatus of an existing Invoice by its Id', async () => {
+    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
+    sendRequestSpy.mockImplementationOnce((messagePattern: InvoiceMessagePatterns, data: any) => {
+      return of(true);
+    });
+
+    await controller.createPaymentStatusForInvoice(InvoiceAndPaymentStatusDtoMock);
+    expect(sendRequestSpy).toHaveBeenCalledWith(
+      InvoiceMessagePatterns.CREATE_NEW_PAYMENT_STATUS_FOR_INVOICE,
+      InvoiceAndPaymentStatusDtoAmqpMock
+    );
   });
 });

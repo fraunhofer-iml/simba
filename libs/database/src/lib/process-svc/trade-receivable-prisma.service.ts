@@ -25,6 +25,15 @@ export class TradeReceivablePrismaService {
     }
   }
 
+  async createPaymentState(data: Prisma.PaymentStatusCreateInput) {
+    this.logger.verbose(`Insert new PaymentState for Receivable ${data}`);
+    try {
+      return await this.prismaService.paymentStatus.create({ data });
+    } catch (e) {
+      this.logger.error(util.inspect(e));
+      throw e;
+    }
+  }
   async getPaymentStatesForTradeReceivable(trId: string): Promise<PaymentStatus[]> {
     return this.prismaService.paymentStatus.findMany({
       where: { tradeReceivableId: trId },
@@ -156,5 +165,9 @@ export class TradeReceivablePrismaService {
       this.logger.error(util.inspect(e));
       throw e;
     }
+  }
+
+  async getTradeReceivableByInvoiceId(id: string): Promise<TradeReceivable | null> {
+    return this.prismaService.tradeReceivable.findUnique({ where: { invoiceId: id } });
   }
 }

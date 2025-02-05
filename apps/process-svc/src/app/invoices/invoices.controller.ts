@@ -3,6 +3,7 @@ import {
   CompanyAndFinancialRole,
   CompanyAndInvoiceAmqpDto,
   InvoiceAmqpDto,
+  InvoiceIdAndPaymentStateAmqpDto,
   InvoiceMessagePatterns,
   NotPaidStatisticsAmqpDto,
   PaidStatisticsAmqpDto,
@@ -45,5 +46,10 @@ export class InvoicesController {
   @MessagePattern(InvoiceMessagePatterns.READ_STATISTICS_NOT_PAID)
   async getTradeReceivableNotPaidStatistics(@Payload() params: CompanyAndFinancialRole): Promise<NotPaidStatisticsAmqpDto> {
     return await this.invoiceStatistics.getInvoicesNotPaidStatisticsByCompanyId(params.companyId, params.financialRole);
+  }
+
+  @MessagePattern(InvoiceMessagePatterns.CREATE_NEW_PAYMENT_STATUS_FOR_INVOICE)
+  async createPaymentStateForInvoice(@Payload() statusChanges: InvoiceIdAndPaymentStateAmqpDto[]): Promise<boolean> {
+    return await this.invoicesService.createPaymentStatusForInvoice(statusChanges);
   }
 }

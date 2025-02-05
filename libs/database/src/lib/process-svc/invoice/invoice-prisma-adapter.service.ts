@@ -1,6 +1,6 @@
 import { AllInvoicesFilterAmqpDto } from '@ap3/amqp';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Invoice, Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import { FinancialRoles } from '../../constants';
 import { QueryBuilderHelperService } from '../query-builder-helper.service';

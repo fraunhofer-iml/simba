@@ -6,12 +6,13 @@ import {
   CompanyAndFinancialRole,
   CompanyAndInvoiceAmqpDto,
   InvoiceAmqpDto,
+  InvoiceIdAndPaymentStateAmqpDto,
   InvoiceMessagePatterns,
   NotPaidStatisticsAmqpDto,
   PaidStatisticsAmqpDto,
   TRParamsCompanyIdAndYearAndFinancialRole,
 } from '@ap3/amqp';
-import { FinancialRoles, InvoiceDto, PaidStatisticsDto, UnpaidStatisticsDto } from '@ap3/api';
+import { FinancialRoles, InvoiceDto, InvoiceIdAndPaymentStateDto, PaidStatisticsDto, UnpaidStatisticsDto } from '@ap3/api';
 import { defaultIfEmpty, firstValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -94,5 +95,19 @@ export class InvoicesService {
       tradeReceivableDtos.push(PaidStatisticsDto.toPaidStatisticsDto(amqpTr));
     }
     return tradeReceivableDtos;
+  }
+
+  async createNewPaymentStatusForInvoice(statusChanges: InvoiceIdAndPaymentStateDto[]): Promise<void> {
+    try {
+      const amqpChanges: InvoiceIdAndPaymentStateAmqpDto[] = statusChanges.map((statusChange: InvoiceIdAndPaymentStateDto) => {
+        const convertedDto = new InvoiceIdAndPaymentStateDto(statusChange.invoiceId, statusChange.paymentStatus);
+        return convertedDto.toAMQPDto();
+      });
+
+      await firstValueFrom(this.processAMQPClient.send(InvoiceMessagePatterns.CREATE_NEW_PAYMENT_STATUS_FOR_INVOICE, amqpChanges));
+    } catch (e) {
+      this.logger.warn(e);
+      throw e;
+    }
   }
 }

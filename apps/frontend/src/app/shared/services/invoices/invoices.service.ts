@@ -1,4 +1,4 @@
-import { InvoiceDto, PaidStatisticsDto, UnpaidStatisticsDto } from '@ap3/api';
+import { InvoiceDto, InvoiceIdAndPaymentStateDto, PaidStatisticsDto, UnpaidStatisticsDto } from '@ap3/api';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -40,5 +40,9 @@ export class InvoiceService {
     return this.httpClient.get<UnpaidStatisticsDto>(
       `${BASE_URL}${ApiEndpoints.invoices.getUnPaidStatistics}?financialRole=${financialRole}`
     );
+  }
+
+  createNewPaymentStatus(changes: InvoiceIdAndPaymentStateDto[]): Observable<boolean> {
+    return this.httpClient.post<boolean>(`${BASE_URL}${ApiEndpoints.invoices.updatePaymentStatus}`, changes);
   }
 }
