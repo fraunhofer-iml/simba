@@ -6,7 +6,6 @@ import {
   CompaniesSeed,
   DatabaseModule,
   DueInvoiceCount,
-  FinancialRoles,
   PaidInvoiceIdsNovember,
   PaidInvoiceIdsSeptember,
   PaidOnTimeInvoiceCount,
@@ -14,6 +13,7 @@ import {
   TradeReceivablePaymentStatusCountMock,
 } from '@ap3/database';
 import { S3Module } from '@ap3/s3';
+import { FinancialRoles } from '@ap3/util';
 import { Test, TestingModule } from '@nestjs/testing';
 import { InvoicesController } from '../invoices.controller';
 import { InvoicesService } from '../invoices.service';

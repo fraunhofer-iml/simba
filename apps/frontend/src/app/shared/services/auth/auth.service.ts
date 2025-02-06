@@ -1,6 +1,6 @@
+import { UserRoles } from '@ap3/util';
 import { KeycloakService } from 'keycloak-angular';
 import { Injectable } from '@angular/core';
-import { USERROLES } from '../../constants/user-roles';
 
 @Injectable()
 export class AuthService {
@@ -41,11 +41,11 @@ export class AuthService {
   findCurrentlyLoggedInUserRole(): string {
     let role = '';
     if (this.isAdmin()) {
-      role = USERROLES.ADMIN;
+      role = UserRoles.ADMIN;
     } else if (this.isContributor()) {
-      role = USERROLES.CONTRIBUTOR;
+      role = UserRoles.CONTRIBUTOR;
     } else if (this.isCustomer()) {
-      role = USERROLES.CUSTOMER;
+      role = UserRoles.CUSTOMER;
     }
     return role;
   }
@@ -55,13 +55,13 @@ export class AuthService {
   }
 
   isAdmin() {
-    return this.userRoles.some((role: string) => role === USERROLES.ADMIN);
+    return this.userRoles.some((role: string) => role === UserRoles.ADMIN);
   }
   isContributor() {
-    return this.userRoles.some((role: string) => role === USERROLES.CONTRIBUTOR);
+    return this.userRoles.some((role: string) => role === UserRoles.CONTRIBUTOR);
   }
   isCustomer() {
-    return this.userRoles.some((role: string) => role === USERROLES.CUSTOMER);
+    return this.userRoles.some((role: string) => role === UserRoles.CUSTOMER);
   }
 
   isCurrentlyLoggedInCompany(companyId: string) {

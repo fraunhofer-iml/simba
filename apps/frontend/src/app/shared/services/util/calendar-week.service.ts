@@ -1,10 +1,8 @@
-import { Injectable } from '@angular/core';
 import moment from 'moment';
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class CalendarWeekService {
-  constructor() {}
-
   public getLastCalendarWeek(year: number): number {
     let numberOfWeeks = 52;
     const lastWeekDay = this.getLastWeekday(year);

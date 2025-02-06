@@ -1,5 +1,5 @@
 import { InvoiceAmqpDto } from '@ap3/amqp';
-import { CurrenciesEnum } from '@ap3/config';
+import { CurrenciesEnum } from '@ap3/util';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class InvoiceDto {

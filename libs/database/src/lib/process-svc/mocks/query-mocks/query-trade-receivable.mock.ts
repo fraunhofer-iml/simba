@@ -1,11 +1,11 @@
+import { PaymentStates } from '@ap3/util';
 import { Prisma } from '@prisma/client';
 import { InvoiceSeed, OrdersSeed, PaymentStatesSeed, TradeReceivablesSeed } from '../../../../seed';
-import { PaymentStatesEnum } from '../../../constants';
 
 export const createTradeReceivableQuery = <Prisma.TradeReceivableCreateInput>{
   nft: TradeReceivablesSeed[0].nft,
   invoice: { connect: { id: InvoiceSeed[0].id } },
-  states: { create: { status: PaymentStatesEnum.OPEN, timestamp: PaymentStatesSeed[3].timestamp } },
+  states: { create: { status: PaymentStates.OPEN, timestamp: PaymentStatesSeed[3].timestamp } },
 };
 
 const trQueryInclude = <Prisma.TradeReceivableInclude>{

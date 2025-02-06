@@ -1,15 +1,15 @@
+import { OrderOverviewDto } from '@ap3/api';
 import { TranslateService } from '@ngx-translate/core';
-import { map, Observable, Subscription } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { OrderOverview } from '../../../model/orderOverview';
 import { ROUTING } from '../../../routing/routing.enum';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { DateFormatService } from '../../../shared/services/util/date-format.service';
-import { OrderOverviewDto } from '@ap3/api';
+import { OrderStatus } from './enum/orderStatus';
 
 @Component({
   selector: 'app-orders-overview',
@@ -30,10 +30,9 @@ export class OrdersOverviewComponent implements AfterViewInit {
     'customerName',
   ];
   displayedColumnsCustomer: string[] = ['orderId', 'status', 'productionDate', 'price', 'currency', 'products', 'amount', 'customerName'];
-  dataSource = new MatTableDataSource<OrderOverview>();
-  dataSourceObservable: Observable<MatTableDataSource<OrderOverview>>;
+  dataSource = new MatTableDataSource<OrderOverviewDto>();
+  dataSourceObservable!: Observable<MatTableDataSource<OrderOverviewDto>>;
   sort?: MatSort;
-  translationStream: Subscription;
   protected readonly ROUTING = ROUTING;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -50,22 +49,43 @@ export class OrdersOverviewComponent implements AfterViewInit {
     private readonly authService: AuthService
   ) {
     this.isCustomer = authService.isCustomer();
-    this.dataSourceObservable = this.orderService.getOrders().pipe(
-      map((orders: OrderOverviewDto[]) => {
-        return this.buildDatasourceOrders(orders);
-      })
-    );
-    this.translationStream = translate.onLangChange.subscribe(() => {
-      this.orderService.getOrders().subscribe((orders: OrderOverviewDto[]) => {
-        this.buildDatasourceOrders(orders);
-      });
-    });
+    this.initializeDataSource();
+    this.setFilterPredicate();
   }
 
-  private buildDatasourceOrders(orders: OrderOverviewDto[]) {
-    this.dataSource.data = OrderOverview.convertToOrderOverview(orders, this.dateFormatService, this.translate)
-      .sort((a: OrderOverview, b: OrderOverview) => Number(b.id) - Number(a.id)).reverse();
-    return this.dataSource;
+  private setFilterPredicate(): void {
+    this.dataSource.filterPredicate = (data: OrderOverviewDto, value: string): boolean => {
+      let productionDate = false;
+      if (data.status == OrderStatus.planned) {
+        productionDate = `${this.translate.instant('CalendarWeek')} ${data.calendarWeek}, ${data.year}`.toLowerCase().includes(value);
+      } else {
+        productionDate = this.dateFormatService.transformDateToCurrentLanguageFormat(data.statusTimestamp).includes(value);
+      }
+      return (
+        data.id.toLowerCase().includes(value) ||
+        this.translate.instant(`OrderStatus.${data.status}`).includes(value) ||
+        `${data.price.toFixed(2)}`.toLowerCase().includes(value) ||
+        data.currency.toLowerCase().includes(value) ||
+        data.product.toLowerCase().includes(value) ||
+        data.amount.toFixed().includes(value) ||
+        data.robots.some((robot) => robot.toLowerCase().includes(value)) ||
+        productionDate ||
+        data.customerName.toLowerCase().includes(value)
+      );
+    };
+  }
+
+  private initializeDataSource(): void {
+    this.dataSourceObservable = this.orderService.getOrders().pipe(
+      map((orders: OrderOverviewDto[]) => {
+        this.dataSource.data = orders;
+        return this.dataSource;
+      })
+    );
+  }
+
+  getDateFormat() {
+    return this.dateFormatService.getDateFormatByCurrentLang();
   }
 
   ngAfterViewInit() {
@@ -84,4 +104,10 @@ export class OrdersOverviewComponent implements AfterViewInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  getScheduledFor(cw: number, year: number) {
+    return `${this.translate.instant('CalendarWeek')} ${cw}, ${year}`;
+  }
+
+  protected readonly OrderStatus = OrderStatus;
 }

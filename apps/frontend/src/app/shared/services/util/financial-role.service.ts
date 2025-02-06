@@ -1,6 +1,5 @@
+import { FinancialRoles, UserRoles } from '@ap3/util';
 import { Injectable } from '@angular/core';
-import { FinancialRoles } from '../../constants/financial-roles';
-import { USERROLES } from '../../constants/user-roles';
 import { AuthService } from '../auth/auth.service';
 
 @Injectable()
@@ -14,7 +13,7 @@ export class FinancialRoleService {
     let res = FinancialRoles.DEBTOR;
     const currentUserRole = this.authService.getCurrentlyLoggedInUserRole();
     if (currentUserRole) {
-      if (currentUserRole === USERROLES.CONTRIBUTOR) {
+      if (currentUserRole === UserRoles.CONTRIBUTOR) {
         res = FinancialRoles.CREDITOR;
       }
     }

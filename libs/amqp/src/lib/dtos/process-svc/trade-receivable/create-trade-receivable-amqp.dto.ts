@@ -1,4 +1,4 @@
-import { PaymentStatesEnum } from '@ap3/database';
+import { PaymentStates } from '@ap3/util';
 import { OmitType } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { TradeReceivableAmqpDto } from './trade-receivable-amqp.dto';
@@ -17,7 +17,7 @@ export class CreateTradeReceivableAmqpDto extends OmitType(TradeReceivableAmqpDt
     return <Prisma.TradeReceivableCreateInput>{
       nft: this.nft,
       invoice: { connect: { id: this.invoiceId } },
-      states: { create: { status: PaymentStatesEnum.OPEN, timestamp: this.statusTimestamp } },
+      states: { create: { status: PaymentStates.OPEN, timestamp: this.statusTimestamp } },
     };
   }
 }

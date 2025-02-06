@@ -79,11 +79,11 @@ export class InvoicePrismaService {
   }
 
   async getInvoiceByServiceProcessId(serviceProcessId: string): Promise<Invoice[]> {
-      return this.prismaService.invoice.findMany({
-        where: {
-          serviceProcessId: serviceProcessId
-        },
-      });
+    return this.prismaService.invoice.findMany({
+      where: {
+        serviceProcessId: serviceProcessId,
+      },
+    });
   }
 
   async getInvoices({

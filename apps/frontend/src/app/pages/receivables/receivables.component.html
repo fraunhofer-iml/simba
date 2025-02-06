@@ -64,7 +64,7 @@
       </ng-container>
       <ng-container matColumnDef="invoiceDueDate">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="invoiceDueDate">{{ 'NftTableFifthColumn' | translate }}</th>
-        <td mat-cell *matCellDef="let row">{{ row.invoiceDueDate }}</td>
+        <td mat-cell *matCellDef="let row">{{ row.invoiceDueDate | date: getDateFormat() }}</td>
       </ng-container>
       <ng-container matColumnDef="debtor">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="debtor">{{ 'NftTableSixthColumn' | translate }}</th>

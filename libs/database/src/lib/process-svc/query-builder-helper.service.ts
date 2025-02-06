@@ -1,6 +1,6 @@
+import { FinancialRoles } from '@ap3/util';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { FinancialRoles } from '../constants';
 
 @Injectable()
 export class QueryBuilderHelperService {

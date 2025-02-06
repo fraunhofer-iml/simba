@@ -1,12 +1,11 @@
 import { PaidStatisticsDto } from '@ap3/api';
+import { FinancialRoles, UserRoles } from '@ap3/util';
 import { TranslateService } from '@ngx-translate/core';
 import { ChartData, ChartOptions, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { forkJoin, map, Observable, Subscription } from 'rxjs';
 import { Component, ViewChild } from '@angular/core';
 import { DIAGRAMM_COLORS } from '../../../shared/constants/diagramm-colors';
-import { FinancialRoles } from '../../../shared/constants/financial-roles';
-import { USERROLES } from '../../../shared/constants/user-roles';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 import { FinancialRoleService } from '../../../shared/services/util/financial-role.service';
@@ -131,7 +130,7 @@ export class PaidStatisticsComponent {
   }
 
   updateLabelTranslations() {
-    if (this.userRole === USERROLES.ADMIN) {
+    if (this.userRole === UserRoles.ADMIN) {
       this.getLabelTranslationsForHost().subscribe((res) => {
         this.mixedChartData.datasets[0].label = res.creditorPercentageChartLabel;
         this.mixedChartData.datasets[1].label = res.creditorVolumeChartLabel;

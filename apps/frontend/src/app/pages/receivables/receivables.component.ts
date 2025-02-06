@@ -1,7 +1,7 @@
 import { InvoiceDto, InvoiceIdAndPaymentStateDto } from '@ap3/api';
-import { PaymentStatesEnum } from '@ap3/util';
+import { PaymentStates } from '@ap3/util';
 import { TranslateService } from '@ngx-translate/core';
-import { forkJoin, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, inject, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -32,9 +32,9 @@ export class ReceivablesComponent {
     'paymentStatus',
   ];
   private readonly _snackBar = inject(MatSnackBar);
-  paymentStates = [PaymentStatesEnum.PAID, PaymentStatesEnum.FINANCED];
+  paymentStates = [PaymentStates.PAID, PaymentStates.FINANCED];
   paymentStatusChanges: InvoiceIdAndPaymentStateDto[];
-  dataSource: MatTableDataSource<Invoice>;
+  dataSource!: MatTableDataSource<Invoice>;
   dataSourceObservable!: Observable<MatTableDataSource<Invoice>>;
   selection = new SelectionModel<Invoice>(true, []);
   paginator?: MatPaginator;
@@ -50,19 +50,34 @@ export class ReceivablesComponent {
     this.paymentStatusChanges = [];
     this.dataSource = new MatTableDataSource<Invoice>();
     this.loadInvoices();
+    this.setFilterPredicate();
   }
 
-  loadInvoices() {
+  private setFilterPredicate(): void {
+    this.dataSource.filterPredicate = (data: Invoice, value: string): boolean => {
+      return (
+        data.invoiceNumber.includes(value) ||
+        data.creditor.toLowerCase().includes(value) ||
+        data.totalAmountWithoutVat.includes(value) ||
+        data.currency.toLowerCase().includes(value) ||
+        this.dateFormatService.transformDateToCurrentLanguageFormat(data.invoiceDueDate).includes(value) ||
+        data.debtor.toLowerCase().includes(value) ||
+        this.translationService.instant(`PaymentStatus.${data.paymentStatus}`).includes(value)
+      );
+    };
+  }
+
+  private loadInvoices() {
     this.dataSourceObservable = this.invoiceService.getInvoices().pipe(
       map((invoices: InvoiceDto[]) => {
-        return this.buildDatasourceInvoices(invoices);
+        this.dataSource.data = Invoice.convertToInvoice(invoices);
+        return this.dataSource;
       })
     );
   }
 
-  private buildDatasourceInvoices(invoices: InvoiceDto[]) {
-    this.dataSource.data = Invoice.convertToInvoice(invoices, this.dateFormatService, this.translationService);
-    return this.dataSource;
+  getDateFormat() {
+    return this.dateFormatService.getDateFormatByCurrentLang();
   }
 
   @ViewChild(MatSort) set matSort(ms: MatSort) {
@@ -128,12 +143,12 @@ export class ReceivablesComponent {
       complete: () => {
         this.loadInvoices();
         this.paymentStatusChanges = [];
-        this.openSnackBar(true).subscribe();
+        this.openSnackBar(true);
       },
       error: () => {
         this.loadInvoices();
         this.paymentStatusChanges = [];
-        this.openSnackBar(false).subscribe();
+        this.openSnackBar(false);
       },
     });
   }
@@ -146,27 +161,12 @@ export class ReceivablesComponent {
       .includes(invoiceId);
   }
 
-  openSnackBar(success: boolean): Observable<void> {
-    let snackBarType: Observable<void>;
-    if (success) {
-      snackBarType = forkJoin<{ message: Observable<string>; action: Observable<string> }>({
-        message: this.translationService.get('PaymentStateChangeSuccessfulSnackBarMessage') as Observable<string>,
-        action: this.translationService.get('CloseSnackBarAction') as Observable<string>,
-      }).pipe(
-        map((translations) => {
-          this._snackBar.open(translations.message, translations.action);
-        })
-      );
-    } else {
-      snackBarType = forkJoin<{ message: Observable<string>; action: Observable<string> }>({
-        message: this.translationService.get('PaymentStateErrorSnackBarMessage') as Observable<string>,
-        action: this.translationService.get('CloseSnackBarAction') as Observable<string>,
-      }).pipe(
-        map((translations) => {
-          this._snackBar.open(translations.message, translations.action);
-        })
-      );
-    }
-    return snackBarType;
+  openSnackBar(success: boolean): void {
+    const message: string = success
+      ? this.translationService.instant('PaymentStateChangeSuccessfulSnackBarMessage')
+      : this.translationService.instant('PaymentStateErrorSnackBarMessage');
+
+    const label: string = this.translationService.instant('CloseSnackBarAction');
+    this._snackBar.open(message, label);
   }
 }

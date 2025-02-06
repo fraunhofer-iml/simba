@@ -1,7 +1,7 @@
 import * as util from 'node:util';
+import { PaymentStates } from '@ap3/util';
 import { Injectable, Logger } from '@nestjs/common';
 import { PaymentStatus, Prisma, TradeReceivable } from '@prisma/client';
-import { PaymentStatesEnum } from '../constants';
 import { PrismaService } from '../prisma.service';
 import { TradeReceivablePaymentStatusCount } from '../types';
 import { InvoiceCountAndDueMonth, InvoiceIdTypes } from './invoice';
@@ -69,7 +69,7 @@ export class TradeReceivablePrismaService {
         LEFT JOIN "PaymentStatus" AS ps ON tr."id" = ps."tradeReceivableId"
         LEFT JOIN "Invoice" AS iv ON tr."invoiceId" = iv."id"
         WHERE TO_CHAR(DATE_TRUNC('month', ps."timestamp"),'YYYY-MM') = ${comparableMonth}
-         AND ps."status" = ${PaymentStatesEnum.PAID}
+         AND ps."status" = ${PaymentStates.PAID}
          AND ${financialRoleQuery};
       `;
     } catch (e) {
@@ -92,7 +92,7 @@ export class TradeReceivablePrismaService {
         LEFT JOIN "PaymentStatus" AS ps ON tr."id" = ps."tradeReceivableId"
         LEFT JOIN "Invoice" AS iv ON tr."invoiceId" = iv."id"
         WHERE ps."timestamp" <= iv."dueDate"
-        AND ps."status" = ${PaymentStatesEnum.PAID}
+        AND ps."status" = ${PaymentStates.PAID}
         AND ${financialRoleQuery}
         GROUP BY due_month;
       `;

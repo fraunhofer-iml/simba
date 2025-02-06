@@ -1,20 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { ServiceProcess } from '@prisma/client';
+import { PaymentStates } from '@ap3/util';
 import {
-  DataIntegrityService, TokenAssetDto,
+  DataIntegrityService,
+  TokenAssetDto,
+  TokenMetadataDto,
   TokenMintService,
   TokenReadDto,
   TokenReadService,
   TokenUpdateDto,
   TokenUpdateService,
-  TokenMetadataDto
 } from '@fraunhofer-iml/nft-folder-blockchain-connector';
+import { Injectable } from '@nestjs/common';
+import { ServiceProcess } from '@prisma/client';
 import { AdditionalDataDto } from './additional.data.dto';
-import { PaymentStatesEnum } from '@ap3/database';
 
 @Injectable()
 export class BlockchainConnectorService {
-
   constructor(
     private readonly dataIntegrityService: DataIntegrityService,
     private readonly tokenMintService: TokenMintService,
@@ -31,27 +31,28 @@ export class BlockchainConnectorService {
    * @param metadata The metadata of the order that is to be stored as a hash in the NFT.
    * @param metadataURL The storage location of the metadata.
    */
-  public async mintNFT(serviceProcess: ServiceProcess, invoiceNumber: string, invoicePdf: any, invoiceURL: string, metadata: any, metadataURL: string): Promise<TokenReadDto> {
-
+  public async mintNFT(
+    serviceProcess: ServiceProcess,
+    invoiceNumber: string,
+    invoicePdf: any,
+    invoiceURL: string,
+    metadata: any,
+    metadataURL: string
+  ): Promise<TokenReadDto> {
     const serviceProcessHash: string = this.dataIntegrityService.hashData(Buffer.from(JSON.stringify(serviceProcess)));
     const invoiceHash: string = this.dataIntegrityService.hashData(Buffer.from(invoicePdf.toString()));
     const metadataHash: string = this.dataIntegrityService.hashData(Buffer.from(JSON.stringify(metadata)));
 
-    return this.tokenMintService.mintToken({
-      remoteId: invoiceNumber,
-      asset: new TokenAssetDto(
-        invoiceURL,
-        invoiceHash,
-      ),
-      metadata: new TokenMetadataDto(
-        metadataURL,
-        metadataHash,
-      ),
-      additionalData: JSON.stringify(
-        new AdditionalDataDto(serviceProcess.id, serviceProcessHash, PaymentStatesEnum.OPEN)
-      ),
-      parentIds: [],
-    }, false);
+    return this.tokenMintService.mintToken(
+      {
+        remoteId: invoiceNumber,
+        asset: new TokenAssetDto(invoiceURL, invoiceHash),
+        metadata: new TokenMetadataDto(metadataURL, metadataHash),
+        additionalData: JSON.stringify(new AdditionalDataDto(serviceProcess.id, serviceProcessHash, PaymentStates.OPEN)),
+        parentIds: [],
+      },
+      false
+    );
   }
 
   /**
@@ -83,7 +84,7 @@ export class BlockchainConnectorService {
    * @param tokenId The token id of the NFT whose status is to be changed.
    * @param status The new status to be set for the NFT.
    */
-  public async updateNFTStatus(tokenId: number, status: PaymentStatesEnum): Promise<TokenReadDto> {
+  public async updateNFTStatus(tokenId: number, status: PaymentStates): Promise<TokenReadDto> {
     const foundToken: TokenReadDto = await this.readNFT(tokenId);
 
     const additionalData: AdditionalDataDto = JSON.parse(foundToken.additionalData);
@@ -97,6 +98,6 @@ export class BlockchainConnectorService {
       additionalData: JSON.stringify(additionalData),
     };
 
-    return this.tokenUpdateService.updateToken(tokenId,tokenUpdateDto);
+    return this.tokenUpdateService.updateToken(tokenId, tokenUpdateDto);
   }
 }

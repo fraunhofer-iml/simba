@@ -6,7 +6,6 @@ import {
   InvoiceIdQueryMock,
   InvoiceNFTPrismaMock,
   InvoiceSeed,
-  PaymentStatesEnum,
   PaymentStatesSeed,
   PaymentStatusMocks,
   PrismaService,
@@ -14,6 +13,7 @@ import {
   TradeReceivablesSeed,
 } from '@ap3/database';
 import { S3Module, S3Service } from '@ap3/s3';
+import { PaymentStates } from '@ap3/util';
 import { Client } from 'minio';
 import { MINIO_CONNECTION } from 'nestjs-minio';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -98,7 +98,7 @@ describe('InvoicesController', () => {
     const prismaRawSpy = jest.spyOn(prisma, '$queryRaw');
     prismaRawSpy.mockResolvedValue([TradeReceivablesSeed[0], TradeReceivablesSeed[1]]);
 
-    const params = new AllInvoicesFilterAmqpDto(InvoiceSeed[0].creditorId, InvoiceSeed[0].debtorId, PaymentStatesEnum.PAID);
+    const params = new AllInvoicesFilterAmqpDto(InvoiceSeed[0].creditorId, InvoiceSeed[0].debtorId, PaymentStates.PAID);
     const retVal = await controller.findAll(params);
     expect(prisma.invoice.findMany).toHaveBeenCalled();
     expect(expectedReturn).toEqual(retVal);

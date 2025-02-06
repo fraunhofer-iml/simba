@@ -1,6 +1,6 @@
 import { OrderAmqpDto } from '@ap3/amqp';
-import { CurrenciesEnum } from '@ap3/config';
 import { ServiceStatesEnum } from '@ap3/database';
+import { CurrenciesEnum } from '@ap3/util';
 import { ApiProperty } from '@nestjs/swagger';
 import { OfferDto } from '../offer';
 import { ProductDto } from '../product';
@@ -8,20 +8,26 @@ import { ProductDto } from '../product';
 export class OrderOverviewDto {
   @ApiProperty()
   id: string;
-  @ApiProperty()
-  product: ProductDto;
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    description: 'Name of ordered product',
+  })
+  product: string;
+  @ApiProperty({
+    type: Number,
+    description: 'Amount of ordered products',
+  })
   amount: number;
-  @ApiProperty()
-  year: number;
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    description: 'Planned calendar week for production',
+  })
   calendarWeek: number;
   @ApiProperty({
     type: String,
-    example: '2025-04-05T14:30:00Z',
-    description: 'Timestamp in ISO 8601 format',
+    description: 'Planned year for production',
   })
-  creationDate: string;
+  year: number;
   @ApiProperty({
     type: String,
     enum: ServiceStatesEnum,
@@ -49,11 +55,10 @@ export class OrderOverviewDto {
 
   constructor(
     id: string,
-    product: ProductDto,
+    product: string,
     amount: number,
-    year: number,
     calendarWeek: number,
-    creationDate: string,
+    year: number,
     status: string,
     statusTimestamp: string,
     price: number,
@@ -65,9 +70,8 @@ export class OrderOverviewDto {
     this.id = id;
     this.product = product;
     this.amount = amount;
-    this.year = year;
     this.calendarWeek = calendarWeek;
-    this.creationDate = creationDate;
+    this.year = year;
     this.status = status;
     this.statusTimestamp = statusTimestamp;
     this.price = price;
@@ -80,11 +84,10 @@ export class OrderOverviewDto {
   public static toOrderOverviewDto(dto: OrderAmqpDto, productDto: ProductDto, offerDto: OfferDto, customerName: string): OrderOverviewDto {
     return new OrderOverviewDto(
       dto.id,
-      productDto,
+      productDto.name,
       dto.amount,
-      dto.year,
       dto.calendarWeek,
-      dto.creationDate,
+      dto.year,
       dto.status.status,
       dto.status.timestamp,
       offerDto ? offerDto.price : 0,

@@ -5,6 +5,7 @@ import {
   OrderAmqpMock,
   OrderMessagePatterns,
   ServiceProcessPattern,
+  ServiceProcessStatesAmqpMock,
 } from '@ap3/amqp';
 import {
   CompanyDtoMock,
@@ -21,7 +22,6 @@ import { CompaniesSeed } from '@ap3/database';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ServiceProcessStatesAmqpMock } from '../../../../../libs/amqp/src/lib/dtos/process-svc/service-process/mocks/service-process-states-amqp.mock';
 import { CompaniesService } from '../companies/companies.service';
 import { OffersService } from '../offers/offers.service';
 import { ProductsService } from '../products/products.service';

@@ -12,7 +12,8 @@ import {
   PaidStatisticsAmqpDto,
   TRParamsCompanyIdAndYearAndFinancialRole,
 } from '@ap3/amqp';
-import { FinancialRoles, InvoiceDto, InvoiceIdAndPaymentStateDto, PaidStatisticsDto, UnpaidStatisticsDto } from '@ap3/api';
+import { InvoiceDto, InvoiceIdAndPaymentStateDto, PaidStatisticsDto, UnpaidStatisticsDto } from '@ap3/api';
+import { FinancialRoles } from '@ap3/util';
 import { defaultIfEmpty, firstValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';

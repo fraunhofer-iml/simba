@@ -1,7 +1,7 @@
 import { UnpaidStatisticsDto } from '@ap3/api';
+import { FinancialRoles } from '@ap3/util';
 import { Observable } from 'rxjs';
 import { Component } from '@angular/core';
-import { FinancialRoles } from '../../../shared/constants/financial-roles';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 

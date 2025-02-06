@@ -1,4 +1,5 @@
-import { AuthRolesEnum, CompanyDto, RolesEnum } from '@ap3/api';
+import { AuthRolesEnum, CompanyDto } from '@ap3/api';
+import { UserRoles } from '@ap3/util';
 import { Roles } from 'nest-keycloak-connect';
 import { Body, Controller, Delete, ForbiddenException, Get, Param, Patch, Post, Request } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -49,7 +50,7 @@ export class CompaniesController {
     type: CompanyDto,
   })
   findOne(@Request() req, @Param('id') id: string): Promise<CompanyDto> {
-    if (!req.user.realm_access.roles.includes(RolesEnum.ADMIN) && id !== req.user.company) {
+    if (!req.user.realm_access.roles.includes(UserRoles.ADMIN) && id !== req.user.company) {
       throw new ForbiddenException();
     }
     return this.companiesService.findOne(id);
@@ -68,7 +69,7 @@ export class CompaniesController {
   })
   @ApiBody({ type: CompanyDto })
   update(@Request() req, @Param('id') id: string, @Body() updateCompanyDto: CompanyDto): Promise<string> {
-    if (!req.user.realm_access.roles.includes(RolesEnum.ADMIN) && id !== req.user.company) {
+    if (!req.user.realm_access.roles.includes(UserRoles.ADMIN) && id !== req.user.company) {
       throw new ForbiddenException();
     }
     return this.companiesService.update(id, updateCompanyDto);

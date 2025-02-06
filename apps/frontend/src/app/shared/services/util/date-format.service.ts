@@ -11,6 +11,10 @@ export class DateFormatService {
   ) {}
 
   transformDateToCurrentLanguageFormat(date: string) {
-    return this.datePipe.transform(date, this.translateService.currentLang === 'en' ? LANGUAGEFORMATS.EN : LANGUAGEFORMATS.DE) || '';
+    return this.datePipe.transform(date, this.getDateFormatByCurrentLang()) || '';
+  }
+
+  getDateFormatByCurrentLang() {
+    return this.translateService.currentLang === 'en' ? LANGUAGEFORMATS.EN : LANGUAGEFORMATS.DE;
   }
 }

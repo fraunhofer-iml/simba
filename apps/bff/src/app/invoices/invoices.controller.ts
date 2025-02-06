@@ -1,6 +1,6 @@
 import { PaidStatisticsAmqpDto } from '@ap3/amqp';
-import { AuthRolesEnum, FinancialRoles, InvoiceDto, InvoiceIdAndPaymentStateDto, RolesEnum, UnpaidStatisticsDto } from '@ap3/api';
-import { PaymentStatesEnum } from '@ap3/database';
+import { AuthRolesEnum, InvoiceDto, InvoiceIdAndPaymentStateDto, UnpaidStatisticsDto } from '@ap3/api';
+import { FinancialRoles, PaymentStates, UserRoles } from '@ap3/util';
 import { Roles } from 'nest-keycloak-connect';
 import { Body, Controller, Get, Param, Post, Query, Request } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -30,7 +30,7 @@ export class InvoicesController {
   @ApiQuery({
     name: 'paymentState',
     type: String,
-    enum: PaymentStatesEnum,
+    enum: PaymentStates,
     description: 'Necessary to filter for a specific payment status.',
     required: false,
   })
@@ -41,7 +41,7 @@ export class InvoicesController {
     @Query('debtorId') debtorId = '',
     @Query('paymentState') paymentState = ''
   ): Promise<InvoiceDto[]> {
-    if (!req.user.realm_access.roles.includes(RolesEnum.ADMIN)) {
+    if (!req.user.realm_access.roles.includes(UserRoles.ADMIN)) {
       if (!creditorId && !debtorId) {
         creditorId = debtorId = req.user.company;
       } else {
@@ -63,7 +63,7 @@ export class InvoicesController {
   })
   @ApiResponse({ type: InvoiceDto })
   async findOne(@Request() req: any, @Param('id') id: string): Promise<InvoiceDto> {
-    const companyId = req.user.realm_access.roles.includes(RolesEnum.ADMIN) ? '' : req.user.company;
+    const companyId = req.user.realm_access.roles.includes(UserRoles.ADMIN) ? '' : req.user.company;
     return await this.invoicesService.findOne(companyId, id);
   }
 
@@ -78,7 +78,7 @@ export class InvoicesController {
   })
   @ApiResponse({ type: String, description: 'File name of uploaded zugferd pdf document.' })
   async createAndUploadZugferdPDF(@Request() req: any, @Param('id') id: string): Promise<string> {
-    const companyId = req.user.realm_access.roles.includes(RolesEnum.ADMIN) ? '' : req.user.company;
+    const companyId = req.user.realm_access.roles.includes(UserRoles.ADMIN) ? '' : req.user.company;
     return await this.invoicesService.createAndUploadZugferdPDF(companyId, id);
   }
 

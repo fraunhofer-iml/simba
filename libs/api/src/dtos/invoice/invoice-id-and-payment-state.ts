@@ -1,5 +1,5 @@
 import { InvoiceIdAndPaymentStateAmqpDto } from '@ap3/amqp';
-import { PaymentStatesEnum } from '@ap3/database';
+import { PaymentStates } from '@ap3/util';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class InvoiceIdAndPaymentStateDto {
@@ -7,7 +7,7 @@ export class InvoiceIdAndPaymentStateDto {
   invoiceId: string;
   @ApiProperty({
     type: String,
-    enum: PaymentStatesEnum,
+    enum: PaymentStates,
   })
   paymentStatus: string;
 

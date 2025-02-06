@@ -1,15 +1,14 @@
 import util from 'node:util';
 import { NotPaidStatisticsAmqpDto, PaidStatisticsAmqpDto } from '@ap3/amqp';
-import { MonthsEnum } from '@ap3/config';
 import {
   InvoiceCountAndDueMonth,
   InvoiceIdTypes,
   InvoicePrismaAdapterService,
   InvoiceSumTotalAmountWithoutVatTypes,
-  PaymentStatesEnum,
   TradeReceivablePaymentStatusCount,
   TradeReceivablePrismaService,
 } from '@ap3/database';
+import { MonthsEnum, PaymentStates } from '@ap3/util';
 import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
@@ -66,10 +65,10 @@ export class InvoicesStatisticsService {
     const tradeReceivablePaymentStatesCount: TradeReceivablePaymentStatusCount[] =
       await this.tradeReceivablePrismaService.getTradeReceivableStateStatisticsByFinancialRole(financialRole, companyId);
     for (const trPaymentStateCount of tradeReceivablePaymentStatesCount) {
-      if (trPaymentStateCount.status == PaymentStatesEnum.OPEN) {
+      if (trPaymentStateCount.status == PaymentStates.OPEN) {
         outstanding = Number(trPaymentStateCount.count);
         outstandingValue = Number(trPaymentStateCount.total_value);
-      } else if (trPaymentStateCount.status == PaymentStatesEnum.EXCEEDED) {
+      } else if (trPaymentStateCount.status == PaymentStates.EXCEEDED) {
         overdue = Number(trPaymentStateCount.count);
         overdueValue = Number(trPaymentStateCount.total_value);
       }

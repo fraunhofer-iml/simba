@@ -19,7 +19,8 @@ import {
   UnpaidStatisticsDto,
   UnpaidTradeReceivableStatisticsMock,
 } from '@ap3/api';
-import { CompaniesSeed, FinancialRoles, PaymentStatesEnum } from '@ap3/database';
+import { CompaniesSeed } from '@ap3/database';
+import { FinancialRoles, PaymentStates } from '@ap3/util';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -84,7 +85,7 @@ describe('InvoicesController', () => {
     });
 
     const res: InvoiceDto[] = await controller.findAll(request, '', '', 'Open');
-    const params = new AllInvoicesFilterAmqpDto(request.user.company, request.user.company, PaymentStatesEnum.OPEN);
+    const params = new AllInvoicesFilterAmqpDto(request.user.company, request.user.company, PaymentStates.OPEN);
     expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.READ_ALL, params);
     expect(res).toEqual(expectedReturnValue);
   });

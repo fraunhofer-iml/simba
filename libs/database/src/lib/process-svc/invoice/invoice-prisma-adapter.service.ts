@@ -1,8 +1,8 @@
 import { AllInvoicesFilterAmqpDto } from '@ap3/amqp';
+import { FinancialRoles } from '@ap3/util';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Invoice, Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
-import { FinancialRoles } from '../../constants';
 import { QueryBuilderHelperService } from '../query-builder-helper.service';
 import { InvoicePrismaService } from './invoice-prisma.service';
 import { InvoiceCountAndDueMonth, InvoiceForZugferd, InvoiceSumTotalAmountWithoutVatTypes, InvoiceWithNFT } from './types';
