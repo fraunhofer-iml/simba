@@ -1,4 +1,4 @@
-import { TokenAssetDto, TokenHierarchyDto, TokenMetadataDto, TokenReadDto } from '@fraunhofer-iml/nft-folder-blockchain-connector';
+import { TokenAssetDto, TokenHierarchyDto, TokenMetadataDto, TokenReadDto } from 'nft-folder-blockchain-connector';
 
 export const TokenReadDtoMock: TokenReadDto = new TokenReadDto(
   'remoteId',

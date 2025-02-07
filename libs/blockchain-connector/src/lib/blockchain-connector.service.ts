@@ -8,7 +8,7 @@ import {
   TokenReadService,
   TokenUpdateDto,
   TokenUpdateService,
-} from '@fraunhofer-iml/nft-folder-blockchain-connector';
+} from 'nft-folder-blockchain-connector';
 import { Injectable } from '@nestjs/common';
 import { ServiceProcess } from '@prisma/client';
 import { AdditionalDataDto } from './additional.data.dto';

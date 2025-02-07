@@ -13,7 +13,7 @@ import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common
 import { PaymentStatus, ServiceProcess, TradeReceivable } from '@prisma/client';
 import { BlockchainConnectorService } from '@ap3/blockchain-connector';
 import { S3Service } from '@ap3/s3';
-import { TokenReadDto } from '@fraunhofer-iml/nft-folder-blockchain-connector';
+import { TokenReadDto } from 'nft-folder-blockchain-connector';
 import { MetadataService } from './metadata/metadata.service';
 import { MetadataDto } from './metadata/metadata.dto';
 

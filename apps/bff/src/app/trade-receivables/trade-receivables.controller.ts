@@ -3,7 +3,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { TradeReceivablesService } from './trade-receivables.service';
 import { Roles } from 'nest-keycloak-connect';
-import { TokenReadDto } from '@fraunhofer-iml/nft-folder-blockchain-connector';
+import { TokenReadDto } from 'nft-folder-blockchain-connector';
 
 @Controller('trade-receivables')
 @ApiTags('Trade Receivables')

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { BlockchainConnectorService } from './blockchain-connector.service';
-import { DataIntegrityModule, TokenModule } from '@fraunhofer-iml/nft-folder-blockchain-connector';
+import { DataIntegrityModule, TokenModule } from 'nft-folder-blockchain-connector';
 
 @Module({
   imports: [DataIntegrityModule, TokenModule],

@@ -6,7 +6,7 @@ import {
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { TradeReceivablesService } from './trade-receivables.service';
-import { TokenReadDto } from '@fraunhofer-iml/nft-folder-blockchain-connector';
+import { TokenReadDto } from 'nft-folder-blockchain-connector';
 
 @Controller('trade-receivables')
 export class TradeReceivablesController {

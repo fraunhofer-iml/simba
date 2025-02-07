@@ -6,7 +6,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TradeReceivablesController } from './trade-receivables.controller';
 import { TradeReceivablesService } from './trade-receivables.service';
-import { TokenReadDto } from '@fraunhofer-iml/nft-folder-blockchain-connector';
+import { TokenReadDto } from 'nft-folder-blockchain-connector';
 
 describe('OrdersController', () => {
   let controller: TradeReceivablesController;

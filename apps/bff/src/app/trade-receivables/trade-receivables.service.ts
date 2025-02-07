@@ -8,7 +8,7 @@ import { CreateTradeReceivableDto, TradeReceivableDto } from '@ap3/api';
 import { defaultIfEmpty, firstValueFrom } from 'rxjs';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { TokenReadDto } from '@fraunhofer-iml/nft-folder-blockchain-connector';
+import { TokenReadDto } from 'nft-folder-blockchain-connector';
 
 @Injectable()
 export class TradeReceivablesService {
