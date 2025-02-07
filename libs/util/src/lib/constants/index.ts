@@ -3,3 +3,5 @@ export * from './user-roles.enum';
 export * from './months.enum';
 export * from './currencies.enum';
 export * from './payment-states.enum';
+export * from './service-states.enum';
+export * from './offer-states.enum';

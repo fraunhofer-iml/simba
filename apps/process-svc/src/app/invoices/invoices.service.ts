@@ -1,7 +1,7 @@
 import util from 'node:util';
 import { AllInvoicesFilterAmqpDto, CompanyAndInvoiceAmqpDto, InvoiceAmqpDto, InvoiceIdAndPaymentStateAmqpDto } from '@ap3/amqp';
 import { ConfigurationService } from '@ap3/config';
-import { InvoiceForZugferd, InvoicePrismaAdapterService, InvoiceWithNFT, TradeReceivablePrismaService } from '@ap3/database';
+import { InvoiceDatabaseAdapterService, InvoiceForZugferd, InvoiceWithNFT, TradeReceivablePrismaService } from '@ap3/database';
 import { S3Service } from '@ap3/s3';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PaymentStatus, TradeReceivable } from '@prisma/client';
@@ -12,7 +12,7 @@ export class InvoicesService {
   private readonly logger = new Logger(InvoicesService.name);
   constructor(
     private readonly tradeReceivablePrismaService: TradeReceivablePrismaService,
-    private readonly invoicePrismaService: InvoicePrismaAdapterService,
+    private readonly invoicePrismaService: InvoiceDatabaseAdapterService,
     private readonly invoiceZugferdService: InvoicesZugferdService,
     private readonly config: ConfigurationService,
     private readonly s3Service: S3Service

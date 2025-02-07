@@ -1,4 +1,4 @@
-import { ServiceStatesEnum } from '@ap3/database';
+import { ServiceStatesEnum } from '@ap3/util';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class OrderDto {

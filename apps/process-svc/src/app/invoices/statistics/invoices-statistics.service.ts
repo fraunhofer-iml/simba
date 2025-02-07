@@ -2,8 +2,8 @@ import util from 'node:util';
 import { NotPaidStatisticsAmqpDto, PaidStatisticsAmqpDto } from '@ap3/amqp';
 import {
   InvoiceCountAndDueMonth,
+  InvoiceDatabaseAdapterService,
   InvoiceIdTypes,
-  InvoicePrismaAdapterService,
   InvoiceSumTotalAmountWithoutVatTypes,
   TradeReceivablePaymentStatusCount,
   TradeReceivablePrismaService,
@@ -16,7 +16,7 @@ export class InvoicesStatisticsService {
   private readonly logger = new Logger(InvoicesStatisticsService.name);
   constructor(
     private readonly tradeReceivablePrismaService: TradeReceivablePrismaService,
-    private readonly invoicePrismaService: InvoicePrismaAdapterService
+    private readonly invoicePrismaService: InvoiceDatabaseAdapterService
   ) {}
 
   async calcPaidInvoicesVolumePerMonth(year: number, companyId: string, financialRole: string): Promise<PaidStatisticsAmqpDto[]> {

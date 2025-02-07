@@ -1,15 +1,9 @@
 import { Module } from '@nestjs/common';
-import { CompanyPrismaService, ProductPrismaService } from './master-data-svc';
+import { InvoiceDatabaseAdapterService, InvoicePrismaService, TradeReceivablePrismaService } from './finance';
+import { CompanyPrismaService, ProductPrismaService } from './master-data';
 import { PrismaService } from './prisma.service';
-import {
-  InvoicePrismaAdapterService,
-  InvoicePrismaService,
-  OfferPrismaService,
-  OrderPrismaService,
-  QueryBuilderHelperService,
-  ServiceProcessPrismaService,
-  TradeReceivablePrismaService,
-} from './process-svc';
+import { OfferPrismaService, OrderPrismaService, ServiceProcessPrismaService } from './process';
+import { QueryBuilderHelperService } from './util/query-builder-helper.service';
 
 @Module({
   imports: [],
@@ -24,7 +18,7 @@ import {
     InvoicePrismaService,
     ServiceProcessPrismaService,
     QueryBuilderHelperService,
-    InvoicePrismaAdapterService,
+    InvoiceDatabaseAdapterService,
   ],
   exports: [
     OrderPrismaService,
@@ -34,7 +28,7 @@ import {
     TradeReceivablePrismaService,
     InvoicePrismaService,
     ServiceProcessPrismaService,
-    InvoicePrismaAdapterService,
+    InvoiceDatabaseAdapterService,
   ],
 })
 export class DatabaseModule {}

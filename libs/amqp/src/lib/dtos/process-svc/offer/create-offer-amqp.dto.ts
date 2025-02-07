@@ -1,4 +1,4 @@
-import { OfferStatesEnum } from '@ap3/database';
+import { OfferStatesEnum } from '@ap3/util';
 import { PickType } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { OfferAmqpDto } from './offer-amqp.dto';

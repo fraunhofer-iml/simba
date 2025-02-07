@@ -1,18 +1,10 @@
 import util from 'node:util';
-import {
-  CreateTradeReceivableAmqpDto,
-  TradeReceivableAmqpDto,
-} from '@ap3/amqp';
-import {
-  InvoicePrismaAdapterService,
-  InvoiceWithNFT,
-  ServiceProcessPrismaService,
-  TradeReceivablePrismaService,
-} from '@ap3/database';
+import { CreateTradeReceivableAmqpDto, TradeReceivableAmqpDto } from '@ap3/amqp';
+import { BlockchainConnectorService } from '@ap3/blockchain-connector';
+import { InvoiceDatabaseAdapterService, InvoiceWithNFT, ServiceProcessPrismaService, TradeReceivablePrismaService } from '@ap3/database';
+import { S3Service } from '@ap3/s3';
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { PaymentStatus, ServiceProcess, TradeReceivable } from '@prisma/client';
-import { BlockchainConnectorService } from '@ap3/blockchain-connector';
-import { S3Service } from '@ap3/s3';
 import { TokenReadDto } from 'nft-folder-blockchain-connector';
 import { MetadataService } from './metadata/metadata.service';
 import { MetadataDto } from './metadata/metadata.dto';
@@ -26,8 +18,8 @@ export class TradeReceivablesService {
     private readonly blockchainConnectorService: BlockchainConnectorService,
     private readonly tradeReceivablePrismaService: TradeReceivablePrismaService,
     private readonly serviceProcessPrismaService: ServiceProcessPrismaService,
-    private readonly invoicePrismaAdapterService: InvoicePrismaAdapterService,
-    private readonly s3Service: S3Service,
+    private readonly invoicePrismaAdapterService: InvoiceDatabaseAdapterService,
+    private readonly s3Service: S3Service
   ) {}
 
   async create(createTradeReceivableDto: CreateTradeReceivableAmqpDto): Promise<TradeReceivableAmqpDto> {

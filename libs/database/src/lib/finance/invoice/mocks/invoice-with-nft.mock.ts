@@ -1,0 +1,47 @@
+import { InvoiceSeed, OrdersSeed, TradeReceivablesSeed } from '../../../../seed';
+import { InvoiceWithNFT } from '../types';
+
+export const InvoiceNFTPrismaMock: any[] = <InvoiceWithNFT[]>[
+  {
+    id: InvoiceSeed[0].id,
+    debtorId: InvoiceSeed[0].debtorId,
+    creditorId: InvoiceSeed[0].creditorId,
+    invoiceNumber: InvoiceSeed[0].invoiceNumber,
+    creationDate: InvoiceSeed[0].creationDate,
+    dueDate: InvoiceSeed[0].dueDate,
+    contractCurrency: InvoiceSeed[0].contractCurrency,
+    measuringUnit: InvoiceSeed[0].measuringUnit,
+    netPricePerUnit: InvoiceSeed[0].netPricePerUnit,
+    totalAmountWithoutVat: InvoiceSeed[0].totalAmountWithoutVat,
+    vat: InvoiceSeed[0].vat,
+    url: InvoiceSeed[0].url,
+    serviceProcess: {
+      orderId: OrdersSeed[0].id,
+    },
+    tradeReceivable: {
+      id: TradeReceivablesSeed[0].id,
+      nft: TradeReceivablesSeed[0].nft,
+    },
+  },
+  {
+    id: InvoiceSeed[1].id,
+    debtorId: InvoiceSeed[1].debtorId,
+    creditorId: InvoiceSeed[1].creditorId,
+    invoiceNumber: InvoiceSeed[1].invoiceNumber,
+    creationDate: InvoiceSeed[1].creationDate,
+    dueDate: InvoiceSeed[1].dueDate,
+    contractCurrency: InvoiceSeed[1].contractCurrency,
+    measuringUnit: InvoiceSeed[1].measuringUnit,
+    netPricePerUnit: InvoiceSeed[1].netPricePerUnit,
+    totalAmountWithoutVat: InvoiceSeed[1].totalAmountWithoutVat,
+    vat: InvoiceSeed[1].vat,
+    url: InvoiceSeed[1].url,
+    serviceProcess: {
+      orderId: OrdersSeed[1].id,
+    },
+    tradeReceivable: {
+      id: TradeReceivablesSeed[1].id,
+      nft: TradeReceivablesSeed[1].nft,
+    },
+  },
+];

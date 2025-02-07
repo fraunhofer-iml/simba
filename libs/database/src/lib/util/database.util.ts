@@ -1,4 +1,4 @@
-import { ServiceProcessWithMachineAssignmentsTypes } from '../types/service-process-with-machine-assignments.types';
+import { ServiceProcessWithMachineAssignmentsTypes } from '../process/service-process/types/service-process-with-machine-assignments.types';
 
 export class DatabaseUtil {
   static ExtractMachineIdsFromServiceProcess(serviceProcess: ServiceProcessWithMachineAssignmentsTypes | null): string[] {

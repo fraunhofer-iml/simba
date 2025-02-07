@@ -1,6 +1,5 @@
 import { OrderAmqpDto } from '@ap3/amqp';
-import { ServiceStatesEnum } from '@ap3/database';
-import { CurrenciesEnum } from '@ap3/util';
+import { CurrenciesEnum, ServiceStatesEnum } from '@ap3/util';
 import { ApiProperty } from '@nestjs/swagger';
 import { OfferDto } from '../offer';
 import { ProductDto } from '../product';

@@ -1,5 +1,5 @@
+import { ServiceStatesEnum } from '@ap3/util';
 import { ServiceStatus } from '@prisma/client';
-import { ServiceStatesEnum } from '../lib/constants';
 
 export const ServiceStatesSeed = <ServiceStatus[]>[
   {

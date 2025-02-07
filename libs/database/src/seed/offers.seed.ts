@@ -1,6 +1,6 @@
+import { OfferStatesEnum } from '@ap3/util';
 import { Offer } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
-import { OfferStatesEnum } from '../lib/constants';
 import { ServiceProcessesSeed } from './service-process.seed';
 
 export const OffersSeed: Offer[] = <Offer[]>[

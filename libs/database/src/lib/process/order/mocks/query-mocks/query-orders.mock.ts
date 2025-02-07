@@ -1,0 +1,80 @@
+import { Prisma } from '@prisma/client';
+import { OrdersSeed } from '../../../../../seed';
+
+const ordersOverviewSelect = <Prisma.OrderSelect>{
+  id: true,
+  documentIssueDate: true,
+  vatCurrency: true,
+  orderLines: {
+    select: {
+      item: true,
+      requestedQuantity: true,
+    },
+  },
+  serviceProcess: {
+    include: {
+      machineAssignments: {
+        include: {
+          machine: true,
+        },
+      },
+      states: true,
+      offers: {
+        select: {
+          id: true,
+        },
+      },
+      acceptedOffer: {
+        select: {
+          id: true,
+          price: true,
+        },
+      },
+      invoices: {
+        select: {
+          tradeReceivable: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      },
+    },
+  },
+  buyer: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
+  seller: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
+};
+
+export const findSingleOrderMock = <Prisma.OrderWhereInput>{
+  where: { id: String(OrdersSeed[0].id) },
+  select: ordersOverviewSelect,
+};
+
+export const findAllOrdersQueryMock = <Prisma.OrderWhereInput>{
+  where: {
+    OR: [
+      { buyerId: 'pt0001' },
+      { sellerId: 'pt0001' },
+      {
+        serviceProcess: {
+          machineAssignments: {
+            some: {
+              machine: { companyId: 'pt0001' },
+            },
+          },
+        },
+      },
+    ],
+  },
+  select: ordersOverviewSelect,
+};
