@@ -4,7 +4,7 @@
     <mat-card-content>
       <form class="order-content" [formGroup]="orderForm">
         <mat-form-field class="order-field">
-          <mat-select placeholder="{{ 'ProduktInputField' | translate }}" formControlName="product">
+          <mat-select placeholder="{{ 'ProductInputField' | translate }}" formControlName="product">
             @for (product of products$ | async; track product) {
               <mat-option [value]="product">{{ product.name }} </mat-option>
             }

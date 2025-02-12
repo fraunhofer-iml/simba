@@ -1,15 +1,14 @@
 import { PaidStatisticsDto } from '@ap3/api';
-import { FinancialRoles, UserRoles } from '@ap3/util';
+import { FinancialRoles } from '@ap3/util';
 import { TranslateService } from '@ngx-translate/core';
-import { ChartData, ChartOptions, ChartType } from 'chart.js';
+import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import { forkJoin, map, Observable, Subscription } from 'rxjs';
+import { forkJoin, map, Subscription } from 'rxjs';
 import { Component, ViewChild } from '@angular/core';
-import { DIAGRAMM_COLORS } from '../../../shared/constants/diagramm-colors';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
-import { FinancialRoleService } from '../../../shared/services/util/financial-role.service';
-import { DiagrammData } from './model/diagramm-data';
+import { DiagramData } from './model/diagram-data';
+import { PaidStatisticsUtil } from './paid-statistics.util';
 
 @Component({
   selector: 'app-paid-statistics',
@@ -17,32 +16,22 @@ import { DiagrammData } from './model/diagramm-data';
   styleUrl: './paid-statistics.component.scss',
 })
 export class PaidStatisticsComponent {
-  financialRole: string;
-  userRole: string;
-  selectableYears: number[];
-  selectedYear: number;
   translation: Subscription;
-
+  selectableYears: number[] = [];
+  selectedYear!: number;
+  volumeYAxis = 'y';
+  percentageYAxis = 'y1';
   mixedChartOptions: ChartOptions = {};
   mixedChartData: ChartData<'bar' | 'line'> = { labels: [], datasets: [] };
-  mixedChartType: ChartType = 'bar';
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   constructor(
     private readonly invoiceService: InvoiceService,
     private readonly translationService: TranslateService,
-    private readonly financialRoleService: FinancialRoleService,
     private readonly authService: AuthService
   ) {
-    this.userRole = this.authService.getCurrentlyLoggedInUserRole();
-    this.financialRole = this.financialRoleService.getFinancialRole();
-    this.selectableYears = this.generateSelectableYears();
-    this.selectedYear = this.selectableYears[0];
-    this.buildOptionsConfig();
-    this.buildDataConfig().subscribe((config) => {
-      this.mixedChartData = config;
-    });
+    this.initPaidStatisticsChart();
     this.translation = translationService.onLangChange
       .pipe(
         map(() => {
@@ -52,252 +41,78 @@ export class PaidStatisticsComponent {
       .subscribe();
   }
 
-  getPaidStatisticsForOthers(year: number) {
-    return this.invoiceService.getPaidStatistics(this.financialRole, year).pipe(
-      map((paidDtos) => {
-        const percentages = paidDtos.map((paidDto) => {
-          return paidDto.percentageOfPaidDue;
-        });
-        const totalValues = paidDtos.map((paidDto) => {
-          return paidDto.totalValuePaid;
-        });
-        return new DiagrammData(percentages, totalValues);
-      })
+  initPaidStatisticsChart() {
+    this.selectableYears = PaidStatisticsUtil.generateSelectableYears();
+    this.selectedYear = this.selectableYears[0];
+    this.mixedChartOptions = PaidStatisticsUtil.buildOptionsConfig();
+    this.mixedChartData = PaidStatisticsUtil.buildDataset(
+      this.translationService.instant('MonthLabels'),
+      this.volumeYAxis,
+      this.percentageYAxis
     );
+    this.updateChartDataSet();
+    this.updateLabelTranslations();
   }
 
-  getPaidStatisticsForHost(year: number) {
-    return forkJoin({
-      creditorData: this.invoiceService.getPaidStatistics(FinancialRoles.CREDITOR, year).pipe(
-        map((paidDtos: PaidStatisticsDto[]) => {
-          const percentages = paidDtos.map((paidDto) => {
-            return paidDto.percentageOfPaidDue;
-          });
-          const totalValues = paidDtos.map((paidDto) => {
-            return paidDto.totalValuePaid;
-          });
-          return new DiagrammData(percentages, totalValues);
-        })
-      ),
-      debtorData: this.invoiceService.getPaidStatistics(FinancialRoles.DEBTOR, year).pipe(
-        map((paidDtos: PaidStatisticsDto[]) => {
-          const percentages = paidDtos.map((paidDto) => {
-            return paidDto.percentageOfPaidDue;
-          });
-          const totalValues = paidDtos.map((paidDto) => {
-            return paidDto.totalValuePaid;
-          });
-          return new DiagrammData(percentages, totalValues);
-        })
-      ),
+  getPaidStatistics(year: number) {
+    const creditorData = this.invoiceService
+      .getPaidStatistics(FinancialRoles.CREDITOR, year)
+      .pipe(map((paidDtos: PaidStatisticsDto[]) => new DiagramData(paidDtos)));
+
+    const debtorData = this.invoiceService
+      .getPaidStatistics(FinancialRoles.DEBTOR, year)
+      .pipe(map((paidDtos: PaidStatisticsDto[]) => new DiagramData(paidDtos)));
+
+    return forkJoin({ creditorData, debtorData });
+  }
+
+  updateChartDataSet() {
+    this.getPaidStatistics(this.selectedYear).subscribe((res) => {
+      this.mixedChartData.datasets[0].data = res.creditorData.getPercentages();
+      this.mixedChartData.datasets[1].data = res.creditorData.getTotalValues();
+      this.mixedChartData.datasets[2].data = res.debtorData.getPercentages();
+      this.mixedChartData.datasets[3].data = res.debtorData.getTotalValues();
+      this.chart?.update();
     });
-  }
-
-  getLabelTranslationsForOthers() {
-    return forkJoin({
-      volumeChartLabel: this.translationService.get('VolumeChartLabel'),
-      percentageChartLabel: this.translationService.get('PercentageChartLabel'),
-      monthLabels: this.translationService.get('MonthLabels'),
-    });
-  }
-
-  getLabelTranslationsForHost() {
-    return forkJoin({
-      debtorVolumeChartLabel: this.translationService.get('DebtorVolumeChartLabel'),
-      debtorPercentageChartLabel: this.translationService.get('DebtorPercentageChartLabel'),
-      creditorVolumeChartLabel: this.translationService.get('CreditorVolumeChartLabel'),
-      creditorPercentageChartLabel: this.translationService.get('CreditorPercentageChartLabel'),
-      monthLabels: this.translationService.get('MonthLabels'),
-    });
-  }
-
-  updateChartDataByYear() {
-    if (this.authService.isAdmin()) {
-      this.getPaidStatisticsForHost(this.selectedYear).subscribe((res) => {
-        this.mixedChartData.datasets[0].data = res.creditorData.getPercentages();
-        this.mixedChartData.datasets[1].data = res.creditorData.getTotalValues();
-        this.mixedChartData.datasets[2].data = res.debtorData.getPercentages();
-        this.mixedChartData.datasets[3].data = res.debtorData.getTotalValues();
-        this.chart?.update();
-      });
-    } else {
-      this.getPaidStatisticsForOthers(this.selectedYear).subscribe((res) => {
-        this.mixedChartData.datasets[0].data = res.getPercentages();
-        this.mixedChartData.datasets[1].data = res.getTotalValues();
-        this.chart?.update();
-      });
-    }
   }
 
   updateLabelTranslations() {
-    if (this.userRole === UserRoles.ADMIN) {
-      this.getLabelTranslationsForHost().subscribe((res) => {
-        this.mixedChartData.datasets[0].label = res.creditorPercentageChartLabel;
-        this.mixedChartData.datasets[1].label = res.creditorVolumeChartLabel;
-        this.mixedChartData.datasets[2].label = res.debtorPercentageChartLabel;
-        this.mixedChartData.datasets[3].label = res.debtorVolumeChartLabel;
-        this.mixedChartData.labels = res.monthLabels;
-        this.chart?.update();
-      });
-    } else {
-      this.getLabelTranslationsForOthers().subscribe((res) => {
-        this.mixedChartData.datasets[0].label = res.percentageChartLabel;
-        this.mixedChartData.datasets[1].label = res.volumeChartLabel;
-        this.mixedChartData.labels = res.monthLabels;
-        this.chart?.update();
-      });
+    if (this.authService.isContributor() || this.authService.isOperator()) {
+      this.mixedChartData.datasets[0].label = this.translationService.instant('CreditorPercentageChartLabel');
+      this.mixedChartData.datasets[0].hidden = false;
+      this.mixedChartData.datasets[1].label = this.translationService.instant('CreditorVolumeChartLabel');
+      this.mixedChartData.datasets[1].hidden = false;
     }
+    if (this.authService.isCustomer() || this.authService.isOperator()) {
+      this.mixedChartData.datasets[2].label = this.translationService.instant('DebtorPercentageChartLabel');
+      this.mixedChartData.datasets[2].hidden = false;
+      this.mixedChartData.datasets[3].label = this.translationService.instant('DebtorVolumeChartLabel');
+      this.mixedChartData.datasets[3].hidden = false;
+    }
+    this.mixedChartData.labels = this.translationService.instant('MonthLabels');
+    this.chart?.update();
   }
 
-  generateSelectableYears(): number[] {
-    const selectableYears: number[] = [];
-    const currentyear = new Date().getFullYear();
-    for (let i = 0; i <= 10; i++) {
-      selectableYears.push(currentyear - i);
+  toggleDatasetVisibility(datasetIndex: number) {
+    if (this.mixedChartData.datasets[datasetIndex]) {
+      this.mixedChartData.datasets[datasetIndex].hidden = !this.mixedChartData.datasets[datasetIndex].hidden;
+      this.chart?.update();
     }
-    return selectableYears;
   }
 
   onYearSelection(year: number) {
     this.selectedYear = year;
-    this.updateChartDataByYear();
+    this.updateChartDataSet();
   }
 
-  buildDataConfig() {
-    if (this.authService.isAdmin()) {
-      return this.buildDataConfigForHost();
-    } else {
-      return this.buildDataConfigForOthers();
-    }
+  getCssColorClassVolume(label: string) {
+    return label === this.mixedChartData.datasets[0].label
+      ? 'paid-statistics-creditor-volume-color option'
+      : 'paid-statistics-debtor-volume-color option';
   }
-
-  buildDataConfigForOthers(): Observable<ChartData<'bar' | 'line'>> {
-    return forkJoin({
-      labels: this.getLabelTranslationsForOthers(),
-      data: this.getPaidStatisticsForOthers(this.selectedYear),
-    }).pipe(
-      map((res) => {
-        return {
-          labels: res.labels.monthLabels,
-          datasets: [
-            {
-              label: res.labels.percentageChartLabel,
-              data: res.data.getPercentages(),
-              borderColor: DIAGRAMM_COLORS.CREDITOR_PERCENTAGES,
-              fill: false,
-              tension: 0,
-              yAxisID: 'y1',
-              type: 'line',
-            },
-            {
-              label: res.labels.volumeChartLabel,
-              data: res.data.getTotalValues(),
-              backgroundColor: DIAGRAMM_COLORS.CREDITOR_VALUES,
-              yAxisID: 'y',
-              type: 'bar',
-              barThickness: 10,
-            },
-          ],
-        };
-      })
-    );
-  }
-
-  buildDataConfigForHost(): Observable<ChartData<'bar' | 'line'>> {
-    return forkJoin({
-      labels: this.getLabelTranslationsForHost(),
-      data: this.getPaidStatisticsForHost(this.selectedYear),
-    }).pipe(
-      map((res) => {
-        return {
-          labels: res.labels.monthLabels,
-          datasets: [
-            {
-              label: res.labels.creditorPercentageChartLabel,
-              data: res.data.creditorData.getPercentages(),
-              borderColor: DIAGRAMM_COLORS.CREDITOR_PERCENTAGES,
-              fill: false,
-              tension: 0,
-              yAxisID: 'y1',
-              type: 'line',
-            },
-            {
-              label: res.labels.creditorVolumeChartLabel,
-              data: res.data.creditorData.getTotalValues(),
-              backgroundColor: DIAGRAMM_COLORS.CREDITOR_VALUES,
-              yAxisID: 'y',
-              type: 'bar',
-              barThickness: 10,
-            },
-            {
-              label: res.labels.debtorPercentageChartLabel,
-              data: res.data.debtorData.getPercentages(),
-              borderColor: DIAGRAMM_COLORS.DEPTOR_PERCENTAGES,
-              fill: false,
-              tension: 0,
-              yAxisID: 'y1',
-              type: 'line',
-            },
-            {
-              label: res.labels.debtorVolumeChartLabel,
-              data: res.data.debtorData.getTotalValues(),
-              backgroundColor: DIAGRAMM_COLORS.DEPTOR_VALUES,
-              yAxisID: 'y',
-              type: 'bar',
-              barThickness: 10,
-            },
-          ],
-        };
-      })
-    );
-  }
-
-  buildOptionsConfig() {
-    this.mixedChartOptions = {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true,
-          grid: {
-            display: false,
-          },
-          ticks: {
-            callback: function (value) {
-              return value.toLocaleString() + '€';
-            },
-          },
-        },
-        y1: {
-          min: 0,
-          max: 1,
-          beginAtZero: true,
-          position: 'right',
-          grid: {
-            display: false,
-          },
-          ticks: {
-            stepSize: 0.2,
-            callback: function (value) {
-              return (Number(value) * 100).toLocaleString() + '%';
-            },
-          },
-        },
-        x: {
-          grid: {
-            display: false,
-          },
-        },
-      },
-      plugins: {
-        legend: {
-          position: 'left',
-          labels: {
-            boxWidth: 20,
-            padding: 15,
-          },
-        },
-      },
-    };
+  getCssColorClassRate(label: string) {
+    return label === this.mixedChartData.datasets[1].label
+      ? 'paid-statistics-creditor-percentage-color option'
+      : 'paid-statistics-debtor-percentage-color option';
   }
 }

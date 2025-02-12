@@ -5,6 +5,7 @@ import { AuthService } from '../auth/auth.service';
 @Injectable()
 export class FinancialRoleService {
   private financialRole: FinancialRoles;
+
   constructor(private readonly authService: AuthService) {
     this.financialRole = this.findFinancialRole();
   }
@@ -18,10 +19,6 @@ export class FinancialRoleService {
       }
     }
     return res;
-  }
-
-  setFinancialRole(newRole: FinancialRoles) {
-    this.financialRole = newRole;
   }
 
   getFinancialRole() {

@@ -28,6 +28,12 @@
   margin: 0.25rem 0.5rem 0.25rem 0.5rem;
 }
 
+.data-title-row {
+  display: grid;
+  grid-template-columns: 75% 25%;
+  margin: 0.25rem 0.5rem 0.25rem 0.5rem;
+}
+
 .column-and-items-host {
   display: flex;
   justify-content: center;

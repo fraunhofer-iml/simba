@@ -1,0 +1,6 @@
+export enum DIAGRAM_COLORS {
+  DEBTOR_VOLUME = '#1f2c56',
+  DEBTOR_PERCENTAGES = '#d9ddef',
+  CREDITOR_VOLUME = '#de8d32',
+  CREDITOR_PERCENTAGES = '#f0ca8c',
+}

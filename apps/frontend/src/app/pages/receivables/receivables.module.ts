@@ -1,7 +1,7 @@
 import { TranslateModule } from '@ngx-translate/core';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { FileSaverModule } from 'ngx-filesaver';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, NgOptimizedImage } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { MatButton, MatButtonModule } from '@angular/material/button';
@@ -14,12 +14,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '../../shared/services/auth/auth.service';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
 import { DateFormatService } from '../../shared/services/util/date-format.service';
@@ -55,6 +57,9 @@ import { UnpaidStatisticsComponent } from './unpaid-statistics/unpaid-statistics
     MatDialogModule,
     FileSaverModule,
     MatButtonToggleModule,
+    MatListModule,
+    MatTooltipModule,
+    NgOptimizedImage,
   ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),

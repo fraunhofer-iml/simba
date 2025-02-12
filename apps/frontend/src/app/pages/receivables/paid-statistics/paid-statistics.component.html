@@ -5,7 +5,7 @@
       <span class="year">{{ 'PaidStatisticsYear' | translate }}</span>
       <span> {{ selectedYear }}</span>
       <button mat-icon-button [matMenuTriggerFor]="menu">
-        <mat-icon><img src="assets/icons/calendar.svg" alt="Icon" /></mat-icon>
+        <mat-icon><img ngSrc="assets/icons/calendar.svg" alt="Icon" height="24" width="24" /></mat-icon>
       </button>
       <mat-menu class="year-selector" #menu="matMenu" xPosition="before" cdkScrollable="true">
         @for (year of selectableYears; track year) {
@@ -16,7 +16,45 @@
       </mat-menu>
     </div>
   </div>
-  <div class="chart-wrapper">
-    <canvas baseChart [data]="mixedChartData" [labels]="mixedChartData.labels" [options]="mixedChartOptions"> </canvas>
+  <div class="legend-with-chart">
+      <mat-list>
+        <div class="heading-legend">
+          <span matListItemTitle>{{ 'VolumeChartLabel' | translate }}</span>
+          <span class="material-symbols-outlined" [matTooltip]="'PaidStatisticsVolumeExplanation' | translate" matTooltipPosition="right"> info </span>
+        </div>
+        <mat-selection-list>
+          @for (dataset of mixedChartData.datasets; track dataset; let index = $index) {
+            @if (dataset.label && dataset.yAxisID === volumeYAxis) {
+              <mat-list-option
+                [ngClass]="getCssColorClassVolume(dataset.label)"
+                [selected]="!(mixedChartData.datasets[index].hidden ?? false)"
+                (click)="toggleDatasetVisibility(index)"
+              >
+                <span matListItemLine> {{ dataset.label }} </span>
+              </mat-list-option>
+            }
+          }
+        </mat-selection-list>
+        <div class="heading-legend">
+          <span matListItemTitle>{{ 'PercentageChartLabel' | translate }}</span>
+          <span class="material-symbols-outlined" [matTooltip]="'PaidStatisticsPercentageExplanation' | translate" matTooltipPosition="right"> info </span>
+        </div>
+        <mat-selection-list>
+          @for (dataset of mixedChartData.datasets; track dataset; let index = $index) {
+            @if (dataset.label && dataset.yAxisID === percentageYAxis) {
+              <mat-list-option
+                [ngClass]="getCssColorClassRate(dataset.label)"
+                [selected]="!(mixedChartData.datasets[index].hidden ?? false)"
+                (click)="toggleDatasetVisibility(index)"
+              >
+                <span matListItemLine> {{ dataset.label }} </span>
+              </mat-list-option>
+            }
+          }
+        </mat-selection-list>
+      </mat-list>
+    <div class="chart-wrapper">
+      <canvas baseChart [data]="mixedChartData" [labels]="mixedChartData.labels" [options]="mixedChartOptions"> </canvas>
+    </div>
   </div>
 </div>

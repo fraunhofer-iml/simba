@@ -40,7 +40,7 @@ export class AuthService {
 
   findCurrentlyLoggedInUserRole(): string {
     let role = '';
-    if (this.isAdmin()) {
+    if (this.isOperator()) {
       role = UserRoles.ADMIN;
     } else if (this.isContributor()) {
       role = UserRoles.CONTRIBUTOR;
@@ -54,7 +54,7 @@ export class AuthService {
     return this.role;
   }
 
-  isAdmin() {
+  isOperator() {
     return this.userRoles.some((role: string) => role === UserRoles.ADMIN);
   }
   isContributor() {

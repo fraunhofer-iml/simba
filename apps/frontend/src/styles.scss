@@ -1,3 +1,4 @@
+@use 'material-symbols';
 @import '@angular/material/prebuilt-themes/azure-blue.css';
 
 @font-face {
@@ -38,6 +39,8 @@ body {
   --creme-color: #d9ddef;
   --lavendel-color: #f4f4f4;
   --dark-blue-color: #1f2c56;
+  --frosted-orange: #de8d32;
+  --light-frosted-orange: #f0ca8c;
   --mint-green: #16b568;
   --greyisch: #e8e6e6;
 }
@@ -96,6 +99,31 @@ h3 {
 }
 
 /* Checkbox */
+
+.paid-statistics-debtor-volume-color .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+.mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+  background-color: var(--dark-blue-color) !important;
+  border-color: var(--dark-blue-color) !important;
+}
+
+.paid-statistics-debtor-percentage-color .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+.mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+  background-color: var(--creme-color) !important;
+  border-color: var(--creme-color) !important;
+}
+
+.paid-statistics-creditor-volume-color .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+.mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+  background-color: var(--frosted-orange) !important;
+  border-color: var(--frosted-orange) !important;
+}
+
+.paid-statistics-creditor-percentage-color .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+.mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+  background-color: var(--light-frosted-orange) !important;
+  border-color: var(--light-frosted-orange) !important;
+}
+
 .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
 .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
   background-color: var(--dark-blue-color) !important;
