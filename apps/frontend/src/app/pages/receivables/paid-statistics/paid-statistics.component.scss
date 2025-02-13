@@ -17,17 +17,17 @@
 }
 
 .year {
-  margin-right: 0.5rem;
+  display: flex;
+  gap: 0.5em;
 }
 
 .year-selector {
-  margin: 2px 0.5rem 0 0.5rem;
-  min-width: 3rem;
+  margin: 2px 0.5em 0 0.5em;
+  min-width: 3em;
 }
 
 .chart-wrapper {
-  width: 100%;
-  height: 100%;
+  height: 250px;
 }
 
 .legend-with-chart {

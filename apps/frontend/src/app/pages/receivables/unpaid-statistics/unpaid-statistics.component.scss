@@ -1,12 +1,11 @@
-.unpaid-statistics-wrapper {
-  display: flex;
-  width: 95%;
-  flex-direction: column;
+.titleStatistic-host {
+  margin-left: 0.4em;
+  margin-bottom: 1em;
 }
 
-.unpaid-statistics {
-  display: flex;
-  flex-direction: column;
+.titleStatistic {
+  margin-left: 0.4em;
+  margin-bottom: 2em;
 }
 
 .data {
@@ -19,13 +18,13 @@
 .data-row-host {
   display: grid;
   grid-template-columns: 50% 25% 25%;
-  margin: 0.25rem 0.5rem 0.25rem 0.5rem;
+  margin: 0.25em 0.5em 0.25em 0.5em;
 }
 
 .data-row {
   display: grid;
   grid-template-columns: 85% 15%;
-  margin: 0.25rem 0.5rem 0.25rem 0.5rem;
+  margin: 0.25em 0.5em 0.25em 0.5em;
 }
 
 .data-title-row {
@@ -35,9 +34,9 @@
 }
 
 .column-and-items-host {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  hyphens: auto;
+  overflow-wrap: break-word;
+  text-align: end;
 }
 
 .column-and-items {
@@ -46,12 +45,31 @@
 
 .unpaid-statistics-column-title {
   word-wrap: break-word;
+  color: var(--dark-blue-color);
+  hyphens: auto;
+  overflow-wrap: break-word;
+  text-align: end;
 }
 
-.text-data {
-  font-size: medium;
+.text-lines {
+  border-bottom: 2px solid var(--lavendel-color);
+  padding: 0.5em;
+}
+
+.text-lines-end {
+  padding: 0.5em 0 0 0.5em;
+}
+
+.text-end {
+  text-align: end;
 }
 
 mat-divider {
   border-top-color: greyisch;
+}
+
+@media (max-width: 105em) {
+  .text-lines-end {
+    padding-bottom: 1em;
+  }
 }

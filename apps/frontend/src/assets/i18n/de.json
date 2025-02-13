@@ -57,7 +57,7 @@
   "NftTableSecondColumn": "Kreditor",
   "NftTableThirdColumn": "Rechnungsbetrag",
   "NftTableFourthColumn": "Währung",
-  "NftTableFifthColumn": "Fällig",
+  "NftTableFifthColumn": "Fälligkeitsdatum",
   "NftTableSixthColumn": "Schuldner",
   "NftTableSeventhColumn": "Finanzstatus",
   "PaymentStatus": {
