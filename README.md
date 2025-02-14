@@ -75,6 +75,24 @@ It will show tasks that you can run with Nx.
 - [Subscribe to the Nx Youtube Channel](https://www.youtube.com/@nxdevtools)
 - [Follow us on Twitter](https://twitter.com/nxdevtools)
 
+# Using the docker-compose file
+
+The supplied docker-compose file can be used to start the services required for local development.
+All you need to do is create a
+```
+docker compose up
+```
+must be executed in the project directory. The necessary Docker images for the postgres database, the Minio server and the rabbitmq broker are then loaded automatically and started with a development configuration.
+A blockchain image is also created, which automatically has an instance of the token smart contract deployed.
+The entries in the .env file have been adapted so that they match the dev configuration. This means that after starting the docker container and setting up the test data via
+```
+set-up-db
+```
+the project should be started via
+```
+dev
+```
+
 # Set up environment
 ## Database (oc port-forward svc/oe260-rw 5432:5432)
 ### posgres container
