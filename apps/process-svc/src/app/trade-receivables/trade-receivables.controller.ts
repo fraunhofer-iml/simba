@@ -28,7 +28,7 @@ export class TradeReceivablesController {
   }
 
   @MessagePattern(TradeReceivableMessagePatterns.READ_BY_ID)
-  async readNftByTradeReceivableId(@Payload() tradeReceivableId: string): Promise<TokenReadDto> {
-    return this.tradeReceivablesService.getNftByTradeReceivableId(tradeReceivableId);
+  async readNftByInvoiceNumber(@Payload() invoiceNumber: string): Promise<TokenReadDto> {
+    return this.tradeReceivablesService.getNftByInvoiceNumber(invoiceNumber);
   }
 }

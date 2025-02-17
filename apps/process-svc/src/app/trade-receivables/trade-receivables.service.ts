@@ -64,8 +64,7 @@ export class TradeReceivablesService {
     return this.blockchainConnectorService.readNFTs();
   }
 
-  public async getNftByTradeReceivableId(trandeReceivableId: string): Promise<TokenReadDto> {
-    const tradeReceivable: TradeReceivable = await this.tradeReceivablePrismaService.getTradeReceivable(trandeReceivableId);
-    return this.blockchainConnectorService.readNFT(Number(tradeReceivable.nft));
+  public async getNftByInvoiceNumber(invoiceNumber: string): Promise<TokenReadDto> {
+    return this.blockchainConnectorService.readNFTForInvoiceNumber(invoiceNumber);
   }
 }

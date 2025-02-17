@@ -31,9 +31,9 @@ export class TradeReceivablesService {
     );
   }
 
-  async getNftByTradeReceivableId(tradeReceivableId: string): Promise<TokenReadDto[]> {
+  async getNftByInvoiceNumber(invoiceNumber: string): Promise<TokenReadDto[]> {
     return await firstValueFrom<TokenReadDto[]>(
-      this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_BY_ID, tradeReceivableId).pipe(defaultIfEmpty(null))
+      this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_BY_ID, invoiceNumber).pipe(defaultIfEmpty(null))
     );
   }
 }

@@ -29,16 +29,16 @@ export class TradeReceivablesController {
     return await this.tradeReceivableService.readAllNfts();
   }
 
-  @Get("nft/:tradeReceivableId")
+  @Get("nft/:invoiceNumber")
   @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
   @ApiParam({
-    name: 'tradeReceivableId',
+    name: 'invoiceNumber',
     type: String,
-    description: 'The tradeReceivable id of the nft that should be returned.',
+    description: 'The invoiceNumber of the nft that should be returned.',
     required: true,
   })
   @ApiOperation({ description: 'Returns every nft that is stored for the caller.' })
-  async readNftByTradeReceivableId(@Param('tradeReceivableId') tradeReceivableId: string): Promise<TokenReadDto[]> {
-    return await this.tradeReceivableService.getNftByTradeReceivableId(tradeReceivableId);
+  async readNftByInvoiceNumber(@Param('invoiceNumber') invoiceNumber: string): Promise<TokenReadDto[]> {
+    return await this.tradeReceivableService.getNftByInvoiceNumber(invoiceNumber);
   }
 }

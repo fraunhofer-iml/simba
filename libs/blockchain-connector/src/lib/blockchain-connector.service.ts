@@ -64,11 +64,11 @@ export class BlockchainConnectorService {
   }
 
   /**
-   * Returns the NFT with the specified service process id.
-   * @param serviceProcessId The service process id of the NFT to be returned.
+   * Returns the NFT with the specified invoice number.
+   * @param invoiceNumber The number of the invoice, that is used as the remote id of the NFT.
    */
-  public async readNFTForServiceProcessId(serviceProcessId: string): Promise<TokenReadDto> {
-    return (await this.tokenReadService.getTokens(serviceProcessId))[0];
+  public async readNFTForInvoiceNumber(invoiceNumber: string): Promise<TokenReadDto> {
+    return (await this.tokenReadService.getTokens(invoiceNumber))[0];
   }
 
   /**

@@ -44,6 +44,7 @@ describe('TradeReceivablesController', () => {
             mintNFT: jest.fn(),
             readNFTs: jest.fn(),
             readNFT: jest.fn(),
+            readNFTForInvoiceNumber: jest.fn(),
           },
         },
         {
@@ -121,15 +122,14 @@ describe('TradeReceivablesController', () => {
     expect(expectedReturn).toEqual(retVal);
   });
 
-  it('readNftByID: should return the nft with the given tradeReceivableId', async () => {
-    const prismaTradeReceivableSpy = jest.spyOn(prisma.tradeReceivable, 'findUnique');
-    prismaTradeReceivableSpy.mockResolvedValue(TradeReceivablesSeed[0]);
+  it('readNftByID: should return the nft with the given invoice number', async () => {
+    const testInvoiceNumber = 'testInvoiceNumber';
 
-    const blockchainConnectorSpy = jest.spyOn(blockchainConnectorService, 'readNFT');
+    const blockchainConnectorSpy = jest.spyOn(blockchainConnectorService, 'readNFTForInvoiceNumber');
     blockchainConnectorSpy.mockResolvedValue(TokenReadDtoMock);
 
     const expectedReturn = TokenReadDtoMock;
-    const retVal = await controller.readNftByTradeReceivableId(TradeReceivablesSeed[0].id);
+    const retVal = await controller.readNftByInvoiceNumber(testInvoiceNumber);
     expect(expectedReturn).toEqual(retVal);
   });
 });

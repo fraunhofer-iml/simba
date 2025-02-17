@@ -39,7 +39,7 @@ describe('BlockchainConnectorService', () => {
   const testHashValue = 'test hash';
 
   const tokenReadDto: TokenReadDto = new TokenReadDto(
-    serviceProcess.id,
+    'test invoice number',
     new TokenAssetDto('test uri', testHashValue),
     new TokenMetadataDto('test uri', testHashValue),
     JSON.stringify(new AdditionalDataDto(serviceProcess.id, testHashValue, PaymentStates.OPEN)),
@@ -83,7 +83,7 @@ describe('BlockchainConnectorService', () => {
       updateToken(tokenId: number, tokenUpdateDto: TokenUpdateDto) {
         return Promise.resolve(
           new TokenReadDto(
-            serviceProcess.id,
+            'test invoice number',
             new TokenAssetDto(
               tokenUpdateDto.assetUri ? tokenUpdateDto.assetUri : '',
               tokenUpdateDto.assetHash ? tokenUpdateDto.assetHash : ''
@@ -146,6 +146,6 @@ describe('BlockchainConnectorService', () => {
   });
 
   it('should read nft with remote id', async () => {
-    expect(await service.readNFTForServiceProcessId(serviceProcess.id)).toEqual(tokenReadDto);
+    expect(await service.readNFTForInvoiceNumber(serviceProcess.id)).toEqual(tokenReadDto);
   });
 });
