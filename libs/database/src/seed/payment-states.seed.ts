@@ -1,4 +1,4 @@
-import { PaymentStates } from '@ap3/util';
+import { PaymentStates } from '../../../util/src';
 import { PaymentStatus } from '@prisma/client';
 import { TradeReceivablesSeed } from './trade-receivables.seed';
 
