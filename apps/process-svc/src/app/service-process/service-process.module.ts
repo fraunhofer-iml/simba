@@ -7,5 +7,6 @@ import { ServiceProcessService } from './service-process.service';
   imports: [DatabaseModule],
   controllers: [ServiceProcessController],
   providers: [ServiceProcessService],
+  exports: [ServiceProcessService],
 })
 export class ServiceProcessModule {}

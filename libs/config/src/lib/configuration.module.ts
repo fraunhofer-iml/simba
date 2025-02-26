@@ -2,6 +2,7 @@ import { KeycloakConnectModule } from 'nest-keycloak-connect';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import bffConfig from './configs/bff.config';
+import cppsSchedulerConfig from './configs/cpps-scheduler.config';
 import generalConfig from './configs/general.config';
 import keycloakConfig from './configs/keycloak.config';
 import minioConfig from './configs/minio.config';
@@ -14,7 +15,7 @@ import { KeycloakConfigService } from './keycloak.config.service';
       envFilePath: ['../../.env'],
       isGlobal: true,
       cache: true,
-      load: [keycloakConfig, bffConfig, generalConfig, minioConfig],
+      load: [keycloakConfig, bffConfig, generalConfig, minioConfig, cppsSchedulerConfig],
     }),
     KeycloakConnectModule,
   ],

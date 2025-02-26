@@ -1,9 +1,9 @@
 {
   "name": "@ap3/source",
-  "version": "0.0.0",
-  "license": "MIT",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
   "scripts": {
-    "clean": "rm -rf .angular dist node_modules prisma/dev.db prisma/erd.png",
+    "clean": "rm -rf .angular dist node_modules",
     "clean-install": "npm run clean && npm install && npm run set-up-db",
     "dev": "nx run-many --all --parallel 5 --target serve",
     "migrate-db": "npx prisma migrate dev && npx prisma generate",

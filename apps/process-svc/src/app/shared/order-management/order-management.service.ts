@@ -1,0 +1,98 @@
+import util from 'node:util';
+import { CreateOfferAmqpDto, CreateOrderAmqpDto, OfferAmqpDto, OrderAmqpDto, ServiceStatusAmqpDto } from '@ap3/amqp';
+import { OfferPrismaService, OrderOverview, OrderPrismaService, ServiceProcessPrismaService } from '@ap3/database';
+import { OfferStatesEnum, ServiceStatesEnum } from '@ap3/util';
+import { Injectable, Logger } from '@nestjs/common';
+import { Offer, Prisma } from '@prisma/client';
+import { ServiceProcessService } from '../../service-process/service-process.service';
+import { OrderSchedulingHandlerService } from './order-scheduling-handler.service';
+
+@Injectable()
+export class OrderManagementService {
+  private readonly logger = new Logger(OrderManagementService.name);
+
+  constructor(
+    private readonly orderPrismaService: OrderPrismaService,
+    private readonly offerPrismaService: OfferPrismaService,
+    private readonly serviceProcessService: ServiceProcessService,
+    private readonly serviceProcessPrismaService: ServiceProcessPrismaService,
+    private readonly orderSchedulingHandlerService: OrderSchedulingHandlerService
+  ) {}
+
+  async create(createOrderDto: CreateOrderAmqpDto): Promise<OrderAmqpDto> {
+    this.logger.debug(`Create order: ${util.inspect(createOrderDto)}`);
+    const createOrderEntity: Prisma.OrderCreateInput = createOrderDto.toPrismaCreateEntity();
+    const newOrderId: string = (await this.orderPrismaService.createOrder(createOrderEntity)).id;
+    try {
+      await this.serviceProcessService.updateServiceStatus(newOrderId, ServiceStatesEnum.OPEN);
+
+      const offers: CreateOfferAmqpDto[] = await this.orderSchedulingHandlerService.scheduleOrder(
+        newOrderId,
+        createOrderDto.calendarWeek,
+        createOrderDto.productId,
+        createOrderDto.quantity
+      );
+      await this.createOffers(offers);
+
+      const orderOverview: OrderOverview = await this.orderPrismaService.getOverviewOrder(newOrderId);
+      const currentState: ServiceStatusAmqpDto = OrderAmqpDto.getLatestState(orderOverview.serviceProcess.states);
+
+      return OrderAmqpDto.fromPrismaEntity(orderOverview, currentState);
+    } catch (e) {
+      this.logger.error(`Couldn't reach cpps to scheduler order #${newOrderId}`);
+      await this.cancelOrder(newOrderId);
+      throw e;
+    }
+  }
+
+  async createOffers(offers: CreateOfferAmqpDto[]): Promise<OfferAmqpDto[]> {
+    const createdOffers: OfferAmqpDto[] = [];
+    for (const offer of offers) {
+      const created: Offer = await this.offerPrismaService.createOffer(offer.toPrismaEntity());
+      createdOffers.push(OfferAmqpDto.fromPrismaEntity(created, offer.orderId));
+    }
+    return createdOffers;
+  }
+
+  async accept(offerId: string): Promise<OfferAmqpDto> {
+    this.logger.debug(`Accepting offer #${offerId} for order`);
+    const offer: Offer = await this.offerPrismaService.setOfferState(offerId, OfferStatesEnum.ACCEPTED);
+    const orderIdOfOffer: string = (await this.serviceProcessPrismaService.setServiceProcessAcceptedOffer(offer.serviceProcessId, offer.id))
+      .orderId;
+    try {
+      const notAcceptedOffers: Offer[] = await this.offerPrismaService.getOffersByOrderId(orderIdOfOffer, [
+        OfferStatesEnum.OPEN.toString(),
+      ]);
+      await this.declineOffers(notAcceptedOffers);
+
+      const order = await this.orderPrismaService.getOverviewOrder(orderIdOfOffer);
+      await this.orderSchedulingHandlerService.acceptScheduling(orderIdOfOffer, offer, order);
+      await this.serviceProcessPrismaService.setServiceState(orderIdOfOffer, ServiceStatesEnum.PLANNED);
+
+      return OfferAmqpDto.fromPrismaEntity(offer, orderIdOfOffer);
+    } catch (e) {
+      this.logger.error(`Couldn't reach cpps scheduler to accept offer for order #${orderIdOfOffer}`);
+      await this.cancelOrder(orderIdOfOffer);
+      throw e;
+    }
+  }
+
+  async declineOffers(offers: Offer[]): Promise<void> {
+    if (offers && offers.length > 0) {
+      for (const offer of offers) {
+        await this.offerPrismaService.setOfferState(offer.id, OfferStatesEnum.REFUSED);
+      }
+    } else {
+      this.logger.warn(`No offers found for order`);
+    }
+  }
+
+  async cancelOrder(orderId: string): Promise<boolean> {
+    await this.serviceProcessPrismaService.setServiceState(orderId, ServiceStatesEnum.CANCELED);
+    const offers: Offer[] = await this.offerPrismaService.getOffersByOrderId(orderId);
+    if(offers) {
+      await this.declineOffers(await this.offerPrismaService.getOffersByOrderId(orderId));
+    }
+    return !!(await this.serviceProcessPrismaService.setServiceState(orderId, ServiceStatesEnum.CANCELED));
+  }
+}

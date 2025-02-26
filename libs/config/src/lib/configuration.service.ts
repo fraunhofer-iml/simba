@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { BFF_IDENTIFIER, bffConfig } from './configs/bff.config';
+import { CPPS_SCHEDULER_IDENTIFIER, CppsSchedulerConfig } from './configs/cpps-scheduler.config';
 import { GENERAL_IDENTIFIER, generalConfig } from './configs/general.config';
 import { KEYCLOAK_IDENTIFIER, KeycloakConfig } from './configs/keycloak.config';
 import { MINIO_IDENTIFIER, MinioConfig } from './configs/minio.config';
@@ -48,5 +49,15 @@ export class ConfigurationService {
       throw new Error(msg);
     }
     return minioConfig;
+  }
+
+  public getCppsSchedulerConfig(): CppsSchedulerConfig {
+    const cppsSchedulerConfig = this.configService.get<CppsSchedulerConfig>(CPPS_SCHEDULER_IDENTIFIER);
+    if (!cppsSchedulerConfig) {
+      const msg = 'Environment variables for CPPS scheduler configuration missing!';
+      this.logger.error(msg);
+      throw new Error(msg);
+    }
+    return cppsSchedulerConfig;
   }
 }

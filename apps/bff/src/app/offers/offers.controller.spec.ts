@@ -68,17 +68,6 @@ describe('OffersController', () => {
     expect(res).toEqual(expectedReturnValue);
   });
 
-  it('should create Offers for a specific orderId', async () => {
-    const sendRequestSpy = jest.spyOn(clientProxy, 'send');
-    sendRequestSpy.mockImplementation((messagePattern: OfferMessagePatterns, data: any) => {
-      return of(true);
-    });
-
-    await controller.createOffers(OrderDtosMock[0].id);
-
-    expect(sendRequestSpy).toHaveBeenCalledWith(OfferMessagePatterns.CREATE, OrderDtosMock[0].id);
-  });
-
   it('should accept an Offer by its Id', async () => {
     const sendRequestSpy = jest.spyOn(clientProxy, 'send');
     sendRequestSpy.mockImplementation((messagePattern: OfferMessagePatterns, data: any) => {

@@ -38,19 +38,6 @@ export class OffersController {
     return await this.offersService.findOne(id);
   }
 
-  @Post()
-  @Roles({ roles: [AuthRolesEnum.CUSTOMER] })
-  @ApiOperation({ description: 'Create new offers.' })
-  @ApiQuery({
-    name: 'orderId',
-    type: String,
-    description: 'Identifying id; Required to identify the order.',
-    required: true,
-  })
-  async createOffers(@Query('orderId') orderId: string): Promise<void> {
-    await this.offersService.createOffer(orderId);
-  }
-
   @Patch(':id/accept')
   @Roles({ roles: [AuthRolesEnum.CUSTOMER] })
   @ApiOperation({ description: 'Accept an offer.' })

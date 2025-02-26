@@ -1,37 +1,18 @@
-import { CreateOfferAmqpDto, OfferAmqpDto } from '@ap3/amqp';
+import { OfferAmqpDto } from '@ap3/amqp';
 import { OfferPrismaService, ServiceProcessPrismaService } from '@ap3/database';
-import { OFFER_STATES_TO_SHOW, OfferStatesEnum, ServiceStatesEnum } from '@ap3/util';
+import { OFFER_STATES_TO_SHOW } from '@ap3/util';
 import { Injectable, Logger } from '@nestjs/common';
 import { Offer } from '@prisma/client';
+import { OrderManagementService } from '../shared/order-management/order-management.service';
 
 @Injectable()
 export class OffersService {
   private readonly logger = new Logger(OffersService.name);
   constructor(
     private readonly offerPrismaService: OfferPrismaService,
-    private readonly serviceProcessPrismaService: ServiceProcessPrismaService
+    private readonly serviceProcessPrismaService: ServiceProcessPrismaService,
+    private readonly orderManagementService: OrderManagementService
   ) {}
-
-  async createOffers(orderId: string): Promise<boolean> {
-    try {
-      this.logger.debug(`Create new offers for order ${orderId}`);
-      const offers: CreateOfferAmqpDto[] = [];
-      //TODO: Replace with CPPS scheduler integration
-      for (let i = 0; i < 4; i++) {
-        const offer = new CreateOfferAmqpDto();
-        offer.price = i + 0.4;
-        offer.orderId = orderId;
-        offers.push(offer);
-      }
-      for (const offer of offers) {
-        await this.offerPrismaService.createOffer(offer.toPrismaEntity(orderId));
-      }
-      return true;
-    } catch (e) {
-      this.logger.error(e);
-      throw e;
-    }
-  }
 
   async findAll(): Promise<OfferAmqpDto[]> {
     const offerDtos: OfferAmqpDto[] = [];
@@ -61,31 +42,11 @@ export class OffersService {
   }
 
   async accept(offerId: string): Promise<OfferAmqpDto> {
-    this.logger.debug(`Accepting offer #${offerId} for order`);
-    const offer: Offer = await this.offerPrismaService.acceptOffer(offerId);
-    const relatedServiceProcess = await this.serviceProcessPrismaService.getServiceProcessById(offer.serviceProcessId);
-    const openOffersOfOrder: Offer[] = await this.offerPrismaService.getOffersByOrderId(relatedServiceProcess.orderId, [
-      OfferStatesEnum.OPEN.toString(),
-    ]);
-    await this.declineOffers(openOffersOfOrder);
-    await this.serviceProcessPrismaService.setServiceState(relatedServiceProcess.orderId, ServiceStatesEnum.PLANNED);
-    return OfferAmqpDto.fromPrismaEntity(offer, relatedServiceProcess.orderId);
+    return this.orderManagementService.accept(offerId);
   }
 
-  async decline(orderId: string): Promise<boolean> {
-    this.logger.debug(`Declining offers for order #${orderId}`);
-    const offers: Offer[] = await this.offerPrismaService.getOffersByOrderId(orderId, [OfferStatesEnum.OPEN.toString()]);
-    await this.declineOffers(offers);
-    return !!(await this.serviceProcessPrismaService.setServiceState(orderId, ServiceStatesEnum.CANCELED));
-  }
-
-  private async declineOffers(offers: Offer[]): Promise<void> {
-    if (offers && offers.length > 0) {
-      for (const offer of offers) {
-        await this.offerPrismaService.setOfferState(offer.id, OfferStatesEnum.REFUSED);
-      }
-    } else {
-      this.logger.warn(`No offers found for order`);
-    }
+  async declineAllOffers(orderId: string): Promise<boolean> {
+    this.logger.debug(`Declining offers for order #${orderId} and cancel order`);
+    return this.orderManagementService.cancelOrder(orderId);
   }
 }

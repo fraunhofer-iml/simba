@@ -3,14 +3,18 @@ import { OffersSeed, ServiceProcessesSeed } from '../../../../../seed';
 
 export const queryOffersToShowWithOrder = {
   where: {
-    serviceProcess: {
-      orderId: {
-        equals: String(ServiceProcessesSeed[0].orderId),
-      },
+    AND: [{
+      serviceProcess: {
+        orderId: {
+          equals: String(ServiceProcessesSeed[0].orderId),
+        },
+      }
     },
+    {
     status: {
       in: OFFER_STATES_TO_SHOW,
     },
+  }]
   },
   include: {
     serviceProcess: {
@@ -23,14 +27,18 @@ export const queryOffersToShowWithOrder = {
 
 export const queryOpenOffersByOrderId = {
   where: {
-    serviceProcess: {
-      orderId: {
-        equals: ServiceProcessesSeed[0].orderId,
+    AND: [{
+      serviceProcess: {
+        orderId: {
+          equals: ServiceProcessesSeed[0].orderId,
+        },
+      }
+    },
+    {
+      status: {
+        in: [OfferStatesEnum.OPEN.toString()],
       },
-    },
-    status: {
-      in: [OfferStatesEnum.OPEN.toString()],
-    },
+    }]
   },
   include: {
     serviceProcess: {

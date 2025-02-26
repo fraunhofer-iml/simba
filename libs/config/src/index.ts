@@ -5,3 +5,4 @@ export * from './lib/configs/bff.config';
 export * from './lib/configs/keycloak.config';
 export * from './lib/configs/general.config';
 export * from './lib/configs/minio.config';
+export * from './lib/configs/cpps-scheduler.config';

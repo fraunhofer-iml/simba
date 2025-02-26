@@ -27,7 +27,7 @@ export class CreateOrderDto {
       buyerId: this.customerId,
       sellerId: operatorId,
       productId: this.productId,
-      amount: this.amount,
+      quantity: this.amount,
       year: this.year,
       calendarWeek: this.calendarWeek,
       customerId: this.customerId,

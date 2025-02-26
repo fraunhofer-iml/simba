@@ -1,15 +1,14 @@
-import {Inject, Injectable, Logger} from '@nestjs/common';
-import {OfferDto} from '@ap3/api';
-import {ClientProxy} from '@nestjs/microservices';
-import {AmqpBrokerQueues, OfferMessagePatterns, OrderAmqpDto} from '@ap3/amqp';
-import {firstValueFrom} from 'rxjs';
+import { AmqpBrokerQueues, OfferMessagePatterns, OrderAmqpDto } from '@ap3/amqp';
+import { OfferDto } from '@ap3/api';
+import { firstValueFrom } from 'rxjs';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class OffersService {
   private readonly logger = new Logger(OffersService.name);
 
-  constructor(@Inject(AmqpBrokerQueues.PROCESS_SVC_QUEUE) private readonly processAMQPClient: ClientProxy) {
-  }
+  constructor(@Inject(AmqpBrokerQueues.PROCESS_SVC_QUEUE) private readonly processAMQPClient: ClientProxy) {}
 
   async findAll(orderId?: string): Promise<OfferDto[]> {
     let offers: OfferDto[] = [];
@@ -21,11 +20,6 @@ export class OffersService {
       offers = await firstValueFrom<OfferDto[]>(this.processAMQPClient.send(OfferMessagePatterns.READ_ALL, {}));
     }
     return offers;
-  }
-
-  async createOffer(orderId: string): Promise<boolean> {
-    this.logger.debug(`Send ${OfferMessagePatterns.CREATE} for order ${orderId}`);
-    return await firstValueFrom<boolean>(this.processAMQPClient.send(OfferMessagePatterns.CREATE, orderId));
   }
 
   async findOne(offerId: string): Promise<OfferDto> {

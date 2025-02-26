@@ -5,7 +5,7 @@ import { ServiceStatusAmqpDto } from './service-status-amqp.dto';
 export class OrderAmqpDto {
   id: string;
   productId: string;
-  amount: number;
+  quantity: number;
   year: number;
   calendarWeek: number;
   creationDate: string;
@@ -30,7 +30,7 @@ export class OrderAmqpDto {
   ) {
     this.id = id;
     this.productId = productId;
-    this.amount = amount;
+    this.quantity = amount;
     this.year = year;
     this.calendarWeek = calendarWeek;
     this.creationDate = creationDate;
@@ -45,7 +45,7 @@ export class OrderAmqpDto {
     return <OrderAmqpDto>{
       id: order.id,
       creationDate: order.documentIssueDate.toISOString(),
-      amount: order.orderLines[0].requestedQuantity.toNumber(),
+      quantity: order.orderLines[0].requestedQuantity.toNumber(),
       status: currentState,
       year: order.serviceProcess?.dueYear,
       calendarWeek: order.serviceProcess?.dueCalendarWeek,

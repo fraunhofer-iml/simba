@@ -3,7 +3,7 @@ import { CreateOrderAmqpDto } from '../create-order-amqp.dto';
 
 export const CreateOrderAmqpDtoMock: any = <CreateOrderAmqpDto>{
   productId: ProductsSeed[0].id,
-  amount: +OrderLinesSeed[0].requestedQuantity,
+  quantity: +OrderLinesSeed[0].requestedQuantity,
   year: ServiceProcessesSeed[0].dueYear,
   calendarWeek: ServiceProcessesSeed[0].dueCalendarWeek,
   customerId: CompaniesSeed[0].id,

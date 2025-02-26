@@ -103,9 +103,6 @@ describe('OrdersController', () => {
   it('should create an Order', async () => {
     const expectedReturnValue = OrderOverviewMock[0];
 
-    const offersServiceCreateSpy = jest.spyOn(offersService, 'createOffer');
-    offersServiceCreateSpy.mockResolvedValue(true);
-
     sendRequestSpy.mockImplementation((messagePattern: OrderMessagePatterns, data: any) => {
       return of(OrderAmqpMock[0]);
     });

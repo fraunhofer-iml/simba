@@ -6,7 +6,7 @@ export const OrderAmqpMock = <OrderAmqpDto[]>[
   {
     id: OrdersSeed[0].id,
     productId: OrderLinesSeed[0].itemId,
-    amount: +OrderLinesSeed[0].requestedQuantity,
+    quantity: +OrderLinesSeed[0].requestedQuantity,
     year: ServiceProcessesSeed[0].dueYear,
     calendarWeek: ServiceProcessesSeed[0].dueCalendarWeek,
     creationDate: new Date(ServiceStatesSeed[0].timestamp).toISOString(),
@@ -21,7 +21,7 @@ export const OrderAmqpMock = <OrderAmqpDto[]>[
   {
     id: OrdersSeed[1].id,
     productId: OrderLinesSeed[1].itemId,
-    amount: +OrderLinesSeed[1].requestedQuantity,
+    quantity: +OrderLinesSeed[1].requestedQuantity,
     year: ServiceProcessesSeed[1].dueYear,
     calendarWeek: ServiceProcessesSeed[1].dueCalendarWeek,
     creationDate: new Date(ServiceStatesSeed[4].timestamp).toISOString(),

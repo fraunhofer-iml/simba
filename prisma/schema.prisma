@@ -14,12 +14,12 @@ datasource db {
 }
 
 model Offer {
-  id            String    @id @default(cuid())
-  creationDate  DateTime  @default(now())
-  decisionDate  DateTime?
-  scheduledDate DateTime?
-  price         Decimal   @db.Money
-  status        String
+  id                  String    @id @default(cuid())
+  creationDate        DateTime  @default(now())
+  decisionDate        DateTime?
+  plannedCalendarWeek Decimal?
+  price               Decimal   @db.Money
+  status              String
 
   serviceProcess     ServiceProcess  @relation("OrderOffers", fields: [serviceProcessId], references: [id])
   serviceProcessId   String
@@ -113,7 +113,7 @@ model PaymentStatus {
   timestamp         DateTime        @default(now())
   tradeReceivable   TradeReceivable @relation(fields: [tradeReceivableId], references: [id])
 
-  @@id([tradeReceivableId,timestamp,status])
+  @@id([tradeReceivableId, timestamp, status])
 }
 
 model ServiceProcess {

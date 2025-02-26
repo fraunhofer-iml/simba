@@ -7,11 +7,6 @@ import { OffersService } from './offers.service';
 export class OffersController {
   constructor(private readonly offerService: OffersService) {}
 
-  @MessagePattern(OfferMessagePatterns.CREATE)
-  async create(@Payload() orderId: string): Promise<boolean> {
-    return await this.offerService.createOffers(orderId);
-  }
-
   @MessagePattern(OfferMessagePatterns.READ_ALL)
   async findAll(): Promise<OfferAmqpDto[]> {
     return this.offerService.findAll();
@@ -24,7 +19,7 @@ export class OffersController {
 
   @MessagePattern(OfferMessagePatterns.DECLINE_ALL_OF_ORDER)
   async declineOffersByOrderId(@Payload() orderId: string): Promise<boolean> {
-    return this.offerService.decline(orderId);
+    return this.offerService.declineAllOffers(orderId);
   }
 
   @MessagePattern(OfferMessagePatterns.READ_BY_ID)

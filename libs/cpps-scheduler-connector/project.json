@@ -1,0 +1,9 @@
+{
+  "name": "cpps-schedular-connector",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/cpps-schedular-connector/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project cpps-schedular-connector --web",
+  "targets": {}
+}

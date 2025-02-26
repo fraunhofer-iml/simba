@@ -2,7 +2,7 @@ import { PickType } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { OrderAmqpDto } from './order-amqp.dto';
 
-export class CreateOrderAmqpDto extends PickType(OrderAmqpDto, ['productId', 'amount', 'year', 'calendarWeek', 'customerId']) {
+export class CreateOrderAmqpDto extends PickType(OrderAmqpDto, ['productId', 'quantity', 'year', 'calendarWeek', 'customerId']) {
   vatCurrency: string;
   buyerId: string;
   sellerId: string;
@@ -24,7 +24,7 @@ export class CreateOrderAmqpDto extends PickType(OrderAmqpDto, ['productId', 'am
       },
       orderLines: {
         create: {
-          requestedQuantity: this.amount,
+          requestedQuantity: this.quantity,
           item: {
             connect: {
               id: this.productId,

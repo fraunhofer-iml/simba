@@ -1,6 +1,7 @@
 import util from 'node:util';
 import { GetMachineAssignmentAmqpDto, MachineAssignmentAmqpDto, ServiceProcessStatusAmqpDto } from '@ap3/amqp';
 import { MachineAssignmentWithOwner, ServiceProcessPrismaService, ServiceStatusWithOrderTypes } from '@ap3/database';
+import { ServiceStatesEnum } from '@ap3/util';
 import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
@@ -34,5 +35,9 @@ export class ServiceProcessService {
     return serviceStates.map((state) => {
       return ServiceProcessStatusAmqpDto.fromPrismaEntity(state);
     });
+  }
+
+  async updateServiceStatus(orderId: string, status: ServiceStatesEnum) {
+    await this.serviceProcessPrismaService.setServiceState(orderId, status);
   }
 }

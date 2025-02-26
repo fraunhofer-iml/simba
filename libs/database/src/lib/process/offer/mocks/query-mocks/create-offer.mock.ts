@@ -13,22 +13,44 @@ export const createOfferQuery = <Prisma.OfferCreateInput>{
   },
 };
 
-export const setOrderStateToAcceptedQuery = <Prisma.OrderUpdateInput>{
-  where: { id: String(ServiceProcessesSeed[0].orderId) },
+export const setServiceStateToAcceptedQuery = <Prisma.OrderUpdateInput>{
+  where: { orderId: String(ServiceProcessesSeed[0].orderId) },
+  include: { order: true },
   data: {
-    status: ServiceStatesEnum.PLANNED,
+    states: {
+      create: {
+        status: ServiceStatesEnum.PLANNED,
+        timestamp: new Date('2024-08-16T10:09:41.295Z'),
+      },
+    },
+  },
+};
+
+export const setServiceStateToCanceledQuery = <Prisma.OrderUpdateInput>{
+  where: { orderId: String(ServiceProcessesSeed[0].orderId) },
+  include: { order: true },
+  data: {
+    states: {
+      create: {
+        status: ServiceStatesEnum.CANCELED,
+        timestamp: new Date('2024-08-16T10:09:41.295Z'),
+      },
+    },
+  },
+};
+
+export const setAcceptedForServiceQuery = <Prisma.OrderUpdateInput>{
+  where: { id: String(ServiceProcessesSeed[0].id) },
+  data: {
+    acceptedOfferId: OffersSeed[0].id,
   },
 };
 
 export const setOfferStateToAcceptedQuery = <Prisma.OfferUpdateInput>{
-  where: { id: OffersSeed[0] },
+  where: { id: OffersSeed[0].id },
   data: {
-    states: {
-      create: {
-        status: OfferStatesEnum.ACCEPTED.toString(),
-        timestamp: new Date(),
-      },
-    },
+    status: OfferStatesEnum.ACCEPTED.toString(),
+    decisionDate: new Date('2024-08-16T10:09:41.295Z'),
   },
 };
 
@@ -36,5 +58,6 @@ export const setOfferStateToDeclinedQuery = <Prisma.OfferUpdateInput>{
   where: { id: OffersSeed[3].id },
   data: {
     status: OfferStatesEnum.REFUSED,
+    decisionDate: new Date('2024-08-16T10:09:41.295Z'),
   },
 };

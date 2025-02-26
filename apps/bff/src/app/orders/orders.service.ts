@@ -32,7 +32,6 @@ export class OrdersService {
       const receivedOrder: OrderAmqpDto = await firstValueFrom<OrderAmqpDto>(
         this.processAMQPClient.send(OrderMessagePatterns.CREATE, createOrder)
       );
-      await this.offerService.createOffer(receivedOrder.id);
       return this.loadOrderReferences(receivedOrder);
     } catch (e) {
       this.logger.error(util.inspect(e));

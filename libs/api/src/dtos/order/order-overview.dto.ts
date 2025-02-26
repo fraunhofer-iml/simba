@@ -84,7 +84,7 @@ export class OrderOverviewDto {
     return new OrderOverviewDto(
       dto.id,
       productDto.name,
-      dto.amount,
+      dto.quantity,
       dto.calendarWeek,
       dto.year,
       dto.status.status,
