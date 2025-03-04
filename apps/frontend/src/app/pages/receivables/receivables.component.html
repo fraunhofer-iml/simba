@@ -47,7 +47,15 @@
 
       <ng-container matColumnDef="invoiceNumber">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="invoiceNumber">{{ 'NftTableFirstColumn' | translate }}</th>
-        <td mat-cell *matCellDef="let row">{{ row.invoiceNumber }}</td>
+        <td
+          mat-cell
+          class="invoiceNumber"
+          *matCellDef="let row"
+          (keyup)="openTokenDetailsDialog(row.invoiceNumber)"
+          (click)="openTokenDetailsDialog(row.invoiceNumber)"
+        >
+          {{ row.invoiceNumber }}
+        </td>
       </ng-container>
       <ng-container matColumnDef="creditor">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="creditor">{{ 'NftTableSecondColumn' | translate }}</th>

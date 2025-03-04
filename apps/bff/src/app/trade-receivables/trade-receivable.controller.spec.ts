@@ -75,7 +75,7 @@ describe('OrdersController', () => {
       return of(TokenReadDtoMock);
     });
 
-    const res: TokenReadDto[] = await controller.readNftByInvoiceNumber(inputTradeReceivableId);
+    const res: TokenReadDto = await controller.readNftByInvoiceNumber(inputTradeReceivableId);
     expect(sendRequestSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_BY_ID, inputTradeReceivableId);
     expect(res).toEqual(expectedReturnValue);
   });

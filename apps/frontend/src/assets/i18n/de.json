@@ -76,5 +76,18 @@
   "PaymentStateErrorSnackBarMessage": "Etwas ist schiefgelaufen. Der Status konnte nicht geändert werden. :(",
   "CloseSnackBarAction": "Schließen",
   "PaidStatisticsPercentageExplanation": "Die Zahlungsquote gibt an, welcher Anteil der fälligen Rechnungen innerhalb der vereinbarten Zahlungsfrist beglichen wurde.",
-  "PaidStatisticsVolumeExplanation": "Das Zahlungsvolumen gibt die Gesamtsumme aller gezahlten Rechnungsbeträge in einem bestimmten Zeitraum an."
+  "PaidStatisticsVolumeExplanation": "Das Zahlungsvolumen gibt die Gesamtsumme aller gezahlten Rechnungsbeträge in einem bestimmten Zeitraum an.",
+
+  "token": "Forderungstoken ID",
+  "invoice": "Rechnung",
+  "addresses": "Adressen",
+  "owner": "Besitzer",
+  "minter": "Ersteller",
+  "date": "Datum",
+  "created": "Erstellt am",
+  "updated": "Aktualisiert am",
+  "asset": "Ressource",
+  "metaData": "Metadaten",
+  "information": "Zusätzliche Information",
+  "errorNft": "Keine NFT-Daten für diese Rechnung gefunden."
 }

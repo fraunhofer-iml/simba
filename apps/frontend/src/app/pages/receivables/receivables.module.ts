@@ -31,9 +31,10 @@ import { PaidStatisticsComponent } from './paid-statistics/paid-statistics.compo
 import { ReceivablesRoutingModule } from './receivables-routing.module';
 import { ReceivablesComponent } from './receivables.component';
 import { UnpaidStatisticsComponent } from './unpaid-statistics/unpaid-statistics.component';
+import { TokenDetailsDialogComponent } from './token-details-dialog/token-details-dialog.component';
 
 @NgModule({
-  declarations: [ReceivablesComponent, PaidStatisticsComponent, UnpaidStatisticsComponent, DownloadInvoiceDialogComponent],
+  declarations: [ReceivablesComponent, PaidStatisticsComponent, UnpaidStatisticsComponent, DownloadInvoiceDialogComponent, TokenDetailsDialogComponent],
   imports: [
     CommonModule,
     MatDividerModule,

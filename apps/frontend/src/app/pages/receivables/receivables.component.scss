@@ -100,6 +100,12 @@
   font-weight: bold;
 }
 
+.invoiceNumber:hover {
+  color: var(--dark-blue-color);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 @media (max-width: 105em) {
   .statistics-wrapper {
     flex-direction: column;

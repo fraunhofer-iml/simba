@@ -77,5 +77,18 @@
   "CloseSnackBarAction": "Close",
   "LanguageLabel": "Language",
   "PaidStatisticsPercentageExplanation": "The payment rate indicates the percentage of due invoices that have been settled within the agreed payment terms.",
-  "PaidStatisticsVolumeExplanation": "The payment volume represents the total sum of all paid invoice amounts within a specific period."
+  "PaidStatisticsVolumeExplanation": "The payment volume represents the total sum of all paid invoice amounts within a specific period.",
+
+  "token": "Trade receivable token ID",
+  "invoice": "Invoice",
+  "addresses": "Addresses",
+  "owner": "Owner",
+  "minter": "Minter",
+  "date": "Date",
+  "created": "Created on",
+  "updated": "Updated on",
+  "asset": "Asset",
+  "metaData": "Metadata",
+  "information": "Additional information",
+  "errorNft": "No NFT data found for this invoice."
 }

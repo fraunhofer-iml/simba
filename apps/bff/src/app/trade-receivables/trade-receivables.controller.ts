@@ -38,7 +38,7 @@ export class TradeReceivablesController {
     required: true,
   })
   @ApiOperation({ description: 'Returns every nft that is stored for the caller.' })
-  async readNftByInvoiceNumber(@Param('invoiceNumber') invoiceNumber: string): Promise<TokenReadDto[]> {
+  async readNftByInvoiceNumber(@Param('invoiceNumber') invoiceNumber: string): Promise<TokenReadDto> {
     return await this.tradeReceivableService.getNftByInvoiceNumber(invoiceNumber);
   }
 }

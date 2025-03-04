@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { BASE_URL } from '../../../../environments/environment';
 import { ApiEndpoints } from '../../constants/endpoints';
 import { AuthService } from '../auth/auth.service';
+import { TokenReadDto } from 'nft-folder-blockchain-connector';
 
 @Injectable()
 export class InvoiceService {
@@ -44,5 +45,9 @@ export class InvoiceService {
 
   createNewPaymentStatus(changes: InvoiceIdAndPaymentStateDto[]): Observable<boolean> {
     return this.httpClient.post<boolean>(`${BASE_URL}${ApiEndpoints.invoices.updatePaymentStatus}`, changes);
+  }
+
+  getNftByInvoiceNumber(invoiceNumber: string): Observable<TokenReadDto> {
+    return this.httpClient.get<TokenReadDto>(`${BASE_URL}${ApiEndpoints.tradeReceivables.getALlTradeReceivableNfts}/${invoiceNumber}`)
   }
 }

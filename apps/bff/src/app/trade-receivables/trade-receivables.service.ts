@@ -1,9 +1,4 @@
-import {
-  AmqpBrokerQueues,
-  CreateTradeReceivableAmqpDto,
-  TradeReceivableAmqpDto,
-  TradeReceivableMessagePatterns,
-} from '@ap3/amqp';
+import { AmqpBrokerQueues, CreateTradeReceivableAmqpDto, TradeReceivableAmqpDto, TradeReceivableMessagePatterns } from '@ap3/amqp';
 import { CreateTradeReceivableDto, TradeReceivableDto } from '@ap3/api';
 import { defaultIfEmpty, firstValueFrom } from 'rxjs';
 import { Inject, Injectable } from '@nestjs/common';
@@ -31,8 +26,8 @@ export class TradeReceivablesService {
     );
   }
 
-  async getNftByInvoiceNumber(invoiceNumber: string): Promise<TokenReadDto[]> {
-    return await firstValueFrom<TokenReadDto[]>(
+  async getNftByInvoiceNumber(invoiceNumber: string): Promise<TokenReadDto> {
+    return await firstValueFrom<TokenReadDto>(
       this.processAMQPClient.send(TradeReceivableMessagePatterns.READ_BY_ID, invoiceNumber).pipe(defaultIfEmpty(null))
     );
   }

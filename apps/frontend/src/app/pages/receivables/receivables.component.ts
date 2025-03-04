@@ -14,6 +14,7 @@ import { AuthService } from '../../shared/services/auth/auth.service';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
 import { DateFormatService } from '../../shared/services/util/date-format.service';
 import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
+import { TokenDetailsDialogComponent } from './token-details-dialog/token-details-dialog.component';
 
 @Component({
   selector: 'app-receivables',
@@ -121,6 +122,14 @@ export class ReceivablesComponent {
   openDownloadInvoiceDialog() {
     this.dialog.open(DownloadInvoiceDialogComponent, {
       data: this.selection.selected,
+      panelClass: 'mat-dialog-container',
+      disableClose: true,
+    });
+  }
+
+  openTokenDetailsDialog(invoiceNumber: string) {
+    this.dialog.open(TokenDetailsDialogComponent, {
+      data: invoiceNumber,
       panelClass: 'mat-dialog-container',
       disableClose: true,
     });
