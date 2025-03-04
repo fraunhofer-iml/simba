@@ -2,9 +2,8 @@ services:
   ############
   # DATABASE #
   ############
-
   postgres:
-    image: postgres:16.1
+    image: postgres:17
     restart: unless-stopped
     environment:
       - POSTGRES_USER=postgres
@@ -16,14 +15,10 @@ services:
         max-file: '3'
     ports:
       - '5432:5432'
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-
 
   ##################
   # Object Storage #
   ##################
-
   minio:
     image: minio/minio
     ports:
@@ -72,10 +67,21 @@ services:
     environment:
       DEV_NODE_URL: 'http://blockchain-network:8545'
 
+  ##################
+  # CPPS-Scheduler #
+  ##################
+  cpps-scheduler:
+    image: container-registry.gitlab.cc-asp.fraunhofer.de/skala/ap3/cpps/ki-und-scheduling/cpps-scheduler:v0.0.1
+    logging:
+      options:
+        max-size: 10m
+        max-file: '3'
+    ports:
+      - '8080:8080'
+
   #########
   # UTILS #
   #########
-
   rabbitmq:
     image: rabbitmq:3-management-alpine
     ports:
@@ -88,6 +94,3 @@ networks:
   default:
     name: ap2-dev
     driver: bridge
-
-volumes:
-  postgres-data:
