@@ -5,6 +5,7 @@ import { CPPS_SCHEDULER_IDENTIFIER, CppsSchedulerConfig } from './configs/cpps-s
 import { GENERAL_IDENTIFIER, generalConfig } from './configs/general.config';
 import { KEYCLOAK_IDENTIFIER, KeycloakConfig } from './configs/keycloak.config';
 import { MINIO_IDENTIFIER, MinioConfig } from './configs/minio.config';
+import { NFT_SCHEDULE_CONFIG, NftUpdateScheduleConfig } from './configs/nftUpdateScheduleConfig';
 
 @Injectable()
 export class ConfigurationService {
@@ -49,6 +50,16 @@ export class ConfigurationService {
       throw new Error(msg);
     }
     return minioConfig;
+  }
+
+  public getNftUpdateScheduleConfig(): NftUpdateScheduleConfig {
+    const nftScheduleConfig = this.configService.get<NftUpdateScheduleConfig>(NFT_SCHEDULE_CONFIG);
+    if (!nftScheduleConfig) {
+      const msg = 'Environment variables for automated nft updates missing!';
+      this.logger.error(msg);
+      throw new Error(msg);
+    }
+    return nftScheduleConfig;
   }
 
   public getCppsSchedulerConfig(): CppsSchedulerConfig {

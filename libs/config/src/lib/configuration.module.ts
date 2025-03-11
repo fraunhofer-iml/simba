@@ -6,6 +6,7 @@ import cppsSchedulerConfig from './configs/cpps-scheduler.config';
 import generalConfig from './configs/general.config';
 import keycloakConfig from './configs/keycloak.config';
 import minioConfig from './configs/minio.config';
+import nftScheduleConfig from './configs/nftUpdateScheduleConfig';
 import { ConfigurationService } from './configuration.service';
 import { KeycloakConfigService } from './keycloak.config.service';
 
@@ -15,7 +16,7 @@ import { KeycloakConfigService } from './keycloak.config.service';
       envFilePath: ['../../.env'],
       isGlobal: true,
       cache: true,
-      load: [keycloakConfig, bffConfig, generalConfig, minioConfig, cppsSchedulerConfig],
+      load: [keycloakConfig, bffConfig, generalConfig, minioConfig, nftScheduleConfig, cppsSchedulerConfig],
     }),
     KeycloakConnectModule,
   ],

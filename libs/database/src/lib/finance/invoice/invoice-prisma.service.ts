@@ -90,11 +90,15 @@ export class InvoicePrismaService {
     orderId,
     creditorId,
     debtorId,
+    paymentState,
+    invoiceNumbers
   }: {
     creditorId?: string;
     debtorId?: string;
     orderId?: string;
     invoiceIds?: string[];
+    paymentState?: string;
+    invoiceNumbers?: string[];
   }): Promise<InvoiceWithNFT[]> {
     this.logger.verbose('Return all invoices from database');
     try {
@@ -102,10 +106,12 @@ export class InvoicePrismaService {
       const debtorFilter: Prisma.InvoiceWhereInput | undefined = debtorId ? { debtorId: String(debtorId) } : undefined;
       const orFilters = [creditorFilter, debtorFilter].filter((filter) => filter !== undefined);
 
+      const paymentStateFilter: Prisma.InvoiceWhereInput | undefined = paymentState ? { tradeReceivable: { states: { every: { status: paymentState } } } } : undefined;
       const orderFilter: Prisma.InvoiceWhereInput | undefined = orderId ? { serviceProcess: { orderId: String(orderId) } } : undefined;
-      const invoiceFilter: Prisma.InvoiceWhereInput | undefined =
-        invoiceIds && invoiceIds.length > 0 ? { id: { in: invoiceIds } } : undefined;
-      const andFilters = [orderFilter, invoiceFilter].filter((filter) => filter !== undefined);
+      const invoiceIdsFilter: Prisma.InvoiceWhereInput | undefined = invoiceIds && invoiceIds.length > 0 ? { id: { in: invoiceIds } } : undefined;
+      const invoiceNumbersFilter: Prisma.InvoiceWhereInput | undefined =
+        invoiceNumbers && invoiceNumbers.length > 0 ? { invoiceNumber: { in: invoiceNumbers } } : undefined;
+      const andFilters = [orderFilter, invoiceIdsFilter, paymentStateFilter, invoiceNumbersFilter].filter((filter) => filter !== undefined);
 
       const where: Prisma.InvoiceWhereInput = {
         ...(orFilters.length ? { OR: orFilters } : {}),

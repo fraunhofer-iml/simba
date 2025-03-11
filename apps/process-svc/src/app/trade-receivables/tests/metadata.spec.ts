@@ -1,4 +1,4 @@
-import { ConfigurationModule, ConfigurationService, MinioConfig } from '@ap3/config';
+import { ConfigurationModule } from '@ap3/config';
 import {
   DatabaseModule,
   InvoiceSeed,
@@ -10,37 +10,21 @@ import {
 } from '@ap3/database';
 import { S3Module, S3Service } from '@ap3/s3';
 import { Test, TestingModule } from '@nestjs/testing';
-import { MetadataDto } from '../metadata/metadata.dto';
 import { MetadataService } from '../metadata/metadata.service';
+import { MINIO_CONNECTION } from 'nestjs-minio';
+import { MetadataMock } from './mocks/metadata.mock';
+import { ReadableMock } from './mocks/minio-object.mock';
 
 describe('MetadataService', () => {
   let service: MetadataService;
   let prisma: PrismaService;
-
-  const testMetadata: MetadataDto = new MetadataDto(
-    ServiceProcessesSeed[0],
-    ['of001', 'of002'],
-    [MachineAssignmentSeed[0], MachineAssignmentSeed[1]],
-    ['IV001', 'IV002'],
-    [ServiceStatesSeed[0], ServiceStatesSeed[1]]
-  );
-
-  const testMetadataConfig: MinioConfig = {
-    bucket: 'testBucket',
-    url: 'testUrl',
-    port: 'testPort',
-    accessKey: 'testAccessKey',
-    secret: 'testSecret',
-    invoicePrefix: 'testInvoicePrefix',
-    metadataPrefix: 'testPrefix-',
-    objectStorageURL: 'testObjectStorageURL/',
-  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [DatabaseModule, S3Module, ConfigurationModule],
       providers: [
         MetadataService,
+        S3Service,
         {
           provide: PrismaService,
           useValue: {
@@ -62,15 +46,10 @@ describe('MetadataService', () => {
           },
         },
         {
-          provide: S3Service,
+          provide: MINIO_CONNECTION,
           useValue: {
-            uploadJson: jest.fn(),
-          },
-        },
-        {
-          provide: ConfigurationService,
-          useValue: {
-            getMinioConfig: jest.fn(() => testMetadataConfig),
+            getObject: jest.fn(() => ReadableMock),
+            putObject: jest.fn(),
           },
         },
       ],
@@ -97,12 +76,12 @@ describe('MetadataService', () => {
     prismaServiceStatusSpy.mockResolvedValue([ServiceStatesSeed[0], ServiceStatesSeed[1]]);
 
     const retVal = await service.createMetadata(ServiceProcessesSeed[0].id);
-    expect(testMetadata).toEqual(retVal);
+    expect(MetadataMock).toEqual(retVal);
   });
 
   it('uploadMetadata: should upload a metadata object', async () => {
-    const expectedReturn = 'testPrefix-sp001.json';
-    const retVal = await service.uploadMetadata(testMetadata);
-    expect(expectedReturn).toEqual(retVal);
+    const expectedReturn = 'METADATA_sp001.json';
+    const retVal = await service.uploadMetadata(MetadataMock);
+    expect(retVal).toEqual(expectedReturn);
   });
 });

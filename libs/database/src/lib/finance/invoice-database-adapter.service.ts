@@ -41,11 +41,27 @@ export class InvoiceDatabaseAdapterService {
       throw new NotFoundException(errorMsg);
     }
   }
+
+  async getInvoiceByNumber(invoiceNumber: string): Promise<InvoiceWithNFT> {
+    this.logger.verbose('Return invoice by invoice number from database');
+    const invoices: InvoiceWithNFT[] = await this.invoicePrismaService.getInvoices({
+      invoiceNumbers: [invoiceNumber],
+    });
+    if (invoices && invoices.length == 1) {
+      return invoices[0];
+    } else {
+      const errorMsg = `Invoice with number ${invoiceNumber} was not found in database.`;
+      this.logger.error(errorMsg);
+      throw new NotFoundException(errorMsg);
+    }
+  }
+
   async getInvoicesCorrespondingToFilterParams(filterParams: AllInvoicesFilterAmqpDto, invoiceIds: string[]): Promise<InvoiceWithNFT[]> {
     return this.invoicePrismaService.getInvoices({
       creditorId: filterParams.creditorId,
       debtorId: filterParams.debtorId,
       invoiceIds: invoiceIds,
+      paymentState: filterParams.paymentState
     });
   }
 

@@ -25,4 +25,12 @@ export class S3Service {
   fetchFile(fileName: string) {
     return this.minioClient.getObject(this.config.getMinioConfig().bucket, fileName);
   }
+
+  public convertFileNameToUrl(fileName: string) {
+    const baseUrl = this.config.getMinioConfig().objectStorageURL;
+    if(fileName.includes(baseUrl)){
+      return fileName;
+    }
+    return baseUrl + fileName;
+  }
 }

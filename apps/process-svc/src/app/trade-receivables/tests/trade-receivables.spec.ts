@@ -1,5 +1,5 @@
-import { CreateTradeReceivableAMQPMock, TradeReceivableAMQPMock } from '@ap3/amqp';
-import { TokenReadDtoMock } from '@ap3/api';
+import { CreateTradeReceivableAMQPMock, TradeReceivableAmqpDto, TradeReceivableAMQPMock } from '@ap3/amqp';
+import { CreateNftDto, TokenReadDtoMock, TokenUpdateDtoMock, UpdateNftPaymentStatusDto } from '@ap3/api';
 import { BlockchainConnectorService } from '@ap3/blockchain-connector';
 import { ConfigurationModule } from '@ap3/config';
 import {
@@ -17,42 +17,34 @@ import { InvoicesStatisticsService } from '../../invoices/statistics/invoices-st
 import { MetadataService } from '../metadata/metadata.service';
 import { TradeReceivablesController } from '../trade-receivables.controller';
 import { TradeReceivablesService } from '../trade-receivables.service';
+import { MINIO_CONNECTION } from 'nestjs-minio';
+import {
+  DataIntegrityService,
+  TokenMintService, TokenReadDto,
+  TokenReadService,
+  TokenUpdateService,
+} from 'nft-folder-blockchain-connector';
+import { PaymentStates } from '@ap3/util';
+import { ReadableMock } from './mocks/minio-object.mock';
+import { ScheduleModule } from '@nestjs/schedule';
 
-describe('TradeReceivablesController', () => {
+describe('TradeReceivables', () => {
   let controller: TradeReceivablesController;
-  let prisma: PrismaService;
-  let blockchainConnectorService: BlockchainConnectorService;
+  let prisma: PrismaService
+  let tokenMintService: TokenMintService;
+  let tokenUpdateService: TokenUpdateService;
+  let tokenReadService: TokenReadService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [DatabaseModule, S3Module, ConfigurationModule],
+      imports: [DatabaseModule, S3Module, ConfigurationModule, ScheduleModule.forRoot()],
       controllers: [TradeReceivablesController],
       providers: [
         TradeReceivablesService,
         InvoicesStatisticsService,
-        {
-          provide: MetadataService,
-          useValue: {
-            createMetadata: jest.fn(),
-            uploadMetadata: jest.fn(),
-            generateFileUrl: jest.fn(),
-          },
-        },
-        {
-          provide: BlockchainConnectorService,
-          useValue: {
-            mintNFT: jest.fn(),
-            readNFTs: jest.fn(),
-            readNFT: jest.fn(),
-            readNFTForInvoiceNumber: jest.fn(),
-          },
-        },
-        {
-          provide: S3Service,
-          useValue: {
-            fetchFile: jest.fn(),
-          },
-        },
+        MetadataService,
+        BlockchainConnectorService,
+        S3Service,
         {
           provide: PrismaService,
           useValue: {
@@ -61,19 +53,63 @@ describe('TradeReceivablesController', () => {
             },
             paymentStatus: {
               findMany: jest.fn(),
+              updateMany: jest.fn()
             },
             invoice: {
-              findMany: [],
+              findMany: jest.fn(),
             },
+            offer: {
+              findMany: jest.fn(),
+            },
+            machineAssignment: {
+              findMany: jest.fn(),
+            },
+            serviceStatus: {
+              findMany: jest.fn(),
+            }
           },
         },
+        {
+          provide: MINIO_CONNECTION,
+          useValue: {
+            getObject: jest.fn(() => ReadableMock),
+            putObject: jest.fn(),
+          },
+        },
+        {
+          provide: DataIntegrityService,
+          useValue: {
+            hashData: jest.fn(),
+          },
+        },
+        {
+          provide: TokenMintService,
+          useValue: {
+            mintToken: jest.fn(),
+          },
+        },
+        {
+          provide: TokenUpdateService,
+          useValue: {
+            updateToken: jest.fn(),
+          },
+        },
+        {
+          provide: TokenReadService,
+          useValue: {
+            getToken: jest.fn(),
+            getTokens: jest.fn(),
+          },
+        }
       ],
     }).compile();
 
     jest.useFakeTimers().setSystemTime(new Date('2024-08-16T10:09:41.295Z'));
     controller = module.get<TradeReceivablesController>(TradeReceivablesController) as TradeReceivablesController;
     prisma = module.get<PrismaService>(PrismaService) as PrismaService;
-    blockchainConnectorService = module.get<BlockchainConnectorService>(BlockchainConnectorService) as BlockchainConnectorService;
+    tokenMintService = module.get<TokenMintService>(TokenMintService) as TokenMintService;
+    tokenUpdateService = module.get<TokenUpdateService>(TokenUpdateService) as TokenUpdateService;
+    tokenReadService = module.get<TokenReadService>(TokenReadService) as TokenReadService;
   });
 
   it('should be defined', () => {
@@ -86,8 +122,8 @@ describe('TradeReceivablesController', () => {
     const prismaPaymentStatusSpy = jest.spyOn(prisma.paymentStatus, 'findMany');
     prismaPaymentStatusSpy.mockResolvedValue([PaymentStatesSeed[0], PaymentStatesSeed[1]]);
 
-    const expectedReturn = TradeReceivableAMQPMock[0];
-    const retVal = await controller.create(CreateTradeReceivableAMQPMock);
+    const expectedReturn: TradeReceivableAmqpDto = TradeReceivableAMQPMock[0];
+    const retVal: TradeReceivableAmqpDto = await controller.create(CreateTradeReceivableAMQPMock);
 
     expect(prisma.tradeReceivable.create).toHaveBeenCalledWith({ data: createTradeReceivableQuery });
     expect(prisma.tradeReceivable.create).toHaveBeenCalledTimes(1);
@@ -101,35 +137,75 @@ describe('TradeReceivablesController', () => {
     const serviceProcessSpy = jest.spyOn(prisma.serviceProcess, 'findUnique');
     serviceProcessSpy.mockResolvedValue(ServiceProcessesSeed[0]);
 
-    const blockchainConnectorSpy = jest.spyOn(blockchainConnectorService, 'mintNFT');
-    blockchainConnectorSpy.mockResolvedValue(TokenReadDtoMock);
+    const prismaOfferSpy = jest.spyOn(prisma.offer, 'findMany');
+    prismaOfferSpy.mockResolvedValue([]);
 
-    const testInput = 'testInvoiceId';
-    const expectedReturn = TokenReadDtoMock;
-    const retVal = await controller.createNft(testInput);
+    const prismaMachineAssignmentSpy = jest.spyOn(prisma.machineAssignment, 'findMany');
+    prismaMachineAssignmentSpy.mockResolvedValue([]);
 
-    expect(prisma.invoice.findMany).toHaveBeenCalledTimes(1);
-    expect(prisma.serviceProcess.findUnique).toHaveBeenCalledTimes(1);
+    const prismaServiceStatusSpy = jest.spyOn(prisma.serviceStatus, 'findMany');
+    prismaServiceStatusSpy.mockResolvedValue([]);
+
+    const mintNftSpy = jest.spyOn(tokenMintService, 'mintToken');
+    mintNftSpy.mockResolvedValue(TokenReadDtoMock);
+
+    const createNftDto: CreateNftDto = {
+      invoiceId: 'testInvoiceId'
+    };
+    const expectedReturn: TokenReadDto = TokenReadDtoMock;
+    const retVal: TokenReadDto = await controller.createNft(createNftDto);
+
+    expect(prisma.invoice.findMany).toHaveBeenCalledTimes(2);
+    expect(prisma.serviceProcess.findUnique).toHaveBeenCalledTimes(2);
+    expect(expectedReturn).toEqual(retVal);
+  });
+
+  it('updateNftPaymentStatus: should update a stored nft', async () => {
+    const prismaInvoiceSpy = jest.spyOn(prisma.invoice, 'findMany');
+    prismaInvoiceSpy.mockResolvedValue([InvoiceSeed[0]]);
+
+    const prismaTradeReceivableSpy = jest.spyOn(prisma.tradeReceivable, 'findUnique');
+    prismaTradeReceivableSpy.mockResolvedValue(TradeReceivablesSeed[0]);
+
+    const prismaPaymentStatusSpy = jest.spyOn(prisma.paymentStatus, 'create');
+    prismaPaymentStatusSpy.mockResolvedValue(undefined);
+
+    const readNftSpy = jest.spyOn(tokenReadService, 'getTokens');
+    readNftSpy.mockResolvedValue([TokenReadDtoMock]);
+
+    const readNftByTokenIdSpy = jest.spyOn(tokenReadService, 'getToken');
+    readNftByTokenIdSpy.mockResolvedValue(TokenReadDtoMock);
+
+    const updateNftSpy = jest.spyOn(tokenUpdateService, 'updateToken');
+    updateNftSpy.mockResolvedValue(TokenUpdateDtoMock);
+
+    const invoiceIdPayload: UpdateNftPaymentStatusDto = {
+      invoiceNumber: "testInvoiceNumber",
+      paymentStatus: PaymentStates.FINANCED
+    };
+
+    const expectedReturn: TokenReadDto = TokenUpdateDtoMock;
+    const retVal: TokenReadDto = await controller.updateNftPaymentStatus(invoiceIdPayload);
     expect(expectedReturn).toEqual(retVal);
   });
 
   it('readAllNfts: should read every nft that is stored', async () => {
-    const blockchainConnectorSpy = jest.spyOn(blockchainConnectorService, 'readNFTs');
-    blockchainConnectorSpy.mockResolvedValue([TokenReadDtoMock]);
+    const readNftSpy = jest.spyOn(tokenReadService, 'getTokens');
+    readNftSpy.mockResolvedValue([TokenReadDtoMock]);
 
-    const expectedReturn = [TokenReadDtoMock];
-    const retVal = await controller.readAllNfts();
+    const expectedReturn: TokenReadDto[] = [TokenReadDtoMock];
+    const retVal: TokenReadDto[] = await controller.readAllNfts();
     expect(expectedReturn).toEqual(retVal);
   });
 
-  it('readNftByID: should return the nft with the given invoice number', async () => {
+  it('readNftByInvoiceNumber: should return the nft with the given invoice number', async () => {
     const testInvoiceNumber = 'testInvoiceNumber';
 
-    const blockchainConnectorSpy = jest.spyOn(blockchainConnectorService, 'readNFTForInvoiceNumber');
-    blockchainConnectorSpy.mockResolvedValue(TokenReadDtoMock);
+    const readNftSpy = jest.spyOn(tokenReadService, 'getTokens');
+    readNftSpy.mockResolvedValue([TokenReadDtoMock]);
 
-    const expectedReturn = TokenReadDtoMock;
-    const retVal = await controller.readNftByInvoiceNumber(testInvoiceNumber);
+    const expectedReturn: TokenReadDto = TokenReadDtoMock;
+    const retVal: TokenReadDto = await controller.readNftByInvoiceNumber(testInvoiceNumber);
     expect(expectedReturn).toEqual(retVal);
   });
 });

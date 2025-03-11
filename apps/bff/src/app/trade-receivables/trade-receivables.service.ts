@@ -1,5 +1,10 @@
-import { AmqpBrokerQueues, CreateTradeReceivableAmqpDto, TradeReceivableAmqpDto, TradeReceivableMessagePatterns } from '@ap3/amqp';
-import { CreateTradeReceivableDto, TradeReceivableDto } from '@ap3/api';
+import {
+  AmqpBrokerQueues,
+  CreateTradeReceivableAmqpDto,
+  TradeReceivableAmqpDto,
+  TradeReceivableMessagePatterns,
+} from '@ap3/amqp';
+import { CreateNftDto, CreateTradeReceivableDto, TradeReceivableDto, UpdateNftPaymentStatusDto } from '@ap3/api';
 import { defaultIfEmpty, firstValueFrom } from 'rxjs';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -18,6 +23,18 @@ export class TradeReceivablesService {
       this.processAMQPClient.send(TradeReceivableMessagePatterns.CREATE, createTradeReceivableAmqpDto).pipe(defaultIfEmpty(null))
     );
     return TradeReceivableDto.fromAmqpDto(tradeReceivableAmqpDto);
+  }
+
+  async createNft(createNftDto: CreateNftDto): Promise<TokenReadDto> {
+    return firstValueFrom<TokenReadDto>(
+      this.processAMQPClient.send(TradeReceivableMessagePatterns.CREATE_NFT, createNftDto).pipe(defaultIfEmpty(null))
+    );
+  }
+
+  async updateNft(updateNftPaymentStatusDto: UpdateNftPaymentStatusDto): Promise<TokenReadDto> {
+    return firstValueFrom<TokenReadDto>(
+      this.processAMQPClient.send(TradeReceivableMessagePatterns.UPDATE_NFT, updateNftPaymentStatusDto).pipe(defaultIfEmpty(null))
+    );
   }
 
   async readAllNfts(): Promise<TokenReadDto[]> {

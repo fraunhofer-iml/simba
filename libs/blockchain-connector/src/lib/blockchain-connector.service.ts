@@ -80,6 +80,15 @@ export class BlockchainConnectorService {
   }
 
   /**
+   * Returns the payment state of the given token read dto.
+   * @param tokenReadDto The token dto whose payment status is to be returned.
+   */
+  public getPaymentState(tokenReadDto: TokenReadDto): PaymentStates {
+    const additionalInformation: AdditionalDataDto = JSON.parse(tokenReadDto.additionalData);
+    return additionalInformation.status;
+  }
+
+  /**
    * Updates the status field of the additional data of the NFT.
    * @param tokenId The token id of the NFT whose status is to be changed.
    * @param status The new status to be set for the NFT.
