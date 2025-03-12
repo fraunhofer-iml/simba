@@ -1,3 +1,11 @@
+/*
+ * Copyright Fraunhofer Institute for Material Flow and Logistics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * For details on the licensing terms, see the LICENSE file.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { KeycloakConnectModule } from 'nest-keycloak-connect';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -13,7 +21,7 @@ import { KeycloakConfigService } from './keycloak.config.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ['../../.env'],
+      envFilePath: ['../../.env', '../../.env.local'],
       isGlobal: true,
       cache: true,
       load: [keycloakConfig, bffConfig, generalConfig, minioConfig, nftScheduleConfig, cppsSchedulerConfig],

@@ -96,6 +96,14 @@ CREATE UNIQUE INDEX "Order_acceptedByOrderId_key" ON "Order"("acceptedByOrderId"
 -- CreateIndex
 CREATE UNIQUE INDEX "Order_tradeReceivableId_key" ON "Order"("tradeReceivableId");
 
+/*
+ * Copyright Fraunhofer Institute for Material Flow and Logistics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * For details on the licensing terms, see the LICENSE file.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 -- AddForeignKey
 ALTER TABLE "Offer" ADD CONSTRAINT "Offer_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 

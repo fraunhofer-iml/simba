@@ -1,6 +1,16 @@
 {
   "name": "@ap3/source",
   "version": "0.0.1",
+  "keywords": [
+    "fraunhofer",
+    "monorepo",
+    "nx",
+    "nestjs",
+    "blockchain",
+    "smart contracts",
+    "nft",
+    "ethereum"
+  ],
   "license": "Apache-2.0",
   "scripts": {
     "clean": "rm -rf .angular dist node_modules",

@@ -214,6 +214,14 @@ ALTER TABLE "Invoice" ADD CONSTRAINT "Invoice_debtorId_fkey" FOREIGN KEY ("debto
 -- AddForeignKey
 ALTER TABLE "Invoice" ADD CONSTRAINT "Invoice_creditorId_fkey" FOREIGN KEY ("creditorId") REFERENCES "Company"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
+/*
+ * Copyright Fraunhofer Institute for Material Flow and Logistics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * For details on the licensing terms, see the LICENSE file.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 -- AddForeignKey
 ALTER TABLE "TradeReceivable" ADD CONSTRAINT "TradeReceivable_invoiceId_fkey" FOREIGN KEY ("invoiceId") REFERENCES "Invoice"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 

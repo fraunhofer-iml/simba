@@ -1,3 +1,11 @@
+/*
+ * Copyright Fraunhofer Institute for Material Flow and Logistics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * For details on the licensing terms, see the LICENSE file.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import util from 'node:util';
 import { GetMachineAssignmentAmqpDto, MachineAssignmentAmqpDto, ServiceProcessStatusAmqpDto } from '@ap3/amqp';
 import { MachineAssignmentWithOwner, ServiceProcessPrismaService, ServiceStatusWithOrderTypes } from '@ap3/database';

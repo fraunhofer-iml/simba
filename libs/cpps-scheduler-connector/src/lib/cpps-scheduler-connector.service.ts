@@ -1,3 +1,11 @@
+/*
+ * Copyright Fraunhofer Institute for Material Flow and Logistics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * For details on the licensing terms, see the LICENSE file.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { ConfigurationService } from '@ap3/config';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { GET_CURRENCT_SCHEDULING, POST_SCHEDULE_ORDER, PUT_ACCEPT_OFFER } from './cpps-scheduler-endpoints.enum';

@@ -1,3 +1,11 @@
+/*
+ * Copyright Fraunhofer Institute for Material Flow and Logistics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * For details on the licensing terms, see the LICENSE file.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { ConfigurationService } from '@ap3/config';
 import { InvoicePrismaService, OfferPrismaService, ServiceProcessPrismaService } from '@ap3/database';
 import { S3Service } from '@ap3/s3';

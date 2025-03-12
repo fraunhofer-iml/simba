@@ -1,3 +1,11 @@
+/*
+ * Copyright Fraunhofer Institute for Material Flow and Logistics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * For details on the licensing terms, see the LICENSE file.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { InvoiceWithNFT } from '@ap3/database';
 import { Invoice, PaymentStatus, TradeReceivable } from '@prisma/client';
 import { PaymentStatusAmqpDto } from '../trade-receivable';

@@ -1,4 +1,12 @@
 /*
+ * Copyright Fraunhofer Institute for Material Flow and Logistics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * For details on the licensing terms, see the LICENSE file.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
   Warnings:
 
   - A unique constraint covering the columns `[serviceProcessId]` on the table `Invoice` will be added. If there are existing duplicate values, this will fail.
