@@ -6,14 +6,22 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export class AllInvoicesFilterAmqpDto {
-  creditorId: string;
-  debtorId: string;
-  paymentState: string;
+import { PaymentStates } from '@ap3/util';
 
-  constructor(creditorId: string, debtorId: string, paymentState: string) {
+export class AllInvoicesFilterAmqpDto {
+  paymentStates?: PaymentStates[];
+  creditorId?: string;
+  debtorId?: string;
+  invoiceNumber?: string;
+  dueDateFrom?: Date;
+  dueDateTo?: Date;
+
+  constructor(paymentStates?: PaymentStates[], creditorId?: string, debtorId?: string, invoiceNumber?: string, dueDateFrom?: Date, dueDateTo?: Date) {
+    this.paymentStates = paymentStates;
     this.creditorId = creditorId;
     this.debtorId = debtorId;
-    this.paymentState = paymentState;
+    this.invoiceNumber = invoiceNumber;
+    this.dueDateFrom = dueDateFrom;
+    this.dueDateTo = dueDateTo;
   }
 }

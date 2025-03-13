@@ -24,6 +24,20 @@ export class InvoicesController {
   @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
   @ApiOperation({ description: 'Get all invoices.' })
   @ApiQuery({
+    name: 'dueDateFrom',
+    type: Date,
+    description: 'Necessary to filter for the start of a specific due date range. The date of the event has to be in ISO format (YYYY-MM-DDTHH:MM:SSZ)',
+    required: false,
+    example: '2024-09-20T07:55:55.695Z'
+  })
+  @ApiQuery({
+    name: 'dueDateTo',
+    type: Date,
+    description: 'Necessary to filter for the end of a specific due date range. The date of the event has to be in ISO format (YYYY-MM-DDTHH:MM:SSZ)',
+    required: false,
+    example: '2024-09-20T07:55:55.695Z'
+  })
+  @ApiQuery({
     name: 'creditorId',
     type: String,
     description: 'Company id; Required to identify the corresponding creditor.',
@@ -36,18 +50,28 @@ export class InvoicesController {
     required: false,
   })
   @ApiQuery({
-    name: 'paymentState',
+    name: 'paymentStates',
     type: String,
     enum: PaymentStates,
-    description: 'Necessary to filter for a specific payment status.',
+    description: 'Necessary to filter for a specific payment status. This query parameter can be used multiple times in the same request to select multiple PaymentStates',
+    required: false,
+    example: PaymentStates.OPEN
+  })
+  @ApiQuery({
+    name: 'invoiceNumber',
+    type: String,
+    description: 'Necessary to filter for a specific invoice number.',
     required: false,
   })
   @ApiResponse({ type: [InvoiceDto] })
   async findAll(
     @Request() req,
-    @Query('creditorId') creditorId = '',
-    @Query('debtorId') debtorId = '',
-    @Query('paymentState') paymentState = ''
+    @Query('dueDateFrom') dueDateFrom: Date,
+    @Query('dueDateTo') dueDateTo: Date,
+    @Query('creditorId') creditorId: string = '',
+    @Query('debtorId') debtorId: string = '',
+    @Query('paymentStates') paymentStates: PaymentStates[] = [],
+    @Query('invoiceNumber') invoiceNumber: string = ''
   ): Promise<InvoiceDto[]> {
     if (!req.user.realm_access.roles.includes(UserRoles.ADMIN)) {
       if (!creditorId && !debtorId) {
@@ -57,7 +81,14 @@ export class InvoicesController {
         debtorId = debtorId ? req.user.company : '';
       }
     }
-    return await this.invoicesService.findAllWithFilter(creditorId, debtorId, paymentState);
+    return await this.invoicesService.findAllWithFilter(
+      Array.isArray(paymentStates) ? paymentStates : [paymentStates],
+      creditorId,
+      debtorId,
+      invoiceNumber,
+      dueDateFrom,
+      dueDateTo
+      );
   }
 
   @Get(':id')

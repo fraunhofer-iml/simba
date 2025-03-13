@@ -21,7 +21,7 @@ import {
   TRParamsCompanyIdAndYearAndFinancialRole,
 } from '@ap3/amqp';
 import { InvoiceDto, InvoiceIdAndPaymentStateDto, PaidStatisticsDto, UnpaidStatisticsDto } from '@ap3/api';
-import { FinancialRoles } from '@ap3/util';
+import { FinancialRoles, PaymentStates } from '@ap3/util';
 import { defaultIfEmpty, firstValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -35,9 +35,23 @@ export class InvoicesService {
     private readonly companyService: CompaniesService
   ) {}
 
-  async findAllWithFilter(creditorId: string, debtorId: string, paymentState: string): Promise<InvoiceDto[]> {
+  async findAllWithFilter(
+    paymentStates: PaymentStates[],
+    creditorId: string,
+    debtorId: string,
+    invoiceNumber: string,
+    dueDateFrom: Date,
+    dueDateTo: Date,
+  ): Promise<InvoiceDto[]> {
     this.logger.debug(`Requesting Tradereceivables `);
-    const params = new AllInvoicesFilterAmqpDto(creditorId, debtorId, paymentState);
+    const params = new AllInvoicesFilterAmqpDto(
+      paymentStates,
+      creditorId,
+      debtorId,
+      invoiceNumber,
+      dueDateFrom,
+      dueDateTo
+      );
     const response: InvoiceAmqpDto[] = await firstValueFrom<InvoiceAmqpDto[]>(
       this.processAMQPClient.send(InvoiceMessagePatterns.READ_ALL, params)
     );

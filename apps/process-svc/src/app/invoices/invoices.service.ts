@@ -30,19 +30,21 @@ export class InvoicesService {
     this.logger.verbose(`requesting all trade receivables for ${util.inspect(filterParams)}`);
     try {
       const possibleInvoiceIds: string[] = [];
-      if (filterParams.paymentState) {
-        const tradeReceivables: TradeReceivable[] = await this.tradeReceivablePrismaService.getTradeReceivableByPaymentStatus(
-          filterParams.paymentState,
-          filterParams.creditorId,
-          filterParams.debtorId
-        );
-        if (!tradeReceivables || tradeReceivables.length == 0) {
-          this.logger.verbose(`No invoices found for payment state ${filterParams.paymentState}`);
-          return [];
-        }
-        for (const tr of tradeReceivables) {
-          possibleInvoiceIds.push(tr.invoiceId);
-        }
+
+      const tradeReceivables: TradeReceivable[] = await this.tradeReceivablePrismaService.getTradeReceivablesForFilterParams(
+        filterParams.paymentStates,
+        filterParams.creditorId,
+        filterParams.debtorId,
+        filterParams.invoiceNumber,
+        filterParams.dueDateFrom,
+        filterParams.dueDateTo
+      );
+      if (!tradeReceivables || tradeReceivables.length == 0) {
+        this.logger.verbose(`No invoices found for the filter parameters ${JSON.stringify(filterParams)}`);
+        return [];
+      }
+      for (const tr of tradeReceivables) {
+        possibleInvoiceIds.push(tr.invoiceId);
       }
       const invoices: InvoiceWithNFT[] = await this.invoicePrismaService.getInvoicesCorrespondingToFilterParams(
         filterParams,

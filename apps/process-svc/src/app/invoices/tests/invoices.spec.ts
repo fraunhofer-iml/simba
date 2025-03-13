@@ -106,7 +106,14 @@ describe('InvoicesController', () => {
     const prismaRawSpy = jest.spyOn(prisma, '$queryRaw');
     prismaRawSpy.mockResolvedValue([TradeReceivablesSeed[0], TradeReceivablesSeed[1]]);
 
-    const params = new AllInvoicesFilterAmqpDto(InvoiceSeed[0].creditorId, InvoiceSeed[0].debtorId, PaymentStates.PAID);
+    const params = new AllInvoicesFilterAmqpDto(
+      [PaymentStates.PAID],
+      InvoiceSeed[0].creditorId,
+      InvoiceSeed[0].debtorId,
+      InvoicesAmqpMock[0].invoiceNumber,
+      InvoicesAmqpMock[0].invoiceDueDate,
+      InvoicesAmqpMock[0].invoiceDueDate
+    );
     const retVal = await controller.findAll(params);
     expect(prisma.invoice.findMany).toHaveBeenCalled();
     expect(expectedReturn).toEqual(retVal);

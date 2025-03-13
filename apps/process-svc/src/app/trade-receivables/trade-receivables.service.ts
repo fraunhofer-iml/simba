@@ -7,7 +7,12 @@
  */
 
 import util from 'node:util';
-import { CreateTradeReceivableAmqpDto, InvoiceIdAndPaymentStateAmqpDto, TradeReceivableAmqpDto } from '@ap3/amqp';
+import {
+  AllInvoicesFilterAmqpDto,
+  CreateTradeReceivableAmqpDto,
+  InvoiceIdAndPaymentStateAmqpDto,
+  TradeReceivableAmqpDto,
+} from '@ap3/amqp';
 import { BlockchainConnectorService } from '@ap3/blockchain-connector';
 import {
   InvoiceDatabaseAdapterService,
@@ -138,7 +143,7 @@ export class TradeReceivablesService {
 
   private async schedulePaymentExceedCheck(): Promise<void> {
     const invoices: InvoiceWithNFT[] = await this.invoicePrismaAdapterService.getInvoicesCorrespondingToFilterParams(
-      { paymentState: PaymentStates.OPEN, creditorId: undefined, debtorId: undefined },
+      new AllInvoicesFilterAmqpDto([PaymentStates.OPEN]),
       []
     );
     for (const invoice of invoices) {

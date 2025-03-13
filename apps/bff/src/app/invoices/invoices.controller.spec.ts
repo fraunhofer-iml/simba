@@ -92,8 +92,23 @@ describe('InvoicesController', () => {
       return of(InvoicesAmqpMock);
     });
 
-    const res: InvoiceDto[] = await controller.findAll(request, '', '', 'Open');
-    const params = new AllInvoicesFilterAmqpDto(request.user.company, request.user.company, PaymentStates.OPEN);
+    const res: InvoiceDto[] = await controller.findAll(
+      request,
+      InvoicesAmqpMock[0].invoiceDueDate,
+      InvoicesAmqpMock[0].invoiceDueDate,
+      request.user.company,
+      request.user.company,
+      [PaymentStates.OPEN],
+      InvoicesAmqpMock[0].invoiceNumber
+    );
+    const params = new AllInvoicesFilterAmqpDto(
+      [PaymentStates.OPEN],
+      request.user.company,
+      request.user.company,
+      InvoicesAmqpMock[0].invoiceNumber,
+      InvoicesAmqpMock[0].invoiceDueDate,
+      InvoicesAmqpMock[0].invoiceDueDate
+    );
     expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.READ_ALL, params);
     expect(res).toEqual(expectedReturnValue);
   });

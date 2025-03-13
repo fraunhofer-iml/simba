@@ -140,11 +140,74 @@ export class TradeReceivablePrismaService {
     }
   }
 
-  async getTradeReceivableByPaymentStatus(paymentStatus: string, creditorId: string, debtorId: string): Promise<TradeReceivable[]> {
-    let companyWhere: Prisma.Sql = Prisma.sql`ps."status" = ${paymentStatus}`;
-    if (creditorId || debtorId) {
-      companyWhere = Prisma.sql`${companyWhere} AND (iv."creditorId" = ${creditorId} OR iv."debtorId" = ${debtorId})`;
+  private getInvoiceFilterClause(
+    paymentStates: PaymentStates[],
+    creditorId: string,
+    debtorId: string,
+    invoiceNumber: string,
+    dueDateFrom: Date,
+    dueDateTo: Date,
+  ): Prisma.Sql {
+    let companyWhere: Prisma.Sql = Prisma.sql`true`;
+
+    if (paymentStates.length > 0){
+      let paymentStateWhere: Prisma.Sql = Prisma.sql``;
+
+      paymentStates.forEach((paymentState: string, index: number) => {
+        paymentStateWhere = (index == 0) ?
+          Prisma.sql`${paymentStateWhere} ps."status" = ${paymentState}`:
+          Prisma.sql`${paymentStateWhere} OR ps."status" = ${paymentState}`;
+      });
+
+      companyWhere = Prisma.sql`${companyWhere} AND (${paymentStateWhere})`;
     }
+
+    if(creditorId || debtorId){
+      if(creditorId && debtorId && creditorId==debtorId){
+        companyWhere = Prisma.sql`${companyWhere} AND (iv."creditorId" = ${creditorId} OR iv."debtorId" = ${debtorId})`;
+      }
+      else if(creditorId && debtorId && creditorId!=debtorId){
+        companyWhere = Prisma.sql`${companyWhere} AND (iv."creditorId" = ${creditorId} AND iv."debtorId" = ${debtorId})`;
+      }
+      else if (creditorId) {
+        companyWhere = Prisma.sql`${companyWhere} AND iv."creditorId" = ${creditorId}`;
+      }
+      else if (debtorId) {
+        companyWhere = Prisma.sql`${companyWhere} AND iv."debtorId" = ${debtorId}`;
+      }
+    }
+
+    if (invoiceNumber) {
+      companyWhere = Prisma.sql`${companyWhere} AND iv."invoiceNumber" = ${invoiceNumber}`;
+    }
+    if (dueDateFrom) {
+      dueDateTo = dueDateTo ? dueDateTo : dueDateFrom;
+      const lowerLimit = new Date(dueDateFrom);
+      const upperLimit = new Date(dueDateTo);
+      lowerLimit.setHours(0, 0, 0, 0);
+      upperLimit.setHours(23, 59, 59, 999);
+      companyWhere = Prisma.sql`${companyWhere} AND iv."dueDate" < ${upperLimit} AND iv."dueDate" > ${lowerLimit}`;
+    }
+    return companyWhere;
+  }
+
+  async getTradeReceivablesForFilterParams(
+    paymentStates: PaymentStates[],
+    creditorId: string,
+    debtorId: string,
+    invoiceNumber: string,
+    dueDateFrom: Date,
+    dueDateTo: Date,
+  ): Promise<TradeReceivable[]> {
+
+    const filterWhereClause: Prisma.Sql = this.getInvoiceFilterClause(
+      paymentStates,
+      creditorId,
+      debtorId,
+      invoiceNumber,
+      dueDateFrom,
+      dueDateTo,
+    );
 
     try {
       const res = <TradeReceivable[]>await this.prismaService.$queryRaw`
@@ -152,7 +215,7 @@ export class TradeReceivablePrismaService {
       FROM "TradeReceivable" AS tr
       JOIN "PaymentStatus" AS ps ON tr."id" = ps."tradeReceivableId"
       LEFT JOIN "Invoice" AS iv ON tr."invoiceId" = iv."id"
-      WHERE ${companyWhere}
+      WHERE ${filterWhereClause}
       AND ps."timestamp" =
         (
         SELECT MAX("timestamp")
