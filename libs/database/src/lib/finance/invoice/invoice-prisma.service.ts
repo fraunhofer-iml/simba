@@ -99,7 +99,7 @@ export class InvoicePrismaService {
     creditorId,
     debtorId,
     paymentStates,
-    invoiceNumbers
+    invoiceNumbers,
   }: {
     creditorId?: string;
     debtorId?: string;
@@ -114,19 +114,24 @@ export class InvoicePrismaService {
       const debtorFilter: Prisma.InvoiceWhereInput | undefined = debtorId ? { debtorId: String(debtorId) } : undefined;
       let orFilters: Prisma.InvoiceWhereInput[] = [];
 
-      const paymentStateFilter: Prisma.InvoiceWhereInput | undefined = (paymentStates && paymentStates.length > 0) ? { tradeReceivable: { states: { every: { status: { in: paymentStates } } } } } : undefined;
+      const paymentStateFilter: Prisma.InvoiceWhereInput | undefined =
+        paymentStates && paymentStates.length > 0
+          ? { tradeReceivable: { states: { every: { status: { in: paymentStates } } } } }
+          : undefined;
       const orderFilter: Prisma.InvoiceWhereInput | undefined = orderId ? { serviceProcess: { orderId: String(orderId) } } : undefined;
-      const invoiceIdsFilter: Prisma.InvoiceWhereInput | undefined = invoiceIds && invoiceIds.length > 0 ? { id: { in: invoiceIds } } : undefined;
+      const invoiceIdsFilter: Prisma.InvoiceWhereInput | undefined =
+        invoiceIds && invoiceIds.length > 0 ? { id: { in: invoiceIds } } : undefined;
       const invoiceNumbersFilter: Prisma.InvoiceWhereInput | undefined =
         invoiceNumbers && invoiceNumbers.length > 0 ? { invoiceNumber: { in: invoiceNumbers } } : undefined;
-      const andFilters: Prisma.InvoiceWhereInput[] = [orderFilter, invoiceIdsFilter, paymentStateFilter, invoiceNumbersFilter].filter((filter) => filter !== undefined);
+      const andFilters: Prisma.InvoiceWhereInput[] = [orderFilter, invoiceIdsFilter, paymentStateFilter, invoiceNumbersFilter].filter(
+        (filter) => filter !== undefined
+      );
 
-      if(creditorFilter && debtorFilter && creditorId==debtorId){
+      if (creditorFilter && debtorFilter && creditorId == debtorId) {
         orFilters = [creditorFilter, debtorFilter];
-      }
-      else{
-        if(creditorFilter) andFilters.push(creditorFilter);
-        if(debtorFilter) andFilters.push(debtorFilter);
+      } else {
+        if (creditorFilter) andFilters.push(creditorFilter);
+        if (debtorFilter) andFilters.push(debtorFilter);
       }
 
       const where: Prisma.InvoiceWhereInput = {

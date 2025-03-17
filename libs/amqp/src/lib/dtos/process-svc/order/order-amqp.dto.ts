@@ -12,6 +12,7 @@ import { ServiceStatusAmqpDto } from './service-status-amqp.dto';
 
 export class OrderAmqpDto {
   id: string;
+  number: string;
   productId: string;
   quantity: number;
   year: number;
@@ -22,11 +23,12 @@ export class OrderAmqpDto {
   offerIds: string[];
   robots: string[];
   customerId: string;
-  tradeReceivableIds?: string[];
+  tradeReceivableIds: string[];
   currency: string;
 
   constructor(
     id: string,
+    number: string,
     productId: string,
     amount: number,
     year: number,
@@ -34,9 +36,13 @@ export class OrderAmqpDto {
     creationDate: string,
     status: ServiceStatusAmqpDto,
     customerId: string,
-    currency: string
+    currency: string,
+    tradeReceivableIds:string[]=[],
+    offerIds:string[]=[],
+    robots:string[]=[]
   ) {
     this.id = id;
+    this.number = number;
     this.productId = productId;
     this.quantity = amount;
     this.year = year;
@@ -44,29 +50,32 @@ export class OrderAmqpDto {
     this.creationDate = creationDate;
     this.status = status;
     this.customerId = customerId;
-    this.offerIds = [];
-    this.robots = [];
     this.currency = currency;
+    this.tradeReceivableIds = tradeReceivableIds;
+    this.offerIds = offerIds;
+    this.robots = robots;
   }
 
   public static fromPrismaEntity(order: OrderOverview, currentState: ServiceStatusAmqpDto): OrderAmqpDto {
-    return <OrderAmqpDto>{
-      id: order.id,
-      creationDate: order.documentIssueDate.toISOString(),
-      quantity: order.orderLines[0].requestedQuantity.toNumber(),
-      status: currentState,
-      year: order.serviceProcess?.dueYear,
-      calendarWeek: order.serviceProcess?.dueCalendarWeek,
-      productId: order.orderLines[0].item.id,
-      robots: DatabaseUtil.ExtractMachineIdsFromServiceProcess(order.serviceProcess),
-      customerId: order.buyer.id,
-      acceptedOfferId: order.serviceProcess?.acceptedOffer?.id,
-      offerIds: order.serviceProcess?.offers.map((offer) => offer.id),
-      tradeReceivableIds: order.serviceProcess?.invoices?.map((invoice) => {
-        return invoice.tradeReceivable?.id;
-      }),
-      currency: order.vatCurrency,
-    };
+    const tradeReceivableIds: string[] | undefined = order.serviceProcess?.invoices
+      ?.map((invoice) => invoice.tradeReceivable?.id)
+      ?.filter((id): id is string => id !== undefined);
+
+    return new OrderAmqpDto(
+      order.id,
+      order.buyerOrderRefDocumentId?order.buyerOrderRefDocumentId:'',
+      order.orderLines[0].item.id,
+      order.orderLines[0].requestedQuantity.toNumber(),
+      order.serviceProcess ? order.serviceProcess.dueYear : 0,
+      order.serviceProcess ? order.serviceProcess.dueCalendarWeek : 0,
+      order.documentIssueDate.toISOString(),
+      currentState,
+      order.buyer.id,
+      order.vatCurrency,
+      tradeReceivableIds ? tradeReceivableIds : [],
+      order.serviceProcess?.offers.map((offer) => offer.id),
+      DatabaseUtil.ExtractMachineIdsFromServiceProcess(order.serviceProcess),
+      );
   }
 
   public static getLatestState(states: ServiceStatus[] | undefined): ServiceStatusAmqpDto | null {

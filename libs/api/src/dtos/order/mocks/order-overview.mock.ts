@@ -14,6 +14,7 @@ import { OrderOverviewDto } from '../order-overview.dto';
 export const OrderOverviewMock: OrderOverviewDto[] = [
   {
     id: OrdersSeed[0].id,
+    number: OrdersSeed[0].buyerOrderRefDocumentId?OrdersSeed[0].buyerOrderRefDocumentId:'',
     product: ProductDtoMocks[0].name,
     amount: +OrderLinesSeed[0].requestedQuantity,
     year: ServiceProcessesSeed[0].dueYear,
@@ -28,6 +29,7 @@ export const OrderOverviewMock: OrderOverviewDto[] = [
   },
   {
     id: OrdersSeed[1].id,
+    number: OrdersSeed[1].buyerOrderRefDocumentId?OrdersSeed[1].buyerOrderRefDocumentId:'',
     product: ProductDtoMocks[0].name,
     amount: +OrderLinesSeed[1].requestedQuantity,
     year: ServiceProcessesSeed[1].dueYear,

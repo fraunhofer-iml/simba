@@ -40,6 +40,7 @@ export class OrderPrismaService {
       select: {
         id: true,
         documentIssueDate: true,
+        buyerOrderRefDocumentId: true,
         vatCurrency: true,
         orderLines: {
           select: {

@@ -11,6 +11,7 @@ import { Decimal } from '@prisma/client/runtime/library';
 
 export type OrderOverview = {
   id: string;
+  buyerOrderRefDocumentId: string | null;
   documentIssueDate: Date;
   vatCurrency: string;
   orderLines: { item: Product; requestedQuantity: Decimal }[];
@@ -29,8 +30,7 @@ export type OrderOverview = {
               } | null;
             }[]
           | null;
-      })
-    | null;
+      }) | null;
   buyer: { id: string; name: string };
   seller: { id: string; name: string };
 };

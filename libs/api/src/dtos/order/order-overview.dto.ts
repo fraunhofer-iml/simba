@@ -17,6 +17,11 @@ export class OrderOverviewDto {
   id: string;
   @ApiProperty({
     type: String,
+    description: 'Number of order, buyerOrderRefDocumentId in Order-X-Standard'
+  })
+  number: string;
+  @ApiProperty({
+    type: String,
     description: 'Name of ordered product',
   })
   product: string;
@@ -62,6 +67,7 @@ export class OrderOverviewDto {
 
   constructor(
     id: string,
+    number: string,
     product: string,
     amount: number,
     calendarWeek: number,
@@ -75,6 +81,7 @@ export class OrderOverviewDto {
     currency: string
   ) {
     this.id = id;
+    this.number = number;
     this.product = product;
     this.amount = amount;
     this.calendarWeek = calendarWeek;
@@ -88,20 +95,21 @@ export class OrderOverviewDto {
     this.currency = currency;
   }
 
-  public static toOrderOverviewDto(dto: OrderAmqpDto, productDto: ProductDto, offerDto: OfferDto, customerName: string): OrderOverviewDto {
+  public static toOrderOverviewDto(entity: OrderAmqpDto, productDto: ProductDto, offerDto: OfferDto, customerName: string): OrderOverviewDto {
     return new OrderOverviewDto(
-      dto.id,
+      entity.id,
+      entity.number,
       productDto.name,
-      dto.quantity,
-      dto.calendarWeek,
-      dto.year,
-      dto.status.status,
-      dto.status.timestamp,
+      entity.quantity,
+      entity.calendarWeek,
+      entity.year,
+      entity.status.status,
+      entity.status.timestamp,
       offerDto ? offerDto.price : 0,
-      dto.robots ? dto.robots : [],
-      dto.customerId,
+      entity.robots ? entity.robots : [],
+      entity.customerId,
       customerName,
-      dto.currency
+      entity.currency
     );
   }
 }

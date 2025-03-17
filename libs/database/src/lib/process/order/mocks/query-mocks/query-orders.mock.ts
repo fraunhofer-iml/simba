@@ -12,6 +12,7 @@ import { OrdersSeed } from '../../../../../seed';
 const ordersOverviewSelect = <Prisma.OrderSelect>{
   id: true,
   documentIssueDate: true,
+  buyerOrderRefDocumentId: true,
   vatCurrency: true,
   orderLines: {
     select: {

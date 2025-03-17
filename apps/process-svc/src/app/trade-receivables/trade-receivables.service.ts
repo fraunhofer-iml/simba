@@ -7,30 +7,20 @@
  */
 
 import util from 'node:util';
-import {
-  AllInvoicesFilterAmqpDto,
-  CreateTradeReceivableAmqpDto,
-  InvoiceIdAndPaymentStateAmqpDto,
-  TradeReceivableAmqpDto,
-} from '@ap3/amqp';
-import { BlockchainConnectorService } from '@ap3/blockchain-connector';
-import {
-  InvoiceDatabaseAdapterService,
-  InvoiceWithNFT,
-  ServiceProcessPrismaService,
-  TradeReceivablePrismaService,
-} from '@ap3/database';
-import { S3Service } from '@ap3/s3';
-import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
-import { PaymentStatus, ServiceProcess, TradeReceivable } from '@prisma/client';
-import { TokenReadDto } from 'nft-folder-blockchain-connector';
-import { MetadataService } from './metadata/metadata.service';
-import { MetadataDto } from './metadata/metadata.dto';
+import { AllInvoicesFilterAmqpDto, CreateTradeReceivableAmqpDto, InvoiceIdAndPaymentStateAmqpDto, TradeReceivableAmqpDto } from '@ap3/amqp';
 import { CreateNftDto, UpdateNftPaymentStatusDto } from '@ap3/api';
-import { PaymentStates } from '@ap3/util';
-import { SchedulerRegistry } from '@nestjs/schedule';
-import { CronJob } from 'cron';
+import { BlockchainConnectorService } from '@ap3/blockchain-connector';
 import { ConfigurationService } from '@ap3/config';
+import { InvoiceDatabaseAdapterService, InvoiceWithNFT, ServiceProcessPrismaService, TradeReceivablePrismaService } from '@ap3/database';
+import { S3Service } from '@ap3/s3';
+import { PaymentStates } from '@ap3/util';
+import { CronJob } from 'cron';
+import { TokenReadDto } from 'nft-folder-blockchain-connector';
+import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { SchedulerRegistry } from '@nestjs/schedule';
+import { PaymentStatus, ServiceProcess, TradeReceivable } from '@prisma/client';
+import { MetadataDto } from './metadata/metadata.dto';
+import { MetadataService } from './metadata/metadata.service';
 
 @Injectable()
 export class TradeReceivablesService {
@@ -46,7 +36,7 @@ export class TradeReceivablesService {
     private readonly config: ConfigurationService,
     private readonly schedulerRegistry: SchedulerRegistry
   ) {
-    if(config.getNftUpdateScheduleConfig().scheduledNftUpdateEnabled){
+    if (config.getNftUpdateScheduleConfig().scheduledNftUpdateEnabled) {
       this.addCronJob();
     }
   }
@@ -95,24 +85,24 @@ export class TradeReceivablesService {
     return this.updateNftPaymentState(updateNftPaymentStatusDto.invoiceNumber, updateNftPaymentStatusDto.paymentStatus);
   }
 
-  private async updateNftPaymentState(invoiceNumber: string, paymentStates: PaymentStates): Promise<TokenReadDto>{
+  private async updateNftPaymentState(invoiceNumber: string, paymentStates: PaymentStates): Promise<TokenReadDto> {
     const invoice: InvoiceWithNFT = await this.invoicePrismaAdapterService.getInvoiceByNumber(invoiceNumber);
-    if(!invoice){
+    if (!invoice) {
       return;
     }
 
     const tradeReceivable: TradeReceivable = await this.tradeReceivablePrismaService.getTradeReceivableByInvoiceId(invoice.id);
-    if(!tradeReceivable){
+    if (!tradeReceivable) {
       return;
     }
 
     const foundNft: TokenReadDto = await this.blockchainConnectorService.readNFTForInvoiceNumber(invoiceNumber);
-    if(!foundNft){
+    if (!foundNft) {
       return;
     }
 
     const nftPaymentState: PaymentStates = this.blockchainConnectorService.getPaymentState(foundNft);
-    if(nftPaymentState == paymentStates){
+    if (nftPaymentState == paymentStates) {
       return;
     }
 
@@ -134,7 +124,7 @@ export class TradeReceivablesService {
     return this.blockchainConnectorService.readNFTForInvoiceNumber(invoiceNumber);
   }
 
-  private addCronJob(): void{
+  private addCronJob(): void {
     const cronExpression: string = this.config.getNftUpdateScheduleConfig().scheduledNftUpdateCronJobExpression;
     const newCronJob: CronJob = new CronJob(cronExpression, () => this.schedulePaymentExceedCheck());
     this.schedulerRegistry.addCronJob('checkExceededNfts', newCronJob);
@@ -147,7 +137,7 @@ export class TradeReceivablesService {
       []
     );
     for (const invoice of invoices) {
-      if(invoice.dueDate < (new Date())){
+      if (invoice.dueDate < new Date()) {
         await this.updateNftPaymentState(invoice.invoiceNumber, PaymentStates.EXCEEDED);
       }
     }

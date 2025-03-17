@@ -9,6 +9,8 @@
 import { PickType } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { OrderAmqpDto } from './order-amqp.dto';
+import { ORDER_NUMBER_PREFIX } from '@ap3/util';
+import { format } from 'date-fns';
 
 export class CreateOrderAmqpDto extends PickType(OrderAmqpDto, ['productId', 'quantity', 'year', 'calendarWeek', 'customerId']) {
   vatCurrency: string;
@@ -16,7 +18,8 @@ export class CreateOrderAmqpDto extends PickType(OrderAmqpDto, ['productId', 'qu
   sellerId: string;
 
   constructor(vatCurrency: string, buyerId: string, sellerId: string) {
-    super(), (this.vatCurrency = vatCurrency);
+    super();
+    this.vatCurrency = vatCurrency;
     this.buyerId = buyerId;
     this.sellerId = sellerId;
   }
@@ -27,6 +30,7 @@ export class CreateOrderAmqpDto extends PickType(OrderAmqpDto, ['productId', 'qu
       vatCurrency: this.vatCurrency,
       buyer: { connect: { id: this.buyerId } },
       seller: { connect: { id: this.sellerId } },
+      buyerOrderRefDocumentId: `${ORDER_NUMBER_PREFIX}${format(new Date(),"yyMMddHHmmSSS")}`,
       serviceProcess: {
         create: { dueCalendarWeek: this.calendarWeek, dueYear: this.year },
       },

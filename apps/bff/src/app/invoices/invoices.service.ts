@@ -30,6 +30,7 @@ import { CompaniesService } from '../companies/companies.service';
 @Injectable()
 export class InvoicesService {
   private readonly logger = new Logger(InvoicesService.name);
+
   constructor(
     @Inject(AmqpBrokerQueues.PROCESS_SVC_QUEUE) private readonly processAMQPClient: ClientProxy,
     private readonly companyService: CompaniesService
@@ -41,17 +42,10 @@ export class InvoicesService {
     debtorId: string,
     invoiceNumber: string,
     dueDateFrom: Date,
-    dueDateTo: Date,
+    dueDateTo: Date
   ): Promise<InvoiceDto[]> {
     this.logger.debug(`Requesting Tradereceivables `);
-    const params = new AllInvoicesFilterAmqpDto(
-      paymentStates,
-      creditorId,
-      debtorId,
-      invoiceNumber,
-      dueDateFrom,
-      dueDateTo
-      );
+    const params = new AllInvoicesFilterAmqpDto(paymentStates, creditorId, debtorId, invoiceNumber, dueDateFrom, dueDateTo);
     const response: InvoiceAmqpDto[] = await firstValueFrom<InvoiceAmqpDto[]>(
       this.processAMQPClient.send(InvoiceMessagePatterns.READ_ALL, params)
     );

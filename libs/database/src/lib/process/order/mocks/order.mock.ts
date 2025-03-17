@@ -20,6 +20,7 @@ import { OrderOverview } from '../types/order-overview.types';
 export const OrderOverviewPrismaMock: any[] = <OrderOverview[]>[
   {
     id: OrdersSeed[0].id,
+    buyerOrderRefDocumentId: OrdersSeed[0].buyerOrderRefDocumentId,
     documentIssueDate: OrdersSeed[0].documentIssueDate,
     vatCurrency: OrdersSeed[0].vatCurrency,
     orderLines: [{ item: ProductsSeed[0], requestedQuantity: OrderLinesSeed[0].requestedQuantity }],
@@ -41,6 +42,7 @@ export const OrderOverviewPrismaMock: any[] = <OrderOverview[]>[
   },
   {
     id: OrdersSeed[1].id,
+    buyerOrderRefDocumentId: OrdersSeed[1].buyerOrderRefDocumentId,
     documentIssueDate: OrdersSeed[1].documentIssueDate,
     vatCurrency: OrdersSeed[0].vatCurrency,
     orderLines: [{ item: ProductsSeed[0], requestedQuantity: OrderLinesSeed[1].requestedQuantity }],

@@ -13,6 +13,7 @@ import { OrderAmqpDto } from '../order-amqp.dto';
 export const OrderAmqpMock = <OrderAmqpDto[]>[
   {
     id: OrdersSeed[0].id,
+    number: OrdersSeed[0].buyerOrderRefDocumentId,
     productId: OrderLinesSeed[0].itemId,
     quantity: +OrderLinesSeed[0].requestedQuantity,
     year: ServiceProcessesSeed[0].dueYear,
@@ -28,6 +29,7 @@ export const OrderAmqpMock = <OrderAmqpDto[]>[
   },
   {
     id: OrdersSeed[1].id,
+    number: OrdersSeed[1].buyerOrderRefDocumentId,
     productId: OrderLinesSeed[1].itemId,
     quantity: +OrderLinesSeed[1].requestedQuantity,
     year: ServiceProcessesSeed[1].dueYear,
