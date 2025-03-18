@@ -99,7 +99,7 @@ export class OrdersService {
 
   private async loadOrderReferences(order: OrderAmqpDto): Promise<OrderOverviewDto> {
     const productRef = await this.productService.loadProductRefs(order);
-    const offerRef = await this.offerService.loadOfferRef(order);
+    const offerRef = await this.offerService.loadAcceptedOfferRef(order);
     const customer = await this.companiesService.findOne(order.customerId);
     return OrderOverviewDto.toOrderOverviewDto(order, productRef, offerRef, customer.name);
   }

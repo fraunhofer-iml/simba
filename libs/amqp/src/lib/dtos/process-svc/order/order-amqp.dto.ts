@@ -37,9 +37,10 @@ export class OrderAmqpDto {
     status: ServiceStatusAmqpDto,
     customerId: string,
     currency: string,
-    tradeReceivableIds:string[]=[],
-    offerIds:string[]=[],
-    robots:string[]=[]
+    tradeReceivableIds: string[] = [],
+    offerIds: string[] = [],
+    robots: string[] = [],
+    acceptedOfferId?: string
   ) {
     this.id = id;
     this.number = number;
@@ -54,6 +55,7 @@ export class OrderAmqpDto {
     this.tradeReceivableIds = tradeReceivableIds;
     this.offerIds = offerIds;
     this.robots = robots;
+    this.acceptedOfferId = acceptedOfferId;
   }
 
   public static fromPrismaEntity(order: OrderOverview, currentState: ServiceStatusAmqpDto): OrderAmqpDto {
@@ -63,7 +65,7 @@ export class OrderAmqpDto {
 
     return new OrderAmqpDto(
       order.id,
-      order.buyerOrderRefDocumentId?order.buyerOrderRefDocumentId:'',
+      order.buyerOrderRefDocumentId ? order.buyerOrderRefDocumentId : '',
       order.orderLines[0].item.id,
       order.orderLines[0].requestedQuantity.toNumber(),
       order.serviceProcess ? order.serviceProcess.dueYear : 0,
@@ -75,7 +77,8 @@ export class OrderAmqpDto {
       tradeReceivableIds ? tradeReceivableIds : [],
       order.serviceProcess?.offers.map((offer) => offer.id),
       DatabaseUtil.ExtractMachineIdsFromServiceProcess(order.serviceProcess),
-      );
+      order.serviceProcess?.acceptedOffer?.id
+    );
   }
 
   public static getLatestState(states: ServiceStatus[] | undefined): ServiceStatusAmqpDto | null {

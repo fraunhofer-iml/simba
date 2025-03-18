@@ -3,7 +3,7 @@ services:
   # DATABASE #
   ############
   postgres:
-    image: postgres:17
+    image: postgres:17.4
     restart: unless-stopped
     environment:
       - POSTGRES_USER=postgres

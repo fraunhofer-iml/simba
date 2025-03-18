@@ -32,30 +32,21 @@ export class TradeReceivablesService {
     private readonly tradeReceivablePrismaService: TradeReceivablePrismaService,
     private readonly serviceProcessPrismaService: ServiceProcessPrismaService,
     private readonly invoicePrismaAdapterService: InvoiceDatabaseAdapterService,
-    private readonly s3Service: S3Service,
-    private readonly config: ConfigurationService,
-    private readonly schedulerRegistry: SchedulerRegistry
-  ) {
-    if (config.getNftUpdateScheduleConfig().scheduledNftUpdateEnabled) {
-      this.addCronJob();
-    }
-  }
+    private readonly s3Service: S3Service
+  ) {}
 
   async create(createTradeReceivableDto: CreateTradeReceivableAmqpDto): Promise<TradeReceivableAmqpDto> {
     this.logger.verbose(`create trade receivable ${util.inspect(createTradeReceivableDto)}`);
-    try {
-      const createTradeReceivable = createTradeReceivableDto.toPrismaCreateEntity();
-      const tradeReceivable: TradeReceivable = await this.tradeReceivablePrismaService.createTradeReceivable(createTradeReceivable);
-      const trStates: PaymentStatus[] = await this.tradeReceivablePrismaService.getPaymentStatesForTradeReceivable(tradeReceivable.id);
+    const createTradeReceivable = createTradeReceivableDto.toPrismaCreateEntity();
+    const tradeReceivable: TradeReceivable = await this.tradeReceivablePrismaService.createTradeReceivable(createTradeReceivable);
+    const trStates: PaymentStatus[] = await this.tradeReceivablePrismaService.getPaymentStatesForTradeReceivable(tradeReceivable.id);
 
-      if (tradeReceivable) {
-        return TradeReceivableAmqpDto.fromPrismaEntity(tradeReceivable, trStates);
-      } else {
-        throw new InternalServerErrorException(`Could not create trade receivable ${util.inspect(createTradeReceivableDto)}`);
-      }
-    } catch (e) {
-      this.logger.error(util.inspect(e));
-      throw e;
+    if (tradeReceivable) {
+      return TradeReceivableAmqpDto.fromPrismaEntity(tradeReceivable, trStates);
+    } else {
+      const msg = `Could not create trade receivable ${util.inspect(createTradeReceivableDto)}`;
+      this.logger.error(msg);
+      throw new InternalServerErrorException(msg);
     }
   }
 
@@ -85,26 +76,18 @@ export class TradeReceivablesService {
     return this.updateNftPaymentState(updateNftPaymentStatusDto.invoiceNumber, updateNftPaymentStatusDto.paymentStatus);
   }
 
-  private async updateNftPaymentState(invoiceNumber: string, paymentStates: PaymentStates): Promise<TokenReadDto> {
+  public async updateNftPaymentState(invoiceNumber: string, paymentStates: PaymentStates): Promise<TokenReadDto> {
     const invoice: InvoiceWithNFT = await this.invoicePrismaAdapterService.getInvoiceByNumber(invoiceNumber);
-    if (!invoice) {
-      return;
-    }
+    if (!invoice) return;
 
     const tradeReceivable: TradeReceivable = await this.tradeReceivablePrismaService.getTradeReceivableByInvoiceId(invoice.id);
-    if (!tradeReceivable) {
-      return;
-    }
+    if (!tradeReceivable) return;
 
     const foundNft: TokenReadDto = await this.blockchainConnectorService.readNFTForInvoiceNumber(invoiceNumber);
-    if (!foundNft) {
-      return;
-    }
+    if (!foundNft) return;
 
     const nftPaymentState: PaymentStates = this.blockchainConnectorService.getPaymentState(foundNft);
-    if (nftPaymentState == paymentStates) {
-      return;
-    }
+    if (nftPaymentState == paymentStates) return;
 
     this.logger.log(`The payment status of the trade receivable with id ${tradeReceivable.id} will be updated.`);
     const convertedDto = new InvoiceIdAndPaymentStateAmqpDto(invoice.id, paymentStates);
@@ -122,24 +105,5 @@ export class TradeReceivablesService {
 
   public async getNftByInvoiceNumber(invoiceNumber: string): Promise<TokenReadDto> {
     return this.blockchainConnectorService.readNFTForInvoiceNumber(invoiceNumber);
-  }
-
-  private addCronJob(): void {
-    const cronExpression: string = this.config.getNftUpdateScheduleConfig().scheduledNftUpdateCronJobExpression;
-    const newCronJob: CronJob = new CronJob(cronExpression, () => this.schedulePaymentExceedCheck());
-    this.schedulerRegistry.addCronJob('checkExceededNfts', newCronJob);
-    newCronJob.start();
-  }
-
-  private async schedulePaymentExceedCheck(): Promise<void> {
-    const invoices: InvoiceWithNFT[] = await this.invoicePrismaAdapterService.getInvoicesCorrespondingToFilterParams(
-      new AllInvoicesFilterAmqpDto([PaymentStates.OPEN]),
-      []
-    );
-    for (const invoice of invoices) {
-      if (invoice.dueDate < new Date()) {
-        await this.updateNftPaymentState(invoice.invoiceNumber, PaymentStates.EXCEEDED);
-      }
-    }
   }
 }

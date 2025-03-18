@@ -43,7 +43,7 @@ export class OffersService {
     return await firstValueFrom<boolean>(this.processAMQPClient.send(OfferMessagePatterns.DECLINE_ALL_OF_ORDER, orderId));
   }
 
-  async loadOfferRef(dto: OrderAmqpDto): Promise<OfferDto> {
+  async loadAcceptedOfferRef(dto: OrderAmqpDto): Promise<OfferDto> {
     let acceptedOffer: OfferDto;
     if (dto.acceptedOfferId) {
       acceptedOffer = await this.findOne(dto.acceptedOfferId);

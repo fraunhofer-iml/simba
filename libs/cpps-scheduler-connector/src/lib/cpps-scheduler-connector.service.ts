@@ -10,7 +10,6 @@ import { ConfigurationService } from '@ap3/config';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { GET_CURRENCT_SCHEDULING, POST_SCHEDULE_ORDER, PUT_ACCEPT_OFFER } from './cpps-scheduler-endpoints.enum';
 import { AcceptScheduledOfferDto, CurrentSchedulingDto, ScheduleOrderRequestDto, ScheduleOrderResponseDto } from './dtos';
-import * as util from 'node:util';
 
 @Injectable()
 export class CppsSchedulerConnectorService {

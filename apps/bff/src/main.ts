@@ -16,11 +16,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configuration = app.get(ConfigurationService);
 
-  const config = new DocumentBuilder()
-    .setTitle('SKALA AP3 backend for frontend')
-    .setVersion('0.0')
-    .addBearerAuth()
-    .build();
+  const config = new DocumentBuilder().setTitle('SKALA AP3 backend for frontend').setVersion('0.0').addBearerAuth().build();
   const document = SwaggerModule.createDocument(app, config);
 
   SwaggerModule.setup(configuration.getGeneralConfig().swaggerPath, app, document);
@@ -31,7 +27,7 @@ async function bootstrap() {
   );
   app.useLogger(configuration.getGeneralConfig().logLevel);
   app.enableCors();
-  const port = configuration.getBFFConfig().port;
+  const port = configuration.getGeneralConfig().bffPort;
   await app.listen(port);
   Logger.log(`🚀 AP3 Backend for Frontend is running on: http://localhost:${port}`);
 }

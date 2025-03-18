@@ -8,6 +8,7 @@
 
 import { LogLevel } from '@nestjs/common';
 import { registerAs } from '@nestjs/config';
+import { CronExpression } from '@nestjs/schedule';
 
 export const GENERAL_IDENTIFIER = 'general';
 
@@ -17,6 +18,9 @@ export interface generalConfig {
   brokerURI: string;
   platformOperator: string;
   platformCurrency: string;
+  bffPort: number;
+  scheduledNftUpdateEnabled: boolean;
+  scheduledNftUpdateCronJobExpression: string;
 }
 
 export default registerAs(GENERAL_IDENTIFIER, () => ({
@@ -25,4 +29,7 @@ export default registerAs(GENERAL_IDENTIFIER, () => ({
   brokerURI: process.env['BROKER_URI'] || 'amqp://localhost:5672',
   platformOperator: process.env['PLATFORM_OPERATOR'] || 'pt0002',
   platformCurrency: process.env['PLATFORM_CURRENCY'] || 'Euro',
+  bffPort: process.env['BFF_PORT'] || 3000,
+  scheduledNftUpdateEnabled: process.env['SCHEDULED_NFT_UPDATE_ENABLED'] || false,
+  scheduledNftUpdateCronJobExpression: process.env['SCHEDULED_NFT_UPDATE_CRON_JOB_EXPRESSION'] || CronExpression.EVERY_HOUR,
 }));

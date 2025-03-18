@@ -8,12 +8,10 @@
 
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { BFF_IDENTIFIER, bffConfig } from './configs/bff.config';
 import { CPPS_SCHEDULER_IDENTIFIER, CppsSchedulerConfig } from './configs/cpps-scheduler.config';
 import { GENERAL_IDENTIFIER, generalConfig } from './configs/general.config';
 import { KEYCLOAK_IDENTIFIER, KeycloakConfig } from './configs/keycloak.config';
 import { MINIO_IDENTIFIER, MinioConfig } from './configs/minio.config';
-import { NFT_SCHEDULE_CONFIG, NftUpdateScheduleConfig } from './configs/nftUpdateScheduleConfig';
 
 @Injectable()
 export class ConfigurationService {
@@ -23,21 +21,11 @@ export class ConfigurationService {
   public getGeneralConfig(): generalConfig {
     const generalConfig = this.configService.get<generalConfig>(GENERAL_IDENTIFIER);
     if (!generalConfig) {
-      const msg = 'Environment variables for AMQP / RabbitMQ configuration missing!';
+      const msg = 'Environment variables for general configuration missing!';
       this.logger.error(msg);
       throw new Error(msg);
     }
     return generalConfig;
-  }
-
-  public getBFFConfig(): bffConfig {
-    const bffConfig = this.configService.get<bffConfig>(BFF_IDENTIFIER);
-    if (!bffConfig) {
-      const msg = 'Environment variables for bff configuration missing!';
-      this.logger.error(msg);
-      throw new Error(msg);
-    }
-    return bffConfig;
   }
 
   public getKeycloakConfig(): KeycloakConfig {
@@ -58,16 +46,6 @@ export class ConfigurationService {
       throw new Error(msg);
     }
     return minioConfig;
-  }
-
-  public getNftUpdateScheduleConfig(): NftUpdateScheduleConfig {
-    const nftScheduleConfig = this.configService.get<NftUpdateScheduleConfig>(NFT_SCHEDULE_CONFIG);
-    if (!nftScheduleConfig) {
-      const msg = 'Environment variables for automated nft updates missing!';
-      this.logger.error(msg);
-      throw new Error(msg);
-    }
-    return nftScheduleConfig;
   }
 
   public getCppsSchedulerConfig(): CppsSchedulerConfig {

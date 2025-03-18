@@ -96,9 +96,8 @@ export class OrderManagementService {
   }
 
   async cancelOrder(orderId: string): Promise<boolean> {
-    await this.serviceProcessPrismaService.setServiceState(orderId, ServiceStatesEnum.CANCELED);
     const offers: Offer[] = await this.offerPrismaService.getOffersByOrderId(orderId);
-    if(offers) {
+    if (offers) {
       await this.declineOffers(await this.offerPrismaService.getOffersByOrderId(orderId));
     }
     return !!(await this.serviceProcessPrismaService.setServiceState(orderId, ServiceStatesEnum.CANCELED));

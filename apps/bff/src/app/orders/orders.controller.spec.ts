@@ -71,7 +71,7 @@ describe('OrdersController', () => {
         {
           provide: OffersService,
           useValue: {
-            loadOfferRef: jest.fn(),
+            loadAcceptedOfferRef: jest.fn(),
             createOffer: jest.fn(),
           },
         },
@@ -101,7 +101,7 @@ describe('OrdersController', () => {
 
     companiesServiceSpy = jest.spyOn(companiesService, 'findOne');
     companiesServiceSpy.mockResolvedValue(CompanyDtoMock[0]);
-    offersServiceLoadSpy = jest.spyOn(offersService, 'loadOfferRef');
+    offersServiceLoadSpy = jest.spyOn(offersService, 'loadAcceptedOfferRef');
     offersServiceLoadSpy.mockResolvedValue(OpenOffersMock[0]);
     productServiceLoadSpy = jest.spyOn(productsService, 'loadProductRefs');
     productServiceLoadSpy.mockResolvedValue(ProductDtoMocks[0]);
