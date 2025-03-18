@@ -18,7 +18,6 @@ export class ProductionComponent {
   streamUrl: SafeResourceUrl;
 
   constructor(private readonly sanitizer: DomSanitizer) {
-    // NOSONAR: The source is only available over HTTP
-    this.streamUrl = this.sanitizer.bypassSecurityTrustResourceUrl('http://unity.flw.mb.tu-dortmund.de');
+    this.streamUrl = this.sanitizer.bypassSecurityTrustResourceUrl('https://unity.flw.mb.tu-dortmund.de');
   }
 }
