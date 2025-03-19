@@ -6,14 +6,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { BrokerAmqp } from '@ap3/amqp';
+import { ConfigurationService } from '@ap3/config';
+import { OrdersSeed } from '@ap3/database';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { AuthGuard, RoleGuard } from 'nest-keycloak-connect';
 import { HttpService } from '@nestjs/axios';
 import { CanActivate, HttpStatus, INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import {BrokerAmqp} from "@ap3/amqp";
-import { AuthGuard, RoleGuard } from 'nest-keycloak-connect';
-import {OffersService} from "../../../bff/src/offers/offers.service";
-import {ConfigurationService} from "@ap3/config";
-import MockAdapter from 'axios-mock-adapter';
+import { OffersService } from '../../../bff/src/offers/offers.service';
 
 describe('OffersController', () => {
   let app: INestApplication;
@@ -50,4 +52,26 @@ describe('OffersController', () => {
     app = moduleRef.createNestApplication();
     await app.init();
   });
-})
+
+  it('should return all offers if requested by an Authorized User', async () => {
+    const res = await axios.get(`/offers`, {
+      params: {
+        orderId: OrdersSeed[0].id,
+      },
+    });
+
+    expect(res.status).toBe(200);
+    expect(res.data).toEqual({ message: 'Hello API' });
+  });
+
+  it('should return a message', async () => {
+    const res = await axios.get(`/offers`, {
+      params: {
+        orderId: OrdersSeed[0].id,
+      },
+    });
+
+    expect(res.status).toBe(200);
+    expect(res.data).toEqual({ message: 'Hello API' });
+  });
+});

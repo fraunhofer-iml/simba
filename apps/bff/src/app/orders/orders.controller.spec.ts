@@ -56,27 +56,17 @@ describe('OrdersController', () => {
       providers: [
         OrdersService,
         ServiceProcessService,
-        {
-          provide: CompaniesService,
-          useValue: {
-            findOne: jest.fn(),
-          },
-        },
-        {
-          provide: ProductsService,
-          useValue: {
-            loadProductRefs: jest.fn(),
-          },
-        },
-        {
-          provide: OffersService,
-          useValue: {
-            loadAcceptedOfferRef: jest.fn(),
-            createOffer: jest.fn(),
-          },
-        },
+        CompaniesService,
+        ProductsService,
+        OffersService,
         {
           provide: AmqpBrokerQueues.PROCESS_SVC_QUEUE,
+          useValue: {
+            send: jest.fn(),
+          },
+        },
+        {
+          provide: AmqpBrokerQueues.MASTER_DATA_SVC_QUEUE,
           useValue: {
             send: jest.fn(),
           },

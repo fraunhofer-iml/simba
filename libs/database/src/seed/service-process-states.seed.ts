@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ServiceStatesEnum } from '../../../util/src';
 import { ServiceStatus } from '@prisma/client';
+import { ServiceStatesEnum } from '../../../util/src';
 
 export const ServiceStatesSeed = <ServiceStatus[]>[
   {
