@@ -17,15 +17,16 @@ export class TradeReceivablesCronJob {
     private readonly schedulerRegistry: SchedulerRegistry,
     private readonly invoicePrismaAdapterService: InvoiceDatabaseAdapterService
   ) {
-    // if (config.getGeneralConfig().scheduledNftUpdateEnabled) {
-    //   this.addCronJob();
-    // }
+    if (config.getGeneralConfig().scheduledNFTUpdate.enabled) {
+      this.logger.log(`Cron job for updating payment status to exceeded is activated`);
+      this.addCronJob();
+    }
   }
 
   private addCronJob(): void {
-    const cronExpression: string = this.config.getGeneralConfig().scheduledNftUpdateCronJobExpression;
+    const cronExpression: string = this.config.getGeneralConfig().scheduledNFTUpdate.interval;
     const newCronJob: CronJob = new CronJob(cronExpression, () => this.schedulePaymentExceedCheck());
-    this.schedulerRegistry.addCronJob('checkExceededNfts', newCronJob);
+    this.schedulerRegistry.addCronJob('checkExceededNFTs', newCronJob);
     newCronJob.start();
   }
 
