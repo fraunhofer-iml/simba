@@ -42,6 +42,7 @@ export class OrdersOverviewComponent implements AfterViewInit {
   dataSourceObservable!: Observable<MatTableDataSource<OrderOverviewDto>>;
   sort?: MatSort;
   protected readonly ROUTING = ROUTING;
+  protected readonly OrderStatus = OrderStatus;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -59,13 +60,14 @@ export class OrdersOverviewComponent implements AfterViewInit {
     this.isCustomer = authService.isCustomer();
     this.initializeDataSource();
     this.setFilterPredicate();
+    this.setSortingPredicate();
   }
 
   private setFilterPredicate(): void {
     this.dataSource.filterPredicate = (data: OrderOverviewDto, value: string): boolean => {
       let productionDate = false;
       if (data.status == OrderStatus.planned) {
-        productionDate = `${this.translate.instant('CalendarWeek')} ${data.calendarWeek}, ${data.year}`.toLowerCase().includes(value);
+        productionDate = this.getScheduledFor(data.calendarWeek, data.year).toLowerCase().includes(value);
       } else {
         productionDate = this.dateFormatService.transformDateToCurrentLanguageFormat(data.statusTimestamp).includes(value);
       }
@@ -92,6 +94,15 @@ export class OrdersOverviewComponent implements AfterViewInit {
     );
   }
 
+  private setSortingPredicate() {
+    this.dataSource.sortingDataAccessor = (order: any, property) => {
+      if (property === 'statusTimestamp' && order.status === OrderStatus.planned) {
+        return this.dateFormatService.getTimestampFromCalendarWeek(order.year, order.calendarWeek).toISOString();
+      }
+      return order[property];
+    };
+  }
+
   getDateFormat() {
     return this.dateFormatService.getDateFormatByCurrentLang();
   }
@@ -116,6 +127,4 @@ export class OrdersOverviewComponent implements AfterViewInit {
   getScheduledFor(cw: number, year: number) {
     return `${this.translate.instant('CalendarWeek')} ${cw}, ${year}`;
   }
-
-  protected readonly OrderStatus = OrderStatus;
 }
