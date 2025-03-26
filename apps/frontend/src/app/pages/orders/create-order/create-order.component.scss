@@ -6,6 +6,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+.offer-details-grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.offer-details-grid-value{
+  justify-content: flex-end;
+  align-items: end;
+  display: flex;
+}
+
 .deadline {
   grid-column: 2 / 3;
   justify-self: end;
@@ -15,28 +27,18 @@
 }
 
 .offers-container {
-  display: flex;
-  justify-content: space-around;
-  height: 100%;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
 }
 
 .offers-header {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
 }
 
 .offer-container {
   margin-top: 1em;
-}
-
-.offers {
-  flex: 50%;
-  max-width: 45%;
-  margin-top: 1em;
-  margin-bottom: 1em;
-  padding: 1em;
 }
 
 .order-card {
@@ -46,15 +48,11 @@
 .order-content {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  gap: 1rem;
 }
 
 .order-field {
-  min-width: 15%;
-}
-
-#order-week {
-  width: 300px;
+  width: 100%;
 }
 
 .title {
@@ -63,26 +61,24 @@
 
 .decline-button {
   width: 200px;
-  position: absolute;
   color: white;
 }
 
 .button-container {
-  padding: 2em 2em 3em 0;
+  margin-top: 1rem;
   display: flex;
   justify-content: flex-end;
 }
 
 .accept-button {
-  width: 150px;
-  position: absolute;
   background-color: var(--creme-color) !important;
   color: black;
 }
 
-.create-button {
-  width: 200px;
-  margin-top: 1em;
+.create-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .creation-container {
@@ -150,14 +146,6 @@
   .offerIdAndDate {
     display: block;
   }
-
-  #order-year {
-    width: 210px;
-  }
-
-  #order-week {
-    width: auto;
-  }
 }
 
 @media (max-width: 95em) {
@@ -172,6 +160,7 @@
   }
 
   .order-field {
+    width: 100%;
     display: flex;
     justify-content: center;
   }

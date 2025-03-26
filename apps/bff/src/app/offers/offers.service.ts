@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AmqpBrokerQueues, OfferMessagePatterns, OrderAmqpDto } from '@ap3/amqp';
+import { AmqpBrokerQueues, OfferAmqpDto, OfferMessagePatterns, OrderAmqpDto } from '@ap3/amqp';
 import { OfferDto } from '@ap3/api';
 import { firstValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -19,19 +19,20 @@ export class OffersService {
   constructor(@Inject(AmqpBrokerQueues.PROCESS_SVC_QUEUE) private readonly processAMQPClient: ClientProxy) {}
 
   async findAll(orderId?: string): Promise<OfferDto[]> {
-    let offers: OfferDto[] = [];
+    let offers: OfferAmqpDto[] = [];
     if (orderId) {
       this.logger.debug(`Get offers filtered by order id ${orderId}`);
-      offers = await firstValueFrom<OfferDto[]>(this.processAMQPClient.send(OfferMessagePatterns.READ_BY_ORDER_ID, orderId));
+      offers = await firstValueFrom<OfferAmqpDto[]>(this.processAMQPClient.send(OfferMessagePatterns.READ_BY_ORDER_ID, orderId));
     } else {
       this.logger.debug(`Get all offers`);
-      offers = await firstValueFrom<OfferDto[]>(this.processAMQPClient.send(OfferMessagePatterns.READ_ALL, {}));
+      offers = await firstValueFrom<OfferAmqpDto[]>(this.processAMQPClient.send(OfferMessagePatterns.READ_ALL, {}));
     }
-    return offers;
+    return OfferDto.toOfferDtos(offers);
   }
 
   async findOne(offerId: string): Promise<OfferDto> {
-    return await firstValueFrom<OfferDto>(this.processAMQPClient.send(OfferMessagePatterns.READ_BY_ID, offerId));
+    const offer = await firstValueFrom<OfferAmqpDto>(this.processAMQPClient.send(OfferMessagePatterns.READ_BY_ID, offerId));
+    return OfferDto.toOfferDto(offer);
   }
 
   async acceptOffer(offerId: string): Promise<boolean> {

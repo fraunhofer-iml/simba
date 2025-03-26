@@ -8,6 +8,8 @@
   "ProductInputField": "Produkt",
   "YearInputField": "Jahr",
   "WeekInputField": "Bevorzugter Produktionszeitraum",
+  "PlannedProductionWeek": "Angebotener Produktionszeitraum",
+  "OfferedPrice": "Angebotspreis",
   "Offers": "Angebote",
   "TimerText": "Verbleibende Zeit",
   "AcceptOffer": "Akzeptieren",

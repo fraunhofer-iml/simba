@@ -14,7 +14,8 @@ export class OfferAmqpDto {
   price: number;
   status: string;
   orderId: string;
-  plannedCalendarWeek?: number;
+  plannedCalendarWeek: number;
+  plannedYear: number;
   decisionDate?: Date;
 
   constructor(
@@ -23,7 +24,8 @@ export class OfferAmqpDto {
     price: number,
     status: string,
     orderId: string,
-    plannedCalendarWeek?: number,
+    plannedCalendarWeek: number,
+    plannedYear: number,
     decisionDate?: Date
   ) {
     this.id = id;
@@ -32,6 +34,7 @@ export class OfferAmqpDto {
     this.status = status;
     this.orderId = orderId;
     this.plannedCalendarWeek = plannedCalendarWeek;
+    this.plannedYear = plannedYear;
     this.decisionDate = decisionDate;
   }
 
@@ -52,6 +55,7 @@ export class OfferAmqpDto {
       status: offer.status,
       orderId: orderId,
       plannedCalendarWeek: Number(offer.plannedCalendarWeek),
+      plannedYear: Number(offer.plannedYear),
     };
   }
 }

@@ -17,7 +17,7 @@ export class OrderOverviewDto {
   id: string;
   @ApiProperty({
     type: String,
-    description: 'Number of order, buyerOrderRefDocumentId in Order-X-Standard'
+    description: 'Number of order, buyerOrderRefDocumentId in Order-X-Standard',
   })
   number: string;
   @ApiProperty({
@@ -95,14 +95,19 @@ export class OrderOverviewDto {
     this.currency = currency;
   }
 
-  public static toOrderOverviewDto(entity: OrderAmqpDto, productDto: ProductDto, offerDto: OfferDto, customerName: string): OrderOverviewDto {
+  public static toOrderOverviewDto(
+    entity: OrderAmqpDto,
+    productDto: ProductDto,
+    offerDto: OfferDto,
+    customerName: string
+  ): OrderOverviewDto {
     return new OrderOverviewDto(
       entity.id,
       entity.number,
       productDto.name,
       entity.quantity,
-      entity.calendarWeek,
-      entity.year,
+      offerDto ? offerDto.plannedCalendarWeek : 0,
+      offerDto ? offerDto.plannedYear : 0,
       entity.status.status,
       entity.status.timestamp,
       offerDto ? offerDto.price : 0,

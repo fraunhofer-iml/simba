@@ -8,6 +8,8 @@
   "ProductInputField": "Product",
   "YearInputField": "Year",
   "WeekInputField": "Preferred production period",
+  "PlannedProductionWeek": "Offered production period",
+  "OfferedPrice": "Offered price",
   "Offers": "Offers",
   "TimerText": "Expiration time",
   "AcceptOffer": "Accept",

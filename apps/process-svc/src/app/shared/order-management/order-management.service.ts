@@ -36,7 +36,8 @@ export class OrderManagementService {
 
       const offers: CreateOfferAmqpDto[] = await this.orderSchedulingHandlerService.scheduleOrder(
         newOrderId,
-        createOrderDto.calendarWeek,
+        createOrderDto.requestedCalendarWeek,
+        createOrderDto.requestedYear,
         createOrderDto.productId,
         createOrderDto.quantity
       );

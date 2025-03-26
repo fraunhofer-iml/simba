@@ -7,6 +7,7 @@
  */
 
 import { CreateOrderDto, OfferDto, OrderOverviewDto, ProductDto } from '@ap3/api';
+import { TranslateService } from '@ngx-translate/core';
 import _moment, { default as _rollupMoment, Moment } from 'moment';
 import { CountdownEvent } from 'ngx-countdown';
 import { catchError, Observable, of } from 'rxjs';
@@ -56,7 +57,8 @@ export class CreateOrderComponent {
     private readonly dialog: MatDialog,
     private readonly productService: ProductService,
     private readonly calendarWeekService: CalendarWeekService,
-    private readonly dateFormatService: DateFormatService
+    private readonly dateFormatService: DateFormatService,
+    private readonly translate: TranslateService
   ) {
     this.orderForm = builder.group({
       date: new FormControl<Moment | null>(null, Validators.required),
@@ -146,6 +148,10 @@ export class CreateOrderComponent {
       this.openOffers = false;
       this.orderForm.enable();
     });
+  }
+
+  getScheduledFor(cw: number, year: number) {
+    return `${this.translate.instant('CalendarWeek')} ${cw}, ${year}`;
   }
 
   getDateFormatOfCurrentLanguage(offer: OfferDto): string {

@@ -48,7 +48,7 @@
             }
           </mat-select>
         </mat-form-field>
-        <div class="order-field">
+        <div class="create-button-container">
           <button class="create-button" (click)="createOrder()" mat-flat-button [disabled]="!orderForm.valid">
             {{ 'Create' | translate }}
           </button>
@@ -71,13 +71,18 @@
         <div class="card offers">
           <div class="offerIdAndDate">
             <p id="offerId" class="grey">ID {{ offer.id }}</p>
-            <p id="offerDate" class="grey">{{ 'WeekInputField' | translate }}: {{ getDateFormatOfCurrentLanguage(offer) }}</p>
           </div>
           <p id="offerName">{{ orderForm.get('product')?.value.name }}</p>
-          <p id="offerAmount">{{ 'AmountInputField' | translate }}: {{ orderForm.get('amount')?.value }}</p>
-          <div class="offerPrice">
-            <img ngSrc="assets/icons/price.svg" alt="Icon" height="20" width="20" />
-            <p>{{ offer.price | number: '1.2-2' }}</p>
+          <div class="offer-details-grid">
+            <div class="offer-details-grid-label">{{'PlannedProductionWeek' | translate}}:</div>
+            <div class="offer-details-grid-value">{{ getScheduledFor(offer.plannedCalendarWeek, offer.plannedYear) }}</div>
+            <div class="offer-details-grid-label">{{ 'AmountInputField' | translate }}:</div>
+            <div class="offer-details-grid-value">{{ orderForm.get('amount')?.value }}</div>
+            <div class="offer-details-grid-label">{{'OfferedPrice' | translate}}:</div>
+            <div class="offer-details-grid-value">
+              <img ngSrc="assets/icons/price.svg" alt="Icon" height="20" width="20" />
+              {{ offer.price | number: '1.2-2' }}
+            </div>
           </div>
           <div class="button-container">
             <button mat-flat-button class="accept-button" (click)="acceptOffer(offer.id)">{{ 'AcceptOffer' | translate }}</button>

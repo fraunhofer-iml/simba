@@ -15,8 +15,8 @@ export class OrderAmqpDto {
   number: string;
   productId: string;
   quantity: number;
-  year: number;
-  calendarWeek: number;
+  requestedYear: number;
+  requestedCalendarWeek: number;
   creationDate: string;
   status: ServiceStatusAmqpDto;
   acceptedOfferId?: string;
@@ -46,8 +46,8 @@ export class OrderAmqpDto {
     this.number = number;
     this.productId = productId;
     this.quantity = amount;
-    this.year = year;
-    this.calendarWeek = calendarWeek;
+    this.requestedYear = year;
+    this.requestedCalendarWeek = calendarWeek;
     this.creationDate = creationDate;
     this.status = status;
     this.customerId = customerId;
@@ -68,8 +68,8 @@ export class OrderAmqpDto {
       order.buyerOrderRefDocumentId ? order.buyerOrderRefDocumentId : '',
       order.orderLines[0].item.id,
       order.orderLines[0].requestedQuantity.toNumber(),
-      order.serviceProcess ? order.serviceProcess.dueYear : 0,
-      order.serviceProcess ? order.serviceProcess.dueCalendarWeek : 0,
+      order.serviceProcess?.dueYear ? order.serviceProcess.dueYear : 0,
+      order.serviceProcess?.dueCalendarWeek ? order.serviceProcess.dueCalendarWeek : 0,
       order.documentIssueDate.toISOString(),
       currentState,
       order.buyer.id,

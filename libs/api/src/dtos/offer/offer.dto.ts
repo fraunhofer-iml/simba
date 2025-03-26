@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { OfferAmqpDto } from '@ap3/amqp';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class OfferDto {
@@ -19,12 +20,45 @@ export class OfferDto {
   status: string;
   @ApiProperty()
   orderId: string;
+  @ApiProperty()
+  plannedCalendarWeek: number;
+  @ApiProperty()
+  plannedYear: number;
 
-  constructor(id: string, creationDate: string, price: number, status: string, orderId: string) {
+  constructor(
+    id: string,
+    creationDate: string,
+    price: number,
+    status: string,
+    orderId: string,
+    plannedCalendarWeek: number,
+    plannedYear: number
+  ) {
     this.id = id;
     this.creationDate = creationDate;
     this.price = price;
     this.status = status;
     this.orderId = orderId;
+    this.plannedCalendarWeek = plannedCalendarWeek;
+    this.plannedYear = plannedYear;
+  }
+
+  public static toOfferDto(offer: OfferAmqpDto): OfferDto {
+    console.log(offer);
+    return new OfferDto(
+      offer.id,
+      new Date(offer.creationDate).toISOString(),
+      offer.price,
+      offer.status,
+      offer.orderId,
+      offer.plannedCalendarWeek,
+      offer.plannedYear
+    );
+  }
+
+  public static toOfferDtos(offers: OfferAmqpDto[]): OfferDto[] {
+    return offers.map((offer: OfferAmqpDto): OfferDto => {
+      return this.toOfferDto(offer);
+    });
   }
 }

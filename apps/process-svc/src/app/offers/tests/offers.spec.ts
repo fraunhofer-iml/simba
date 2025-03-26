@@ -7,7 +7,7 @@
  */
 
 import { OfferAmqpMock } from '@ap3/amqp';
-import { AcceptScheduledOfferResponseMock, CppsSchedulerConnectorModule } from '@ap3/cpps-scheduler-connector';
+import { AcceptScheduledOfferResponseMock } from '@ap3/cpps-scheduler-connector';
 import {
   DatabaseModule,
   OffersSeed,
@@ -20,12 +20,13 @@ import {
   setAcceptedForServiceQuery,
   setOfferStateToAcceptedQuery,
   setOfferStateToDeclinedQuery,
-  setServiceStateToAcceptedQuery, setServiceStateToCanceledQuery,
+  setServiceStateToAcceptedQuery,
+  setServiceStateToCanceledQuery,
 } from '@ap3/database';
 import { Test, TestingModule } from '@nestjs/testing';
+import { OrderManagementModule } from '../../shared/order-management/order-management.module';
 import { OffersController } from '../offers.controller';
 import { OffersService } from '../offers.service';
-import { OrderManagementModule } from '../../shared/order-management/order-management.module';
 
 describe('OfferController', () => {
   let controller: OffersController;
@@ -118,13 +119,13 @@ describe('OfferController', () => {
     prismaOfferUpdateSpy.mockResolvedValue(OffersSeed[0]);
     const prismaServiceProcessUpdateSpy = jest.spyOn(prisma.serviceProcess, 'update'); //mock set accepted offer in service process and update service state to planned
     prismaServiceProcessUpdateSpy.mockResolvedValue(ServiceProcessesSeed[0]);
-    prismaFindOffersSpy.mockResolvedValue(OffersSeed.slice(1, 4));//mock find remaining open offers to decline them
+    prismaFindOffersSpy.mockResolvedValue(OffersSeed.slice(1, 4)); //mock find remaining open offers to decline them
     const prismaOrderFindManySpy = jest.spyOn(prisma.order, 'findMany'); //mock get order to get product id and quantity
     prismaOrderFindManySpy.mockResolvedValue([OrderOverviewPrismaMock[0]]);
 
     const mockResponse = {
       ok: true,
-      json: jest.fn().mockResolvedValue(AcceptScheduledOfferResponseMock ),
+      json: jest.fn().mockResolvedValue(AcceptScheduledOfferResponseMock),
     } as unknown as Response;
     (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
 

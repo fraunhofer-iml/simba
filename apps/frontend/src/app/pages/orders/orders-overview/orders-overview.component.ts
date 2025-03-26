@@ -63,6 +63,10 @@ export class OrdersOverviewComponent implements AfterViewInit {
     this.setSortingPredicate();
   }
 
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
   private setFilterPredicate(): void {
     this.dataSource.filterPredicate = (data: OrderOverviewDto, value: string): boolean => {
       let productionDate = false;
@@ -71,8 +75,9 @@ export class OrdersOverviewComponent implements AfterViewInit {
       } else {
         productionDate = this.dateFormatService.transformDateToCurrentLanguageFormat(data.statusTimestamp).includes(value);
       }
+      console.log(data);
       return (
-        data.id.toLowerCase().includes(value) ||
+        data.number.toLowerCase().includes(value) ||
         this.translate.instant(`OrderStatus.${data.status}`).includes(value) ||
         `${data.price.toFixed(2)}`.toLowerCase().includes(value) ||
         data.currency.toLowerCase().includes(value) ||
@@ -105,10 +110,6 @@ export class OrdersOverviewComponent implements AfterViewInit {
 
   getDateFormat() {
     return this.dateFormatService.getDateFormatByCurrentLang();
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
   }
 
   setDataSourceSortAttribute() {

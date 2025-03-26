@@ -17,7 +17,8 @@ model Offer {
   id                  String    @id @default(cuid())
   creationDate        DateTime  @default(now())
   decisionDate        DateTime?
-  plannedCalendarWeek Decimal?
+  plannedCalendarWeek Decimal
+  plannedYear         Decimal
   price               Decimal   @db.Money
   status              String
 

@@ -24,7 +24,13 @@ export class OrderSchedulingHandlerService {
 
   constructor(private readonly cppsSchedulerConnector: CppsSchedulerConnectorService) {}
 
-  async scheduleOrder(orderId: string, calendarWeek: number, productId: string, quantity: number): Promise<CreateOfferAmqpDto[]> {
+  async scheduleOrder(
+    orderId: string,
+    calendarWeek: number,
+    year: number,
+    productId: string,
+    quantity: number
+  ): Promise<CreateOfferAmqpDto[]> {
     const product = new ScheduledProductDto(productId, quantity);
     const orderToSchedule = new ScheduleOrderRequestDto(orderId, calendarWeek, new Date(), [product]);
     const scheduledOrder: ScheduleOrderResponseDto = await this.cppsSchedulerConnector.scheduleOrder(orderToSchedule);
@@ -35,6 +41,8 @@ export class OrderSchedulingHandlerService {
       offer.orderId = orderId;
       offer.price = cwPrice.price;
       offer.plannedCalendarWeek = cwPrice.cw;
+      //TODO: AFFDS-382 Scheduler needs to consider the year for scheduling
+      offer.plannedYear = year;
       createOffers.push(offer);
     }
 

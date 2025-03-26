@@ -6,13 +6,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ORDER_NUMBER_PREFIX } from '@ap3/util';
+import { format } from 'date-fns';
 import { PickType } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { OrderAmqpDto } from './order-amqp.dto';
-import { ORDER_NUMBER_PREFIX } from '@ap3/util';
-import { format } from 'date-fns';
 
-export class CreateOrderAmqpDto extends PickType(OrderAmqpDto, ['productId', 'quantity', 'year', 'calendarWeek', 'customerId']) {
+export class CreateOrderAmqpDto extends PickType(OrderAmqpDto, [
+  'productId',
+  'quantity',
+  'requestedYear',
+  'requestedCalendarWeek',
+  'customerId',
+]) {
   vatCurrency: string;
   buyerId: string;
   sellerId: string;
@@ -30,9 +36,9 @@ export class CreateOrderAmqpDto extends PickType(OrderAmqpDto, ['productId', 'qu
       vatCurrency: this.vatCurrency,
       buyer: { connect: { id: this.buyerId } },
       seller: { connect: { id: this.sellerId } },
-      buyerOrderRefDocumentId: `${ORDER_NUMBER_PREFIX}${format(new Date(),"yyMMddHHmmSSS")}`,
+      buyerOrderRefDocumentId: `${ORDER_NUMBER_PREFIX}${format(new Date(), 'yyMMddHHmmSSS')}`,
       serviceProcess: {
-        create: { dueCalendarWeek: this.calendarWeek, dueYear: this.year },
+        create: { dueCalendarWeek: this.requestedCalendarWeek, dueYear: this.requestedYear },
       },
       orderLines: {
         create: {

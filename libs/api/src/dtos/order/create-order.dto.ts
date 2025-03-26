@@ -36,8 +36,8 @@ export class CreateOrderDto {
       sellerId: operatorId,
       productId: this.productId,
       quantity: this.amount,
-      year: this.year,
-      calendarWeek: this.calendarWeek,
+      requestedYear: this.year,
+      requestedCalendarWeek: this.calendarWeek,
       customerId: this.customerId,
     };
   }

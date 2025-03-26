@@ -9,4 +9,11 @@
 import { PickType } from '@nestjs/swagger';
 import { OrderAmqpDto } from './order-amqp.dto';
 
-export class UpdateOrderAmqpDto extends PickType(OrderAmqpDto, ['id', 'productId', 'quantity', 'year', 'calendarWeek', 'customerId']) {}
+export class UpdateOrderAmqpDto extends PickType(OrderAmqpDto, [
+  'id',
+  'productId',
+  'quantity',
+  'requestedYear',
+  'requestedCalendarWeek',
+  'customerId',
+]) {}

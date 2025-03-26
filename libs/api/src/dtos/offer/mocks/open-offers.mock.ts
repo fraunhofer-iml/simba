@@ -16,6 +16,8 @@ export const OpenOffersMock: OfferDto[] = [
     price: +OffersSeed[2].price,
     status: OffersSeed[2].status,
     orderId: 'o001',
+    plannedCalendarWeek: Number(OffersSeed[2].plannedCalendarWeek),
+    plannedYear: Number(OffersSeed[2].plannedYear),
   },
   {
     id: OffersSeed[4].id,
@@ -23,5 +25,7 @@ export const OpenOffersMock: OfferDto[] = [
     price: +OffersSeed[4].price,
     status: OffersSeed[4].status,
     orderId: 'o001',
+    plannedCalendarWeek: Number(OffersSeed[4].plannedCalendarWeek),
+    plannedYear: Number(OffersSeed[4].plannedYear),
   },
 ];
