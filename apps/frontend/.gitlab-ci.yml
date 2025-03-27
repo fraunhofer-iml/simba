@@ -61,13 +61,26 @@ frontend:build:
   stage: build
   extends: .default
   script:
-    - npx nx run frontend:build --verbose
+    - npx nx run frontend:build --configuration=staging --verbose
   artifacts:
     paths:
       - dist/apps/frontend
   only:
     - merge_requests
     - tags
+  except:
+    - /^.*rel.*$/
+
+frontend-prod:build:
+  stage: build
+  extends: .default
+  script:
+    - npx nx run frontend:build --configuration=production --verbose
+  artifacts:
+    paths:
+      - dist/apps/frontend
+  only:
+    - /^.*rel.*$/
 
 frontend:archive:
   needs:
