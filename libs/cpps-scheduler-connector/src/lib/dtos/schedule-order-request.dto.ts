@@ -11,12 +11,14 @@ import { ScheduledProductDto } from './scheduled-product.dto';
 export class ScheduleOrderRequestDto {
   id: string;
   requestedCW: number;
+  requestedYear: number;
   timestamp: Date;
   products: ScheduledProductDto[];
 
-  constructor(id: string, requestedCW: number, timestamp: Date, products: ScheduledProductDto[]) {
+  constructor(id: string, requestedCW: number, requestedYear: number, timestamp: Date, products: ScheduledProductDto[]) {
     this.id = id;
     this.requestedCW = requestedCW;
+    this.requestedYear = requestedYear;
     this.timestamp = timestamp;
     this.products = products;
   }

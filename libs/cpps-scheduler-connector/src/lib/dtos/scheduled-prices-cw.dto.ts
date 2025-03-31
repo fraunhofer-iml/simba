@@ -8,10 +8,12 @@
 
 export class ScheduledPricesCwDto {
   cw: number;
+  year: number;
   price: number;
 
-  constructor(cw: number, price: number) {
+  constructor(cw: number, year: number, price: number) {
     this.cw = cw;
+    this.year = year;
     this.price = price;
   }
 }
