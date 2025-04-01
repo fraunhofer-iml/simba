@@ -16,6 +16,7 @@ export interface generalConfig {
   logLevel: LogLevel[];
   swaggerPath: string;
   brokerURI: string;
+  queuePrefix: string;
   platformOperator: string;
   platformCurrency: string;
   bffPort: number;
@@ -31,6 +32,7 @@ export default registerAs(GENERAL_IDENTIFIER, () => ({
   logLevel: (process.env['LOG_SETTINGS'] || 'error,verbose').split(','),
   swaggerPath: process.env['SWAGGER_PATH'] || 'api',
   brokerURI: process.env['BROKER_URI'] || 'amqp://localhost:5672',
+  queuePrefix: process.env['AMQP_QUEUE_PREFIX'] || 'SIMBA',
   platformOperator: process.env['PLATFORM_OPERATOR'] || 'pt0002',
   platformCurrency: process.env['PLATFORM_CURRENCY'] || 'Euro',
   bffPort: process.env['BFF_PORT'] || 3000,

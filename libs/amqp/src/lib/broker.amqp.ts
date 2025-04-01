@@ -11,17 +11,16 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AmqpBrokerQueues } from './broker.queues';
 
 export class BrokerAmqp {
-
-  public getProcessSvcBroker(): DynamicModule{
-    return this.getMessageBroker(AmqpBrokerQueues.PROCESS_SVC_QUEUE)
+  public getProcessSvcBroker(): DynamicModule {
+    return this.getMessageBroker(AmqpBrokerQueues.PROCESS_SVC_QUEUE);
   }
 
-  public getMasterDataSvcBroker(): DynamicModule{
-    return this.getMessageBroker(AmqpBrokerQueues.MASTER_DATA_SVC_QUEUE)
+  public getMasterDataSvcBroker(): DynamicModule {
+    return this.getMessageBroker(AmqpBrokerQueues.MASTER_DATA_SVC_QUEUE);
   }
 
   private getMessageBroker(queue: string): DynamicModule {
-    const amqpUri = process.env['BROKER_URI'] || "amqp://localhost:5672";
+    const amqpUri = process.env['BROKER_URI'] || 'amqp://localhost:5672';
 
     if (!amqpUri) {
       throw new Error('BROKER_URI in environment variables is not defined');
