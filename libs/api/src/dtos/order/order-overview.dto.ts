@@ -9,6 +9,7 @@
 import { OrderAmqpDto } from '@ap3/amqp';
 import { CurrenciesEnum, ServiceStatesEnum } from '@ap3/util';
 import { ApiProperty } from '@nestjs/swagger';
+import { InvoiceDto } from '../invoice';
 import { OfferDto } from '../offer';
 import { ProductDto } from '../product';
 
@@ -64,6 +65,8 @@ export class OrderOverviewDto {
     enum: CurrenciesEnum,
   })
   currency: string;
+  @ApiProperty()
+  invoiceNumber: string;
 
   constructor(
     id: string,
@@ -78,7 +81,8 @@ export class OrderOverviewDto {
     robots: string[],
     customerId: string,
     customerName: string,
-    currency: string
+    currency: string,
+    invoiceNumber: string
   ) {
     this.id = id;
     this.number = number;
@@ -93,13 +97,15 @@ export class OrderOverviewDto {
     this.customerId = customerId;
     this.customerName = customerName;
     this.currency = currency;
+    this.invoiceNumber = invoiceNumber;
   }
 
   public static toOrderOverviewDto(
     entity: OrderAmqpDto,
     productDto: ProductDto,
     offerDto: OfferDto,
-    customerName: string
+    customerName: string,
+    invoice?: InvoiceDto
   ): OrderOverviewDto {
     return new OrderOverviewDto(
       entity.id,
@@ -114,7 +120,8 @@ export class OrderOverviewDto {
       entity.robots ? entity.robots : [],
       entity.customerId,
       customerName,
-      entity.currency
+      entity.currency,
+      invoice?.invoiceNumber ? invoice.invoiceNumber : ''
     );
   }
 }

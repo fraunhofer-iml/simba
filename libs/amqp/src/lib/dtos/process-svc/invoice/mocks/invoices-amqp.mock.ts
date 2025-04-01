@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InvoiceSeed, PaymentStatesSeed, TradeReceivablesSeed } from '@ap3/database';
+import { InvoiceSeed, OrdersSeed, PaymentStatesSeed, TradeReceivablesSeed } from '@ap3/database';
 import { PaymentStatusAmqpDto } from '../../trade-receivable';
 import { InvoiceAmqpDto } from '../invoice-amqp.dto';
 
@@ -15,6 +15,8 @@ export const InvoicesAmqpMock = <InvoiceAmqpDto[]>[
     id: InvoiceSeed[0].id,
     debtorId: InvoiceSeed[0].debtorId,
     creditorId: InvoiceSeed[0].creditorId,
+    orderId: OrdersSeed[0].id,
+    orderNumber: OrdersSeed[0].buyerOrderRefDocumentId,
     nft: TradeReceivablesSeed[0].nft,
     totalAmountWithoutVat: +InvoiceSeed[0].totalAmountWithoutVat,
     status: new PaymentStatusAmqpDto(PaymentStatesSeed[1].status, PaymentStatesSeed[1].timestamp),
@@ -27,6 +29,8 @@ export const InvoicesAmqpMock = <InvoiceAmqpDto[]>[
     id: InvoiceSeed[1].id,
     debtorId: InvoiceSeed[1].debtorId,
     creditorId: InvoiceSeed[1].creditorId,
+    orderId: OrdersSeed[1].id,
+    orderNumber: OrdersSeed[1].buyerOrderRefDocumentId,
     nft: TradeReceivablesSeed[1].nft,
     totalAmountWithoutVat: +InvoiceSeed[1].totalAmountWithoutVat,
     status: new PaymentStatusAmqpDto(PaymentStatesSeed[3].status, PaymentStatesSeed[3].timestamp),

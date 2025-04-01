@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InvoiceMocks } from '@ap3/api';
+import { InvoiceDtoMocks } from '@ap3/api';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormatService } from '../shared/services/util/date-format.service';
 import { Invoice } from './invoice';
@@ -36,7 +36,7 @@ describe('Invoice', () => {
   });
 
   it('should format totalAmountWithoutVat to two decimal places with currency symbol', () => {
-    const result = Invoice.convertToInvoice(InvoiceMocks);
+    const result = Invoice.convertToInvoice(InvoiceDtoMocks);
     expect(result[0].totalAmountWithoutVat).toBe('3.00');
   });
 });

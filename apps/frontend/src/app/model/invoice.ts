@@ -21,6 +21,7 @@ export class Invoice {
   url: string;
   displayedStatus: string;
   currency: string;
+  orderNumber: string;
 
   constructor(invoice: InvoiceDto) {
     this.id = invoice.id;
@@ -35,6 +36,7 @@ export class Invoice {
     this.url = invoice.url;
     this.displayedStatus = invoice.paymentStatus;
     this.currency = invoice.currency;
+    this.orderNumber = invoice.orderNumber;
   }
 
   public static convertToInvoice(invoices: InvoiceDto[]): Invoice[] {

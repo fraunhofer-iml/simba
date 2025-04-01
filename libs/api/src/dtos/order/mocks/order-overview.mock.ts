@@ -6,7 +6,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CompaniesSeed, MachinesSeed, OrderLinesSeed, OrdersSeed, ServiceProcessesSeed, ServiceStatesSeed } from '@ap3/database';
+import {
+  CompaniesSeed,
+  InvoiceSeed,
+  MachinesSeed,
+  OrderLinesSeed,
+  OrdersSeed,
+  ServiceProcessesSeed,
+  ServiceStatesSeed,
+} from '@ap3/database';
 import { OpenOffersMock } from '../../offer';
 import { ProductDtoMocks } from '../../product';
 import { OrderOverviewDto } from '../order-overview.dto';
@@ -26,6 +34,7 @@ export const OrderOverviewMock: OrderOverviewDto[] = [
     customerId: CompaniesSeed[0].id,
     customerName: CompaniesSeed[0].name,
     currency: OrdersSeed[0].vatCurrency,
+    invoiceNumber: InvoiceSeed[0].invoiceNumber,
   },
   {
     id: OrdersSeed[1].id,
@@ -39,7 +48,8 @@ export const OrderOverviewMock: OrderOverviewDto[] = [
     price: OpenOffersMock[1].price,
     robots: [MachinesSeed[0].id, MachinesSeed[1].id],
     customerId: OrdersSeed[1].buyerId,
-    customerName: CompaniesSeed[1].name,
+    customerName: CompaniesSeed[0].name,
     currency: OrdersSeed[1].vatCurrency,
+    invoiceNumber: InvoiceSeed[1].invoiceNumber,
   },
 ];

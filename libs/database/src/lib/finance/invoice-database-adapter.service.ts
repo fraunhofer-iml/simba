@@ -70,6 +70,7 @@ export class InvoiceDatabaseAdapterService {
       debtorId: filterParams.debtorId,
       invoiceIds: invoiceIds,
       paymentStates: filterParams.paymentStates,
+      orderNumber: filterParams.orderNumber,
     });
   }
 

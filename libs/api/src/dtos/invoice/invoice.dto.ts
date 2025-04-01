@@ -16,6 +16,8 @@ export class InvoiceDto {
   @ApiProperty()
   invoiceNumber: string;
   @ApiProperty()
+  orderNumber: string;
+  @ApiProperty()
   creditor: string;
   @ApiProperty()
   creditorId: string;
@@ -40,6 +42,7 @@ export class InvoiceDto {
   constructor(
     id: string,
     invoiceNumber: string,
+    orderNumber: string,
     creditorId: string,
     creditor: string,
     totalAmountWithoutVat: number,
@@ -52,6 +55,7 @@ export class InvoiceDto {
   ) {
     this.id = id;
     this.invoiceNumber = invoiceNumber;
+    this.orderNumber = orderNumber;
     this.creditorId = creditorId;
     this.creditor = creditor;
     this.totalAmountWithoutVat = totalAmountWithoutVat;
@@ -67,6 +71,7 @@ export class InvoiceDto {
     return new InvoiceDto(
       dto.id,
       dto.invoiceNumber,
+      dto.orderNumber,
       dto.creditorId,
       creditor,
       dto.totalAmountWithoutVat,

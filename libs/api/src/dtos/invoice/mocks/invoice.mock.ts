@@ -6,13 +6,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CompaniesSeed, InvoiceSeed, PaymentStatesSeed } from '@ap3/database';
+import { CompaniesSeed, InvoiceSeed, OrdersSeed, PaymentStatesSeed } from '@ap3/database';
 import { InvoiceDto } from '../invoice.dto';
 
-export const InvoiceMocks: InvoiceDto[] = [
+export const InvoiceDtoMocks: InvoiceDto[] = [
   new InvoiceDto(
     InvoiceSeed[0].id,
     InvoiceSeed[0].invoiceNumber,
+    OrdersSeed[0].buyerOrderRefDocumentId ? OrdersSeed[0].buyerOrderRefDocumentId : '',
     CompaniesSeed[1].id,
     CompaniesSeed[1].name,
     +InvoiceSeed[0].totalAmountWithoutVat,
@@ -26,6 +27,7 @@ export const InvoiceMocks: InvoiceDto[] = [
   new InvoiceDto(
     InvoiceSeed[1].id,
     InvoiceSeed[1].invoiceNumber,
+    OrdersSeed[1].buyerOrderRefDocumentId ? OrdersSeed[1].buyerOrderRefDocumentId : '',
     CompaniesSeed[1].id,
     CompaniesSeed[1].name,
     +InvoiceSeed[1].totalAmountWithoutVat,

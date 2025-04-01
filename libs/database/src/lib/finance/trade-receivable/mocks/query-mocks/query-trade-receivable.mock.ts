@@ -18,8 +18,13 @@ export const createTradeReceivableQuery = <Prisma.TradeReceivableCreateInput>{
 
 const trQueryInclude = <Prisma.TradeReceivableInclude>{
   serviceProcess: {
-    select: {
-      orderId: true,
+    include: {
+      order: {
+        select: {
+          buyerOrderRefDocumentId: true,
+          id: true,
+        },
+      },
     },
   },
   tradeReceivable: {

@@ -38,6 +38,7 @@ export class ReceivablesComponent {
     'currency',
     'invoiceDueDate',
     'debtor',
+    'orderNumber',
     'paymentStatus',
   ];
   private readonly _snackBar = inject(MatSnackBar);
@@ -71,7 +72,8 @@ export class ReceivablesComponent {
         data.currency.toLowerCase().includes(value) ||
         this.dateFormatService.transformDateToCurrentLanguageFormat(data.invoiceDueDate).includes(value) ||
         data.debtor.toLowerCase().includes(value) ||
-        this.translationService.instant(`PaymentStatus.${data.paymentStatus}`).includes(value)
+        this.translationService.instant(`PaymentStatus.${data.paymentStatus}`).includes(value) ||
+        data.orderNumber.toLowerCase().includes(value)
       );
     };
   }

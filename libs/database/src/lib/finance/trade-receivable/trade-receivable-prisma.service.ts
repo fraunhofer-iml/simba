@@ -150,7 +150,7 @@ export class TradeReceivablePrismaService {
   ): Prisma.Sql {
     let companyWhere: Prisma.Sql = Prisma.sql`true`;
 
-    if (paymentStates.length > 0) {
+    if (paymentStates?.length > 0) {
       let paymentStateWhere: Prisma.Sql = Prisma.sql``;
 
       paymentStates.forEach((paymentState: string, index: number) => {

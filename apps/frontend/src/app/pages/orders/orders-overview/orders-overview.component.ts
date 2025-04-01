@@ -36,8 +36,19 @@ export class OrdersOverviewComponent implements AfterViewInit {
     'amount',
     'robots',
     'customerName',
+    'invoiceNumber',
   ];
-  displayedColumnsCustomer: string[] = ['orderId', 'status', 'productionDate', 'price', 'currency', 'products', 'amount', 'customerName'];
+  displayedColumnsCustomer: string[] = [
+    'orderId',
+    'status',
+    'productionDate',
+    'price',
+    'currency',
+    'products',
+    'amount',
+    'robots',
+    'invoiceNumber',
+  ];
   dataSource = new MatTableDataSource<OrderOverviewDto>();
   dataSourceObservable!: Observable<MatTableDataSource<OrderOverviewDto>>;
   sort?: MatSort;
@@ -75,7 +86,6 @@ export class OrdersOverviewComponent implements AfterViewInit {
       } else {
         productionDate = this.dateFormatService.transformDateToCurrentLanguageFormat(data.statusTimestamp).includes(value);
       }
-      console.log(data);
       return (
         data.number.toLowerCase().includes(value) ||
         this.translate.instant(`OrderStatus.${data.status}`).includes(value) ||
@@ -85,7 +95,8 @@ export class OrdersOverviewComponent implements AfterViewInit {
         data.amount.toFixed().includes(value) ||
         data.robots.some((robot) => robot.toLowerCase().includes(value)) ||
         productionDate ||
-        data.customerName.toLowerCase().includes(value)
+        data.customerName.toLowerCase().includes(value) ||
+        data.invoiceNumber.toLowerCase().includes(value)
       );
     };
   }

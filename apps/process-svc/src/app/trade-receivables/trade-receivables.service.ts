@@ -7,17 +7,14 @@
  */
 
 import util from 'node:util';
-import { AllInvoicesFilterAmqpDto, CreateTradeReceivableAmqpDto, InvoiceIdAndPaymentStateAmqpDto, TradeReceivableAmqpDto } from '@ap3/amqp';
+import { CreateTradeReceivableAmqpDto, InvoiceIdAndPaymentStateAmqpDto, TradeReceivableAmqpDto } from '@ap3/amqp';
 import { CreateNftDto, UpdateNftPaymentStatusDto } from '@ap3/api';
 import { BlockchainConnectorService } from '@ap3/blockchain-connector';
-import { ConfigurationService } from '@ap3/config';
 import { InvoiceDatabaseAdapterService, InvoiceWithNFT, ServiceProcessPrismaService, TradeReceivablePrismaService } from '@ap3/database';
 import { S3Service } from '@ap3/s3';
 import { PaymentStates } from '@ap3/util';
-import { CronJob } from 'cron';
 import { TokenReadDto } from 'nft-folder-blockchain-connector';
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
-import { SchedulerRegistry } from '@nestjs/schedule';
 import { PaymentStatus, ServiceProcess, TradeReceivable } from '@prisma/client';
 import { MetadataDto } from './metadata/metadata.dto';
 import { MetadataService } from './metadata/metadata.service';

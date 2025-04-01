@@ -94,12 +94,13 @@ export class InvoicePrismaService {
   }
 
   async getInvoices({
-    invoiceIds,
-    orderId,
     creditorId,
     debtorId,
+    orderId,
+    invoiceIds,
     paymentStates,
     invoiceNumbers,
+    orderNumber,
   }: {
     creditorId?: string;
     debtorId?: string;
@@ -107,26 +108,21 @@ export class InvoicePrismaService {
     invoiceIds?: string[];
     paymentStates?: string[];
     invoiceNumbers?: string[];
+    orderNumber?: string[];
   }): Promise<InvoiceWithNFT[]> {
     this.logger.verbose('Return all invoices from database');
     try {
-      const creditorFilter: Prisma.InvoiceWhereInput | undefined = creditorId ? { creditorId: String(creditorId) } : undefined;
-      const debtorFilter: Prisma.InvoiceWhereInput | undefined = debtorId ? { debtorId: String(debtorId) } : undefined;
+      const andFilters: Prisma.InvoiceWhereInput[] = this.createInvoiceWhereAndFilter(
+        invoiceIds,
+        invoiceNumbers,
+        orderId,
+        orderNumber,
+        paymentStates
+      );
       let orFilters: Prisma.InvoiceWhereInput[] = [];
 
-      const paymentStateFilter: Prisma.InvoiceWhereInput | undefined =
-        paymentStates && paymentStates.length > 0
-          ? { tradeReceivable: { states: { every: { status: { in: paymentStates } } } } }
-          : undefined;
-      const orderFilter: Prisma.InvoiceWhereInput | undefined = orderId ? { serviceProcess: { orderId: String(orderId) } } : undefined;
-      const invoiceIdsFilter: Prisma.InvoiceWhereInput | undefined =
-        invoiceIds && invoiceIds.length > 0 ? { id: { in: invoiceIds } } : undefined;
-      const invoiceNumbersFilter: Prisma.InvoiceWhereInput | undefined =
-        invoiceNumbers && invoiceNumbers.length > 0 ? { invoiceNumber: { in: invoiceNumbers } } : undefined;
-      const andFilters: Prisma.InvoiceWhereInput[] = [orderFilter, invoiceIdsFilter, paymentStateFilter, invoiceNumbersFilter].filter(
-        (filter) => filter !== undefined
-      );
-
+      const creditorFilter: Prisma.InvoiceWhereInput | undefined = creditorId ? { creditorId: String(creditorId) } : undefined;
+      const debtorFilter: Prisma.InvoiceWhereInput | undefined = debtorId ? { debtorId: String(debtorId) } : undefined;
       if (creditorFilter && debtorFilter && creditorId == debtorId) {
         orFilters = [creditorFilter, debtorFilter];
       } else {
@@ -143,8 +139,13 @@ export class InvoicePrismaService {
         where: where,
         include: {
           serviceProcess: {
-            select: {
-              orderId: true,
+            include: {
+              order: {
+                select: {
+                  id: true,
+                  buyerOrderRefDocumentId: true,
+                },
+              },
             },
           },
           tradeReceivable: {
@@ -159,6 +160,31 @@ export class InvoicePrismaService {
       this.logger.error(util.inspect(e));
       throw e;
     }
+  }
+
+  private createInvoiceWhereAndFilter(
+    invoiceIds?: string[],
+    invoiceNumbers?: string[],
+    orderId?: string,
+    orderNumbers?: string[],
+    paymentStates?: string[]
+  ): Prisma.InvoiceWhereInput[] {
+    const orderFilter: Prisma.InvoiceWhereInput | undefined = orderId ? { serviceProcess: { orderId: String(orderId) } } : undefined;
+
+    const paymentStateFilter: Prisma.InvoiceWhereInput | undefined =
+      paymentStates && paymentStates.length > 0 ? { tradeReceivable: { states: { every: { status: { in: paymentStates } } } } } : undefined;
+    const orderNumbersFilter: Prisma.InvoiceWhereInput | undefined =
+      orderNumbers && orderNumbers.length > 0
+        ? { serviceProcess: { order: { buyerOrderRefDocumentId: { in: orderNumbers } } } }
+        : undefined;
+    const invoiceIdsFilter: Prisma.InvoiceWhereInput | undefined =
+      invoiceIds && invoiceIds.length > 0 ? { id: { in: invoiceIds } } : undefined;
+    const invoiceNumbersFilter: Prisma.InvoiceWhereInput | undefined =
+      invoiceNumbers && invoiceNumbers.length > 0 ? { invoiceNumber: { in: invoiceNumbers } } : undefined;
+
+    return <Prisma.InvoiceWhereInput[]>(
+      [orderFilter, orderNumbersFilter, invoiceIdsFilter, paymentStateFilter, invoiceNumbersFilter].filter((filter) => filter !== undefined)
+    );
   }
 
   async countInvoicesDueInMonth(year: number, whereQuery: Prisma.Sql): Promise<InvoiceCountAndDueMonth[]> {

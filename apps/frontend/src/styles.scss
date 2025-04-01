@@ -89,8 +89,8 @@ h3 {
 
 .searchbar-container {
   display: flex;
-  gap: 50%;
-  margin-bottom: 1em;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* All Buttons */

@@ -16,13 +16,14 @@ import {
   InvoiceMessagePatterns,
   InvoicesAmqpMock,
   NotPaidStatisticsAmqpMock,
+  OrderAmqpMock,
   PaidStatisticsAmqpMock,
   TRParamsCompanyIdAndYearAndFinancialRole,
 } from '@ap3/amqp';
 import {
   InvoiceAndPaymentStatusDtoMock,
   InvoiceDto,
-  InvoiceMocks,
+  InvoiceDtoMocks,
   PaidTrStatisticsMock,
   UnpaidStatisticsDto,
   UnpaidTradeReceivableStatisticsMock,
@@ -86,7 +87,7 @@ describe('InvoicesController', () => {
   });
 
   it('should find all invoices', async () => {
-    const expectedReturnValue = InvoiceMocks;
+    const expectedReturnValue = InvoiceDtoMocks;
     const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
     sendRequestSpy.mockImplementation((messagePattern: InvoiceMessagePatterns, data: any) => {
       return of(InvoicesAmqpMock);
@@ -99,7 +100,8 @@ describe('InvoicesController', () => {
       request.user.company,
       request.user.company,
       [PaymentStates.OPEN],
-      InvoicesAmqpMock[0].invoiceNumber
+      InvoicesAmqpMock[0].invoiceNumber,
+      OrderAmqpMock[0].number
     );
     const params = new AllInvoicesFilterAmqpDto(
       [PaymentStates.OPEN],
@@ -107,38 +109,39 @@ describe('InvoicesController', () => {
       request.user.company,
       InvoicesAmqpMock[0].invoiceNumber,
       InvoicesAmqpMock[0].invoiceDueDate,
-      InvoicesAmqpMock[0].invoiceDueDate
+      InvoicesAmqpMock[0].invoiceDueDate,
+      [OrderAmqpMock[0].number]
     );
     expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.READ_ALL, params);
     expect(res).toEqual(expectedReturnValue);
   });
 
   it('should find an invoice by its id', async () => {
-    const expectedReturnValue = InvoiceMocks[0];
+    const expectedReturnValue = InvoiceDtoMocks[0];
     const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
     sendRequestSpy.mockImplementation((messagePattern: InvoiceMessagePatterns, data: any) => {
       return of(InvoicesAmqpMock[0]);
     });
 
-    const res: InvoiceDto = await controller.findOne(request, InvoiceMocks[0].id);
+    const res: InvoiceDto = await controller.findOne(request, InvoiceDtoMocks[0].id);
     expect(sendRequestSpy).toHaveBeenCalledWith(
       InvoiceMessagePatterns.READ_BY_ID,
-      new CompanyAndInvoiceAmqpDto(CompaniesSeed[1].id, InvoiceMocks[0].id)
+      new CompanyAndInvoiceAmqpDto(CompaniesSeed[1].id, InvoiceDtoMocks[0].id)
     );
     expect(res).toEqual(expectedReturnValue);
   });
 
   it('should get trigger creation of a new ZUGFeRD pdf', async () => {
-    const expectedReturnValue = 'INV_' + InvoiceMocks[0].invoiceNumber + '.pdf';
+    const expectedReturnValue = 'INV_' + InvoiceDtoMocks[0].invoiceNumber + '.pdf';
     const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
     sendRequestSpy.mockImplementationOnce((messagePattern: InvoiceMessagePatterns, data: any) => {
       return of(expectedReturnValue);
     });
 
-    const res = await controller.createAndUploadZugferdPDF(request, InvoiceMocks[0].id);
+    const res = await controller.createAndUploadZugferdPDF(request, InvoiceDtoMocks[0].id);
     expect(sendRequestSpy).toHaveBeenCalledWith(
       InvoiceMessagePatterns.CREATE_AND_UPLOAD_ZUGFERD_PDF,
-      new CompanyAndInvoiceAmqpDto(CompaniesSeed[1].id, InvoiceMocks[0].id)
+      new CompanyAndInvoiceAmqpDto(CompaniesSeed[1].id, InvoiceDtoMocks[0].id)
     );
     expect(res).toEqual(expectedReturnValue);
   });

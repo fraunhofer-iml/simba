@@ -7,13 +7,15 @@
  */
 
 import { InvoiceWithNFT } from '@ap3/database';
-import { Invoice, PaymentStatus, TradeReceivable } from '@prisma/client';
+import { PaymentStatus } from '@prisma/client';
 import { PaymentStatusAmqpDto } from '../trade-receivable';
 
 export class InvoiceAmqpDto {
   id: string;
   debtorId: string;
   creditorId: string;
+  orderId: string;
+  orderNumber: string;
   nft: string;
   totalAmountWithoutVat: number;
   status: PaymentStatusAmqpDto;
@@ -26,6 +28,8 @@ export class InvoiceAmqpDto {
     id: string,
     debtorId: string,
     creditorId: string,
+    orderId: string,
+    orderNumber: string,
     nft: string,
     totalAmountWithoutVat: number,
     status: PaymentStatusAmqpDto,
@@ -37,6 +41,8 @@ export class InvoiceAmqpDto {
     this.id = id;
     this.debtorId = debtorId;
     this.creditorId = creditorId;
+    this.orderId = orderId;
+    this.orderNumber = orderNumber;
     this.nft = nft;
     this.totalAmountWithoutVat = totalAmountWithoutVat;
     this.status = status;
@@ -56,32 +62,9 @@ export class InvoiceAmqpDto {
       invoice.id,
       invoice.debtorId ? invoice.debtorId : '',
       invoice.creditorId ? invoice.creditorId : '',
+      invoice.serviceProcess?.order?.id ? invoice.serviceProcess.order?.id : '',
+      invoice.serviceProcess?.order?.buyerOrderRefDocumentId ? invoice.serviceProcess.order?.buyerOrderRefDocumentId : '',
       invoice?.tradeReceivable?.nft ? invoice.tradeReceivable.nft : '',
-      +invoice.totalAmountWithoutVat,
-      currentState,
-      invoice.invoiceNumber,
-      invoice.dueDate,
-      invoice.url ? fileServerUrl + invoice.url : '',
-      invoice.contractCurrency
-    );
-  }
-
-  public static fromTRPrismaEntity(
-    tradeReceivable: TradeReceivable,
-    invoice: Invoice,
-    states: PaymentStatus[],
-    fileServerUrl: string
-  ): InvoiceAmqpDto {
-    const lastState = this.getLatestState(states);
-    const currentState = lastState
-      ? new PaymentStatusAmqpDto(lastState.status, lastState.timestamp)
-      : new PaymentStatusAmqpDto('', new Date());
-
-    return new InvoiceAmqpDto(
-      invoice.id,
-      invoice.debtorId ? invoice.debtorId : '',
-      invoice.creditorId ? invoice.creditorId : '',
-      tradeReceivable?.nft,
       +invoice.totalAmountWithoutVat,
       currentState,
       invoice.invoiceNumber,

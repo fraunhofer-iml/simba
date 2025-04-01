@@ -24,7 +24,10 @@ export const InvoiceNFTPrismaMock: any[] = <InvoiceWithNFT[]>[
     vat: InvoiceSeed[0].vat,
     url: InvoiceSeed[0].url,
     serviceProcess: {
-      orderId: OrdersSeed[0].id,
+      order: {
+        id: OrdersSeed[0].id,
+        buyerOrderRefDocumentId: OrdersSeed[0].buyerOrderRefDocumentId,
+      },
     },
     tradeReceivable: {
       id: TradeReceivablesSeed[0].id,
@@ -45,7 +48,10 @@ export const InvoiceNFTPrismaMock: any[] = <InvoiceWithNFT[]>[
     vat: InvoiceSeed[1].vat,
     url: InvoiceSeed[1].url,
     serviceProcess: {
-      orderId: OrdersSeed[1].id,
+      order: {
+        id: OrdersSeed[1].id,
+        buyerOrderRefDocumentId: OrdersSeed[1].buyerOrderRefDocumentId,
+      },
     },
     tradeReceivable: {
       id: TradeReceivablesSeed[1].id,

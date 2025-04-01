@@ -15,13 +15,23 @@ export class AllInvoicesFilterAmqpDto {
   invoiceNumber?: string;
   dueDateFrom?: Date;
   dueDateTo?: Date;
+  orderNumber?: string[];
 
-  constructor(paymentStates?: PaymentStates[], creditorId?: string, debtorId?: string, invoiceNumber?: string, dueDateFrom?: Date, dueDateTo?: Date) {
+  constructor(
+    paymentStates?: PaymentStates[],
+    creditorId?: string,
+    debtorId?: string,
+    invoiceNumber?: string,
+    dueDateFrom?: Date,
+    dueDateTo?: Date,
+    orderNumber?: string[]
+  ) {
     this.paymentStates = paymentStates;
     this.creditorId = creditorId;
     this.debtorId = debtorId;
     this.invoiceNumber = invoiceNumber;
     this.dueDateFrom = dueDateFrom;
     this.dueDateTo = dueDateTo;
+    this.orderNumber = orderNumber;
   }
 }

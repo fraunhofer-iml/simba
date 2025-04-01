@@ -8,12 +8,22 @@
 
 import * as util from 'node:util';
 import { AmqpBrokerQueues, CreateOrderAmqpDto, OrderAmqpDto, OrderMessagePatterns } from '@ap3/amqp';
-import { CreateOrderDto, GetMachineAssignmentDto, OrderDetailsDto, OrderOverviewDto, ServiceProcessStatusDto } from '@ap3/api';
+import {
+  CompanyDto,
+  CreateOrderDto,
+  GetMachineAssignmentDto,
+  InvoiceDto,
+  OrderDetailsDto,
+  OrderOverviewDto,
+  ProductDto,
+  ServiceProcessStatusDto,
+} from '@ap3/api';
 import { ConfigurationService } from '@ap3/config';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { CompaniesService } from '../companies/companies.service';
+import { InvoicesService } from '../invoices/invoices.service';
 import { OffersService } from '../offers/offers.service';
 import { ProductsService } from '../products/products.service';
 import { ServiceProcessService } from '../service-process/service-process.service';
@@ -30,7 +40,8 @@ export class OrdersService {
     private readonly productService: ProductsService,
     private readonly configuration: ConfigurationService,
     private readonly companiesService: CompaniesService,
-    private readonly serviceProcessService: ServiceProcessService
+    private readonly serviceProcessService: ServiceProcessService,
+    private readonly invoiceService: InvoicesService
   ) {}
 
   async create(createOrderDto: CreateOrderDto): Promise<OrderOverviewDto> {
@@ -40,7 +51,7 @@ export class OrdersService {
       const receivedOrder: OrderAmqpDto = await firstValueFrom<OrderAmqpDto>(
         this.processAMQPClient.send(OrderMessagePatterns.CREATE, createOrder)
       );
-      return this.loadOrderReferences(receivedOrder);
+      return (await this.loadOrderReferences([receivedOrder]))[0];
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
@@ -53,11 +64,7 @@ export class OrdersService {
     try {
       this.logger.verbose(`Get all orders for company with id: ${companyId}`);
       orders = await firstValueFrom<OrderAmqpDto[]>(this.processAMQPClient.send(OrderMessagePatterns.READ_ALL, companyId));
-      frontendDtos = await Promise.all(
-        orders.map(async (order) => {
-          return await this.loadOrderReferences(order);
-        })
-      );
+      frontendDtos = await this.loadOrderReferences(orders);
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
@@ -70,7 +77,7 @@ export class OrdersService {
     let order: OrderAmqpDto;
     try {
       order = await firstValueFrom<OrderAmqpDto>(this.processAMQPClient.send(OrderMessagePatterns.READ_BY_ID, id));
-      return this.loadOrderReferences(order);
+      return (await this.loadOrderReferences([order]))[0];
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
@@ -97,11 +104,39 @@ export class OrdersService {
     }
   }
 
-  private async loadOrderReferences(order: OrderAmqpDto): Promise<OrderOverviewDto> {
-    const productRef = await this.productService.loadProductRefs(order);
-    const offerRef = await this.offerService.loadAcceptedOfferRef(order);
-    const customer = await this.companiesService.findOne(order.customerId);
-    return OrderOverviewDto.toOrderOverviewDto(order, productRef, offerRef, customer.name);
+  private async loadOrderReferences(orders: OrderAmqpDto[]): Promise<OrderOverviewDto[]> {
+    const products: Map<string, ProductDto> = new Map();
+    const companies: Map<string, CompanyDto> = new Map();
+    const invoices: Map<string, InvoiceDto> = await this.loadInvoicesForOrders(orders);
+    const retVal: OrderOverviewDto[] = [];
+    for (const order of orders) {
+      if (!companies.has(order.customerId)) {
+        companies.set(order.customerId, await this.companiesService.findOne(order.customerId));
+      }
+      if (!products.has(order.productId)) {
+        products.set(order.productId, await this.productService.loadProductRefs(order));
+      }
+      const offerRef = await this.offerService.loadAcceptedOfferRef(order);
+      retVal.push(
+        OrderOverviewDto.toOrderOverviewDto(
+          order,
+          products.get(order.productId),
+          offerRef,
+          companies.get(order.customerId).name,
+          invoices.has(order.number) ? invoices.get(order.number) : null
+        )
+      );
+    }
+    return retVal;
+  }
+
+  private async loadInvoicesForOrders(orders: OrderAmqpDto[]): Promise<Map<string, InvoiceDto>> {
+    const invoices: Map<string, InvoiceDto> = new Map();
+    const invoiceDtos: InvoiceDto[] = await this.invoiceService.findAllWithFilter(orders.map((order) => order.number));
+    if (invoiceDtos?.length > 0) {
+      invoiceDtos.forEach((invoice) => invoices.set(invoice.orderNumber, invoice));
+    }
+    return invoices;
   }
 
   private async loadOrderProcessDetails(order: OrderOverviewDto): Promise<OrderDetailsDto> {
