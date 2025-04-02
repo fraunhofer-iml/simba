@@ -1,0 +1,49 @@
+[[chapter-runtime-view]]
+:docinfo: shared
+:toc: left
+:toclevels: 3
+:sectnums:
+:copyright: Apache License 2.0
+
+= Runtime View
+
+*Contents*
+
+- 1 General Component Communication
+- 2 Transaction related schemes and definitions
+- 3 Use Cases and process flows
+
+== General Component Communication
+
+All inter-component communication is carried out using JSON messages.
+This communication occurs either through direct REST interactions from the frontend to the BFF (backend for frontend), or for inter-service communication, an AMQP messaging queue via a broker instance, as provided by https://www.rabbitmq.com/[RabbitMQ].
+
+== Transaction related schemes and definitions
+
+This Chapter outlines all available APIs in the following Order:
+
+1. The Backend which accepts AMQP messages related to the process.
+2. The Api exposed through the BFF which the {projectName} Frontend uses to query for data.
+
+=== AMQP specific messaging interfaces and API
+
+The Master Data SVC and Process SVC serves as a Bridge and allows the following AMQP Endpoints.
+
+==== Company API
+|===
+| *ExportToken Controller* | Path | Description
+| CREATE | `/companies/create` | Create a new company
+| READ_BY_ID | `/companies/read-by-id` | Read a company by its ID
+| READ_COMPANIES | `/companies/read` | Read all companies
+| READ_BATCHES  | `/companies/read-batches` | Read all batches by company
+|===
+
+=== REST specific messaging interfaces and API
+
+The BFF serves as a bridge for the frontend and enables RESTful endpoints, which can be found in the Swagger documentation (OpenAPI) at the following link:
+https://affds-bff.apps.blockchain-europe.iml.fraunhofer.de/api
+
+
+== Use Cases and process flows
+
+TBD
