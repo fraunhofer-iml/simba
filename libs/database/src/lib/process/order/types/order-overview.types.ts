@@ -14,7 +14,8 @@ export type OrderOverview = {
   buyerOrderRefDocumentId: string | null;
   documentIssueDate: Date;
   vatCurrency: string;
-  orderLines: { item: Product; requestedQuantity: Decimal }[];
+  totalAmountWithoutVat: Decimal | null;
+  orderLines: { item: Product; requestedQuantity: Decimal, netPrice: Decimal | null, unitOfMeasureCodeAgreed: string | null }[];
   serviceProcess:
     | (ServiceProcess & {
         states: ServiceStatus[];

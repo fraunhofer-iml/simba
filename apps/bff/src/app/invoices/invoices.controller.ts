@@ -6,8 +6,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { PaidStatisticsAmqpDto } from '@ap3/amqp';
-import { AuthRolesEnum, InvoiceDto, InvoiceIdAndPaymentStateDto, UnpaidStatisticsDto } from '@ap3/api';
+import { InvoiceAmqpDto, PaidStatisticsAmqpDto } from '@ap3/amqp';
+import {
+  AuthRolesEnum,
+  CreateInvoiceDto,
+  InvoiceDto,
+  InvoiceIdAndPaymentStateDto,
+  UnpaidStatisticsDto,
+} from '@ap3/api';
 import { FinancialRoles, PaymentStates, UserRoles } from '@ap3/util';
 import { Roles } from 'nest-keycloak-connect';
 import { Body, Controller, Get, Param, Post, Query, Request } from '@nestjs/common';
@@ -19,6 +25,17 @@ import { InvoicesService } from './invoices.service';
 @ApiBearerAuth()
 export class InvoicesController {
   constructor(private readonly invoicesService: InvoicesService) {}
+
+  @Post()
+  @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
+  @ApiOperation({ description: 'Create a new invoice for an order ' })
+  @ApiBody({
+    type: CreateInvoiceDto,
+    required: true,
+  })
+  async create(@Body() createInvoiceDto: CreateInvoiceDto): Promise<InvoiceAmqpDto> {
+    return this.invoicesService.createInvoice(createInvoiceDto);
+  }
 
   @Get()
   @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })

@@ -20,7 +20,13 @@ import {
   PaidStatisticsAmqpDto,
   TRParamsCompanyIdAndYearAndFinancialRole,
 } from '@ap3/amqp';
-import { InvoiceDto, InvoiceIdAndPaymentStateDto, PaidStatisticsDto, UnpaidStatisticsDto } from '@ap3/api';
+import {
+  CreateInvoiceDto,
+  InvoiceDto,
+  InvoiceIdAndPaymentStateDto,
+  PaidStatisticsDto,
+  UnpaidStatisticsDto,
+} from '@ap3/api';
 import { FinancialRoles, PaymentStates } from '@ap3/util';
 import { defaultIfEmpty, firstValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -123,6 +129,15 @@ export class InvoicesService {
       });
 
       await firstValueFrom(this.processAMQPClient.send(InvoiceMessagePatterns.CREATE_NEW_PAYMENT_STATUS_FOR_INVOICE, amqpChanges));
+    } catch (e) {
+      this.logger.warn(e);
+      throw e;
+    }
+  }
+
+  createInvoice(createInvoiceDto: CreateInvoiceDto): Promise<InvoiceAmqpDto> {
+    try {
+      return firstValueFrom(this.processAMQPClient.send(InvoiceMessagePatterns.CREATE, createInvoiceDto));
     } catch (e) {
       this.logger.warn(e);
       throw e;

@@ -9,11 +9,13 @@
 import { AllInvoicesFilterAmqpDto, CompanyAndInvoiceAmqpDto, InvoiceAndPaymentStatusDtoAmqpMock, InvoicesAmqpMock } from '@ap3/amqp';
 import { ConfigurationModule } from '@ap3/config';
 import {
+  CompaniesSeed,
   CreatePaymentStatusQueryMocks,
   DatabaseModule,
   InvoiceIdQueryMock,
   InvoiceNFTPrismaMock,
   InvoiceSeed,
+  OrderLinesSeed,
   PaymentStatesSeed,
   PaymentStatusMocks,
   PrismaService,
@@ -29,6 +31,9 @@ import { InvoicesController } from '../invoices.controller';
 import { InvoicesService } from '../invoices.service';
 import { InvoicesStatisticsService } from '../statistics/invoices-statistics.service';
 import { InvoicesZugferdService } from '../zugferd/invoices-zugferd.service';
+import { CreateInvoiceDto, OrderOverviewMock } from '@ap3/api';
+import { Decimal } from '@prisma/client/runtime/library';
+import { Invoice } from '@prisma/client';
 
 describe('InvoicesController', () => {
   let controller: InvoicesController;
@@ -59,8 +64,12 @@ describe('InvoicesController', () => {
               findMany: jest.fn(),
               create: jest.fn(),
             },
+            order: {
+              findMany: jest.fn()
+            },
             invoice: {
               findMany: jest.fn(),
+              create: jest.fn()
             },
             tradeReceivable: {
               findUnique: jest.fn(),
@@ -101,8 +110,64 @@ describe('InvoicesController', () => {
     expect(controller).toBeDefined();
   });
 
+  it('create: should create a new invoice', async () => {
+    const expectedReturn = InvoicesAmqpMock[2];
+    expectedReturn.paymentTerms = '10 Tage 2%; 60 Tage netto';
+    expectedReturn.serviceProcessId = 'sp003';
+    expectedReturn.netPricePerUnit = '1';
+    expectedReturn.status.timestamp = new Date('2024-10-11T07:55:55.695Z');
+    expectedReturn.orderId = "";
+    expectedReturn.orderNumber = "";
+
+    const foundOrderMock =
+      {
+        id: 'o001',
+        documentIssueDate: new Date(),
+        buyerOrderRefDocumentId: '202410291549-726762',
+        vatCurrency: 'EUR',
+        totalAmountWithoutVat: new Decimal(3.5),
+        orderLines: [
+          OrderLinesSeed[0]
+        ],
+        noteContent: '',
+        referencedBuyerOrderLine: OrderLinesSeed[0].id,
+        sumOfLinesAmount: 5,
+        buyerId: CompaniesSeed[0].id,
+        sellerId: CompaniesSeed[1].id,
+        buyerAccountingRefId: 'ACC-202410291551-363148',
+        serviceProcess: {
+          id: 'sp001',
+          dueCalendarWeek: 50,
+          dueYear: 2024,
+          scheduledDate: new Date(),
+          orderId: 'o001',
+          acceptedOfferId: null,
+          acceptedOffer: null,
+          machineAssignments: [],
+          offers: [],
+          states: [],
+          invoices: []
+        },
+        buyer: { id: 'pt0001', name: 'Test Company 01' },
+        seller: { id: 'pt0002', name: 'Test Company 02' }
+  };
+
+    const prismaOrderSpy = jest.spyOn(prisma.order, 'findMany');
+    prismaOrderSpy.mockResolvedValueOnce([foundOrderMock]);
+
+    const mockedInvoiceValue: Invoice = InvoiceSeed[2];
+    //mockedInvoiceValue.netPricePerUnit = "3";
+    const prismaInvoiceSpy = jest.spyOn(prisma.invoice, 'create');
+    prismaInvoiceSpy.mockResolvedValueOnce(InvoiceSeed[2]);
+
+    const retVal = await controller.create(new CreateInvoiceDto(OrderOverviewMock[0].id));
+    expect(prisma.order.findMany).toHaveBeenCalledTimes(1);
+    expect(prisma.invoice.create).toHaveBeenCalledTimes(1);
+    expect(expectedReturn).toEqual(retVal);
+  });
+
   it('findAll: should return all invoices', async () => {
-    const expectedReturn = InvoicesAmqpMock;
+    const expectedReturn = [InvoicesAmqpMock[0], InvoicesAmqpMock[1]];
     const prismaRawSpy = jest.spyOn(prisma, '$queryRaw');
     prismaRawSpy.mockResolvedValue([TradeReceivablesSeed[0], TradeReceivablesSeed[1]]);
 

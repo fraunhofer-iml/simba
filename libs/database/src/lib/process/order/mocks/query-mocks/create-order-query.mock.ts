@@ -20,6 +20,7 @@ export const createOrderQueryMock = <Prisma.OrderCreateInput>{
   orderLines: {
     create: {
       requestedQuantity: OrderLinesSeed[0].requestedQuantity,
+      netPrice: OrderLinesSeed[0].netPrice,
       item: {
         connect: {
           id: OrderLinesSeed[0].itemId,

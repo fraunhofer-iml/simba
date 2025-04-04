@@ -6,10 +6,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllInvoicesFilterAmqpDto } from '@ap3/amqp';
+import { AllInvoicesFilterAmqpDto, InvoiceAmqpDto } from '@ap3/amqp';
 import { FinancialRoles } from '@ap3/util';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Invoice, Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import { QueryBuilderHelperService } from '../util/query-builder-helper.service';
 import {
@@ -28,6 +28,25 @@ export class InvoiceDatabaseAdapterService {
     private readonly queryBuilderService: QueryBuilderHelperService,
     private readonly invoicePrismaService: InvoicePrismaService
   ) {}
+
+
+  async createInvoice(invoiceAmqpDto: InvoiceAmqpDto): Promise<Invoice> {
+    this.logger.verbose('Create new invoice');
+    return (await this.invoicePrismaService.createInvoice({
+      invoiceNumber: invoiceAmqpDto.invoiceNumber,
+      dueDate: invoiceAmqpDto.invoiceDueDate,
+      contractCurrency: invoiceAmqpDto.currency,
+      measuringUnit: invoiceAmqpDto.measuringUnit,
+      netPricePerUnit: invoiceAmqpDto.netPricePerUnit,
+      totalAmountWithoutVat: invoiceAmqpDto.totalAmountWithoutVat,
+      vat: invoiceAmqpDto.totalAmountWithoutVat,
+      url: '',
+      paymentTerms: invoiceAmqpDto.paymentTerms,
+      serviceProcess: { connect: { id: invoiceAmqpDto.serviceProcessId } },
+      debtor: { connect: { id: invoiceAmqpDto.debtorId } },
+      creditor: { connect: { id: invoiceAmqpDto.creditorId } },
+    }))!;
+  }
 
   async updateInvoiceURL(invoiceId: string, url: string): Promise<void> {
     const updateUrlData: Prisma.InvoiceUpdateInput = { url: url };

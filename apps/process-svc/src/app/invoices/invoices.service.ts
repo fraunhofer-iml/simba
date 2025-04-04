@@ -7,13 +7,31 @@
  */
 
 import util from 'node:util';
-import { AllInvoicesFilterAmqpDto, CompanyAndInvoiceAmqpDto, InvoiceAmqpDto, InvoiceIdAndPaymentStateAmqpDto } from '@ap3/amqp';
+import {
+  AllInvoicesFilterAmqpDto,
+  CompanyAndInvoiceAmqpDto,
+  InvoiceAmqpDto,
+  InvoiceIdAndPaymentStateAmqpDto, PaymentStatusAmqpDto,
+} from '@ap3/amqp';
 import { ConfigurationService } from '@ap3/config';
-import { InvoiceDatabaseAdapterService, InvoiceForZugferd, InvoiceWithNFT, TradeReceivablePrismaService } from '@ap3/database';
+import {
+  InvoiceDatabaseAdapterService,
+  InvoiceForZugferd,
+  InvoiceWithNFT, OrderOverview,
+  OrderPrismaService,
+  TradeReceivablePrismaService,
+} from '@ap3/database';
 import { S3Service } from '@ap3/s3';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { PaymentStatus, TradeReceivable } from '@prisma/client';
+import { Invoice, PaymentStatus, TradeReceivable } from '@prisma/client';
 import { InvoicesZugferdService } from './zugferd/invoices-zugferd.service';
+import { CreateInvoiceDto } from '@ap3/api';
+import {
+  PAYMENT_DEADLINE_IN_DAYS,
+  PAYMENT_TERMS,
+  PaymentStates,
+  VAT_IN_PERCENT
+} from '@ap3/util';
 
 @Injectable()
 export class InvoicesService {
@@ -21,6 +39,7 @@ export class InvoicesService {
   constructor(
     private readonly tradeReceivablePrismaService: TradeReceivablePrismaService,
     private readonly invoicePrismaService: InvoiceDatabaseAdapterService,
+    private readonly orderPrismaService: OrderPrismaService,
     private readonly invoiceZugferdService: InvoicesZugferdService,
     private readonly config: ConfigurationService,
     private readonly s3Service: S3Service
@@ -67,7 +86,7 @@ export class InvoicesService {
     const invoice: InvoiceForZugferd = await this.invoicePrismaService.getInvoiceByIdForZugferd(params.invoiceId, params.companyId);
     const pdfFile: Uint8Array = await this.invoiceZugferdService.generatePdf(invoice);
 
-    const fileName = `${this.config.getMinioConfig().invoicePrefix}${invoice.invoiceNumber}.pdf`;
+    const fileName = `${invoice.invoiceNumber}.pdf`;
     await this.s3Service.uploadPdf(Buffer.from(pdfFile.buffer), fileName);
 
     await this.invoicePrismaService.updateInvoiceURL(params.invoiceId, fileName);
@@ -108,5 +127,45 @@ export class InvoicesService {
       this.logger.error(util.inspect(e));
       throw e;
     }
+  }
+
+  private generateInvoiceNumber(): string {
+    const now: Date = new Date();
+    const year: number = now.getFullYear();
+    const month: string = String(now.getMonth() + 1).padStart(2, '0');
+    const day: string = String(now.getDate()).padStart(2, '0');
+    const hours: number = now.getHours();
+    const minutes: number = now.getMinutes();
+    const seconds: number = now.getSeconds();
+
+    return `${this.config.getMinioConfig().invoicePrefix}${year}${month}${day}${hours}${minutes}${seconds}`;
+  }
+
+  public async createInvoice(createInvoiceDto: CreateInvoiceDto): Promise<InvoiceAmqpDto> {
+    const orderOverview: OrderOverview = await this.orderPrismaService.getOverviewOrder(createInvoiceDto.orderId);
+    const dueDate: Date = new Date();
+    dueDate.setDate(dueDate.getDate() + PAYMENT_DEADLINE_IN_DAYS);
+
+    const newInvoiceInput: InvoiceAmqpDto = new InvoiceAmqpDto(
+      '',
+      orderOverview.buyer.id,
+      orderOverview.seller.id,
+      orderOverview.id,
+      '',
+      '',
+      +orderOverview.totalAmountWithoutVat,
+      new PaymentStatusAmqpDto(PaymentStates.OPEN, new Date()),
+      this.generateInvoiceNumber(),
+      dueDate,
+      '',
+      orderOverview.vatCurrency,
+      orderOverview.orderLines[0].unitOfMeasureCodeAgreed,
+      String(orderOverview.orderLines[0].netPrice),
+      String(VAT_IN_PERCENT),
+      PAYMENT_TERMS,
+      orderOverview.serviceProcess.id
+    );
+    const newInvoice: Invoice = await this.invoicePrismaService.createInvoice(newInvoiceInput);
+    return InvoiceAmqpDto.fromInvoicePrismaEntity(newInvoice, newInvoiceInput.status)
   }
 }

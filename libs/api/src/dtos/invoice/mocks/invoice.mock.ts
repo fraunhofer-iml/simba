@@ -8,6 +8,7 @@
 
 import { CompaniesSeed, InvoiceSeed, OrdersSeed, PaymentStatesSeed } from '@ap3/database';
 import { InvoiceDto } from '../invoice.dto';
+import { PaymentStates } from '@ap3/util';
 
 export const InvoiceDtoMocks: InvoiceDto[] = [
   new InvoiceDto(
@@ -38,4 +39,18 @@ export const InvoiceDtoMocks: InvoiceDto[] = [
     process.env['OBJECT_STORAGE_URL'] + InvoiceSeed[1].url,
     InvoiceSeed[1].contractCurrency
   ),
+  new InvoiceDto(
+    InvoiceSeed[2].id,
+    InvoiceSeed[2].invoiceNumber,
+    OrdersSeed[1].buyerOrderRefDocumentId ? OrdersSeed[1].buyerOrderRefDocumentId : '',
+    CompaniesSeed[1].id,
+    CompaniesSeed[1].name,
+    +InvoiceSeed[2].totalAmountWithoutVat,
+    InvoiceSeed[2].dueDate.toISOString(),
+    CompaniesSeed[0].id,
+    CompaniesSeed[0].name,
+    PaymentStates.OPEN,
+    InvoiceSeed[2].url,
+    InvoiceSeed[2].contractCurrency
+  )
 ];
