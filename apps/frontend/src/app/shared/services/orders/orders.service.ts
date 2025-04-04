@@ -7,7 +7,7 @@
  */
 
 import { CreateOrderDto, OrderOverviewDto } from '@ap3/api';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BASE_URL } from '../../../../environments/environment';
@@ -28,10 +28,18 @@ export class OrdersService {
 
   public getOrders(): Observable<OrderOverviewDto[]> {
     const companyId = this.authService.getCurrentlyLoggedInCompanyId();
-    return this.httpClient.get<OrderOverviewDto[]>(`${BASE_URL}${ApiEndpoints.orders.getAllOrders}`, {
-      params: {
-        companyId: companyId,
-      },
-    });
+    return this.httpClient
+      .get<OrderOverviewDto[]>(`${BASE_URL}${ApiEndpoints.orders.getAllOrders}`, {
+        params: {
+          companyId: companyId,
+        },
+      })
+      .pipe(
+        map((orders: OrderOverviewDto[]) => {
+          return orders.sort((a, b) => {
+            return new Date(b.statusTimestamp).getTime() - new Date(a.statusTimestamp).getTime();
+          });
+        })
+      );
   }
 }

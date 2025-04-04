@@ -47,7 +47,7 @@ export class CalendarWeekService {
     }
   }
 
-  getTimestampFromCalendarWeek(year: number, calendarWeek: number): Date {
+  public getTimestampFromCalendarWeek(year: number, calendarWeek: number): Date {
     const firstDayOfYear = new Date(year, 0, 1);
 
     // Adjust to the first Monday (start of the ISO week)
