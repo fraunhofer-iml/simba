@@ -27,7 +27,7 @@ import {
   ProductDtoMocks,
 } from '@ap3/api';
 import { ConfigurationModule, ConfigurationService } from '@ap3/config';
-import { CompaniesSeed } from '@ap3/database';
+import { CompaniesSeed, InvoiceSeed } from '@ap3/database';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -126,7 +126,8 @@ describe('OrdersController', () => {
   });
 
   it('should findAll Orders', async () => {
-    const expectedReturnValue = OrderOverviewMock;
+    const expectedReturnValue: any = OrderOverviewMock;
+    expectedReturnValue[1].invoiceNumber = InvoiceSeed[2].invoiceNumber;
 
     companiesServiceSpy.mockResolvedValueOnce(CompanyDtoMock[0]);
     companiesServiceSpy.mockResolvedValueOnce(CompanyDtoMock[1]);

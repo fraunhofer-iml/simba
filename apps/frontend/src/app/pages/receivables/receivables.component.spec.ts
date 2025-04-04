@@ -29,8 +29,8 @@ import { RouterOutlet } from '@angular/router';
 import { Invoice } from '../../model/invoice';
 import { AuthService } from '../../shared/services/auth/auth.service';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
-import { DateFormatService } from '../../shared/services/util/date-format.service';
 import { FinancialRoleService } from '../../shared/services/util/financial-role.service';
+import { FormatService } from '../../shared/services/util/format.service';
 import { PaidStatisticsComponent } from './paid-statistics/paid-statistics.component';
 import { ReceivablesComponent } from './receivables.component';
 import { UnpaidStatisticsComponent } from './unpaid-statistics/unpaid-statistics.component';
@@ -55,7 +55,7 @@ describe('ReceivablesComponent', () => {
         InvoiceService,
         provideHttpClient(),
         DatePipe,
-        DateFormatService,
+        FormatService,
         {
           provide: KeycloakService,
           useValue: {

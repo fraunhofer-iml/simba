@@ -71,7 +71,7 @@
       </ng-container>
       <ng-container matColumnDef="totalAmountWithoutVat">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="totalAmountWithoutVat">{{ 'InvoiceTableInvoiceAmount' | translate }}</th>
-        <td mat-cell class="center-row" *matCellDef="let row">{{ row.totalAmountWithoutVat }}</td>
+        <td mat-cell class="center-row" *matCellDef="let row">{{ getNumberInCurrentLangFormat(row.totalAmountWithoutVat) }}</td>
       </ng-container>
       <ng-container matColumnDef="currency">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="currency">{{ 'InvoiceTableCurrency' | translate }}</th>

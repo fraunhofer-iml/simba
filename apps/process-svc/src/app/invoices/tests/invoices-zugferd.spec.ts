@@ -61,7 +61,7 @@ describe('InvoicesController', () => {
   });
 
   it('createAndUploadZugferdPDF: should return uploaded invoice pdf name', async () => {
-    const expectedReturn = 'INV_' + InvoiceDtoMocks[0].invoiceNumber + '.pdf';
+    const expectedReturn = InvoiceDtoMocks[0].invoiceNumber + '.pdf';
 
     const prismaZugferdInvoiceSpy = jest.spyOn(prisma.invoice, 'findUniqueOrThrow');
     prismaZugferdInvoiceSpy.mockResolvedValue(InvoiceForZugferdMock);

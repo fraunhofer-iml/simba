@@ -21,6 +21,7 @@ import {
   TRParamsCompanyIdAndYearAndFinancialRole,
 } from '@ap3/amqp';
 import {
+  CreateInvoiceDto,
   InvoiceAndPaymentStatusDtoMock,
   InvoiceDto,
   InvoiceDtoMocks,
@@ -84,6 +85,21 @@ describe('InvoicesController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  it('should create a new invoice', async () => {
+    const newInvoiceInput: CreateInvoiceDto = new CreateInvoiceDto('testOrderId');
+    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
+    sendRequestSpy.mockImplementationOnce((messagePattern: InvoiceMessagePatterns, data: any) => {
+      return of(InvoicesAmqpMock[0]);
+    });
+
+    const res = await controller.create(newInvoiceInput);
+    expect(sendRequestSpy).toHaveBeenCalledWith(
+      InvoiceMessagePatterns.CREATE,
+      newInvoiceInput
+    );
+    expect(res).toEqual(InvoicesAmqpMock[0]);
   });
 
   it('should find all invoices', async () => {

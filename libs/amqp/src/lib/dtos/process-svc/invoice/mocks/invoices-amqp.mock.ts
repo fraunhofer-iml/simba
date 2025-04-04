@@ -9,6 +9,7 @@
 import { InvoiceSeed, OrdersSeed, PaymentStatesSeed, TradeReceivablesSeed } from '@ap3/database';
 import { PaymentStatusAmqpDto } from '../../trade-receivable';
 import { InvoiceAmqpDto } from '../invoice-amqp.dto';
+import { PaymentStates } from '@ap3/util';
 
 export const InvoicesAmqpMock = <InvoiceAmqpDto[]>[
   {
@@ -24,6 +25,9 @@ export const InvoicesAmqpMock = <InvoiceAmqpDto[]>[
     invoiceDueDate: InvoiceSeed[0].dueDate,
     url: process.env['OBJECT_STORAGE_URL'] + InvoiceSeed[0].url,
     currency: InvoiceSeed[0].contractCurrency,
+    measuringUnit: InvoiceSeed[0].measuringUnit,
+    netPricePerUnit: InvoiceSeed[0].netPricePerUnit,
+    vat: String(InvoiceSeed[0].vat)
   },
   {
     id: InvoiceSeed[1].id,
@@ -38,5 +42,25 @@ export const InvoicesAmqpMock = <InvoiceAmqpDto[]>[
     invoiceDueDate: InvoiceSeed[1].dueDate,
     url: process.env['OBJECT_STORAGE_URL'] + InvoiceSeed[1].url,
     currency: InvoiceSeed[1].contractCurrency,
+    measuringUnit: InvoiceSeed[1].measuringUnit,
+    netPricePerUnit: InvoiceSeed[1].netPricePerUnit,
+    vat: String(InvoiceSeed[1].vat)
+  },
+  {
+    id: InvoiceSeed[2].id,
+    debtorId: InvoiceSeed[2].debtorId,
+    creditorId: InvoiceSeed[2].creditorId,
+    orderId: OrdersSeed[1].id,
+    orderNumber: OrdersSeed[1].buyerOrderRefDocumentId ? OrdersSeed[1].buyerOrderRefDocumentId : '',
+    nft: '',
+    totalAmountWithoutVat: +InvoiceSeed[2].totalAmountWithoutVat,
+    status: new PaymentStatusAmqpDto(PaymentStates.OPEN, new Date('2025-11-23T00:00:00Z')),
+    invoiceNumber: InvoiceSeed[2].invoiceNumber,
+    invoiceDueDate: InvoiceSeed[2].dueDate,
+    url: InvoiceSeed[2].url,
+    currency: InvoiceSeed[2].contractCurrency,
+    measuringUnit: InvoiceSeed[2].measuringUnit,
+    netPricePerUnit: InvoiceSeed[2].netPricePerUnit,
+    vat: String(InvoiceSeed[2].vat)
   },
 ];

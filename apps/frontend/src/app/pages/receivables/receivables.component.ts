@@ -20,7 +20,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Invoice } from '../../model/invoice';
 import { AuthService } from '../../shared/services/auth/auth.service';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
-import { DateFormatService } from '../../shared/services/util/date-format.service';
+import { FormatService } from '../../shared/services/util/format.service';
 import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
 import { TokenDetailsDialogComponent } from './token-details-dialog/token-details-dialog.component';
 
@@ -52,7 +52,7 @@ export class ReceivablesComponent {
 
   constructor(
     private readonly invoiceService: InvoiceService,
-    private readonly dateFormatService: DateFormatService,
+    private readonly formatService: FormatService,
     private readonly dialog: MatDialog,
     private readonly translationService: TranslateService,
     readonly authService: AuthService
@@ -70,7 +70,7 @@ export class ReceivablesComponent {
         data.creditor.toLowerCase().includes(value) ||
         data.totalAmountWithoutVat.includes(value) ||
         data.currency.toLowerCase().includes(value) ||
-        this.dateFormatService.transformDateToCurrentLanguageFormat(data.invoiceDueDate).includes(value) ||
+        this.formatService.transformDateToCurrentLanguageFormat(data.invoiceDueDate).includes(value) ||
         data.debtor.toLowerCase().includes(value) ||
         this.translationService.instant(`PaymentStatus.${data.paymentStatus}`).includes(value) ||
         data.orderNumber.toLowerCase().includes(value)
@@ -88,7 +88,11 @@ export class ReceivablesComponent {
   }
 
   getDateFormat() {
-    return this.dateFormatService.getDateFormatByCurrentLang();
+    return this.formatService.getDateFormatByCurrentLang();
+  }
+
+  getNumberInCurrentLangFormat(number: number): string {
+    return this.formatService.transformNumberToCurrentLanguageFormat(number);
   }
 
   @ViewChild(MatSort) set matSort(ms: MatSort) {

@@ -32,17 +32,23 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '../../shared/services/auth/auth.service';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
-import { DateFormatService } from '../../shared/services/util/date-format.service';
 import { FinancialRoleService } from '../../shared/services/util/financial-role.service';
+import { FormatService } from '../../shared/services/util/format.service';
 import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
 import { PaidStatisticsComponent } from './paid-statistics/paid-statistics.component';
 import { ReceivablesRoutingModule } from './receivables-routing.module';
 import { ReceivablesComponent } from './receivables.component';
-import { UnpaidStatisticsComponent } from './unpaid-statistics/unpaid-statistics.component';
 import { TokenDetailsDialogComponent } from './token-details-dialog/token-details-dialog.component';
+import { UnpaidStatisticsComponent } from './unpaid-statistics/unpaid-statistics.component';
 
 @NgModule({
-  declarations: [ReceivablesComponent, PaidStatisticsComponent, UnpaidStatisticsComponent, DownloadInvoiceDialogComponent, TokenDetailsDialogComponent],
+  declarations: [
+    ReceivablesComponent,
+    PaidStatisticsComponent,
+    UnpaidStatisticsComponent,
+    DownloadInvoiceDialogComponent,
+    TokenDetailsDialogComponent,
+  ],
   imports: [
     CommonModule,
     MatDividerModule,
@@ -74,7 +80,7 @@ import { TokenDetailsDialogComponent } from './token-details-dialog/token-detail
     provideHttpClient(withInterceptorsFromDi()),
     provideCharts(withDefaultRegisterables()),
     InvoiceService,
-    DateFormatService,
+    FormatService,
     DatePipe,
     FinancialRoleService,
     AuthService,

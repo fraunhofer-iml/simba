@@ -16,7 +16,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ROUTING } from '../../../routing/routing.enum';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
-import { DateFormatService } from '../../../shared/services/util/date-format.service';
+import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
+import { FormatService } from '../../../shared/services/util/format.service';
 import { OrderStatus } from './enum/orderStatus';
 
 @Component({
@@ -65,10 +66,11 @@ export class OrdersOverviewComponent implements AfterViewInit {
   constructor(
     private readonly orderService: OrdersService,
     private readonly translate: TranslateService,
-    private readonly dateFormatService: DateFormatService,
-    private readonly authService: AuthService
+    private readonly formatService: FormatService,
+    private readonly authService: AuthService,
+    private readonly cwService: CalendarWeekService
   ) {
-    this.isCustomer = authService.isCustomer();
+    this.isCustomer = this.authService.isCustomer();
     this.initializeDataSource();
     this.setFilterPredicate();
     this.setSortingPredicate();
@@ -84,7 +86,7 @@ export class OrdersOverviewComponent implements AfterViewInit {
       if (data.status == OrderStatus.planned) {
         productionDate = this.getScheduledFor(data.calendarWeek, data.year).toLowerCase().includes(value);
       } else {
-        productionDate = this.dateFormatService.transformDateToCurrentLanguageFormat(data.statusTimestamp).includes(value);
+        productionDate = this.formatService.transformDateToCurrentLanguageFormat(data.statusTimestamp).includes(value);
       }
       return (
         data.number.toLowerCase().includes(value) ||
@@ -113,14 +115,18 @@ export class OrdersOverviewComponent implements AfterViewInit {
   private setSortingPredicate() {
     this.dataSource.sortingDataAccessor = (order: any, property) => {
       if (property === 'statusTimestamp' && order.status === OrderStatus.planned) {
-        return this.dateFormatService.getTimestampFromCalendarWeek(order.year, order.calendarWeek).toISOString();
+        return this.cwService.getTimestampFromCalendarWeek(order.year, order.calendarWeek).toISOString();
       }
       return order[property];
     };
   }
 
+  getNumberInCurrentLangFormat(number: number): string {
+    return this.formatService.transformNumberToCurrentLanguageFormat(number);
+  }
+
   getDateFormat() {
-    return this.dateFormatService.getDateFormatByCurrentLang();
+    return this.formatService.getDateFormatByCurrentLang();
   }
 
   setDataSourceSortAttribute() {
@@ -139,4 +145,6 @@ export class OrdersOverviewComponent implements AfterViewInit {
   getScheduledFor(cw: number, year: number) {
     return `${this.translate.instant('CalendarWeek')} ${cw}, ${year}`;
   }
+
+  protected readonly Intl = Intl;
 }

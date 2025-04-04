@@ -7,7 +7,7 @@
  */
 
 import { InvoiceWithNFT } from '@ap3/database';
-import { PaymentStatus } from '@prisma/client';
+import { Invoice, PaymentStatus } from '@prisma/client';
 import { PaymentStatusAmqpDto } from '../trade-receivable';
 
 export class InvoiceAmqpDto {
@@ -23,6 +23,11 @@ export class InvoiceAmqpDto {
   invoiceDueDate: Date;
   url: string;
   currency: string;
+  measuringUnit: string;
+  netPricePerUnit: string;
+  vat: string;
+  paymentTerms: string;
+  serviceProcessId: string;
 
   constructor(
     id: string,
@@ -36,7 +41,12 @@ export class InvoiceAmqpDto {
     invoiceNumber: string,
     invoiceDueDate: Date,
     url: string,
-    currency: string
+    currency: string,
+    measuringUnit: string,
+    netPricePerUnit: string,
+    vat: string,
+    paymentTerms: string,
+    serviceProcessId: string
   ) {
     this.id = id;
     this.debtorId = debtorId;
@@ -50,6 +60,33 @@ export class InvoiceAmqpDto {
     this.invoiceDueDate = invoiceDueDate;
     this.url = url;
     this.currency = currency;
+    this.measuringUnit = measuringUnit;
+    this.netPricePerUnit = netPricePerUnit;
+    this.vat = vat;
+    this.paymentTerms = paymentTerms;
+    this.serviceProcessId = serviceProcessId;
+  }
+
+  public static fromInvoicePrismaEntity(invoice: Invoice, currentState: PaymentStatusAmqpDto): InvoiceAmqpDto {
+    return new InvoiceAmqpDto(
+      invoice.id,
+      invoice.debtorId ? invoice.debtorId : '',
+      invoice.creditorId ? invoice.creditorId : '',
+      '',
+      '',
+      '',
+      +invoice.totalAmountWithoutVat,
+      currentState,
+      invoice.invoiceNumber,
+      invoice.dueDate,
+      invoice.url,
+      invoice.contractCurrency,
+      invoice.measuringUnit,
+      invoice.netPricePerUnit,
+      invoice.vat.toString(),
+      invoice.paymentTerms,
+      invoice.serviceProcessId!
+    );
   }
 
   public static fromPrismaEntity(invoice: InvoiceWithNFT, states: PaymentStatus[], fileServerUrl: string): InvoiceAmqpDto {
@@ -70,7 +107,12 @@ export class InvoiceAmqpDto {
       invoice.invoiceNumber,
       invoice.dueDate,
       invoice.url ? fileServerUrl + invoice.url : '',
-      invoice.contractCurrency
+      invoice.contractCurrency,
+      invoice.measuringUnit,
+      invoice.netPricePerUnit,
+      invoice.vat.toString(),
+      invoice.paymentTerms,
+      invoice.serviceProcessId!
     );
   }
 

@@ -29,7 +29,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
-import { DateFormatService } from '../../../shared/services/util/date-format.service';
+import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
+import { FormatService } from '../../../shared/services/util/format.service';
 import { OrdersOverviewComponent } from './orders-overview.component';
 
 describe('OrdersOverviewComponent', () => {
@@ -64,7 +65,8 @@ describe('OrdersOverviewComponent', () => {
         provideHttpClient(),
         DatePipe,
         AuthService,
-        DateFormatService,
+        FormatService,
+        CalendarWeekService,
         {
           provide: KeycloakService,
           useValue: {

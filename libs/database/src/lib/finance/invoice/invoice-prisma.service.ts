@@ -21,7 +21,7 @@ export class InvoicePrismaService {
   async createInvoice(data: Prisma.InvoiceCreateInput): Promise<Invoice | null> {
     this.logger.verbose(`Insert new invoice ${util.inspect(data)}`);
     try {
-      return await this.prismaService.invoice.create({ data });
+      return this.prismaService.invoice.create({ data });
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;

@@ -42,10 +42,13 @@ export class OrderPrismaService {
         documentIssueDate: true,
         buyerOrderRefDocumentId: true,
         vatCurrency: true,
+        totalAmountWithoutVat: true,
         orderLines: {
           select: {
             item: true,
             requestedQuantity: true,
+            netPrice: true,
+            unitOfMeasureCodeAgreed: true
           },
         },
         serviceProcess: {

@@ -23,7 +23,8 @@ export const OrderOverviewPrismaMock: any[] = <OrderOverview[]>[
     buyerOrderRefDocumentId: OrdersSeed[0].buyerOrderRefDocumentId,
     documentIssueDate: OrdersSeed[0].documentIssueDate,
     vatCurrency: OrdersSeed[0].vatCurrency,
-    orderLines: [{ item: ProductsSeed[0], requestedQuantity: OrderLinesSeed[0].requestedQuantity }],
+    totalAmountWithoutVat: OrdersSeed[0].totalAmountWithoutVat,
+    orderLines: [{ item: ProductsSeed[0], requestedQuantity: OrderLinesSeed[0].requestedQuantity, netPrice: OrderLinesSeed[0].netPrice, unitOfMeasureCodeAgreed: OrderLinesSeed[0].unitOfMeasureCodeAgreed }],
     serviceProcess: {
       id: ServiceProcessesSeed[0].id,
       orderId: ServiceProcessesSeed[0].orderId,
@@ -45,7 +46,8 @@ export const OrderOverviewPrismaMock: any[] = <OrderOverview[]>[
     buyerOrderRefDocumentId: OrdersSeed[1].buyerOrderRefDocumentId,
     documentIssueDate: OrdersSeed[1].documentIssueDate,
     vatCurrency: OrdersSeed[0].vatCurrency,
-    orderLines: [{ item: ProductsSeed[0], requestedQuantity: OrderLinesSeed[1].requestedQuantity }],
+    totalAmountWithoutVat: OrdersSeed[0].totalAmountWithoutVat,
+    orderLines: [{ item: ProductsSeed[0], requestedQuantity: OrderLinesSeed[1].requestedQuantity, netPrice: OrderLinesSeed[0].netPrice, unitOfMeasureCodeAgreed: OrderLinesSeed[0].unitOfMeasureCodeAgreed }],
     serviceProcess: {
       id: ServiceProcessesSeed[1].id,
       orderId: ServiceProcessesSeed[1].orderId,

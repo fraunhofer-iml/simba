@@ -37,7 +37,7 @@
       </ng-container>
       <ng-container matColumnDef="price">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="price" class="bold">{{ 'OrderTablePrice' | translate }}</th>
-        <td mat-cell *matCellDef="let row">{{ row.price }}</td>
+        <td mat-cell *matCellDef="let row">{{ getNumberInCurrentLangFormat(row.price) }}</td>
       </ng-container>
       <ng-container matColumnDef="currency">
         <th mat-header-cell *matHeaderCellDef mat-sort-header="currency" class="bold">{{ 'OrderTableCurrency' | translate }}</th>

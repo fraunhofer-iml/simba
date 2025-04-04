@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { addWeeks, startOfWeek } from 'date-fns';
 import moment from 'moment';
 import { Injectable } from '@angular/core';
 
@@ -44,5 +45,13 @@ export class CalendarWeekService {
     } else {
       return Array.from({ length: lastCalendarWeek }, (_, index) => index + 1);
     }
+  }
+
+  getTimestampFromCalendarWeek(year: number, calendarWeek: number): Date {
+    const firstDayOfYear = new Date(year, 0, 1);
+
+    // Adjust to the first Monday (start of the ISO week)
+    const firstMonday = startOfWeek(firstDayOfYear, { weekStartsOn: 1 });
+    return addWeeks(firstMonday, calendarWeek - 1);
   }
 }

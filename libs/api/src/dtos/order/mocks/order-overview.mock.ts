@@ -50,6 +50,6 @@ export const OrderOverviewMock: OrderOverviewDto[] = [
     customerId: OrdersSeed[1].buyerId,
     customerName: CompaniesSeed[0].name,
     currency: OrdersSeed[1].vatCurrency,
-    invoiceNumber: InvoiceSeed[1].invoiceNumber,
+    invoiceNumber: InvoiceSeed[2].invoiceNumber,
   },
 ];

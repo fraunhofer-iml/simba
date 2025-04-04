@@ -21,6 +21,7 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { InvoicesService } from './invoices.service';
 import { InvoicesStatisticsService } from './statistics/invoices-statistics.service';
+import { CreateInvoiceDto } from '@ap3/api';
 
 @Controller()
 export class InvoicesController {
@@ -28,6 +29,11 @@ export class InvoicesController {
     private readonly invoicesService: InvoicesService,
     private readonly invoiceStatistics: InvoicesStatisticsService
   ) {}
+
+  @MessagePattern(InvoiceMessagePatterns.CREATE)
+  create(@Payload() createInvoiceDto: CreateInvoiceDto): Promise<InvoiceAmqpDto> {
+    return this.invoicesService.createInvoice(createInvoiceDto);
+  }
 
   @MessagePattern(InvoiceMessagePatterns.READ_ALL)
   async findAll(@Payload() filterParams: AllInvoicesFilterAmqpDto): Promise<InvoiceAmqpDto[]> {

@@ -7,3 +7,7 @@
  */
 
 export const ORDER_NUMBER_PREFIX = 'ORD';
+
+export const PAYMENT_DEADLINE_IN_DAYS = 30;
+export const PAYMENT_TERMS = '10 Tage 2%; 60 Tage netto';
+export const VAT_IN_PERCENT = 19;

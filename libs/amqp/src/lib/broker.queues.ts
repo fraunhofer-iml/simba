@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export enum AmqpBrokerQueues{
-  PROCESS_SVC_QUEUE = 'affds_process_svc',
-  MASTER_DATA_SVC_QUEUE = 'affds_master_data_svc',
+export class AmqpBrokerQueues {
+  public static PROCESS_SVC_QUEUE = process.env['AMQP_QUEUE_PREFIX'] + 'affds_process_svc';
+  public static MASTER_DATA_SVC_QUEUE = process.env['AMQP_QUEUE_PREFIX'] + 'affds_master_data_svc';
 }
