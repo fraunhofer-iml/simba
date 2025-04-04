@@ -68,7 +68,7 @@ export class ReceivablesComponent {
       return (
         data.invoiceNumber.includes(value) ||
         data.creditor.toLowerCase().includes(value) ||
-        data.totalAmountWithoutVat.includes(value) ||
+        this.getNumberInCurrentLangFormat(Number(data.totalAmountWithoutVat)).includes(value) ||
         data.currency.toLowerCase().includes(value) ||
         this.formatService.transformDateToCurrentLanguageFormat(data.invoiceDueDate).includes(value) ||
         data.debtor.toLowerCase().includes(value) ||

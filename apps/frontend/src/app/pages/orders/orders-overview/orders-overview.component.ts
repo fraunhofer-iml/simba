@@ -91,7 +91,7 @@ export class OrdersOverviewComponent implements AfterViewInit {
       return (
         data.number.toLowerCase().includes(value) ||
         this.translate.instant(`OrderStatus.${data.status}`).includes(value) ||
-        `${data.price.toFixed(2)}`.toLowerCase().includes(value) ||
+        `${this.getNumberInCurrentLangFormat(data.price)}`.includes(value) ||
         data.currency.toLowerCase().includes(value) ||
         data.product.toLowerCase().includes(value) ||
         data.amount.toFixed().includes(value) ||
