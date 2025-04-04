@@ -9,14 +9,14 @@
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DatePipe } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
-import { DateFormatService } from './date-format.service';
+import { FormatService } from './format.service';
 
 describe('DateFormatService', () => {
-  let service: DateFormatService;
+  let service: FormatService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ imports: [TranslateModule.forRoot()], providers: [DateFormatService, DatePipe, TranslateService] });
-    service = TestBed.inject(DateFormatService);
+    TestBed.configureTestingModule({ imports: [TranslateModule.forRoot()], providers: [FormatService, DatePipe, TranslateService] });
+    service = TestBed.inject(FormatService);
   });
 
   it('should be created', () => {

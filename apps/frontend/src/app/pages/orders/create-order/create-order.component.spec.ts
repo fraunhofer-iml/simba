@@ -37,7 +37,7 @@ import { OffersService } from '../../../shared/services/offers/offers.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { ProductService } from '../../../shared/services/product/product.service';
 import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
-import { DateFormatService } from '../../../shared/services/util/date-format.service';
+import { FormatService } from '../../../shared/services/util/format.service';
 import { CreateOrderComponent } from './create-order.component';
 
 describe('CreateOrderComponent', () => {
@@ -84,7 +84,7 @@ describe('CreateOrderComponent', () => {
         CalendarWeekService,
         TranslateService,
         DatePipe,
-        DateFormatService,
+        FormatService,
         AuthService,
         {
           provide: KeycloakService,

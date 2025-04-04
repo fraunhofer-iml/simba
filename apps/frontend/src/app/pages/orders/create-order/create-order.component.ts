@@ -22,7 +22,7 @@ import { OffersService } from '../../../shared/services/offers/offers.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { ProductService } from '../../../shared/services/product/product.service';
 import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
-import { DateFormatService } from '../../../shared/services/util/date-format.service';
+import { FormatService } from '../../../shared/services/util/format.service';
 import { Countdown } from './model/countdown';
 
 const moment = _rollupMoment || _moment;
@@ -57,7 +57,7 @@ export class CreateOrderComponent {
     private readonly dialog: MatDialog,
     private readonly productService: ProductService,
     private readonly calendarWeekService: CalendarWeekService,
-    private readonly dateFormatService: DateFormatService,
+    private readonly formatService: FormatService,
     private readonly translate: TranslateService
   ) {
     this.orderForm = builder.group({
@@ -152,9 +152,5 @@ export class CreateOrderComponent {
 
   getScheduledFor(cw: number, year: number) {
     return `${this.translate.instant('CalendarWeek')} ${cw}, ${year}`;
-  }
-
-  getDateFormatOfCurrentLanguage(offer: OfferDto): string {
-    return this.dateFormatService.transformDateToCurrentLanguageFormat(offer.creationDate);
   }
 }

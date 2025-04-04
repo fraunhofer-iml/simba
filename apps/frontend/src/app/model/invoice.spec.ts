@@ -8,11 +8,11 @@
 
 import { InvoiceDtoMocks } from '@ap3/api';
 import { TranslateService } from '@ngx-translate/core';
-import { DateFormatService } from '../shared/services/util/date-format.service';
+import { FormatService } from '../shared/services/util/format.service';
 import { Invoice } from './invoice';
 
 describe('Invoice', () => {
-  let dateFormatServiceMock: Partial<DateFormatService>;
+  let dateFormatServiceMock: Partial<FormatService>;
   let translateServiceMock: Partial<TranslateService>;
 
   beforeEach(() => {

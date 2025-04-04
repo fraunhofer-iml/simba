@@ -7,7 +7,10 @@
  */
 
 import { TranslateService } from '@ngx-translate/core';
-import { Component } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
+import localeEn from '@angular/common/locales/en';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Languages } from '../../../assets/i18n/languages';
 import { ROUTING } from '../../routing/routing.enum';
 import { AuthService } from '../../shared/services/auth/auth.service';
@@ -27,8 +30,9 @@ export class SidebarComponent {
   ];
 
   constructor(
-    private authService: AuthService,
-    private translationService: TranslateService
+    private readonly authService: AuthService,
+    private readonly translationService: TranslateService,
+    private readonly cdr: ChangeDetectorRef
   ) {
     this.userName = authService.getUserName();
     this.userRole = authService.getCurrentlyLoggedInUserRole();
@@ -40,5 +44,7 @@ export class SidebarComponent {
 
   setLanguage(language: string) {
     this.translationService.use(language);
+    registerLocaleData(language === Languages.DE ? localeDe : localeEn);
+    this.cdr.detectChanges();
   }
 }

@@ -80,8 +80,7 @@
             <div class="offer-details-grid-value">{{ orderForm.get('amount')?.value }}</div>
             <div class="offer-details-grid-label">{{'OfferedPrice' | translate}}:</div>
             <div class="offer-details-grid-value">
-              <img ngSrc="assets/icons/price.svg" alt="Icon" height="20" width="20" />
-              {{ offer.price | number: '1.2-2' }}
+              {{ offer.price | currency:'EUR':'symbol':'1.2-2' }}
             </div>
           </div>
           <div class="button-container">

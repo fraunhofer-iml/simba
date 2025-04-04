@@ -7,13 +7,12 @@
  */
 
 import { TranslateService } from '@ngx-translate/core';
-import { addWeeks, startOfWeek } from 'date-fns';
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { LANGUAGEFORMATS } from '../../formats/date-formats';
 
 @Injectable()
-export class DateFormatService {
+export class FormatService {
   constructor(
     private readonly datePipe: DatePipe,
     private readonly translateService: TranslateService
@@ -27,11 +26,8 @@ export class DateFormatService {
     return this.translateService.currentLang === 'en' ? LANGUAGEFORMATS.EN : LANGUAGEFORMATS.DE;
   }
 
-  getTimestampFromCalendarWeek(year: number, calendarWeek: number): Date {
-    const firstDayOfYear = new Date(year, 0, 1);
-
-    // Adjust to the first Monday (start of the ISO week)
-    const firstMonday = startOfWeek(firstDayOfYear, { weekStartsOn: 1 });
-    return addWeeks(firstMonday, calendarWeek - 1);
+  transformNumberToCurrentLanguageFormat(number: string | number): string {
+    const formatter = new Intl.NumberFormat(this.translateService.currentLang === 'en' ? 'en-US' : 'de-DE', { minimumFractionDigits: 2 });
+    return formatter.format(Number(number));
   }
 }
