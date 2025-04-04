@@ -83,8 +83,6 @@ frontend:build:prod:
     - /^.*rel.*$/
 
 frontend:archive:
-  needs:
-    - frontend:build
   stage: archive
   image: docker
   services:
