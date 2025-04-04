@@ -31,7 +31,7 @@ export class CppsSchedulerConnectorService {
   }
 
   public async scheduleOrder(order: ScheduleOrderRequestDto): Promise<ScheduleOrderResponseDto> {
-    this.logger.verbose(`Schedule order #${order.id}`);
+    this.logger.verbose(`Schedule order ${this.baseURL + POST_SCHEDULE_ORDER} #${order.id}`);
     const request = new Request(this.baseURL + POST_SCHEDULE_ORDER, {
       method: 'POST',
       headers: this.buildHeader(),
@@ -43,7 +43,7 @@ export class CppsSchedulerConnectorService {
   }
 
   public async acceptOffer(orderId: string, acceptDto: AcceptScheduledOfferDto): Promise<AcceptScheduledOfferDto> {
-    this.logger.verbose(`Accept scheduling for order #${orderId}`);
+    this.logger.verbose(`Accept scheduling for order ${this.baseURL + POST_SCHEDULE_ORDER} #${orderId}`);
     const request = new Request(this.baseURL + PUT_ACCEPT_OFFER(orderId), {
       method: 'PUT',
       headers: this.buildHeader(),
