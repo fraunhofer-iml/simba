@@ -18,6 +18,19 @@
   margin: 4px 0;
 }
 
+.site-policies{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+.site-policies-links{
+  text-decoration: none;
+  color: inherit;
+
+}
+
 #flags {
   margin-right: 0.5rem;
   width: 1rem;

@@ -6,10 +6,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
+  selector: 'app-privacy-policy',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './privacy-policy.component.html',
+  styleUrl: './privacy-policy.component.scss',
 })
-export class AppComponent {}
+export class PrivacyPolicyComponent {}

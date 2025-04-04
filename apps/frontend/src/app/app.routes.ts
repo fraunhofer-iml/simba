@@ -8,6 +8,8 @@
 
 import { Route } from '@angular/router';
 import { AuthGuard } from './guards/auth/auth.guard';
+import { ImprintComponent } from './pages/imprint/imprint.component';
+import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 import { PATH } from './routing/path.enum';
 
 export const appRoutes: Route[] = [
@@ -30,5 +32,13 @@ export const appRoutes: Route[] = [
     path: PATH.receivables,
     loadChildren: () => import('./pages/receivables/receivables.module').then((m) => m.ReceivablesModule),
     canActivate: [AuthGuard],
+  },
+  {
+    path: PATH.imprint,
+    component: ImprintComponent,
+  },
+  {
+    path: PATH.privacyPolicy,
+    component: PrivacyPolicyComponent,
   },
 ];
