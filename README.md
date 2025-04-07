@@ -40,7 +40,7 @@
 
 ### 📄 Description <a id="description"></a>
 
-TODO: Description of the SIMBA System
+SiMBA (Shopfloor Financial Management with Blockchain and AI) brings financial innovation to the entire production process, from order placement to manufacturing to payment. Leveraging a cyber-physical production system, SiMBA enables dynamic, AI-driven pricing that predicts capacity utilisation and automatically sets prices to balance profitability and system efficiency. Once an order is received and produced, invoices are automatically generated and tokenised based on real-time production data. Finally, SiMBA ensures seamless, use-case-agnostic payment processing via direct debit, stable coins or emerging digital currencies such as CBDCs - making every transaction efficient, transparent and future-proof.
 
 ### 🛠️ Built With <a id="built-with"></a>
 
