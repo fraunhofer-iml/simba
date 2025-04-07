@@ -16,7 +16,7 @@ export const TokenReadDtoMock: TokenReadDto = new TokenReadDto(
   new TokenHierarchyDto(true, [], []),
   'ownerAddress',
   'minterAddress',
-  'createdOn',
+  '2025-03-31T14:49:55.836Z',
   'lastUpdatedOn',
   0,
   'tokenAddress'

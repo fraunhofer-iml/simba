@@ -1,0 +1,86 @@
+proxy-svc:run-tests:
+  needs: []
+  stage: test
+  extends: .default
+  script:
+    - npx nx run proxy-svc:test
+  artifacts:
+    paths:
+      - ./apps/proxy-svc/coverage
+    expire_in: 1 week
+  allow_failure: true
+  only:
+    - merge_requests
+    - main
+
+proxy-svc:sonarqube-check-mr:
+  needs:
+    - proxy-svc:run-tests
+  stage: analysis
+  image:
+    name: sonarsource/sonar-scanner-cli:5.0
+    entrypoint: ['']
+  variables:
+    SONAR_USER_HOME: '/apps/proxy-svc/.sonar' # Defines the location of the analysis task cache
+    GIT_DEPTH: '0' # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: '${CI_JOB_NAME}'
+    paths:
+      - /apps/proxy-svc/.sonar/cache
+  script:
+    - >
+      sonar-scanner
+      -Dsonar.projectBaseDir=./apps/proxy-svc/
+      -Dsonar.pullrequest.key=${CI_MERGE_REQUEST_IID}
+      -Dsonar.pullrequest.branch=${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME}
+      -Dsonar.pullrequest.base=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}
+  allow_failure: true
+  only:
+    - merge_requests
+
+proxy-svc:sonarqube-check-main:
+  needs:
+    - proxy-svc:run-tests
+  stage: analysis
+  image:
+    name: sonarsource/sonar-scanner-cli:5.0
+    entrypoint: ['']
+  variables:
+    SONAR_USER_HOME: '/apps/proxy-svc/.sonar' # Defines the location of the analysis task cache
+    GIT_DEPTH: '0' # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: '${CI_JOB_NAME}'
+    paths:
+      - /apps/proxy-svc/.sonar/cache
+  script:
+    - sonar-scanner -Dsonar.projectBaseDir=./apps/proxy-svc/
+  allow_failure: true
+  only:
+    - main
+
+proxy-svc:build:
+  stage: build
+  extends: .default
+  script:
+    - npx nx run proxy-svc:build
+  artifacts:
+    paths:
+      - dist/apps/proxy-svc
+  only:
+    - merge_requests
+    - tags
+
+proxy-svc:archive:
+  needs:
+    - proxy-svc:build
+  stage: archive
+  image: docker
+  services:
+    - docker:dind
+  before_script:
+    - echo "$HARBOR_TOKEN" | docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build --pull --cache-from ${CRI_PATH}/proxy-svc --build-arg APP=proxy-svc -t ${CRI_PATH}/proxy-svc:$CI_COMMIT_TAG -f docker/nest.dockerfile  .
+    - docker push ${CRI_PATH}/proxy-svc:$CI_COMMIT_TAG
+  only:
+    - tags

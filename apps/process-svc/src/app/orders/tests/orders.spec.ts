@@ -27,6 +27,8 @@ import { ServiceProcessModule } from '../../service-process/service-process.modu
 import { OrdersController } from '../orders.controller';
 import { OrdersService } from '../orders.service';
 import { OrderManagementModule } from '../../shared/order-management/order-management.module';
+import { ServiceProcess } from '@prisma/client';
+import { ServiceStatesEnum } from '@ap3/util';
 
 describe('OrdersService', () => {
   let controller: OrdersController;
@@ -115,5 +117,38 @@ describe('OrdersService', () => {
 
     expect(prisma.order.findMany).toHaveBeenCalledWith(findSingleOrderMock);
     expect(expectedReturnValue).toEqual(res);
+  });
+
+  it('should set the order status to finished', async () => {
+
+    const serviceProcessMock: ServiceProcess = {
+      id: '0',
+      orderId: OrderAmqpMock[0].id,
+      dueCalendarWeek: OrderAmqpMock[0].requestedCalendarWeek,
+      dueYear: OrderAmqpMock[0].requestedYear,
+      scheduledDate: new Date(),
+      acceptedOfferId: "0"
+    };
+
+    const prismaInputMock = {
+      where: { orderId: String(OrderAmqpMock[0].id) },
+      include: { order: true },
+      data: {
+        states: {
+          create: {
+            status: ServiceStatesEnum.PRODUCED,
+            timestamp: new Date(),
+          },
+        },
+      },
+    };
+
+    const prismaUpdateOrderSpy = jest.spyOn(prisma.serviceProcess, 'update');
+    prismaUpdateOrderSpy.mockResolvedValue(serviceProcessMock);
+
+    const res = await controller.finishOrder(OrderOverviewPrismaMock[0].id);
+
+    expect(prisma.serviceProcess.update).toHaveBeenCalledWith(prismaInputMock);
+    expect(true).toEqual(res);
   });
 });

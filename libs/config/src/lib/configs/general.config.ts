@@ -20,6 +20,7 @@ export interface generalConfig {
   platformOperator: string;
   platformCurrency: string;
   bffPort: number;
+  proxyPort: number;
   scheduledNFTUpdate: {
     enabled: boolean;
     interval: string;
@@ -36,6 +37,7 @@ export default registerAs(GENERAL_IDENTIFIER, () => ({
   platformOperator: process.env['PLATFORM_OPERATOR'] || 'pt0002',
   platformCurrency: process.env['PLATFORM_CURRENCY'] || 'Euro',
   bffPort: process.env['BFF_PORT'] || 3000,
+  proxyPort: process.env['PROXY_PORT'] || 3001,
   scheduledNFTUpdate: {
     enabled: process.env['SCHEDULED_NFT_UPDATE_ENABLED'] == 'true' || false,
     interval: process.env['SCHEDULED_NFT_UPDATE_CRON_JOB_EXPRESSION'] || CronExpression.EVERY_HOUR,

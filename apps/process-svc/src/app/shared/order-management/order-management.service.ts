@@ -103,4 +103,14 @@ export class OrderManagementService {
     }
     return !!(await this.serviceProcessPrismaService.setServiceState(orderId, ServiceStatesEnum.CANCELED));
   }
+
+  async finishOrder(orderId: string): Promise<boolean> {
+    try{
+      return !!(await this.serviceProcessPrismaService.setServiceState(orderId, ServiceStatesEnum.PRODUCED));
+    }
+    catch(e){
+      this.logger.error(`Couldn't create a PRODUCED state for order: ${orderId}`);
+      return false;
+    }
+  }
 }

@@ -50,4 +50,8 @@ export class OrdersService {
     const deletedOrder: Order = await this.orderPrismaService.deleteOrder(id);
     return !!deletedOrder;
   }
+
+  async finishOrder(offerId: string): Promise<boolean> {
+      return await this.orderManagementService.finishOrder(offerId);
+  }
 }

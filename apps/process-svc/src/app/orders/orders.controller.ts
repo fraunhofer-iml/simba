@@ -34,4 +34,9 @@ export class OrdersController {
   async remove(@Payload() id: string): Promise<boolean> {
     return await this.ordersService.remove(id);
   }
+
+  @MessagePattern(OrderMessagePatterns.FINISH_BY_ID)
+  async finishOrder(@Payload() offerId: string): Promise<boolean> {
+    return this.ordersService.finishOrder(offerId);
+  }
 }
