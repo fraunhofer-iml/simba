@@ -32,8 +32,7 @@ import { InvoicesService } from '../invoices.service';
 import { InvoicesStatisticsService } from '../statistics/invoices-statistics.service';
 import { InvoicesZugferdService } from '../zugferd/invoices-zugferd.service';
 import { CreateInvoiceDto, OrderOverviewMock } from '@ap3/api';
-import { Decimal } from '@prisma/client/runtime/library';
-import { Invoice } from '@prisma/client';
+import { OrderMock } from './mock/order.mock';
 
 describe('InvoicesController', () => {
   let controller: InvoicesController;
@@ -119,44 +118,9 @@ describe('InvoicesController', () => {
     expectedReturn.orderId = "";
     expectedReturn.orderNumber = "";
 
-    const foundOrderMock =
-      {
-        id: 'o001',
-        documentIssueDate: new Date(),
-        buyerOrderRefDocumentId: '202410291549-726762',
-        vatCurrency: 'EUR',
-        totalAmountWithoutVat: new Decimal(3.5),
-        orderLines: [
-          OrderLinesSeed[0]
-        ],
-        noteContent: '',
-        referencedBuyerOrderLine: OrderLinesSeed[0].id,
-        sumOfLinesAmount: 5,
-        buyerId: CompaniesSeed[0].id,
-        sellerId: CompaniesSeed[1].id,
-        buyerAccountingRefId: 'ACC-202410291551-363148',
-        serviceProcess: {
-          id: 'sp001',
-          dueCalendarWeek: 50,
-          dueYear: 2024,
-          scheduledDate: new Date(),
-          orderId: 'o001',
-          acceptedOfferId: null,
-          acceptedOffer: null,
-          machineAssignments: [],
-          offers: [],
-          states: [],
-          invoices: []
-        },
-        buyer: { id: 'pt0001', name: 'Test Company 01' },
-        seller: { id: 'pt0002', name: 'Test Company 02' }
-  };
-
     const prismaOrderSpy = jest.spyOn(prisma.order, 'findMany');
-    prismaOrderSpy.mockResolvedValueOnce([foundOrderMock]);
+    prismaOrderSpy.mockResolvedValueOnce([OrderMock]);
 
-    const mockedInvoiceValue: Invoice = InvoiceSeed[2];
-    //mockedInvoiceValue.netPricePerUnit = "3";
     const prismaInvoiceSpy = jest.spyOn(prisma.invoice, 'create');
     prismaInvoiceSpy.mockResolvedValueOnce(InvoiceSeed[2]);
 

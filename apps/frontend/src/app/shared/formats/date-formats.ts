@@ -9,4 +9,6 @@
 export const LANGUAGEFORMATS = {
   DE: 'dd.MM.yyyy',
   EN: 'MM-dd-yyyy',
+  DE_DATETIME: 'dd.MM.yyyy, HH:mm',
+  EN_DATETIME: 'MM-dd-yyyy, HH:mm'
 };

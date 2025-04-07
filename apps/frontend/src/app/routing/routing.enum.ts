@@ -13,4 +13,5 @@ export enum ROUTING {
   orders = '/orders',
   receivables = '/receivables',
   production = '/production',
+  details = '/details',
 }

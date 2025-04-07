@@ -94,5 +94,20 @@
   "asset": "Asset",
   "metaData": "Metadata",
   "information": "Additional information",
-  "errorNft": "No NFT data found for this invoice."
+  "errorNft": "No NFT data found for this invoice.",
+
+  "Order": "Order",
+  "Contractor": "Contractor",
+  "Quantity": "Quantity",
+  "Participant": "Participant/s",
+  "StartDate": "Start date",
+  "EndDate": "End date",
+  "Time": "Time",
+  "Status": "Process status",
+  "ProductionProcess": "Production process",
+  "RobotId": "Robot ID",
+  "Paginator": {
+    "ItemsPerPage": "Items per page",
+    "Of": "of"
+  }
 }

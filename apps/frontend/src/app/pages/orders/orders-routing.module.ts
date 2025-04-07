@@ -13,6 +13,7 @@ import { AuthGuard } from '../../guards/auth/auth.guard';
 import { RoleGuard } from '../../guards/role/role.guard';
 import { CreateOrderComponent } from './create-order/create-order.component';
 import { OrdersOverviewComponent } from './orders-overview/orders-overview.component';
+import { OrderDetailsComponent } from './order-details/order-details.component';
 
 const routes: Routes = [
   { path: '', component: OrdersOverviewComponent, canActivate: [AuthGuard] },
@@ -21,6 +22,11 @@ const routes: Routes = [
     component: CreateOrderComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: [UserRoles.CUSTOMER] },
+  },
+  {
+    path: ':id',
+    component: OrderDetailsComponent,
+    canActivate: [AuthGuard],
   },
 ];
 

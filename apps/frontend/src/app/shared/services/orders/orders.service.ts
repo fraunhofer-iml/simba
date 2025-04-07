@@ -6,13 +6,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CreateOrderDto, OrderOverviewDto } from '@ap3/api';
+import { CreateOrderDto, OrderOverviewDto, OrderDetailsDto } from '@ap3/api';
 import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BASE_URL } from '../../../../environments/environment';
 import { ApiEndpoints } from '../../constants/endpoints';
 import { AuthService } from '../auth/auth.service';
+import { ROUTING } from '../../../routing/routing.enum';
 
 @Injectable()
 export class OrdersService {
@@ -41,5 +42,14 @@ export class OrdersService {
           });
         })
       );
+  }
+
+  public getOrderDetailsById(orderId: string): Observable<OrderDetailsDto> {
+    const companyId = this.authService.getCurrentlyLoggedInCompanyId();
+    return this.httpClient.get<OrderDetailsDto>(`${BASE_URL}${ApiEndpoints.orders.getAllOrders}/${orderId}${ROUTING.details}`, {
+      params: {
+        companyId: companyId,
+      },
+    });
   }
 }

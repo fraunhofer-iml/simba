@@ -34,6 +34,15 @@
   background-color: white;
 }
 
+.orderId {
+  color: var(--dark-blue-color);
+  cursor: pointer;
+}
+
+.orderId:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 60em) {
   .searchbar-container{
     gap: 10%;

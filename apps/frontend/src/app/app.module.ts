@@ -24,6 +24,8 @@ import { appRoutes } from './app.routes';
 import { initializeKeycloak } from './keycloak-initializer';
 import { LayoutModule } from './layout/layout.module';
 import { AuthService } from './shared/services/auth/auth.service';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { PaginatorService } from './shared/services/util/paginator.service';
 
 registerLocaleData(localeDe);
 registerLocaleData(localeEn);
@@ -68,6 +70,7 @@ registerLocaleData(localeEn);
         subscriptSizing: 'dynamic',
       },
     },
+    { provide: MatPaginatorIntl, useClass: PaginatorService }
   ],
   bootstrap: [AppComponent],
 })

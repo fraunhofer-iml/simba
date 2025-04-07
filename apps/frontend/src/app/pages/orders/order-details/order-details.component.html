@@ -1,0 +1,92 @@
+<!--
+  ~ Copyright Fraunhofer Institute for Material Flow and Logistics
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License").
+  ~ For details on the licensing terms, see the LICENSE file.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<div *ngIf="orderDetails$ | async as orderDetail" class="details-container">
+  <header class="header">
+    <a routerLink="/orders" class="link">{{ 'Orders' | translate }}</a>
+    <img src="assets/icons/chevron_right.svg" alt="Icon" />
+    <a class="orderId"> {{ 'Order' | translate }} {{ orderDetail.order.number }}</a>
+  </header>
+
+  <h1>{{ 'Order' | translate }} {{ orderDetail.order.number }}</h1>
+
+  <div class="grid">
+    <div class="card">
+      <h2 class="title">Details</h2>
+
+      <div class="data-row border">
+        <a class="description">{{ 'OrderTableCustomerName' | translate }}</a>
+        <a class="text-end">{{ orderDetail.order.customerName }}</a>
+      </div>
+
+      <div class="data-row border">
+        <a class="description">{{ 'Contractor' | translate }}</a>
+        <a class="text-end">{{ orderDetail.order.customerName }}</a>
+      </div>
+
+      <div class="data-row border">
+        <a class="description">{{ 'OrderTableProductName' | translate }}</a>
+        <a class="text-end">{{ orderDetail.order.product }}</a>
+      </div>
+
+      <div class="row-end">
+        <a class="description">{{ 'Quantity' | translate }}</a>
+        <a class="text-end">{{ orderDetail.order.amount }}</a>
+      </div>
+    </div>
+    <div class="card diagram"></div>
+  </div>
+
+  <div class="card">
+    <a class="description">{{ 'Status' | translate }}</a>
+    <div class="status-container">
+      <div *ngFor="let status of allFinancialStatus; let i = index" class="status-wrapper">
+        <div [matTooltip]="getStatusTooltip(orderDetail.processStateHistory, status)">
+          <div
+            class="status-circle"
+            [ngClass]="{
+              done: getStatus(orderDetail.processStateHistory, status),
+              pending: !getStatus(orderDetail.processStateHistory, status),
+            }"
+          >
+            <img class="status-icon" [src]="getStatusIcon(status)" alt="{{ status }} Icon" />
+          </div>
+        </div>
+        <mat-divider *ngIf="i < allFinancialStatus.length - 1" class="status-line"></mat-divider>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="orderDetail.machineAssignments.length > 0">
+    <h1>{{ 'ProductionProcess' | translate }}</h1>
+    <div class="card table-container">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="robots">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="machineId">{{ 'RobotId' | translate }}</th>
+          <td mat-cell *matCellDef="let row">{{ row.machineId }}</td>
+        </ng-container>
+        <ng-container matColumnDef="startDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="start">{{ 'StartDate' | translate }}</th>
+          <td mat-cell *matCellDef="let row">{{ row.start | date: formatService.getDateTimeFormatByCurrentLang() }}</td>
+        </ng-container>
+        <ng-container matColumnDef="endDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="end">{{ 'EndDate' | translate }}</th>
+          <td mat-cell *matCellDef="let row">{{ row.end | date: formatService.getDateTimeFormatByCurrentLang() }}</td>
+        </ng-container>
+        <ng-container matColumnDef="ownerName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="ownerName">{{ 'Participant' | translate }}</th>
+          <td mat-cell *matCellDef="let row">{{ row.ownerName }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsCustomer"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsCustomer"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[5]" [pageSize]="5"></mat-paginator>
+    </div>
+  </div>
+</div>

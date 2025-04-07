@@ -94,5 +94,20 @@
   "asset": "Ressource",
   "metaData": "Metadaten",
   "information": "Zusätzliche Information",
-  "errorNft": "Keine NFT-Daten für diese Rechnung gefunden."
+  "errorNft": "Keine NFT-Daten für diese Rechnung gefunden.",
+
+  "Order": "Auftrag",
+  "Contractor": "Auftragnehmer",
+  "Quantity": "Menge",
+  "Participant": "Teilnehmer",
+  "StartDate": "Startzeitraum",
+  "EndDate": "Endzeitraum",
+  "Time": "Uhrzeit",
+  "Status": "Prozessstatus",
+  "ProductionProcess": "Produktionsablauf",
+  "RobotId": "Roboter ID",
+  "Paginator": {
+    "ItemsPerPage": "Elemente pro Seite",
+    "Of": "von"
+  }
 }
