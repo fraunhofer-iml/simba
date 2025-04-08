@@ -6,7 +6,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CreateTradeReceivableAMQPMock, TradeReceivableAmqpDto, TradeReceivableAMQPMock } from '@ap3/amqp';
+import {
+  CreateTradeReceivableAMQPMock,
+  InvoiceAndPaymentStatusDtoAmqpMock,
+  TradeReceivableAmqpDto,
+  TradeReceivableAMQPMock,
+} from '@ap3/amqp';
 import { CreateNftDto, TokenReadDtoMock, TokenUpdateDtoMock, UpdateNftPaymentStatusDto } from '@ap3/api';
 import { BlockchainConnectorService } from '@ap3/blockchain-connector';
 import { ConfigurationModule } from '@ap3/config';
@@ -32,7 +37,6 @@ import {
   TokenReadService,
   TokenUpdateService,
 } from 'nft-folder-blockchain-connector';
-import { PaymentStates } from '@ap3/util';
 import { ReadableMock } from './mocks/minio-object.mock';
 import { ScheduleModule } from '@nestjs/schedule';
 
@@ -187,14 +191,8 @@ describe('TradeReceivables', () => {
     const updateNftSpy = jest.spyOn(tokenUpdateService, 'updateToken');
     updateNftSpy.mockResolvedValue(TokenUpdateDtoMock);
 
-    const invoiceIdPayload: UpdateNftPaymentStatusDto = {
-      invoiceNumber: "testInvoiceNumber",
-      paymentStatus: PaymentStates.FINANCED
-    };
-
-    const expectedReturn: TokenReadDto = TokenUpdateDtoMock;
-    const retVal: TokenReadDto = await controller.updateNftPaymentStatus(invoiceIdPayload);
-    expect(expectedReturn).toEqual(retVal);
+    const retVal: boolean = await controller.updateNftPaymentStatus(InvoiceAndPaymentStatusDtoAmqpMock);
+    expect(retVal).toBeTruthy();
   });
 
   it('readAllNfts: should read every nft that is stored', async () => {

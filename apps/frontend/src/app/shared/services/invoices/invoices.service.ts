@@ -50,7 +50,7 @@ export class InvoiceService {
   }
 
   createNewPaymentStatus(changes: InvoiceIdAndPaymentStateDto[]): Observable<boolean> {
-    return this.httpClient.post<boolean>(`${BASE_URL}${ApiEndpoints.invoices.updatePaymentStatus}`, changes);
+    return this.httpClient.put<boolean>(`${BASE_URL}${ApiEndpoints.tradeReceivables.updateTradeReceivableNfts}`, changes);
   }
 
   getNftByInvoiceNumber(invoiceNumber: string): Observable<TokenReadDto> {

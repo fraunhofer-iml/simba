@@ -8,9 +8,14 @@
 
 import util from 'node:util';
 import { CreateTradeReceivableAmqpDto, InvoiceIdAndPaymentStateAmqpDto, TradeReceivableAmqpDto } from '@ap3/amqp';
-import { CreateNftDto, UpdateNftPaymentStatusDto } from '@ap3/api';
+import { CreateNftDto } from '@ap3/api';
 import { BlockchainConnectorService } from '@ap3/blockchain-connector';
-import { InvoiceDatabaseAdapterService, InvoiceWithNFT, ServiceProcessPrismaService, TradeReceivablePrismaService } from '@ap3/database';
+import {
+  InvoiceDatabaseAdapterService,
+  InvoiceWithNFT,
+  ServiceProcessPrismaService,
+  TradeReceivablePrismaService,
+} from '@ap3/database';
 import { S3Service } from '@ap3/s3';
 import { PaymentStates } from '@ap3/util';
 import { TokenReadDto } from 'nft-folder-blockchain-connector';
@@ -69,18 +74,30 @@ export class TradeReceivablesService {
     );
   }
 
-  public async updateNft(updateNftPaymentStatusDto: UpdateNftPaymentStatusDto): Promise<TokenReadDto> {
-    return this.updateNftPaymentState(updateNftPaymentStatusDto.invoiceNumber, updateNftPaymentStatusDto.paymentStatus);
+  public async updateNft(statusChanges: InvoiceIdAndPaymentStateAmqpDto[]): Promise<boolean> {
+    try {
+      for (const statusChange of statusChanges) {
+        await this.updateNftPaymentState(
+          statusChange.invoiceId,
+          statusChange.paymentStatus as PaymentStates
+        );
+      }
+      return true;
+    }
+    catch(e) {
+      this.logger.error(util.inspect(e));
+      throw e;
+    }
   }
 
-  public async updateNftPaymentState(invoiceNumber: string, paymentStates: PaymentStates): Promise<TokenReadDto> {
-    const invoice: InvoiceWithNFT = await this.invoicePrismaAdapterService.getInvoiceByNumber(invoiceNumber);
+  public async updateNftPaymentState(invoiceId: string, paymentStates: PaymentStates): Promise<TokenReadDto> {
+    const invoice: InvoiceWithNFT = await this.invoicePrismaAdapterService.getInvoiceById(invoiceId);
     if (!invoice) return;
 
     const tradeReceivable: TradeReceivable = await this.tradeReceivablePrismaService.getTradeReceivableByInvoiceId(invoice.id);
     if (!tradeReceivable) return;
 
-    const foundNft: TokenReadDto = await this.blockchainConnectorService.readNFTForInvoiceNumber(invoiceNumber);
+    const foundNft: TokenReadDto = await this.blockchainConnectorService.readNFTForInvoiceNumber(invoice.invoiceNumber);
     if (!foundNft) return;
 
     const nftPaymentState: PaymentStates = this.blockchainConnectorService.getPaymentState(foundNft);
@@ -92,7 +109,7 @@ export class TradeReceivablesService {
       convertedDto.toPrismaCreatePaymentStatusQuery(tradeReceivable.id, new Date())
     );
 
-    this.logger.log(`The nft of the invoice with id ${invoiceNumber} will be updated.`);
+    this.logger.log(`The nft of the invoice with id ${invoiceId} will be updated.`);
     return this.blockchainConnectorService.updateNFTStatus(foundNft.tokenId, paymentStates);
   }
 

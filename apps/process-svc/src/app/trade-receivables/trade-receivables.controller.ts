@@ -8,6 +8,7 @@
 
 import {
   CreateTradeReceivableAmqpDto,
+  InvoiceIdAndPaymentStateAmqpDto,
   TradeReceivableAmqpDto,
   TradeReceivableMessagePatterns,
 } from '@ap3/amqp';
@@ -15,7 +16,7 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { TradeReceivablesService } from './trade-receivables.service';
 import { TokenReadDto } from 'nft-folder-blockchain-connector';
-import { CreateNftDto, UpdateNftPaymentStatusDto } from '@ap3/api';
+import { CreateNftDto } from '@ap3/api';
 
 @Controller('trade-receivables')
 export class TradeReceivablesController {
@@ -32,8 +33,8 @@ export class TradeReceivablesController {
   }
 
   @MessagePattern(TradeReceivableMessagePatterns.UPDATE_NFT)
-  async updateNftPaymentStatus(@Payload() updateNftPaymentStatusDto: UpdateNftPaymentStatusDto): Promise<TokenReadDto> {
-    return await this.tradeReceivablesService.updateNft(updateNftPaymentStatusDto);
+  async updateNftPaymentStatus(@Payload() statusChanges: InvoiceIdAndPaymentStateAmqpDto[]): Promise<boolean> {
+    return await this.tradeReceivablesService.updateNft(statusChanges);
   }
 
   @MessagePattern(TradeReceivableMessagePatterns.READ_ALL)

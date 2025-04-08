@@ -9,6 +9,7 @@
 import {
   AmqpBrokerQueues,
   CreateTradeReceivableAmqpDto,
+  InvoiceIdAndPaymentStateAmqpDto,
   TradeReceivableAmqpDto,
   TradeReceivableMessagePatterns,
 } from '@ap3/amqp';
@@ -39,9 +40,9 @@ export class TradeReceivablesService {
     );
   }
 
-  async updateNft(updateNftPaymentStatusDto: UpdateNftPaymentStatusDto): Promise<TokenReadDto> {
-    return firstValueFrom<TokenReadDto>(
-      this.processAMQPClient.send(TradeReceivableMessagePatterns.UPDATE_NFT, updateNftPaymentStatusDto).pipe(defaultIfEmpty(null))
+  async updateNft(statusChanges: InvoiceIdAndPaymentStateAmqpDto[]): Promise<boolean> {
+    return firstValueFrom<boolean>(
+      this.processAMQPClient.send(TradeReceivableMessagePatterns.UPDATE_NFT, statusChanges).pipe(defaultIfEmpty(null))
     );
   }
 

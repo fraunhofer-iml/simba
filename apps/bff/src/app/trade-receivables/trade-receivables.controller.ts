@@ -11,7 +11,6 @@ import {
   CreateNftDto,
   CreateTradeReceivableDto,
   TradeReceivableDto,
-  UpdateNftPaymentStatusDto,
 } from '@ap3/api';
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
@@ -19,6 +18,7 @@ import { TradeReceivablesService } from './trade-receivables.service';
 import { Roles } from 'nest-keycloak-connect';
 import { TokenReadDto } from 'nft-folder-blockchain-connector';
 import { Payload } from '@nestjs/microservices';
+import { InvoiceIdAndPaymentStateAmqpDto } from '@ap3/amqp';
 
 @Controller('trade-receivables')
 @ApiTags('Trade Receivables')
@@ -57,8 +57,8 @@ export class TradeReceivablesController {
     required: true,
     description: 'The invoice id of the invoice that should be updated.'
   })
-  async updateNftPaymentStatus(@Payload() invoiceIdPayload: UpdateNftPaymentStatusDto): Promise<TokenReadDto> {
-    return await this.tradeReceivableService.updateNft(invoiceIdPayload);
+  async updateNftPaymentStatus(@Payload() statusChanges: InvoiceIdAndPaymentStateAmqpDto[]): Promise<boolean> {
+    return await this.tradeReceivableService.updateNft(statusChanges);
   }
 
   @Get("nft")

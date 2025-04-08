@@ -21,6 +21,7 @@ export const ApiEndpoints = {
   tradeReceivables: {
     getAllTradeReceivablesForOrder: '/trade-receivables?orderId=',
     getALlTradeReceivableNfts: '/trade-receivables/nft',
+    updateTradeReceivableNfts: '/trade-receivables/nft',
   },
   invoices: {
     getAllInvoices: '/invoices',
