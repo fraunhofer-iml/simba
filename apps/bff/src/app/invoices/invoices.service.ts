@@ -44,7 +44,7 @@ export class InvoicesService {
 
   async findAllWithFilter(
     orderNumber?: string[],
-    paymentStates?: PaymentStates[],
+    paymentStates?: string,
     creditorId?: string,
     debtorId?: string,
     invoiceNumber?: string,
@@ -52,7 +52,15 @@ export class InvoicesService {
     dueDateTo?: Date
   ): Promise<InvoiceDto[]> {
     this.logger.debug(`Requesting Tradereceivables `);
-    const params = new AllInvoicesFilterAmqpDto(paymentStates, creditorId, debtorId, invoiceNumber, dueDateFrom, dueDateTo, orderNumber);
+    const params = this.createAmqpFilterDtoForInvoices(
+      paymentStates,
+      creditorId,
+      debtorId,
+      invoiceNumber,
+      dueDateFrom,
+      dueDateTo,
+      orderNumber
+    );
     const response: InvoiceAmqpDto[] = await firstValueFrom<InvoiceAmqpDto[]>(
       this.processAMQPClient.send(InvoiceMessagePatterns.READ_ALL, params)
     );
@@ -101,8 +109,10 @@ export class InvoicesService {
   }
 
   async getStatisticNotPaidPerMonth(companyId: string, financialRole: FinancialRoles): Promise<UnpaidStatisticsDto> {
+    const params = new CompanyAndFinancialRole(companyId, financialRole);
+
     const notPaidTRStatistics: NotPaidStatisticsAmqpDto = await firstValueFrom<NotPaidStatisticsAmqpDto>(
-      this.processAMQPClient.send(InvoiceMessagePatterns.READ_STATISTICS_NOT_PAID, new CompanyAndFinancialRole(companyId, financialRole))
+      this.processAMQPClient.send(InvoiceMessagePatterns.READ_STATISTICS_NOT_PAID, params)
     );
 
     return UnpaidStatisticsDto.toUnpaidStatisticsDto(notPaidTRStatistics);
@@ -142,5 +152,44 @@ export class InvoicesService {
       this.logger.warn(e);
       throw e;
     }
+  }
+
+  createAmqpFilterDtoForInvoices(
+    paymentStates: string,
+    creditorId: string,
+    debtorId: string,
+    invoiceNumber: string,
+    dueDateFrom: Date,
+    dueDateTo: Date,
+    orderNumber: string[]
+  ) {
+    const allInvoicesAmqpFilter: AllInvoicesFilterAmqpDto = new AllInvoicesFilterAmqpDto();
+    if (paymentStates) {
+      try {
+        const parsedPaymentStates = <PaymentStates[]>JSON.parse(paymentStates);
+        allInvoicesAmqpFilter.paymentStates = parsedPaymentStates;
+      } catch (e) {
+        this.logger.warn(e);
+      }
+    }
+    if (creditorId) {
+      allInvoicesAmqpFilter.creditorId = creditorId;
+    }
+    if (debtorId) {
+      allInvoicesAmqpFilter.debtorId = debtorId;
+    }
+    if (invoiceNumber) {
+      allInvoicesAmqpFilter.invoiceNumber = invoiceNumber;
+    }
+    if (dueDateFrom) {
+      allInvoicesAmqpFilter.dueDateFrom = dueDateFrom;
+    }
+    if (dueDateTo) {
+      allInvoicesAmqpFilter.dueDateTo = dueDateTo;
+    }
+    if (orderNumber) {
+      allInvoicesAmqpFilter.orderNumber = orderNumber;
+    }
+    return allInvoicesAmqpFilter;
   }
 }

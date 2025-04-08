@@ -49,6 +49,13 @@
   margin-right: auto;
 }
 
+.searchbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10%;
+}
+
 .grid-list {
   gap: 0;
 }
@@ -81,6 +88,17 @@
 
 .apply-changes-button-container {
   display: flex;
+}
+
+.filter-with-searchbar-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  min-width: 50%;
+}
+
+.filter-button {
+  margin-top: 0.5rem;
 }
 
 /* Materials */

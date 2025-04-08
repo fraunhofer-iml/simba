@@ -28,6 +28,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterOutlet } from '@angular/router';
 import { Invoice } from '../../model/invoice';
 import { AuthService } from '../../shared/services/auth/auth.service';
+import { InvoiceFilterService } from '../../shared/services/invoices/filter/invoice-filter.service';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
 import { FinancialRoleService } from '../../shared/services/util/financial-role.service';
 import { FormatService } from '../../shared/services/util/format.service';
@@ -56,6 +57,7 @@ describe('ReceivablesComponent', () => {
         provideHttpClient(),
         DatePipe,
         FormatService,
+        InvoiceFilterService,
         {
           provide: KeycloakService,
           useValue: {

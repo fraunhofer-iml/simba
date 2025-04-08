@@ -16,7 +16,7 @@ import {
 } from '@ap3/api';
 import { FinancialRoles, PaymentStates, UserRoles } from '@ap3/util';
 import { Roles } from 'nest-keycloak-connect';
-import { Body, Controller, Get, Param, Post, Query, Request } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Param, Post, Query, Request } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { InvoicesService } from './invoices.service';
 
@@ -24,6 +24,7 @@ import { InvoicesService } from './invoices.service';
 @ApiTags('Invoices')
 @ApiBearerAuth()
 export class InvoicesController {
+  private readonly logger = new Logger(InvoicesController.name);
   constructor(private readonly invoicesService: InvoicesService) {}
 
   @Post()
@@ -88,23 +89,26 @@ export class InvoicesController {
     @Request() req,
     @Query('dueDateFrom') dueDateFrom: Date,
     @Query('dueDateTo') dueDateTo: Date,
+    @Query('invoiceNumber') invoiceNumber: string,
+    @Query('orderNumber') orderNumber: string,
     @Query('creditorId') creditorId: string = '',
     @Query('debtorId') debtorId: string = '',
-    @Query('paymentStates') paymentStates: PaymentStates[] = [],
-    @Query('invoiceNumber') invoiceNumber: string,
-    @Query('orderNumber') orderNumber: string
+    @Query('paymentStates') paymentStates: string = '[]'
   ): Promise<InvoiceDto[]> {
-    if (!req.user.realm_access.roles.includes(UserRoles.ADMIN)) {
-      if (!creditorId && !debtorId) {
-        creditorId = debtorId = req.user.company;
-      } else {
-        creditorId = creditorId ? req.user.company : '';
-        debtorId = debtorId ? req.user.company : '';
+    if (req.user.realm_access.roles.includes(UserRoles.ADMIN)) {
+      if (creditorId === '' && debtorId === '') {
+        creditorId = req.user.company;
+        debtorId = req.user.company;
       }
+    } else if (req.user.realm_access.roles.includes(UserRoles.CONTRIBUTOR)) {
+      creditorId = req.user.company;
+    } else if (req.user.realm_access.roles.includes(UserRoles.CUSTOMER)) {
+      debtorId = req.user.company;
     }
+
     return await this.invoicesService.findAllWithFilter(
       orderNumber ? [orderNumber] : [],
-      Array.isArray(paymentStates) ? paymentStates : [paymentStates],
+      paymentStates,
       creditorId,
       debtorId,
       invoiceNumber,

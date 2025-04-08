@@ -16,7 +16,7 @@ export class AuthService {
   private readonly role: string;
   private readonly userRoles: string[];
 
-  constructor(private keyCloakService: KeycloakService) {
+  constructor(private readonly keyCloakService: KeycloakService) {
     this.status = false;
     this.userRoles = this.keyCloakService.getUserRoles();
     this.role = this.findCurrentlyLoggedInUserRole();

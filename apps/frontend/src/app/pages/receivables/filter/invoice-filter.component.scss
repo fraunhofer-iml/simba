@@ -1,0 +1,26 @@
+.filter-container {
+  margin: 1rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  margin-left: 0.5rem;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.filter-option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.financial-states-container {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}

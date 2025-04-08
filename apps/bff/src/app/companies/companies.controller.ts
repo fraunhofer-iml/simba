@@ -32,7 +32,7 @@ export class CompaniesController {
   }
 
   @Get()
-  @Roles({ roles: [AuthRolesEnum.ADMIN] })
+  @Roles({ roles: [AuthRolesEnum.ADMIN,AuthRolesEnum.CUSTOMER,AuthRolesEnum.CONTRIBUTOR] })
   @ApiOperation({
     description: 'Get all available companies.',
   })

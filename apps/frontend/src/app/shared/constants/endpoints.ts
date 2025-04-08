@@ -28,4 +28,7 @@ export const ApiEndpoints = {
     getPaidStatistics: '/invoices/statistics/paid',
     getUnPaidStatistics: '/invoices/statistics/unpaid',
   },
+  companies: {
+    getAllCompanies: '/companies',
+  },
 };

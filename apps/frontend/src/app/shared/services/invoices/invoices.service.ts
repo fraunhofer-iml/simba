@@ -7,13 +7,14 @@
  */
 
 import { InvoiceDto, InvoiceIdAndPaymentStateDto, PaidStatisticsDto, UnpaidStatisticsDto } from '@ap3/api';
+import { TokenReadDto } from 'nft-folder-blockchain-connector';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BASE_URL } from '../../../../environments/environment';
+import { InvoiceFilter } from '../../../model/invoice-filter';
 import { ApiEndpoints } from '../../constants/endpoints';
 import { AuthService } from '../auth/auth.service';
-import { TokenReadDto } from 'nft-folder-blockchain-connector';
 
 @Injectable()
 export class InvoiceService {
@@ -22,12 +23,9 @@ export class InvoiceService {
     private readonly authService: AuthService
   ) {}
 
-  getInvoices(): Observable<InvoiceDto[]> {
-    const companyId = this.authService.getCurrentlyLoggedInCompanyId();
+  getInvoices(filter?: InvoiceFilter): Observable<InvoiceDto[]> {
     return this.httpClient.get<InvoiceDto[]>(`${BASE_URL}${ApiEndpoints.invoices.getAllInvoices}`, {
-      params: {
-        companyId: companyId,
-      },
+      params: this.processFiltersToParams(filter),
     });
   }
 
@@ -56,6 +54,20 @@ export class InvoiceService {
   }
 
   getNftByInvoiceNumber(invoiceNumber: string): Observable<TokenReadDto> {
-    return this.httpClient.get<TokenReadDto>(`${BASE_URL}${ApiEndpoints.tradeReceivables.getALlTradeReceivableNfts}/${invoiceNumber}`)
+    return this.httpClient.get<TokenReadDto>(`${BASE_URL}${ApiEndpoints.tradeReceivables.getALlTradeReceivableNfts}/${invoiceNumber}`);
+  }
+
+  processFiltersToParams(filter?: InvoiceFilter): HttpParams {
+    let params = new HttpParams();
+    if (filter) {
+      for (const key in filter) {
+        if (Array.isArray(filter[key as keyof InvoiceFilter])) {
+          params = params.append(key, JSON.stringify(filter[key as keyof InvoiceFilter]));
+        } else {
+          params = params.append(key, String(filter[key as keyof InvoiceFilter]));
+        }
+      }
+    }
+    return params;
   }
 }

@@ -69,6 +69,7 @@
   "InvoiceTableFinancialState": "Finanzstatus",
   "InvoiceTableOrderNumber": "Auftrags ID",
 
+  "FilterButton": "Filter",
   "Invoices": "Rechnungen",
   "ShowInvoice": "Rechnung anzeigen",
   "PaymentStatus": {
@@ -80,6 +81,16 @@
   "NoMatchingData": "Es wurden keine Daten gefunden, die dem Filter entsprechen ",
   "Download": "Herunterladen",
   "Cancel": "Abbrechen",
+
+  "FilterPayer": "Schuldner",
+  "FilterPayee": " Kreditor",
+  "FilterDate": " Zeitraum",
+  "FilterFinancialStatus": "Finanzstatus",
+  "FilterExampleCompany": "Name des Unternehmens",
+  "FilterExampleStartDate": "Anfangsdatum",
+  "FilterExampleEndDate": "Enddatum",
+  "ResetButton": "Zurücksetzen",
+  "SaveButton": "Sichern",
 
   "PaymentStateChangeSuccessfulSnackBarMessage": "Der Status wurden erfolgreich geändert",
   "PaymentStateErrorSnackBarMessage": "Etwas ist schiefgelaufen. Der Status konnte nicht geändert werden. :(",

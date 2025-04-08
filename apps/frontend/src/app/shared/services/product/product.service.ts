@@ -14,7 +14,7 @@ import { ApiEndpoints } from '../../constants/endpoints';
 
 @Injectable()
 export class ProductService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private readonly httpClient: HttpClient) {}
 
   getProducts() {
     return this.httpClient.get<ProductDto[]>(`${BASE_URL}${ApiEndpoints.products.getAllProducts}`);

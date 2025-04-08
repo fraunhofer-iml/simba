@@ -172,7 +172,7 @@ export class InvoicePrismaService {
     const orderFilter: Prisma.InvoiceWhereInput | undefined = orderId ? { serviceProcess: { orderId: String(orderId) } } : undefined;
 
     const paymentStateFilter: Prisma.InvoiceWhereInput | undefined =
-      paymentStates && paymentStates.length > 0 ? { tradeReceivable: { states: { every: { status: { in: paymentStates } } } } } : undefined;
+      paymentStates && paymentStates.length > 0 ? { tradeReceivable: { states: { some: { status: { in: paymentStates } } } } } : undefined;
     const orderNumbersFilter: Prisma.InvoiceWhereInput | undefined =
       orderNumbers && orderNumbers.length > 0
         ? { serviceProcess: { order: { buyerOrderRefDocumentId: { in: orderNumbers } } } }

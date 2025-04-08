@@ -18,10 +18,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Invoice } from '../../model/invoice';
+import { InvoiceFilter } from '../../model/invoice-filter';
 import { AuthService } from '../../shared/services/auth/auth.service';
+import { InvoiceFilterService } from '../../shared/services/invoices/filter/invoice-filter.service';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
 import { FormatService } from '../../shared/services/util/format.service';
 import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
+import { InvoiceFilterComponent } from './filter/invoice-filter.component';
 import { TokenDetailsDialogComponent } from './token-details-dialog/token-details-dialog.component';
 
 @Component({
@@ -30,17 +33,8 @@ import { TokenDetailsDialogComponent } from './token-details-dialog/token-detail
   styleUrl: './receivables.component.scss',
 })
 export class ReceivablesComponent {
-  displayedNFTColumns: string[] = [
-    'select',
-    'invoiceNumber',
-    'creditor',
-    'totalAmountWithoutVat',
-    'currency',
-    'invoiceDueDate',
-    'debtor',
-    'orderNumber',
-    'paymentStatus',
-  ];
+  activatedFiltersCount: number;
+  displayedInvoiceColumns: string[];
   private readonly _snackBar = inject(MatSnackBar);
   paymentStates = [PaymentStates.PAID, PaymentStates.FINANCED];
   paymentStatusChanges: InvoiceIdAndPaymentStateDto[];
@@ -55,8 +49,21 @@ export class ReceivablesComponent {
     private readonly formatService: FormatService,
     private readonly dialog: MatDialog,
     private readonly translationService: TranslateService,
-    readonly authService: AuthService
+    readonly authService: AuthService,
+    private readonly invoiceFilterService: InvoiceFilterService
   ) {
+    this.displayedInvoiceColumns = [
+      'select',
+      'invoiceNumber',
+      'creditor',
+      'totalAmountWithoutVat',
+      'currency',
+      'invoiceDueDate',
+      'debtor',
+      'orderNumber',
+      'paymentStatus',
+    ];
+    this.activatedFiltersCount = this.countSelectedFilterOptions();
     this.paymentStatusChanges = [];
     this.dataSource = new MatTableDataSource<Invoice>();
     this.loadInvoices();
@@ -78,8 +85,8 @@ export class ReceivablesComponent {
     };
   }
 
-  private loadInvoices() {
-    this.dataSourceObservable = this.invoiceService.getInvoices().pipe(
+  private loadInvoices(filter?: InvoiceFilter) {
+    this.dataSourceObservable = this.invoiceService.getInvoices(filter).pipe(
       map((invoices: InvoiceDto[]) => {
         this.dataSource.data = Invoice.convertToInvoice(invoices);
         return this.dataSource;
@@ -141,6 +148,25 @@ export class ReceivablesComponent {
     });
   }
 
+  openFilterDialog(event: MouseEvent) {
+    const dialogRef = this.dialog.open(InvoiceFilterComponent, {
+      position: { top: `${String(event.clientY)}px`, left: `${String(event.clientX)}px` },
+      hasBackdrop: true,
+      disableClose: false,
+      autoFocus: true,
+      data: this.invoiceFilterService.getFilter(),
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== undefined) {
+        this.invoiceFilterService.setFilter(result);
+        this.invoiceFilterService.cleanupFilter();
+        this.loadInvoices(this.invoiceFilterService.getFilter());
+        this.activatedFiltersCount = this.countSelectedFilterOptions();
+      }
+    });
+  }
+
   openTokenDetailsDialog(invoiceNumber: string) {
     this.dialog.open(TokenDetailsDialogComponent, {
       data: invoiceNumber,
@@ -191,5 +217,15 @@ export class ReceivablesComponent {
 
     const label: string = this.translationService.instant('CloseSnackBarAction');
     this._snackBar.open(message, label);
+  }
+
+  countSelectedFilterOptions(): number {
+    let selectedOptions = 0;
+    for (const option of Object.values(this.invoiceFilterService.getFilter())) {
+      if (option) {
+        selectedOptions++;
+      }
+    }
+    return selectedOptions;
   }
 }

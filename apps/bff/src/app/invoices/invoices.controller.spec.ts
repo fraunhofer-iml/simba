@@ -113,11 +113,11 @@ describe('InvoicesController', () => {
       request,
       InvoicesAmqpMock[0].invoiceDueDate,
       InvoicesAmqpMock[0].invoiceDueDate,
-      request.user.company,
-      request.user.company,
-      [PaymentStates.OPEN],
       InvoicesAmqpMock[0].invoiceNumber,
-      OrderAmqpMock[0].number
+      OrderAmqpMock[0].number,
+      request.user.company,
+      request.user.company,
+      JSON.stringify([PaymentStates.OPEN])
     );
     const params = new AllInvoicesFilterAmqpDto(
       [PaymentStates.OPEN],

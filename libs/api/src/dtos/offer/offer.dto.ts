@@ -44,7 +44,6 @@ export class OfferDto {
   }
 
   public static toOfferDto(offer: OfferAmqpDto): OfferDto {
-    console.log(offer);
     return new OfferDto(
       offer.id,
       new Date(offer.creationDate).toISOString(),

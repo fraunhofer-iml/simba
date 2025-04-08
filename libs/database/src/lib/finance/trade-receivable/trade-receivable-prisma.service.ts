@@ -163,16 +163,11 @@ export class TradeReceivablePrismaService {
       companyWhere = Prisma.sql`${companyWhere} AND (${paymentStateWhere})`;
     }
 
-    if (creditorId || debtorId) {
-      if (creditorId && debtorId && creditorId == debtorId) {
-        companyWhere = Prisma.sql`${companyWhere} AND (iv."creditorId" = ${creditorId} OR iv."debtorId" = ${debtorId})`;
-      } else if (creditorId && debtorId && creditorId != debtorId) {
-        companyWhere = Prisma.sql`${companyWhere} AND (iv."creditorId" = ${creditorId} AND iv."debtorId" = ${debtorId})`;
-      } else if (creditorId) {
-        companyWhere = Prisma.sql`${companyWhere} AND iv."creditorId" = ${creditorId}`;
-      } else if (debtorId) {
-        companyWhere = Prisma.sql`${companyWhere} AND iv."debtorId" = ${debtorId}`;
-      }
+    if (creditorId && debtorId && creditorId === debtorId) {
+      companyWhere = Prisma.sql`${companyWhere} AND (iv."creditorId" = ${creditorId} OR iv."debtorId" = ${debtorId})`;
+    } else {
+      if (creditorId) companyWhere = Prisma.sql`${companyWhere} AND iv."creditorId" = ${creditorId}`;
+      if (debtorId) companyWhere = Prisma.sql`${companyWhere} AND iv."debtorId" = ${debtorId}`;
     }
 
     if (invoiceNumber) {
@@ -205,7 +200,7 @@ export class TradeReceivablePrismaService {
       dueDateFrom,
       dueDateTo
     );
-
+    
     try {
       const res = <TradeReceivable[]>await this.prismaService.$queryRaw`
       SELECT tr."id", tr."nft", tr."invoiceId"

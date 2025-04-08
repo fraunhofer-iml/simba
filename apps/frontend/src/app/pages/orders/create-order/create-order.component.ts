@@ -50,10 +50,10 @@ export class CreateOrderComponent {
   };
 
   constructor(
-    private orderService: OrdersService,
-    private builder: FormBuilder,
-    private offerService: OffersService,
-    private router: Router,
+    private readonly orderService: OrdersService,
+    private readonly builder: FormBuilder,
+    private readonly offerService: OffersService,
+    private readonly router: Router,
     private readonly dialog: MatDialog,
     private readonly productService: ProductService,
     private readonly calendarWeekService: CalendarWeekService,

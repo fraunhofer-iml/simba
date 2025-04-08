@@ -1,0 +1,73 @@
+<div class="filter-container">
+  <div class="header">
+    <h2>Filter</h2>
+    <div>
+      <button mat-button (click)="resetFormGroup()">{{ 'ResetButton' | translate }}</button>
+      <button mat-button (click)="onSaveClick()">{{ 'SaveButton' | translate }}</button>
+    </div>
+  </div>
+
+  <mat-dialog-content class="content">
+    <div [formGroup]="filterFormGroup">
+      @if (authService.isCustomer() || authService.isOperator()) {
+        <div class="filter-option">
+          <h3>{{ 'FilterPayee' | translate }}</h3>
+          <mat-form-field>
+            <input
+              type="text"
+              matInput
+              formControlName="payee"
+              [matAutocomplete]="payee"
+              placeholder="{{ 'FilterExampleCompany' | translate }}"
+            />
+            <mat-autocomplete #payee="matAutocomplete" [displayWith]="displayCompanies">
+              @for (company of filteredPayeeOptions | async; track company) {
+                <mat-option [value]="company">{{ company.name }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+      }
+      @if (authService.isContributor() || authService.isOperator()) {
+        <div class="filter-option">
+          <h3>{{ 'FilterPayer' | translate }}</h3>
+          <mat-form-field>
+            <input
+              type="text"
+              matInput
+              formControlName="payer"
+              [matAutocomplete]="payer"
+              placeholder="{{ 'FilterExampleCompany' | translate }}"
+            />
+            <mat-autocomplete #payer="matAutocomplete" [displayWith]="displayCompanies">
+              @for (company of filteredPayerOptions | async; track company) {
+                <mat-option [value]="company">{{ company.name }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+      }
+      <div formGroupName="dateRange" class="filter-option">
+        <h3>{{ 'FilterDate' | translate }}</h3>
+        <mat-form-field>
+          <mat-date-range-input [rangePicker]="picker">
+            <input formControlName="start" matStartDate placeholder="{{ 'FilterExampleStartDate' | translate }}" />
+            <input formControlName="end" matEndDate placeholder="{{ 'FilterExampleEndDate' | translate }}" />
+          </mat-date-range-input>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+      </div>
+      <div class="filter-option">
+        <h3>{{ 'FilterFinancialStatus' | translate }}</h3>
+        <div class="financial-states-container">
+          @for (state of paymentStates; track state) {
+            <mat-checkbox (change)="onCheckBoxChange(state)" [checked]="isCheckBoxChecked(state)">
+              {{ 'PaymentStatus.' + state | translate }}
+            </mat-checkbox>
+          }
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+</div>
