@@ -22,6 +22,7 @@ module.exports = {
       assets: ['./src/assets'],
       optimization: false,
       outputHashing: 'none',
+      generatePackageJson: true,
     }),
   ],
 };
