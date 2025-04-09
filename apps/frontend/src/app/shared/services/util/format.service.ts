@@ -30,6 +30,10 @@ export class FormatService {
     return this.translateService.currentLang === 'en' ? LANGUAGEFORMATS.EN_DATETIME : LANGUAGEFORMATS.DE_DATETIME;
   }
 
+  getTimeFormat() {
+    return 'HH:mm';
+  }
+
   transformNumberToCurrentLanguageFormat(number: string | number): string {
     const formatter = new Intl.NumberFormat(this.translateService.currentLang === 'en' ? 'en-US' : 'de-DE', { minimumFractionDigits: 2 });
     return formatter.format(Number(number));

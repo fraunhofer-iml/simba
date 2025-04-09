@@ -66,7 +66,7 @@ export class OrderDetailsComponent {
     if (!timestamp) return '';
     return `${this.translate.instant('Status')}: ${this.translate.instant('OrderStatus.' + status)}
             ${this.translate.instant('StartDate')}: ${this.datePipe.transform(timestamp, this.formatService.getDateFormatByCurrentLang())}
-            ${this.translate.instant('Time')}: ${this.datePipe.transform(timestamp, 'HH:mm')}`;
+            ${this.translate.instant('Time')}: ${this.datePipe.transform(timestamp, this.formatService.getTimeFormat())}`;
   }
 
   getStatus(allProcessStatus: ServiceProcessStatusDto[], status: string): boolean {
