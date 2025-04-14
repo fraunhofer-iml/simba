@@ -11,7 +11,7 @@ import { Company } from '@prisma/client';
 export const CompaniesSeed = <Company[]>[
   {
     id: 'pt0001',
-    name: 'Test Company 01',
+    name: 'EcoTrade Solutions AG',
     city: 'Dortmund',
     countryCode: 'DE',
     address: 'Joseph-von-Fraunhofer-Straße 3',
@@ -25,7 +25,7 @@ export const CompaniesSeed = <Company[]>[
   },
   {
     id: 'pt0002',
-    name: 'Test Company 02',
+    name: 'SmartPay Solutions AG',
     city: 'München',
     countryCode: 'DE',
     address: 'Hansastraße 27c',
@@ -39,7 +39,7 @@ export const CompaniesSeed = <Company[]>[
   },
   {
     id: 'pt0003',
-    name: 'Test Company 03',
+    name: 'FinTech Innovations GmbH',
     city: 'Dublin',
     countryCode: 'EN',
     address: 'Moonavenue 3',
@@ -53,7 +53,7 @@ export const CompaniesSeed = <Company[]>[
   },
   {
     id: 'pt0004',
-    name: 'SmartPay Solutions AG',
+    name: 'GreenEnergy Systems GmbH',
     city: 'Berlin',
     countryCode: 'DE',
     address: 'Friedrichstraße 88',
@@ -63,11 +63,11 @@ export const CompaniesSeed = <Company[]>[
     telephone: '030765432',
     emailAddress: 'contact@smartpay.de',
     electronicAddress: '54321098-0076-54',
-    electronicAddressSchemeId: ''
+    electronicAddressSchemeId: '',
   },
   {
     id: 'pt0005',
-    name: 'FinTech Innovations GmbH',
+    name: 'Quantum Supply Chain AG',
     city: 'Stuttgart',
     countryCode: 'DE',
     address: 'Königstraße 27',
@@ -77,11 +77,11 @@ export const CompaniesSeed = <Company[]>[
     telephone: '0711987654',
     emailAddress: 'support@fintech-innovations.de',
     electronicAddress: '23456789-0012-89',
-    electronicAddressSchemeId: ''
+    electronicAddressSchemeId: '',
   },
   {
     id: 'pt0006',
-    name: 'EcoTrade Solutions AG',
+    name: 'AI Vision Technologies GmbH',
     city: 'Köln',
     countryCode: 'DE',
     address: 'Rheinpromenade 21',
@@ -91,11 +91,11 @@ export const CompaniesSeed = <Company[]>[
     telephone: '0221987654',
     emailAddress: 'info@ecotrade.de',
     electronicAddress: '45678912-0034-76',
-    electronicAddressSchemeId: ''
+    electronicAddressSchemeId: '',
   },
   {
     id: 'pt0007',
-    name: 'AI Vision Technologies GmbH',
+    name: 'VR Technologies GmbH',
     city: 'Düsseldorf',
     countryCode: 'DE',
     address: 'Kaiserswerther Straße 45',
@@ -105,11 +105,11 @@ export const CompaniesSeed = <Company[]>[
     telephone: '0211898765',
     emailAddress: 'contact@ai-vision.de',
     electronicAddress: '78901234-0045-32',
-    electronicAddressSchemeId: ''
+    electronicAddressSchemeId: '',
   },
   {
     id: 'pt0008',
-    name: 'Quantum Supply Chain AG',
+    name: 'AI Supply Chain AG',
     city: 'Leipzig',
     countryCode: 'DE',
     address: 'Augustusplatz 7',
@@ -119,11 +119,11 @@ export const CompaniesSeed = <Company[]>[
     telephone: '0341987654',
     emailAddress: 'info@quantum-sc.de',
     electronicAddress: '89012345-0023-67',
-    electronicAddressSchemeId: ''
+    electronicAddressSchemeId: '',
   },
   {
     id: 'pt0009',
-    name: 'GreenEnergy Systems GmbH',
+    name: 'New Energy Systems GmbH',
     city: 'Bremen',
     countryCode: 'DE',
     address: 'Am Wall 10',
@@ -133,6 +133,6 @@ export const CompaniesSeed = <Company[]>[
     telephone: '0421987654',
     emailAddress: 'info@greenenergy-systems.de',
     electronicAddress: '90123456-0056-43',
-    electronicAddressSchemeId: ''
+    electronicAddressSchemeId: '',
   },
 ];

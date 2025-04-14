@@ -22,6 +22,7 @@ import {
   TradeReceivablesSeed,
 } from '../libs/database/src/seed';
 import { MachineAssignmentSeed } from '../libs/database/src/seed/machine-assignments.seed';
+import { ServiceProcessesRelationSeed } from '../libs/database/src/seed/service-process-relations.seed';
 import { Entity, importEntities } from './data_import';
 
 const machines = MachinesSeed;
@@ -37,6 +38,8 @@ const serviceProcesses = ServiceProcessesSeed;
 const paymentInformation = PaymentInformationSeed;
 const offers = OffersSeed;
 const machineAssignments = MachineAssignmentSeed;
+
+const serviceProcessRelations = ServiceProcessesRelationSeed;
 
 const dataSets: Entity[] = [
   {
@@ -104,8 +107,12 @@ const dataSets: Entity[] = [
     records: machineAssignments,
     createRecord: async (data: any) => await prisma.machineAssignment.create({ data }),
   },
+  {
+    name: 'serviceProcessRelations',
+    records: serviceProcessRelations,
+    createRecord: async (data: any) => await prisma.serviceProcess.updateMany(data),
+  },
 ];
-
 const prisma = new PrismaClient();
 
 importEntities(dataSets)

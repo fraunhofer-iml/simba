@@ -94,14 +94,17 @@
   font-size: x-small;
   font-weight: bold;
   color: white;
+  background-color: var(--dark-blue-color);
+}
+
+.current {
+  border-color: var(--light-frosted-orange);
+  border-width: 5px;
+  border-style: solid;
 }
 
 .pending {
   background-color: gray;
-}
-
-.done {
-  background-color: var(--dark-blue-color);
 }
 
 .production-container{

@@ -49,7 +49,8 @@
           <div [matTooltip]="getStatusTooltip(orderDetail.processStateHistory, status)"
               class="status-circle"
               [ngClass]="{
-                done: getStatus(orderDetail.processStateHistory, status),
+                current: getStatus(orderDetail.processStateHistory, status) && !getStatus(orderDetail.processStateHistory, allFinancialStatus[i+1]),
+                done: getStatus(orderDetail.processStateHistory, status) && getStatus(orderDetail.processStateHistory, allFinancialStatus[i+1]),
                 pending: !getStatus(orderDetail.processStateHistory, status),
               }"
             >
