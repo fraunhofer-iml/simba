@@ -83,7 +83,7 @@ describe('InvoicesStatisticsController', () => {
     prismaInvoiceSpy.mockResolvedValueOnce(AggregationSumSeptember).mockResolvedValueOnce(AggregationSumNovember);
 
     const retVal = await controller.calcPaidTradeReceivableVolumePerMonth(
-      new TRParamsCompanyIdAndYearAndFinancialRole(CompaniesSeed[0].id, 2024, FinancialRoles.DEBTOR)
+      new TRParamsCompanyIdAndYearAndFinancialRole([], CompaniesSeed[0].id, 2024, FinancialRoles.DEBTOR)
     );
     expect(expectedReturn).toEqual(retVal);
   });
@@ -95,6 +95,7 @@ describe('InvoicesStatisticsController', () => {
     prismaRawSpy.mockResolvedValue(TradeReceivablePaymentStatusCountMock);
 
     const retVal = await controller.getTradeReceivableNotPaidStatistics({
+      invoiceIds: [],
       companyId: CompaniesSeed[0].id,
       financialRole: FinancialRoles.DEBTOR,
     });

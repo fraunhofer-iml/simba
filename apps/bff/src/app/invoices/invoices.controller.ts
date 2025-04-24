@@ -7,13 +7,7 @@
  */
 
 import { InvoiceAmqpDto, PaidStatisticsAmqpDto } from '@ap3/amqp';
-import {
-  AuthRolesEnum,
-  CreateInvoiceDto,
-  InvoiceDto,
-  InvoiceIdAndPaymentStateDto,
-  UnpaidStatisticsDto,
-} from '@ap3/api';
+import { AuthRolesEnum, CreateInvoiceDto, InvoiceDto, InvoiceIdAndPaymentStateDto, UnpaidStatisticsDto } from '@ap3/api';
 import { FinancialRoles, PaymentStates, UserRoles } from '@ap3/util';
 import { Roles } from 'nest-keycloak-connect';
 import { Body, Controller, Get, Logger, Param, Post, Query, Request } from '@nestjs/common';
@@ -45,7 +39,7 @@ export class InvoicesController {
     name: 'dueDateFrom',
     type: Date,
     description:
-      'Necessary to filter for the start of a specific due date range. The date of the event has to be in ISO format (YYYY-MM-DDTHH:MM:SSZ)',
+      'Used to filter for the start of a specific due date range. The date of the event has to be in ISO format (YYYY-MM-DDTHH:MM:SSZ)',
     required: false,
     example: '2024-09-20T07:55:55.695Z',
   })
@@ -53,35 +47,37 @@ export class InvoicesController {
     name: 'dueDateTo',
     type: Date,
     description:
-      'Necessary to filter for the end of a specific due date range. The date of the event has to be in ISO format (YYYY-MM-DDTHH:MM:SSZ)',
+      'Used to filter for the end of a specific due date range. The date of the event has to be in ISO format (YYYY-MM-DDTHH:MM:SSZ)',
     required: false,
     example: '2024-09-20T07:55:55.695Z',
   })
   @ApiQuery({
     name: 'creditorId',
     type: String,
-    description: 'Company id; Required to identify the corresponding creditor.',
+    description: 'Company id; Used to identify the corresponding creditor.',
     required: false,
+    example: 'pt0001',
   })
   @ApiQuery({
     name: 'debtorId',
     type: String,
-    description: 'Company id; Required to identify the corresponding debtor.',
+    description: 'Company id; Used to identify the corresponding debtor.',
     required: false,
+    example: 'pt0001',
   })
   @ApiQuery({
     name: 'paymentStates',
-    type: String,
+    type: [String],
+    isArray: true,
     enum: PaymentStates,
-    description:
-      'Necessary to filter for a specific payment status. This query parameter can be used multiple times in the same request to select multiple PaymentStates',
+    description: ' Payment statuses; Used to filter for specific payment statuses.',
     required: false,
-    example: PaymentStates.OPEN,
+    example: [PaymentStates.OPEN, PaymentStates.PAID],
   })
   @ApiQuery({
     name: 'invoiceNumber',
     type: String,
-    description: 'Necessary to filter for a specific invoice number.',
+    description: 'Redundant parameter, will be removed in later releases',
     required: false,
   })
   @ApiResponse({ type: [InvoiceDto] })
@@ -93,10 +89,10 @@ export class InvoicesController {
     @Query('orderNumber') orderNumber: string,
     @Query('creditorId') creditorId: string = '',
     @Query('debtorId') debtorId: string = '',
-    @Query('paymentStates') paymentStates: string = '[]'
+    @Query('paymentStates') paymentStates: PaymentStates[] = []
   ): Promise<InvoiceDto[]> {
     if (req.user.realm_access.roles.includes(UserRoles.ADMIN)) {
-      if (creditorId === '' && debtorId === '') {
+      if (!creditorId && !debtorId) {
         creditorId = req.user.company;
         debtorId = req.user.company;
       }
@@ -153,20 +149,32 @@ export class InvoicesController {
   @ApiQuery({
     name: 'year',
     type: Number,
+    description: 'The year all statistics need to be in',
+    example: '2024',
     required: true,
   })
   @ApiQuery({
     name: 'financialRole',
+    description: 'The financial role the client takes, either debtor or creditor',
+    example: FinancialRoles.CREDITOR,
     type: String,
     required: true,
+  })
+  @ApiQuery({
+    name: 'invoiceIds',
+    type: String,
+    description: 'A string array of InvoiceIds. These need to be transmitted as an exact JSON string.',
+    example: '["IV0001", "IV0002"]',
+    required: false,
   })
   @ApiResponse({ type: [PaidStatisticsAmqpDto] })
   async getStatisticPaidTradePerMonth(
     @Request() req: any,
     @Query('year') year: number,
-    @Query('financialRole') financialRole: FinancialRoles
+    @Query('financialRole') financialRole: FinancialRoles,
+    @Query('invoiceIds') invoiceIds?: string
   ): Promise<PaidStatisticsAmqpDto[]> {
-    return await this.invoicesService.getStatisticPaidPerMonth(req.user.company, year, financialRole);
+    return await this.invoicesService.getStatisticPaidPerMonth(req.user.company, year, financialRole, invoiceIds);
   }
 
   @Get('/statistics/unpaid')
@@ -177,9 +185,20 @@ export class InvoicesController {
     type: String,
     required: true,
   })
+  @ApiQuery({
+    name: 'invoiceIds',
+    type: String,
+    description: 'A string array of InvoiceIds. These need to be transmitted as an exact JSON string.',
+    example: '["IV0001", "IV0002"]',
+    required: true,
+  })
   @ApiResponse({ type: UnpaidStatisticsDto })
-  async getStatisticUnpaid(@Request() req: any, @Query('financialRole') financialRole: FinancialRoles): Promise<UnpaidStatisticsDto> {
-    return await this.invoicesService.getStatisticNotPaidPerMonth(req.user.company, financialRole);
+  async getStatisticUnpaid(
+    @Request() req: any,
+    @Query('financialRole') financialRole: FinancialRoles,
+    @Query('invoiceIds') invoiceIds?: string
+  ): Promise<UnpaidStatisticsDto> {
+    return await this.invoicesService.getStatisticNotPaidPerMonth(req.user.company, financialRole, invoiceIds);
   }
 
   @Post('/payment-status')

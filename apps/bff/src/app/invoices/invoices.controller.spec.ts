@@ -32,7 +32,9 @@ import {
 import { CompaniesSeed } from '@ap3/database';
 import { FinancialRoles, PaymentStates } from '@ap3/util';
 import { of } from 'rxjs';
+import { ConflictException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { ApiConflictResponse } from '@nestjs/swagger';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CompaniesModule } from '../companies/companies.module';
 import { InvoicesController } from './invoices.controller';
@@ -95,10 +97,7 @@ describe('InvoicesController', () => {
     });
 
     const res = await controller.create(newInvoiceInput);
-    expect(sendRequestSpy).toHaveBeenCalledWith(
-      InvoiceMessagePatterns.CREATE,
-      newInvoiceInput
-    );
+    expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.CREATE, newInvoiceInput);
     expect(res).toEqual(InvoicesAmqpMock[0]);
   });
 
@@ -108,7 +107,6 @@ describe('InvoicesController', () => {
     sendRequestSpy.mockImplementation((messagePattern: InvoiceMessagePatterns, data: any) => {
       return of(InvoicesAmqpMock);
     });
-
     const res: InvoiceDto[] = await controller.findAll(
       request,
       InvoicesAmqpMock[0].invoiceDueDate,
@@ -117,12 +115,72 @@ describe('InvoicesController', () => {
       OrderAmqpMock[0].number,
       request.user.company,
       request.user.company,
-      JSON.stringify([PaymentStates.OPEN])
+      [PaymentStates.OPEN]
     );
     const params = new AllInvoicesFilterAmqpDto(
       [PaymentStates.OPEN],
       request.user.company,
       request.user.company,
+      InvoicesAmqpMock[0].invoiceNumber,
+      InvoicesAmqpMock[0].invoiceDueDate,
+      InvoicesAmqpMock[0].invoiceDueDate,
+      [OrderAmqpMock[0].number]
+    );
+    expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.READ_ALL, params);
+    expect(res).toEqual(expectedReturnValue);
+  });
+
+  it('should set creditorId an debtorId as an Admin if none are provided', async () => {
+    const expectedReturnValue = InvoiceDtoMocks;
+    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
+    sendRequestSpy.mockImplementation((messagePattern: InvoiceMessagePatterns, data: any) => {
+      return of(InvoicesAmqpMock);
+    });
+    request.user.realm_access.roles = ['ap3_admin'];
+    const res: InvoiceDto[] = await controller.findAll(
+      request,
+      InvoicesAmqpMock[0].invoiceDueDate,
+      InvoicesAmqpMock[0].invoiceDueDate,
+      InvoicesAmqpMock[0].invoiceNumber,
+      OrderAmqpMock[0].number,
+      undefined,
+      undefined,
+      [PaymentStates.OPEN]
+    );
+    const params = new AllInvoicesFilterAmqpDto(
+      [PaymentStates.OPEN],
+      request.user.company,
+      request.user.company,
+      InvoicesAmqpMock[0].invoiceNumber,
+      InvoicesAmqpMock[0].invoiceDueDate,
+      InvoicesAmqpMock[0].invoiceDueDate,
+      [OrderAmqpMock[0].number]
+    );
+    expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.READ_ALL, params);
+    expect(res).toEqual(expectedReturnValue);
+  });
+
+  it('should set creditorId if user Role is Contributor', async () => {
+    const expectedReturnValue = InvoiceDtoMocks;
+    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
+    sendRequestSpy.mockImplementation((messagePattern: InvoiceMessagePatterns, data: any) => {
+      return of(InvoicesAmqpMock);
+    });
+    request.user.realm_access.roles = ['ap3_contributor'];
+    const res: InvoiceDto[] = await controller.findAll(
+      request,
+      InvoicesAmqpMock[0].invoiceDueDate,
+      InvoicesAmqpMock[0].invoiceDueDate,
+      InvoicesAmqpMock[0].invoiceNumber,
+      OrderAmqpMock[0].number,
+      undefined,
+      undefined,
+      [PaymentStates.OPEN]
+    );
+    const params = new AllInvoicesFilterAmqpDto(
+      [PaymentStates.OPEN],
+      request.user.company,
+      '',
       InvoicesAmqpMock[0].invoiceNumber,
       InvoicesAmqpMock[0].invoiceDueDate,
       InvoicesAmqpMock[0].invoiceDueDate,
@@ -162,7 +220,7 @@ describe('InvoicesController', () => {
     expect(res).toEqual(expectedReturnValue);
   });
 
-  it('should get Tradereceivable unpaid TR statistics by its companyId', async () => {
+  it('should get Tradereceivable unpaid TR statistics by its companyId without filter', async () => {
     const expectedReturnValue = UnpaidTradeReceivableStatisticsMock;
     const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
     sendRequestSpy.mockImplementationOnce((messagePattern: InvoiceMessagePatterns, data: any) => {
@@ -173,6 +231,23 @@ describe('InvoicesController', () => {
     expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.READ_STATISTICS_NOT_PAID, {
       companyId: CompaniesSeed[1].id,
       financialRole: FinancialRoles.DEBTOR,
+      invoiceIds: [],
+    });
+    expect(res).toEqual(expectedReturnValue);
+  });
+
+  it('should get Tradereceivable unpaid TR statistics by its companyId with filter', async () => {
+    const expectedReturnValue = UnpaidTradeReceivableStatisticsMock;
+    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
+    sendRequestSpy.mockImplementationOnce((messagePattern: InvoiceMessagePatterns, data: any) => {
+      return of(NotPaidStatisticsAmqpMock);
+    });
+
+    const res: UnpaidStatisticsDto = await controller.getStatisticUnpaid(request, FinancialRoles.DEBTOR, '["IV0001"]');
+    expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.READ_STATISTICS_NOT_PAID, {
+      companyId: CompaniesSeed[1].id,
+      financialRole: FinancialRoles.DEBTOR,
+      invoiceIds: ['IV0001'],
     });
     expect(res).toEqual(expectedReturnValue);
   });
@@ -184,10 +259,10 @@ describe('InvoicesController', () => {
       return of(PaidStatisticsAmqpMock);
     });
 
-    const res = await controller.getStatisticPaidTradePerMonth(request, 2024, FinancialRoles.DEBTOR);
+    const res = await controller.getStatisticPaidTradePerMonth(request, 2024, FinancialRoles.DEBTOR, '[]');
     expect(sendRequestSpy).toHaveBeenCalledWith(
       InvoiceMessagePatterns.READ_STATISTICS_PAID,
-      new TRParamsCompanyIdAndYearAndFinancialRole(CompaniesSeed[1].id, 2024, FinancialRoles.DEBTOR)
+      new TRParamsCompanyIdAndYearAndFinancialRole([], CompaniesSeed[1].id, 2024, FinancialRoles.DEBTOR)
     );
     expect(res).toEqual(expectedReturnValue);
   });
@@ -203,5 +278,18 @@ describe('InvoicesController', () => {
       InvoiceMessagePatterns.CREATE_NEW_PAYMENT_STATUS_FOR_INVOICE,
       InvoiceAndPaymentStatusDtoAmqpMock
     );
+  });
+
+  it('should throw an error if the creation of a paymentstatus failed', async () => {
+    const conflictException = new ConflictException('Creation failed');
+    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
+    sendRequestSpy.mockImplementationOnce((messagePattern: InvoiceMessagePatterns, data: any) => {
+      throw conflictException;
+    });
+    try {
+      await controller.createPaymentStatusForInvoice(InvoiceAndPaymentStatusDtoMock);
+    } catch (error) {
+      expect(error).toBe(conflictException);
+    }
   });
 });

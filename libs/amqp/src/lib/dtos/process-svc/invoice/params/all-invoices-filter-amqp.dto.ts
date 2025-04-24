@@ -18,7 +18,7 @@ export class AllInvoicesFilterAmqpDto {
   orderNumber?: string[];
 
   constructor(
-    paymentStates?: PaymentStates[],
+    paymentStates?: PaymentStates[] | string,
     creditorId?: string,
     debtorId?: string,
     invoiceNumber?: string,
@@ -26,12 +26,24 @@ export class AllInvoicesFilterAmqpDto {
     dueDateTo?: Date,
     orderNumber?: string[]
   ) {
-    this.paymentStates = paymentStates;
+    if (typeof paymentStates === 'string') {
+      this.paymentStates = this.parsePaymentStates(paymentStates);
+    } else {
+      this.paymentStates = paymentStates;
+    }
     this.creditorId = creditorId;
     this.debtorId = debtorId;
     this.invoiceNumber = invoiceNumber;
     this.dueDateFrom = dueDateFrom;
     this.dueDateTo = dueDateTo;
     this.orderNumber = orderNumber;
+  }
+
+  private parsePaymentStates(paymentStates: string) {
+    try {
+      return <PaymentStates[]>JSON.parse(paymentStates);
+    } catch (e) {
+      throw new Error('Parsing of PaymentStates not possible');
+    }
   }
 }

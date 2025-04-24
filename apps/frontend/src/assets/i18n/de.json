@@ -82,15 +82,16 @@
   "Download": "Herunterladen",
   "Cancel": "Abbrechen",
 
-  "FilterPayer": "Schuldner",
-  "FilterPayee": " Kreditor",
-  "FilterDate": " Zeitraum",
-  "FilterFinancialStatus": "Finanzstatus",
-  "FilterExampleCompany": "Name des Unternehmens",
-  "FilterExampleStartDate": "Anfangsdatum",
-  "FilterExampleEndDate": "Enddatum",
-  "ResetButton": "Zurücksetzen",
-  "SaveButton": "Sichern",
+  "Filter": {
+    "Payer": "Schuldner",
+    "Payee": "Kreditor",
+    "Date": "Fälligkeitsdatum",
+    "FinancialStatus": "Finanzstatus",
+    "ExampleStartDate": "Anfangsdatum",
+    "ExampleEndDate": "Enddatum",
+    "ResetButton": "Zurücksetzen",
+    "SaveButton": "Sichern"
+  },
 
   "PaymentStateChangeSuccessfulSnackBarMessage": "Der Status wurden erfolgreich geändert",
   "PaymentStateErrorSnackBarMessage": "Etwas ist schiefgelaufen. Der Status konnte nicht geändert werden. :(",

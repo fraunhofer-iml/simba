@@ -81,15 +81,16 @@
   "Download": "Download",
   "Cancel": "Cancel",
 
-  "FilterPayer": "Payer",
-  "FilterPayee": "Payee",
-  "FilterDate": "Date Range",
-  "FilterExampleCompany": "Name of the company",
-  "FilterFinancialStatus": "Financial status",
-  "FilterExampleStartDate": "Start date",
-  "FilterExampleEndDate": "End date",
-  "ResetButton": "Reset",
-  "SaveButton": "Save",
+  "Filter": {
+    "Payer": "Payer",
+    "Payee": "Payee",
+    "Date": "Due date",
+    "FinancialStatus": "Financial status",
+    "ExampleStartDate": "Start date",
+    "ExampleEndDate": "End date",
+    "ResetButton": "Reset",
+    "SaveButton": "Save"
+  },
 
   "PaymentStateChangeSuccessfulSnackBarMessage": "Status changed successfully",
   "PaymentStateErrorSnackBarMessage": "Something went wrong. Your status could not be changed. :(",

@@ -42,6 +42,7 @@ export class TradeReceivablePrismaService {
       throw e;
     }
   }
+
   async getPaymentStatesForTradeReceivable(trId: string): Promise<PaymentStatus[]> {
     return this.prismaService.paymentStatus.findMany({
       where: { tradeReceivableId: trId },
@@ -49,19 +50,22 @@ export class TradeReceivablePrismaService {
   }
 
   async getInvoiceIdsForPaidTradeReceivableIdsForMonthByFinancialRole(
+    invoiceIds: string[],
     financialRole: string,
     month: string,
     year: number,
     companyId: string
   ) {
-    const query: Prisma.Sql = this.queryBuilderService.buildRawQueryForFinancialRole(financialRole, companyId);
-    return this.getInvoiceIdsForPaidTradeReceivableIdsForMonth(month, year, query);
+    const financialRoleQuery: Prisma.Sql = this.queryBuilderService.buildRawQueryForFinancialRole(financialRole, companyId);
+    const iDsFromFilteringQuery: Prisma.Sql = this.queryBuilderService.buildRawQueryForFilteredInvoiceIds(invoiceIds);
+    return this.getInvoiceIdsForPaidTradeReceivableIdsForMonth(month, year, financialRoleQuery, iDsFromFilteringQuery);
   }
 
   private async getInvoiceIdsForPaidTradeReceivableIdsForMonth(
     month: string,
     year: number,
-    financialRoleQuery: Prisma.Sql
+    financialRoleQuery: Prisma.Sql,
+    iDsFromFilteringQuery: Prisma.Sql
   ): Promise<InvoiceIdTypes[]> {
     try {
       const comparableMonth = `${year}-${month}`;
@@ -72,7 +76,8 @@ export class TradeReceivablePrismaService {
         LEFT JOIN "Invoice" AS iv ON tr."invoiceId" = iv."id"
         WHERE TO_CHAR(DATE_TRUNC('month', ps."timestamp"),'YYYY-MM') = ${comparableMonth}
          AND ps."status" = ${PaymentStates.PAID}
-         AND ${financialRoleQuery};
+         AND ${financialRoleQuery}
+         AND ${iDsFromFilteringQuery};
       `;
     } catch (e) {
       this.logger.error(e);
@@ -81,12 +86,22 @@ export class TradeReceivablePrismaService {
     }
   }
 
-  async countPaidOnTimeInvoicesMonthlyByFinancialRole(financialRole: string, year: number, companyId: string) {
-    const query: Prisma.Sql = this.queryBuilderService.buildRawQueryForFinancialRole(financialRole, companyId);
-    return this.countPaidOnTimeInvoicesMonthly(year, query);
+  async countPaidOnTimeInvoicesMonthlyByFinancialRole(
+    filteredInvoiceIds: string[],
+    financialRole: string,
+    year: number,
+    companyId: string
+  ) {
+    const financialQuery: Prisma.Sql = this.queryBuilderService.buildRawQueryForFinancialRole(financialRole, companyId);
+    const filteredInvoiceQuery: Prisma.Sql = this.queryBuilderService.buildRawQueryForFilteredInvoiceIds(filteredInvoiceIds);
+    return this.countPaidOnTimeInvoicesMonthly(year, financialQuery, filteredInvoiceQuery);
   }
 
-  private async countPaidOnTimeInvoicesMonthly(year: number, financialRoleQuery: Prisma.Sql): Promise<InvoiceCountAndDueMonth[]> {
+  private async countPaidOnTimeInvoicesMonthly(
+    year: number,
+    financialRoleQuery: Prisma.Sql,
+    filteredInvoiceQuery: Prisma.Sql
+  ): Promise<InvoiceCountAndDueMonth[]> {
     try {
       return <InvoiceCountAndDueMonth[]>await this.prismaService.$queryRaw`
         SELECT COUNT(*) as invoice_count, TO_CHAR(DATE_TRUNC('month', iv."dueDate"), 'YYYY-MM') as due_month
@@ -96,6 +111,7 @@ export class TradeReceivablePrismaService {
         WHERE ps."timestamp" <= iv."dueDate"
         AND ps."status" = ${PaymentStates.PAID}
         AND ${financialRoleQuery}
+        AND ${filteredInvoiceQuery}
         GROUP BY due_month;
       `;
     } catch (e) {
@@ -106,14 +122,19 @@ export class TradeReceivablePrismaService {
   }
 
   async getTradeReceivableStateStatisticsByFinancialRole(
+    filteredInvoiceIds: string[],
     financialRole: string,
     companyId: string
   ): Promise<TradeReceivablePaymentStatusCount[]> {
-    const query: Prisma.Sql = this.queryBuilderService.buildRawQueryForFinancialRole(financialRole, companyId);
-    return this.getTradeReceivableStateStatistics(query);
+    const financialQuery: Prisma.Sql = this.queryBuilderService.buildRawQueryForFinancialRole(financialRole, companyId);
+    const filteredInvoiceQuery: Prisma.Sql = this.queryBuilderService.buildRawQueryForFilteredInvoiceIds(filteredInvoiceIds);
+    return this.getTradeReceivableStateStatistics(financialQuery, filteredInvoiceQuery);
   }
 
-  private async getTradeReceivableStateStatistics(whereQuery: Prisma.Sql): Promise<TradeReceivablePaymentStatusCount[]> {
+  private async getTradeReceivableStateStatistics(
+    financialQuery: Prisma.Sql,
+    filteredInvoiceQuery: Prisma.Sql
+  ): Promise<TradeReceivablePaymentStatusCount[]> {
     try {
       const res = <TradeReceivablePaymentStatusCount[]>await this.prismaService.$queryRaw`
       SELECT trstat."status", COUNT(*) as count, SUM(trstat."totalAmountWithoutVat") as total_value
@@ -127,12 +148,13 @@ export class TradeReceivablePrismaService {
                 FROM "PaymentStatus" AS subps
                 WHERE subps."tradeReceivableId" = tr."id"
               )
-              AND ${whereQuery}
+              AND ${financialQuery}
+              AND ${filteredInvoiceQuery}
          ) as trstat
       GROUP BY trstat."status";
     `;
 
-      this.logger.verbose(`Trade receivable not paid statistics for query #${whereQuery}: ${util.inspect(res)}`);
+      this.logger.verbose(`Trade receivable not paid statistics for query #${financialQuery}: ${util.inspect(res)}`);
       return res;
     } catch (e) {
       this.logger.error(util.inspect(e));
@@ -216,7 +238,6 @@ export class TradeReceivablePrismaService {
         )
       GROUP BY tr."id";
     `;
-      this.logger.debug('BY STATE' + util.inspect(res));
       return res;
     } catch (e) {
       this.logger.error(util.inspect(e));

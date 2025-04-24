@@ -93,9 +93,15 @@ export class InvoiceDatabaseAdapterService {
     });
   }
 
-  async countInvoicesDueInMonthByFinancialRole(financialRole: string, year: number, companyId: string): Promise<InvoiceCountAndDueMonth[]> {
-    const query: Prisma.Sql = this.queryBuilderService.buildRawQueryForFinancialRole(financialRole, companyId);
-    return this.invoicePrismaService.countInvoicesDueInMonth(year, query);
+  async countInvoicesDueInMonthByFinancialRole(
+    filteredInvoiceIds: string[],
+    financialRole: string,
+    year: number,
+    companyId: string
+  ): Promise<InvoiceCountAndDueMonth[]> {
+    const financialQuery: Prisma.Sql = this.queryBuilderService.buildRawQueryForFinancialRole(financialRole, companyId);
+    const invoiceQuery: Prisma.Sql = this.queryBuilderService.buildRawQueryForFilteredInvoiceIds(filteredInvoiceIds);
+    return this.invoicePrismaService.countInvoicesDueInMonth(year, financialQuery, invoiceQuery);
   }
 
   async sumInvoiceAmountsForTradeReceivablesByFinancialRole(

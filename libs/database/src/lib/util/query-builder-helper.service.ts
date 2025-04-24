@@ -21,4 +21,16 @@ export class QueryBuilderHelperService {
       throw new NotFoundException('Received no CreditorId/DebtorId');
     }
   }
+
+  buildRawQueryForFilteredInvoiceIds(ids: string[]) {
+    let query: Prisma.Sql;
+
+    if (ids.length > 0) {
+      query = Prisma.sql`iv."id" IN (${Prisma.join(ids)})`;
+    } else {
+      // Prevent creating prisma query for empty filter
+      query = Prisma.sql`true`;
+    }
+    return query;
+  }
 }

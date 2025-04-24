@@ -27,16 +27,28 @@ export class InvoicesStatisticsService {
     private readonly invoicePrismaService: InvoiceDatabaseAdapterService
   ) {}
 
-  async calcPaidInvoicesVolumePerMonth(year: number, companyId: string, financialRole: string): Promise<PaidStatisticsAmqpDto[]> {
+  async calcPaidInvoicesVolumePerMonth(
+    invoiceIds: string[],
+    year: number,
+    companyId: string,
+    financialRole: string
+  ): Promise<PaidStatisticsAmqpDto[]> {
     this.logger.debug(`Paid per month for ${companyId} in ${year} and ${financialRole}`);
     const volumeOfPaidTradeReceivablesPerMonth: PaidStatisticsAmqpDto[] = [];
     const paidInvoiceIdsPerMonth: Map<string, string[]> = await this.getInvoiceIdsForPaidTradeReceivablesPerMonth(
+      invoiceIds,
       year,
       companyId,
       financialRole
     );
-    const dueInvoicesCountPerMonth: Map<string, number> = await this.getCountOfInvoicesDuePerMonth(year, companyId, financialRole);
+    const dueInvoicesCountPerMonth: Map<string, number> = await this.getCountOfInvoicesDuePerMonth(
+      invoiceIds,
+      year,
+      companyId,
+      financialRole
+    );
     const paidOnTimeInvoicesCountPerMonth: Map<string, number> = await this.getCountOfPaidOnTimeInvoicesPerMonth(
+      invoiceIds,
       year,
       companyId,
       financialRole
@@ -64,14 +76,22 @@ export class InvoicesStatisticsService {
     return volumeOfPaidTradeReceivablesPerMonth;
   }
 
-  async getInvoicesNotPaidStatisticsByCompanyId(companyId: string, financialRole: string): Promise<NotPaidStatisticsAmqpDto> {
+  async getInvoicesNotPaidStatisticsByCompanyId(
+    filteredInvoiceIds: string[],
+    companyId: string,
+    financialRole: string
+  ): Promise<NotPaidStatisticsAmqpDto> {
     let overdue = 0;
     let overdueValue = 0;
     let outstanding = 0;
     let outstandingValue = 0;
 
     const tradeReceivablePaymentStatesCount: TradeReceivablePaymentStatusCount[] =
-      await this.tradeReceivablePrismaService.getTradeReceivableStateStatisticsByFinancialRole(financialRole, companyId);
+      await this.tradeReceivablePrismaService.getTradeReceivableStateStatisticsByFinancialRole(
+        filteredInvoiceIds,
+        financialRole,
+        companyId
+      );
     for (const trPaymentStateCount of tradeReceivablePaymentStatesCount) {
       if (trPaymentStateCount.status == PaymentStates.OPEN) {
         outstanding = Number(trPaymentStateCount.count);
@@ -86,6 +106,7 @@ export class InvoicesStatisticsService {
   }
 
   private async getInvoiceIdsForPaidTradeReceivablesPerMonth(
+    invoiceIdsFromFilter: string[],
     year: number,
     companyId: string,
     financialRole: string
@@ -95,6 +116,7 @@ export class InvoicesStatisticsService {
       const monthIndex = MonthsEnum[month as keyof typeof MonthsEnum];
       const invoiceIds: InvoiceIdTypes[] =
         await this.tradeReceivablePrismaService.getInvoiceIdsForPaidTradeReceivableIdsForMonthByFinancialRole(
+          invoiceIdsFromFilter,
           financialRole,
           monthIndex,
           year,
@@ -112,9 +134,15 @@ export class InvoicesStatisticsService {
     return paidInvoiceIdsPerMonth;
   }
 
-  private async getCountOfInvoicesDuePerMonth(year: number, companyId: string, financialRole: string): Promise<Map<string, number>> {
+  private async getCountOfInvoicesDuePerMonth(
+    filteredInvoiceIds: string[],
+    year: number,
+    companyId: string,
+    financialRole: string
+  ): Promise<Map<string, number>> {
     const dueInvoicesPerMonth: Map<string, number> = new Map();
     const dueInvoicesForMonth: InvoiceCountAndDueMonth[] = await this.invoicePrismaService.countInvoicesDueInMonthByFinancialRole(
+      filteredInvoiceIds,
       financialRole,
       year,
       companyId
@@ -130,10 +158,20 @@ export class InvoicesStatisticsService {
     return dueInvoicesPerMonth;
   }
 
-  private async getCountOfPaidOnTimeInvoicesPerMonth(year: number, companyId: string, financialRole: string): Promise<Map<string, number>> {
+  private async getCountOfPaidOnTimeInvoicesPerMonth(
+    filteredInvoiceIds: string[],
+    year: number,
+    companyId: string,
+    financialRole: string
+  ): Promise<Map<string, number>> {
     const countPaidOnTimeInvoicesPerMonth: Map<string, number> = new Map();
     const paidOnTimeInvoicesPerMonth: InvoiceCountAndDueMonth[] =
-      await this.tradeReceivablePrismaService.countPaidOnTimeInvoicesMonthlyByFinancialRole(financialRole, year, companyId);
+      await this.tradeReceivablePrismaService.countPaidOnTimeInvoicesMonthlyByFinancialRole(
+        filteredInvoiceIds,
+        financialRole,
+        year,
+        companyId
+      );
 
     this.logger.debug(util.inspect(paidOnTimeInvoicesPerMonth));
     if (paidOnTimeInvoicesPerMonth && paidOnTimeInvoicesPerMonth.length > 0) {

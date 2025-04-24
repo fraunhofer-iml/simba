@@ -8,8 +8,8 @@
 
 import { UnpaidStatisticsDto } from '@ap3/api';
 import { FinancialRoles } from '@ap3/util';
-import { Observable } from 'rxjs';
-import { Component } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { Component, Input, OnChanges } from '@angular/core';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 
@@ -18,15 +18,20 @@ import { InvoiceService } from '../../../shared/services/invoices/invoices.servi
   templateUrl: './unpaid-statistics.component.html',
   styleUrl: './unpaid-statistics.component.scss',
 })
-export class UnpaidStatisticsComponent {
+export class UnpaidStatisticsComponent implements OnChanges {
   creditorStatisticsDto$: Observable<UnpaidStatisticsDto>;
   debtorStatisticsDto$: Observable<UnpaidStatisticsDto>;
-
+  @Input({ required: true }) invoiceIds: string[] = [];
   constructor(
     private readonly invoiceService: InvoiceService,
     readonly authService: AuthService
   ) {
-    this.creditorStatisticsDto$ = invoiceService.getUnPaidStatistics(FinancialRoles.CREDITOR);
-    this.debtorStatisticsDto$ = invoiceService.getUnPaidStatistics(FinancialRoles.DEBTOR);
+    this.creditorStatisticsDto$ = of();
+    this.debtorStatisticsDto$ = of();
+  }
+
+  ngOnChanges(): void {
+    this.creditorStatisticsDto$ = this.invoiceService.getUnPaidStatistics(this.invoiceIds, FinancialRoles.CREDITOR);
+    this.debtorStatisticsDto$ = this.invoiceService.getUnPaidStatistics(this.invoiceIds, FinancialRoles.DEBTOR);
   }
 }

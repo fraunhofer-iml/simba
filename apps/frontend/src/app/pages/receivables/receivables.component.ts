@@ -33,6 +33,7 @@ import { TokenDetailsDialogComponent } from './token-details-dialog/token-detail
   styleUrl: './receivables.component.scss',
 })
 export class ReceivablesComponent {
+  filteredInvoicesIds: string[];
   activatedFiltersCount: number;
   displayedInvoiceColumns: string[];
   private readonly _snackBar = inject(MatSnackBar);
@@ -63,6 +64,7 @@ export class ReceivablesComponent {
       'orderNumber',
       'paymentStatus',
     ];
+    this.filteredInvoicesIds = [];
     this.activatedFiltersCount = this.countSelectedFilterOptions();
     this.paymentStatusChanges = [];
     this.dataSource = new MatTableDataSource<Invoice>();
@@ -88,6 +90,9 @@ export class ReceivablesComponent {
   private loadInvoices(filter?: InvoiceFilter) {
     this.dataSourceObservable = this.invoiceService.getInvoices(filter).pipe(
       map((invoices: InvoiceDto[]) => {
+        this.filteredInvoicesIds = invoices.map((invoice) => {
+          return invoice.id;
+        });
         this.dataSource.data = Invoice.convertToInvoice(invoices);
         return this.dataSource;
       })
@@ -228,4 +233,5 @@ export class ReceivablesComponent {
     }
     return selectedOptions;
   }
+
 }

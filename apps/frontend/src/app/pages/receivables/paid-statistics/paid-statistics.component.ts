@@ -12,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { forkJoin, map, Subscription } from 'rxjs';
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 import { DiagramData } from './model/diagram-data';
@@ -23,7 +23,7 @@ import { PaidStatisticsUtil } from './paid-statistics.util';
   templateUrl: './paid-statistics.component.html',
   styleUrl: './paid-statistics.component.scss',
 })
-export class PaidStatisticsComponent {
+export class PaidStatisticsComponent implements OnChanges {
   translation: Subscription;
   selectableYears: number[] = [];
   selectedYear!: number;
@@ -32,6 +32,7 @@ export class PaidStatisticsComponent {
   mixedChartOptions: ChartOptions = {};
   mixedChartData: ChartData<'bar' | 'line'> = { labels: [], datasets: [] };
 
+  @Input({ required: true }) invoiceIds: string[] = [];
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   constructor(
@@ -49,6 +50,10 @@ export class PaidStatisticsComponent {
       .subscribe();
   }
 
+  ngOnChanges(): void {
+    this.updateChartDataSet();
+  }
+
   initPaidStatisticsChart() {
     this.selectableYears = PaidStatisticsUtil.generateSelectableYears();
     this.selectedYear = this.selectableYears[0];
@@ -64,11 +69,11 @@ export class PaidStatisticsComponent {
 
   getPaidStatistics(year: number) {
     const creditorData = this.invoiceService
-      .getPaidStatistics(FinancialRoles.CREDITOR, year)
+      .getPaidStatistics(this.invoiceIds, FinancialRoles.CREDITOR, year)
       .pipe(map((paidDtos: PaidStatisticsDto[]) => new DiagramData(paidDtos)));
 
     const debtorData = this.invoiceService
-      .getPaidStatistics(FinancialRoles.DEBTOR, year)
+      .getPaidStatistics(this.invoiceIds, FinancialRoles.DEBTOR, year)
       .pipe(map((paidDtos: PaidStatisticsDto[]) => new DiagramData(paidDtos)));
 
     return forkJoin({ creditorData, debtorData });

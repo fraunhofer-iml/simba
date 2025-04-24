@@ -37,16 +37,17 @@ export class InvoiceService {
       responseType: 'blob',
     });
   }
-  getPaidStatistics(financialRole: string, year: number): Observable<PaidStatisticsDto[]> {
-    return this.httpClient.get<PaidStatisticsDto[]>(
-      `${BASE_URL}${ApiEndpoints.invoices.getPaidStatistics}?year=${year}&financialRole=${financialRole}`
-    );
+
+  getPaidStatistics(invoiceIds: string[], financialRole: string, year: number): Observable<PaidStatisticsDto[]> {
+    return this.httpClient.get<PaidStatisticsDto[]>(`${BASE_URL}${ApiEndpoints.invoices.getPaidStatistics}`, {
+      params: this.processPaidStatisticsParams(invoiceIds, financialRole, year),
+    });
   }
 
-  getUnPaidStatistics(financialRole: string): Observable<UnpaidStatisticsDto> {
-    return this.httpClient.get<UnpaidStatisticsDto>(
-      `${BASE_URL}${ApiEndpoints.invoices.getUnPaidStatistics}?financialRole=${financialRole}`
-    );
+  getUnPaidStatistics(invoiceIds: string[], financialRole: string): Observable<UnpaidStatisticsDto> {
+    return this.httpClient.get<UnpaidStatisticsDto>(`${BASE_URL}${ApiEndpoints.invoices.getUnPaidStatistics}`, {
+      params: this.processUnPaidStatisticsParams(invoiceIds, financialRole),
+    });
   }
 
   createNewPaymentStatus(changes: InvoiceIdAndPaymentStateDto[]): Observable<boolean> {
@@ -68,6 +69,21 @@ export class InvoiceService {
         }
       }
     }
+    return params;
+  }
+
+  processPaidStatisticsParams(invoiceIds: string[], financialRole: string, year: number): HttpParams {
+    let params = new HttpParams();
+    params = params.append('invoiceIds', JSON.stringify(invoiceIds));
+    params = params.append('financialRole', financialRole);
+    params = params.append('year', year);
+    return params;
+  }
+
+  processUnPaidStatisticsParams(invoiceIds: string[], financialRole: string): HttpParams {
+    let params = new HttpParams();
+    params = params.append('invoiceIds', JSON.stringify(invoiceIds));
+    params = params.append('financialRole', financialRole);
     return params;
   }
 }

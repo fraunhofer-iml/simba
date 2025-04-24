@@ -54,12 +54,17 @@ export class InvoicesController {
   async calcPaidTradeReceivableVolumePerMonth(
     @Payload() params: TRParamsCompanyIdAndYearAndFinancialRole
   ): Promise<PaidStatisticsAmqpDto[]> {
-    return await this.invoiceStatistics.calcPaidInvoicesVolumePerMonth(params.year, params.companyId, params.financialRole);
+    return await this.invoiceStatistics.calcPaidInvoicesVolumePerMonth(
+      params.invoiceIds,
+      params.year,
+      params.companyId,
+      params.financialRole
+    );
   }
 
   @MessagePattern(InvoiceMessagePatterns.READ_STATISTICS_NOT_PAID)
   async getTradeReceivableNotPaidStatistics(@Payload() params: CompanyAndFinancialRole): Promise<NotPaidStatisticsAmqpDto> {
-    return await this.invoiceStatistics.getInvoicesNotPaidStatisticsByCompanyId(params.companyId, params.financialRole);
+    return await this.invoiceStatistics.getInvoicesNotPaidStatisticsByCompanyId(params.invoiceIds, params.companyId, params.financialRole);
   }
 
   @MessagePattern(InvoiceMessagePatterns.CREATE_NEW_PAYMENT_STATUS_FOR_INVOICE)

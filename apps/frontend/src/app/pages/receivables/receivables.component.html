@@ -10,8 +10,8 @@
   <!-- Statistics-Part -->
   <h1>{{ 'StatisticsTitle' | translate }}</h1>
   <div class="statistics-wrapper">
-    <app-unpaid-statistics class="card"></app-unpaid-statistics>
-    <app-paid-statistics class="card"></app-paid-statistics>
+    <app-unpaid-statistics class="card" [invoiceIds]="filteredInvoicesIds"></app-unpaid-statistics>
+    <app-paid-statistics class="card" [invoiceIds]="filteredInvoicesIds"></app-paid-statistics>
   </div>
   <h1>{{ 'InvoiceDetails' | translate }}</h1>
 

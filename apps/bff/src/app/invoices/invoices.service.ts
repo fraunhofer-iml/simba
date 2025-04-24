@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import util from 'node:util';
 import {
   AllInvoicesFilterAmqpDto,
   AmqpBrokerQueues,
@@ -20,13 +19,7 @@ import {
   PaidStatisticsAmqpDto,
   TRParamsCompanyIdAndYearAndFinancialRole,
 } from '@ap3/amqp';
-import {
-  CreateInvoiceDto,
-  InvoiceDto,
-  InvoiceIdAndPaymentStateDto,
-  PaidStatisticsDto,
-  UnpaidStatisticsDto,
-} from '@ap3/api';
+import { CreateInvoiceDto, InvoiceDto, InvoiceIdAndPaymentStateDto, PaidStatisticsDto, UnpaidStatisticsDto } from '@ap3/api';
 import { FinancialRoles, PaymentStates } from '@ap3/util';
 import { defaultIfEmpty, firstValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -44,7 +37,7 @@ export class InvoicesService {
 
   async findAllWithFilter(
     orderNumber?: string[],
-    paymentStates?: string,
+    paymentStates?: PaymentStates[],
     creditorId?: string,
     debtorId?: string,
     invoiceNumber?: string,
@@ -52,15 +45,7 @@ export class InvoicesService {
     dueDateTo?: Date
   ): Promise<InvoiceDto[]> {
     this.logger.debug(`Requesting Tradereceivables `);
-    const params = this.createAmqpFilterDtoForInvoices(
-      paymentStates,
-      creditorId,
-      debtorId,
-      invoiceNumber,
-      dueDateFrom,
-      dueDateTo,
-      orderNumber
-    );
+    const params = new AllInvoicesFilterAmqpDto(paymentStates, creditorId, debtorId, invoiceNumber, dueDateFrom, dueDateTo, orderNumber);
     const response: InvoiceAmqpDto[] = await firstValueFrom<InvoiceAmqpDto[]>(
       this.processAMQPClient.send(InvoiceMessagePatterns.READ_ALL, params)
     );
@@ -94,7 +79,6 @@ export class InvoicesService {
   private async handleFrontendTradeReceivableDTOCreation(tradeReceivables: InvoiceAmqpDto[]): Promise<InvoiceDto[]> {
     const retVal: InvoiceDto[] = [];
     const companies: Map<string, CompanyAmqpDto> = new Map();
-    this.logger.verbose(`Create Frontend Dtos for ${util.inspect(tradeReceivables)}`);
     for (const tr of tradeReceivables) {
       if (!companies.has(tr.creditorId)) {
         companies.set(tr.creditorId, await this.companyService.findOne(tr.creditorId));
@@ -108,8 +92,8 @@ export class InvoicesService {
     return retVal;
   }
 
-  async getStatisticNotPaidPerMonth(companyId: string, financialRole: FinancialRoles): Promise<UnpaidStatisticsDto> {
-    const params = new CompanyAndFinancialRole(companyId, financialRole);
+  async getStatisticNotPaidPerMonth(companyId: string, financialRole: FinancialRoles, invoiceIds?: string): Promise<UnpaidStatisticsDto> {
+    const params = new CompanyAndFinancialRole(invoiceIds ? this.parseJSONStringtoArray(invoiceIds) : [], companyId, financialRole);
 
     const notPaidTRStatistics: NotPaidStatisticsAmqpDto = await firstValueFrom<NotPaidStatisticsAmqpDto>(
       this.processAMQPClient.send(InvoiceMessagePatterns.READ_STATISTICS_NOT_PAID, params)
@@ -118,11 +102,24 @@ export class InvoicesService {
     return UnpaidStatisticsDto.toUnpaidStatisticsDto(notPaidTRStatistics);
   }
 
-  async getStatisticPaidPerMonth(companyId: string, year: number, financialRole: FinancialRoles): Promise<PaidStatisticsDto[]> {
+  async getStatisticPaidPerMonth(
+    companyId: string,
+    year: number,
+    financialRole: FinancialRoles,
+    invoiceIds?: string
+  ): Promise<PaidStatisticsDto[]> {
     const tradeReceivableDtos: PaidStatisticsDto[] = [];
     const tradeReceivableAmqpDtos: PaidStatisticsAmqpDto[] = await firstValueFrom<PaidStatisticsAmqpDto[]>(
       this.processAMQPClient
-        .send(InvoiceMessagePatterns.READ_STATISTICS_PAID, new TRParamsCompanyIdAndYearAndFinancialRole(companyId, year, financialRole))
+        .send(
+          InvoiceMessagePatterns.READ_STATISTICS_PAID,
+          new TRParamsCompanyIdAndYearAndFinancialRole(
+            invoiceIds ? this.parseJSONStringtoArray(invoiceIds) : [],
+            companyId,
+            year,
+            financialRole
+          )
+        )
         .pipe(defaultIfEmpty(null))
     );
     for (const amqpTr of tradeReceivableAmqpDtos) {
@@ -154,42 +151,14 @@ export class InvoicesService {
     }
   }
 
-  createAmqpFilterDtoForInvoices(
-    paymentStates: string,
-    creditorId: string,
-    debtorId: string,
-    invoiceNumber: string,
-    dueDateFrom: Date,
-    dueDateTo: Date,
-    orderNumber: string[]
-  ) {
-    const allInvoicesAmqpFilter: AllInvoicesFilterAmqpDto = new AllInvoicesFilterAmqpDto();
-    if (paymentStates) {
-      try {
-        const parsedPaymentStates = <PaymentStates[]>JSON.parse(paymentStates);
-        allInvoicesAmqpFilter.paymentStates = parsedPaymentStates;
-      } catch (e) {
-        this.logger.warn(e);
-      }
+  private parseJSONStringtoArray(arrayString: string) {
+    let result = [];
+    try {
+      result = JSON.parse(arrayString);
+      return result;
+    } catch (e) {
+      this.logger.error('Error parsing a JSON string to an array. The string is : ', arrayString);
+      return e;
     }
-    if (creditorId) {
-      allInvoicesAmqpFilter.creditorId = creditorId;
-    }
-    if (debtorId) {
-      allInvoicesAmqpFilter.debtorId = debtorId;
-    }
-    if (invoiceNumber) {
-      allInvoicesAmqpFilter.invoiceNumber = invoiceNumber;
-    }
-    if (dueDateFrom) {
-      allInvoicesAmqpFilter.dueDateFrom = dueDateFrom;
-    }
-    if (dueDateTo) {
-      allInvoicesAmqpFilter.dueDateTo = dueDateTo;
-    }
-    if (orderNumber) {
-      allInvoicesAmqpFilter.orderNumber = orderNumber;
-    }
-    return allInvoicesAmqpFilter;
   }
 }

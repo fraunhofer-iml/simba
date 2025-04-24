@@ -7,10 +7,12 @@
  */
 
 export class CompanyAndFinancialRole {
+  invoiceIds: string[];
   companyId: string;
   financialRole: string;
 
-  constructor(companyId: string, financialRole: string) {
+  constructor(invoiceIds: string[], companyId: string, financialRole: string) {
+    this.invoiceIds = invoiceIds;
     this.companyId = companyId;
     this.financialRole = financialRole;
   }

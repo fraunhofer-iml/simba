@@ -10,7 +10,7 @@ import { AmqpBrokerQueues, CompanyAmqpDto, CompanyAmqpMock, CompanyMessagePatter
 import { CompanyDto, CompanyDtoMock } from '@ap3/api';
 import { CompaniesSeed } from '@ap3/database';
 import { of } from 'rxjs';
-import { NotImplementedException } from '@nestjs/common';
+import { ForbiddenException, NotImplementedException, UnauthorizedException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CompaniesController } from './companies.controller';
@@ -92,5 +92,21 @@ describe('CompaniesController', () => {
     await expect(async () => {
       await controller.remove(CompanyDtoMock[0].id);
     }).rejects.toThrow(NotImplementedException);
+  });
+
+  it('should throw an error if an unauthorized user tries to find one Company', async () => {
+    await expect(async () => {
+      request.user.realm_access.roles = ['ap3_customer'];
+      const res = await controller.findOne(request, 'fwsfs');
+      return res;
+    }).rejects.toThrow(ForbiddenException);
+  });
+
+  it('should throw an error if an unauthorized user tries to update a Company', async () => {
+    await expect(async () => {
+      request.user.realm_access.roles = ['ap3_customer'];
+      const res = await controller.update(request, 'fwsfs', undefined);
+      return res;
+    }).rejects.toThrow(ForbiddenException);
   });
 });

@@ -123,6 +123,7 @@ export class InvoicePrismaService {
 
       const creditorFilter: Prisma.InvoiceWhereInput | undefined = creditorId ? { creditorId: String(creditorId) } : undefined;
       const debtorFilter: Prisma.InvoiceWhereInput | undefined = debtorId ? { debtorId: String(debtorId) } : undefined;
+
       if (creditorFilter && debtorFilter && creditorId == debtorId) {
         orFilters = [creditorFilter, debtorFilter];
       } else {
@@ -187,12 +188,17 @@ export class InvoicePrismaService {
     );
   }
 
-  async countInvoicesDueInMonth(year: number, whereQuery: Prisma.Sql): Promise<InvoiceCountAndDueMonth[]> {
+  async countInvoicesDueInMonth(
+    year: number,
+    financialQuery: Prisma.Sql,
+    filteredInvoiceQuery: Prisma.Sql
+  ): Promise<InvoiceCountAndDueMonth[]> {
     try {
       return <InvoiceCountAndDueMonth[]>await this.prismaService.$queryRaw`
         SELECT COUNT(*) as invoice_count, TO_CHAR(DATE_TRUNC('month', iv."dueDate"), 'YYYY-MM') as due_month
         FROM "Invoice" AS iv
-        where ${whereQuery}
+        where ${financialQuery}
+        AND ${filteredInvoiceQuery}
         GROUP BY due_month;
       `;
     } catch (e) {
