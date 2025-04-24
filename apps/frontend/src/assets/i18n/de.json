@@ -1,127 +1,152 @@
 {
-  "ProjectName": "SiMBA",
-  "Orders": "Aufträge",
-  "Production": "Produktion",
-  "Imprint": "Impressum",
-  "PrivacyPolicy": "Datenschutzerklärung",
-
-  "Create": "Erstellen",
-  "CreateOrder": "Auftrag erstellen",
-  "ProductInputField": "Produkt",
-  "YearInputField": "Jahr",
-  "WeekInputField": "Bevorzugter Produktionszeitraum",
-  "PlannedProductionWeek": "Angebotener Produktionszeitraum",
-  "OfferedPrice": "Angebotspreis",
-  "Offers": "Angebote",
-  "TimerText": "Verbleibende Zeit",
-  "AcceptOffer": "Akzeptieren",
-  "AmountInputField": "Stück",
-  "DeclineAllOffers": "Alle Ablehnen",
-  "OffersExpired": "Das tut uns leid, Ihre Angebote sind abgelaufen.",
-  "Accept": "Akzeptieren",
-  "CalendarWeek": "KW",
-  "OrderTable": {
-    "Id": "Auftrags ID",
-    "Status": "Status",
-    "ProductionDate": "Produktionsdatum",
-    "Price": "Preis",
-    "Currency": "Währung",
-    "ProductName": "Produkt",
-    "Quantity": "Stück",
-    "Robots": "Roboter",
-    "CustomerName": "Kunde",
-    "InvoiceNumber": "Rechnungsnummer"
-  },
-  "OrderStatus": {
-    "Open": "offen",
-    "Planned": "geplant",
-    "Scheduled": "terminiert",
-    "Produced": "produziert"
+  "Sidebar": {
+    "ProjectName": "SiMBA",
+    "Imprint": "Impressum",
+    "PrivacyPolicy": "Datenschutzerklärung",
+    "Orders": "Aufträge",
+    "Production": "Produktion",
+    "Receivables": "Rechnungen"
   },
 
-  "MonthLabels": ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
-  "PaidStatistics": "Bezahlte Rechnungen",
-  "VolumeChartLabel": "Gesamtvolumen",
-  "PercentageChartLabel": "Zahlungsrate",
-  "CreditorVolumeChartLabel": "Forderungen",
-  "CreditorPercentageChartLabel": "Forderungen",
-  "DebtorVolumeChartLabel": "Verbindlichkeiten",
-  "DebtorPercentageChartLabel": "Verbindlichkeiten",
-  "UnpaidStatistics": "Offene Rechnungen",
-  "SidebarReceivablesTitle": "Rechnungen",
-  "UnpaidStatisticsFirstColumn": "Forderungen",
-  "UnpaidStatisticsSecondColumn": "Verbindlichkeiten",
-  "UnpaidStatisticsFirstRow": "Anzahl offener",
-  "UnpaidStatisticsSecondRow": "Gesamtwert offener",
-  "UnpaidStatisticsThirdRow": "Anzahl überfälliger",
-  "UnpaidStatisticsFourthRow": "Gesamtwert überfälliger",
-  "PaidStatisticsYear": "Jahr",
-  "InvoiceDetails": "Rechnungsdetails",
-  "StatisticsTitle": "Analyse der Rechnungen",
-  "PaymentStatusChangesButtonTitle": "Änderungen anwenden",
-  "InvoiceTableTitle": "Rechnungsdetails",
-  "InvoiceTableInvoiceNumber": "Rechnungsnummer",
-  "InvoiceTablePayee": "Kreditor",
-  "InvoiceTableInvoiceAmount": "Rechnungsbetrag",
-  "InvoiceTableCurrency": "Währung",
-  "InvoiceTableInvoiceDueDate": "Fälligkeitsdatum",
-  "InvoiceTablePayer": "Schuldner",
-  "InvoiceTableFinancialState": "Finanzstatus",
-  "InvoiceTableOrderNumber": "Auftrags ID",
+  "Orders": {
+    "Title": "Aufträge",
+    "Create": {
+      "Title": "Auftrag erstellen",
+      "ProductInputField": "Produkt",
+      "YearInputField": "Jahr",
+      "WeekInputField": "Bevorzugter Produktionszeitraum",
+      "AmountInputField": "Stück"
+    },
+    "OrderTable": {
+      "Id": "Auftrags ID",
+      "Status": "Status",
+      "ProductionDate": "Produktionsdatum",
+      "Price": "Preis",
+      "Currency": "Währung",
+      "ProductName": "Produkt",
+      "Quantity": "Stück",
+      "Robots": "Roboter",
+      "CustomerName": "Kunde",
+      "InvoiceNumber": "Rechnungsnummer"
+    },
+    "Status": {
+      "Open": "offen",
+      "Planned": "geplant",
+      "Scheduled": "scheduled",
+      "Produced": "produziert"
+    },
+    "Details": {
+      "Table": { "StartDate": "Startzeitraum", "EndDate": "Endzeitraum", "RobotId": "Roboter ID", "Participant": "Maschineneigentümer" },
+      "Number": "Nummer",
+      "Title": "Auftrag",
+      "Contractor": "Auftragnehmer",
+      "Quantity": "Menge",
+      "Time": "Uhrzeit",
+      "Status": "Prozessstatus",
+      "ProductionProcess": "Produktionsablauf"
+    }
+  },
 
-  "FilterButton": "Filter",
-  "Invoices": "Rechnungen",
-  "ShowInvoice": "Rechnung anzeigen",
+  "Offers": {
+    "Title": "Angebote",
+    "OfferedPrice": "Angebotspreis",
+    "TimerText": "Verbleibende Zeit",
+    "ProductionWeek": "Angebotener Produktionszeitraum",
+    "Amount": "Stück",
+    "DeclineAllOffers": "Alle Ablehnen",
+    "OffersExpired": "Das tut uns leid, Ihre Angebote sind abgelaufen."
+  },
+
   "PaymentStatus": {
     "Open": "offen",
     "Financed": "finanziert",
     "Paid": "bezahlt",
-    "Exceeded": "überfällig"
+    "Exceeded": "überfällig",
+    "PaymentStateChangeSuccessfulSnackBarMessage": "Der Status wurden erfolgreich geändert",
+    "PaymentStateErrorSnackBarMessage": "Etwas ist schiefgelaufen. Der Status konnte nicht geändert werden. :("
   },
-  "NoMatchingData": "Es wurden keine Daten gefunden, die dem Filter entsprechen ",
-  "Download": "Herunterladen",
-  "Cancel": "Abbrechen",
+
+  "Invoices": {
+    "Title": "Rechnungen",
+    "Details": "Rechnungsdetails",
+    "Statistics": {
+      "Title": "Analyse der Rechnungen",
+      "UnpaidStatistics": {
+        "Title": "Offene Rechnungen",
+        "Receivables": "Forderungen",
+        "Liabilities": "Verbindlichkeiten",
+        "CountOpen": "Anzahl offener",
+        "ValueOpen": "Gesamtwert offener",
+        "CountOverdue": "Anzahl überfälliger",
+        "ValueOverdue": "Gesamtwert überfälliger"
+      },
+      "PaidStatistics": {
+        "Title": "Bezahlte Rechnungen",
+        "PercentageExplanation": "Die Zahlungsquote gibt an, welcher Anteil der fälligen Rechnungen innerhalb der vereinbarten Zahlungsfrist beglichen wurde.",
+        "VolumeExplanation": "Das Zahlungsvolumen gibt die Gesamtsumme aller gezahlten Rechnungsbeträge in einem bestimmten Zeitraum an.",
+        "CreditorVolumeChartLabel": "Forderungen",
+        "CreditorPercentageChartLabel": "Forderungen",
+        "DebtorVolumeChartLabel": "Verbindlichkeiten",
+        "DebtorPercentageChartLabel": "Verbindlichkeiten",
+        "VolumeChartLabel": "Gesamtvolumen",
+        "PercentageChartLabel": "Zahlungsrate",
+        "Year": "Jahr"
+      }
+    },
+    "Table": {
+      "Title": "Rechnungsdetails",
+      "ShowInvoice": "Rechnung anzeigen",
+      "Number": "Rechnungsnummer",
+      "Payee": "Kreditor",
+      "Amount": "Rechnungsbetrag",
+      "Currency": "Währung",
+      "DueDate": "Fälligkeitsdatum",
+      "Payer": "Schuldner",
+      "FinancialState": "Finanzstatus",
+      "OrderNumber": "Auftrags ID"
+    }
+  },
 
   "Filter": {
+    "Title": "Filter",
     "Payer": "Schuldner",
-    "Payee": "Kreditor",
-    "Date": "Fälligkeitsdatum",
+    "Payee": " Kreditor",
+    "Date": " Zeitraum",
     "FinancialStatus": "Finanzstatus",
+    "ExampleCompany": "Name des Unternehmens",
     "ExampleStartDate": "Anfangsdatum",
-    "ExampleEndDate": "Enddatum",
-    "ResetButton": "Zurücksetzen",
-    "SaveButton": "Sichern"
+    "ExampleEndDate": "Enddatum"
   },
 
-  "PaymentStateChangeSuccessfulSnackBarMessage": "Der Status wurden erfolgreich geändert",
-  "PaymentStateErrorSnackBarMessage": "Etwas ist schiefgelaufen. Der Status konnte nicht geändert werden. :(",
+  "Buttons": {
+    "Reset": "Zurücksetzen",
+    "Save": "Sichern",
+    "Download": "Herunterladen",
+    "Cancel": "Abbrechen",
+    "Change": "Änderungen anwenden",
+    "Create": "Erstellen",
+    "Accept": "Akzeptieren"
+  },
+
+  "Nft": {
+    "Token": "Forderungstoken ID",
+    "Invoice": "Rechnung",
+    "Addresses": "Adressen",
+    "Owner": "Besitzer",
+    "Minter": "Ersteller",
+    "Date": "Datum",
+    "Created": "Erstellt am",
+    "Updated": "Aktualisiert am",
+    "Asset": "Ressource",
+    "MetaData": "Metadaten",
+    "Information": "Zusätzliche Information",
+    "ErrorNft": "Keine NFT-Daten für diese Rechnung gefunden."
+  },
+
+  "NoMatchingData": "Es wurden keine Daten gefunden, die dem Filter entsprechen ",
+  "CalendarWeek": "KW",
+  "MonthLabels": ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
   "CloseSnackBarAction": "Schließen",
-  "PaidStatisticsPercentageExplanation": "Die Zahlungsquote gibt an, welcher Anteil der fälligen Rechnungen innerhalb der vereinbarten Zahlungsfrist beglichen wurde.",
-  "PaidStatisticsVolumeExplanation": "Das Zahlungsvolumen gibt die Gesamtsumme aller gezahlten Rechnungsbeträge in einem bestimmten Zeitraum an.",
-
-  "token": "Forderungstoken ID",
-  "invoice": "Rechnung",
-  "addresses": "Adressen",
-  "owner": "Besitzer",
-  "minter": "Ersteller",
-  "date": "Datum",
-  "created": "Erstellt am",
-  "updated": "Aktualisiert am",
-  "asset": "Ressource",
-  "metaData": "Metadaten",
-  "information": "Zusätzliche Information",
-  "errorNft": "Keine NFT-Daten für diese Rechnung gefunden.",
-
-  "Order": "Auftrag",
-  "Contractor": "Auftragnehmer",
-  "Quantity": "Menge",
-  "Participant": "Maschineneigentümer",
-  "StartDate": "Startzeitraum",
-  "EndDate": "Endzeitraum",
-  "Time": "Uhrzeit",
-  "Status": "Prozessstatus",
-  "ProductionProcess": "Produktionsablauf",
-  "RobotId": "Roboter ID",
   "Paginator": {
     "ItemsPerPage": "Elemente pro Seite",
     "Of": "von"

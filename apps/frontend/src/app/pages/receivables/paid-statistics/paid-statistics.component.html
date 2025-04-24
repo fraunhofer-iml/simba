@@ -8,10 +8,10 @@
 
 <div class="transactions-statistics-card">
   <div class="transactions-header">
-    <h2>{{ 'PaidStatistics' | translate }}</h2>
+    <h2>{{ 'Invoices.Statistics.PaidStatistics.Title' | translate }}</h2>
     <div class="years-container">
       <div class="year">
-        <span>{{ 'PaidStatisticsYear' | translate }}</span>
+        <span>{{ 'Invoices.Statistics.PaidStatistics.Year' | translate }}</span>
         <span> {{ selectedYear }}</span>
       </div>
       <button mat-icon-button [matMenuTriggerFor]="menu">
@@ -27,42 +27,54 @@
     </div>
   </div>
   <div class="legend-with-chart">
-      <mat-list>
-        <div class="heading-legend">
-          <span matListItemTitle>{{ 'VolumeChartLabel' | translate }}</span>
-          <span class="material-symbols-outlined" [matTooltip]="'PaidStatisticsVolumeExplanation' | translate" matTooltipPosition="right"> info </span>
-        </div>
-        <mat-selection-list>
-          @for (dataset of mixedChartData.datasets; track dataset; let index = $index) {
-            @if (dataset.label && dataset.yAxisID === volumeYAxis) {
-              <mat-list-option
-                [ngClass]="getCssColorClassVolume(dataset.label)"
-                [selected]="!(mixedChartData.datasets[index].hidden ?? false)"
-                (click)="toggleDatasetVisibility(index)"
-              >
-                <span matListItemLine> {{ dataset.label }} </span>
-              </mat-list-option>
-            }
+    <mat-list>
+      <div class="heading-legend">
+        <span matListItemTitle>{{ 'Invoices.Statistics.PaidStatistics.VolumeChartLabel' | translate }}</span>
+        <span
+          class="material-symbols-outlined"
+          [matTooltip]="'Invoices.Statistics.PaidStatistics.VolumeExplanation' | translate"
+          matTooltipPosition="right"
+        >
+          info
+        </span>
+      </div>
+      <mat-selection-list>
+        @for (dataset of mixedChartData.datasets; track dataset; let index = $index) {
+          @if (dataset.label && dataset.yAxisID === volumeYAxis) {
+            <mat-list-option
+              [ngClass]="getCssColorClassVolume(dataset.label)"
+              [selected]="!(mixedChartData.datasets[index].hidden ?? false)"
+              (click)="toggleDatasetVisibility(index)"
+            >
+              <span matListItemLine> {{ 'Invoices.Statistics.PaidStatistics.' + dataset.label | translate }} </span>
+            </mat-list-option>
           }
-        </mat-selection-list>
-        <div class="heading-legend">
-          <span matListItemTitle>{{ 'PercentageChartLabel' | translate }}</span>
-          <span class="material-symbols-outlined" [matTooltip]="'PaidStatisticsPercentageExplanation' | translate" matTooltipPosition="right"> info </span>
-        </div>
-        <mat-selection-list>
-          @for (dataset of mixedChartData.datasets; track dataset; let index = $index) {
-            @if (dataset.label && dataset.yAxisID === percentageYAxis) {
-              <mat-list-option
-                [ngClass]="getCssColorClassRate(dataset.label)"
-                [selected]="!(mixedChartData.datasets[index].hidden ?? false)"
-                (click)="toggleDatasetVisibility(index)"
-              >
-                <span matListItemLine> {{ dataset.label }} </span>
-              </mat-list-option>
-            }
+        }
+      </mat-selection-list>
+      <div class="heading-legend">
+        <span matListItemTitle>{{ 'Invoices.Statistics.PaidStatistics.PercentageChartLabel' | translate }}</span>
+        <span
+          class="material-symbols-outlined"
+          [matTooltip]="'Invoices.Statistics.PaidStatistics.PercentageExplanation' | translate"
+          matTooltipPosition="right"
+        >
+          info
+        </span>
+      </div>
+      <mat-selection-list>
+        @for (dataset of mixedChartData.datasets; track dataset; let index = $index) {
+          @if (dataset.label && dataset.yAxisID === percentageYAxis) {
+            <mat-list-option
+              [ngClass]="getCssColorClassRate(dataset.label)"
+              [selected]="!(mixedChartData.datasets[index].hidden ?? false)"
+              (click)="toggleDatasetVisibility(index)"
+            >
+              <span matListItemLine> {{ 'Invoices.Statistics.PaidStatistics.' + dataset.label | translate }} </span>
+            </mat-list-option>
           }
-        </mat-selection-list>
-      </mat-list>
+        }
+      </mat-selection-list>
+    </mat-list>
     <div class="chart-wrapper">
       <canvas baseChart [data]="mixedChartData" [labels]="mixedChartData.labels" [options]="mixedChartOptions"> </canvas>
     </div>

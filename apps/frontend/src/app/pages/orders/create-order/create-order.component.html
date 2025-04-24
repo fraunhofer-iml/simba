@@ -7,12 +7,12 @@
   -->
 
 <div class="creation-container">
-  <h1>{{ 'CreateOrder' | translate }}</h1>
+  <h1>{{ 'Orders.Title' | translate }}</h1>
   <div class="card">
     <mat-card-content>
       <form class="order-content" [formGroup]="orderForm">
         <mat-form-field class="order-field">
-          <mat-select placeholder="{{ 'ProductInputField' | translate }}" formControlName="product">
+          <mat-select placeholder="{{ 'Orders.Create.ProductInputField' | translate }}" formControlName="product">
             @for (product of products$ | async; track product) {
               <mat-option [value]="product">{{ product.name }} </mat-option>
             }
@@ -21,7 +21,7 @@
         <mat-form-field class="order-field">
           <input
             matInput
-            placeholder="{{ 'AmountInputField' | translate }}"
+            placeholder="{{ 'Orders.Create.AmountInputField' | translate }}"
             formControlName="amount"
             type="number"
             value="number"
@@ -31,7 +31,7 @@
         </mat-form-field>
         <mat-form-field class="order-field" id="order-year">
           <input
-            placeholder="{{ 'YearInputField' | translate }}"
+            placeholder="{{ 'Orders.Create.YearInputField' | translate }}"
             matInput
             readonly
             [matDatepickerFilter]="datePickerFilter"
@@ -42,7 +42,7 @@
           <mat-datepicker #dp startView="multi-year" (yearSelected)="setYear($event, dp)" panelClass="year-picker"> </mat-datepicker>
         </mat-form-field>
         <mat-form-field class="order-field" id="order-week">
-          <mat-select placeholder="{{ 'WeekInputField' | translate }}" formControlName="selectedCalendarWeek">
+          <mat-select placeholder="{{ 'Orders.Create.WeekInputField' | translate }}" formControlName="selectedCalendarWeek">
             @for (week of allCalendarWeeks; track week) {
               <mat-option [value]="week">{{ 'CalendarWeek' | translate }} {{ week }}</mat-option>
             }
@@ -50,7 +50,7 @@
         </mat-form-field>
         <div class="create-button-container">
           <button class="create-button" (click)="createOrder()" mat-flat-button [disabled]="!orderForm.valid">
-            {{ 'Create' | translate }}
+            {{ 'Buttons.Create' | translate }}
           </button>
         </div>
       </form>
@@ -60,9 +60,9 @@
   <!-- Offers -->
   <div class="card offer-container" *ngIf="openOffers">
     <div class="offers-header">
-      <h1 class="title">{{ 'Offers' | translate }}</h1>
+      <h1 class="title">{{ 'Offers.Title' | translate }}</h1>
       <div class="deadline">
-        <p>{{ 'TimerText' | translate }}</p>
+        <p>{{ 'Offers.TimerText' | translate }}</p>
         <countdown [config]="countdownConfig" (event)="onEvent($event)"></countdown>
       </div>
     </div>
@@ -74,24 +74,24 @@
           </div>
           <p id="offerName">{{ orderForm.get('product')?.value.name }}</p>
           <div class="offer-details-grid">
-            <div class="offer-details-grid-label">{{'PlannedProductionWeek' | translate}}:</div>
+            <div class="offer-details-grid-label">{{ 'Offers.ProductionWeek' | translate }}:</div>
             <div class="offer-details-grid-value">{{ getScheduledFor(offer.plannedCalendarWeek, offer.plannedYear) }}</div>
-            <div class="offer-details-grid-label">{{ 'AmountInputField' | translate }}:</div>
+            <div class="offer-details-grid-label">{{ 'Offers.Amount' | translate }}:</div>
             <div class="offer-details-grid-value">{{ orderForm.get('amount')?.value }}</div>
-            <div class="offer-details-grid-label">{{'OfferedPrice' | translate}}:</div>
+            <div class="offer-details-grid-label">{{ 'Offers.OfferedPrice' | translate }}:</div>
             <div class="offer-details-grid-value">
-              {{ offer.price | currency:'EUR':'symbol':'1.2-2' }}
+              {{ offer.price | currency: 'EUR' : 'symbol' : '1.2-2' }}
             </div>
           </div>
           <div class="button-container">
-            <button mat-flat-button class="accept-button" (click)="acceptOffer(offer.id)">{{ 'AcceptOffer' | translate }}</button>
+            <button mat-flat-button class="accept-button" (click)="acceptOffer(offer.id)">{{ 'Buttons.Accept' | translate }}</button>
           </div>
         </div>
       }
     </div>
     <div class="button-container">
       <button mat-flat-button class="decline-button" (click)="declineAllOffers(); navigateToOrders()">
-        {{ 'DeclineAllOffers' | translate }}
+        {{ 'Offers.DeclineAllOffers' | translate }}
       </button>
     </div>
   </div>

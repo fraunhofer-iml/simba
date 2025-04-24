@@ -6,23 +6,26 @@
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 
-<h2 [ngClass]="{ 'titleStatistic-host': authService.isOperator(), 'titleStatistic': !authService.isOperator() }">{{ 'UnpaidStatistics' | translate }}</h2>
+<h2 [ngClass]="{ 'titleStatistic-host': authService.isOperator(), titleStatistic: !authService.isOperator() }">
+  {{ 'Invoices.Statistics.UnpaidStatistics.Title' | translate }}
+</h2>
 <div class="data">
-
-    <div [ngClass]="{ 'data-row-host': authService.isOperator(), 'data-title-row': !authService.isOperator() }">
-      <span class="text-data"> </span>@if (authService.isContributor() || authService.isOperator()) {
+  <div [ngClass]="{ 'data-row-host': authService.isOperator(), 'data-title-row': !authService.isOperator() }">
+    <span class="text-data"> </span>
+    @if (authService.isContributor() || authService.isOperator()) {
       <div [ngClass]="{ 'column-and-items-host': authService.isOperator(), 'column-and-items': !authService.isContributor() }">
-        <h3 class="unpaid-statistics-column-title">{{ 'UnpaidStatisticsSecondColumn' | translate }}</h3>
+        <h3 class="unpaid-statistics-column-title">{{ 'Invoices.Statistics.UnpaidStatistics.Liabilities' | translate }}</h3>
       </div>
-      }
-      @if (authService.isCustomer() || authService.isOperator()) {
-        <div [ngClass]="{ 'column-and-items-host': authService.isOperator(), 'column-and-items': !authService.isCustomer() }">
-        <h3 class="unpaid-statistics-column-title">{{ 'UnpaidStatisticsFirstColumn' | translate }}</h3>
+    }
+    @if (authService.isCustomer() || authService.isOperator()) {
+      <div [ngClass]="{ 'column-and-items-host': authService.isOperator(), 'column-and-items': !authService.isCustomer() }">
+        <h3 class="unpaid-statistics-column-title">{{ 'Invoices.Statistics.UnpaidStatistics.Receivables' | translate }}</h3>
       </div>
-    }</div>
+    }
+  </div>
 
   <div [ngClass]="{ 'data-row-host': authService.isOperator(), 'data-row': !authService.isOperator() }">
-    <span class="text-lines">{{ 'UnpaidStatisticsFirstRow' | translate }}</span>
+    <span class="text-lines">{{ 'Invoices.Statistics.UnpaidStatistics.CountOpen' | translate }}</span>
     @if (authService.isCustomer() || authService.isOperator()) {
       <div class="text-lines text-end" [ngClass]="{ 'column-and-items-host': authService.isOperator() }">
         <span [ngClass]="{ 'column-and-items': !authService.isOperator() }" *ngIf="debtorStatisticsDto$ | async as dStatDto">{{
@@ -38,7 +41,7 @@
   </div>
 
   <div [ngClass]="{ 'data-row-host': authService.isOperator(), 'data-row': !authService.isOperator() }">
-    <span class="text-lines">{{ 'UnpaidStatisticsSecondRow' | translate }}</span>
+    <span class="text-lines">{{ 'Invoices.Statistics.UnpaidStatistics.ValueOpen' | translate }}</span>
     @if (authService.isCustomer() || authService.isOperator()) {
       <div class="text-lines text-end" [ngClass]="{ 'column-and-items-host': authService.isOperator() }">
         <span [ngClass]="{ 'column-and-items': !authService.isOperator() }" *ngIf="debtorStatisticsDto$ | async as dStatDto"
@@ -54,7 +57,7 @@
   </div>
 
   <div [ngClass]="{ 'data-row-host': authService.isOperator(), 'data-row': !authService.isOperator() }">
-    <span class="text-lines">{{ 'UnpaidStatisticsThirdRow' | translate }}</span>
+    <span class="text-lines">{{ 'Invoices.Statistics.UnpaidStatistics.CountOverdue' | translate }}</span>
     @if (authService.isCustomer() || authService.isOperator()) {
       <div class="text-lines text-end" [ngClass]="{ 'column-and-items-host': authService.isOperator() }">
         <span [ngClass]="{ 'column-and-items': !authService.isOperator() }" *ngIf="debtorStatisticsDto$ | async as dStatDto">{{
@@ -70,7 +73,7 @@
   </div>
 
   <div [ngClass]="{ 'data-row-host': authService.isOperator(), 'data-row': !authService.isOperator() }">
-    <span class="text-lines-end">{{ 'UnpaidStatisticsFourthRow' | translate }}</span>
+    <span class="text-lines-end">{{ 'Invoices.Statistics.UnpaidStatistics.ValueOverdue' | translate }}</span>
     @if (authService.isCustomer() || authService.isOperator()) {
       <div class="text-lines-end text-end" [ngClass]="{ 'column-and-items-host': authService.isOperator() }">
         <span [ngClass]="{ 'column-and-items': !authService.isOperator() }" *ngIf="debtorStatisticsDto$ | async as dStatDto"

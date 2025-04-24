@@ -1,9 +1,9 @@
 <div class="filter-container">
   <div class="header">
-    <h2>Filter</h2>
+    <h2>{{ 'Filter.Title' | translate }}</h2>
     <div>
-      <button mat-button (click)="resetFormGroup()">{{ 'Filter.ResetButton' | translate }}</button>
-      <button mat-button (click)="onSaveClick()">{{ 'Filter.SaveButton' | translate }}</button>
+      <button mat-button (click)="resetFormGroup()">{{ 'Buttons.Reset' | translate }}</button>
+      <button mat-button (click)="onSaveClick()">{{ 'Buttons.Save' | translate }}</button>
     </div>
   </div>
 
@@ -13,7 +13,13 @@
         <div class="filter-option">
           <h3>{{ 'Filter.Payee' | translate }}</h3>
           <mat-form-field>
-            <input type="text" matInput formControlName="payee" [matAutocomplete]="payee" placeholder="{{ 'Filter.Payee' | translate }}" />
+            <input
+              type="text"
+              matInput
+              formControlName="payee"
+              [matAutocomplete]="payee"
+              placeholder="{{ 'Filter.ExampleCompany' | translate }}"
+            />
             <mat-autocomplete #payee="matAutocomplete" [displayWith]="displayCompanies">
               @for (company of filteredPayeeOptions | async; track company) {
                 <mat-option [value]="company">{{ company.name }}</mat-option>
@@ -25,8 +31,15 @@
       @if (authService.isContributor() || authService.isOperator()) {
         <div class="filter-option">
           <h3>{{ 'Filter.Payer' | translate }}</h3>
+          <h3>{{ 'Filter.Payer' | translate }}</h3>
           <mat-form-field>
-            <input type="text" matInput formControlName="payer" [matAutocomplete]="payer" placeholder="{{ 'Filter.Payer' | translate }}" />
+            <input
+              type="text"
+              matInput
+              formControlName="payer"
+              [matAutocomplete]="payer"
+              placeholder="{{ 'Filter.ExampleCompany' | translate }}"
+            />
             <mat-autocomplete #payer="matAutocomplete" [displayWith]="displayCompanies">
               @for (company of filteredPayerOptions | async; track company) {
                 <mat-option [value]="company">{{ company.name }}</mat-option>
@@ -38,7 +51,7 @@
       <div formGroupName="dateRange" class="filter-option">
         <h3>{{ 'Filter.Date' | translate }}</h3>
         <mat-form-field>
-          <mat-date-range-input [rangePicker]="picker" class="date-range-input-size">
+          <mat-date-range-input [rangePicker]="picker">
             <input formControlName="start" matStartDate placeholder="{{ 'Filter.ExampleStartDate' | translate }}" />
             <input formControlName="end" matEndDate placeholder="{{ 'Filter.ExampleEndDate' | translate }}" />
           </mat-date-range-input>
