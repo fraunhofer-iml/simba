@@ -10,7 +10,7 @@ import { Module } from '@nestjs/common';
 import { InvoiceDatabaseAdapterService, InvoicePrismaService, TradeReceivablePrismaService } from './finance';
 import { CompanyPrismaService, ProductPrismaService } from './master-data';
 import { PrismaService } from './prisma.service';
-import { OfferPrismaService, OrderPrismaService, ServiceProcessPrismaService } from './process';
+import { OfferPrismaService, OrderDatabaseAdapterService, OrderPrismaService, ServiceProcessPrismaService } from './process';
 import { QueryBuilderHelperService } from './util/query-builder-helper.service';
 
 @Module({
@@ -27,9 +27,9 @@ import { QueryBuilderHelperService } from './util/query-builder-helper.service';
     ServiceProcessPrismaService,
     QueryBuilderHelperService,
     InvoiceDatabaseAdapterService,
+    OrderDatabaseAdapterService,
   ],
   exports: [
-    OrderPrismaService,
     OfferPrismaService,
     ProductPrismaService,
     CompanyPrismaService,
@@ -37,6 +37,7 @@ import { QueryBuilderHelperService } from './util/query-builder-helper.service';
     InvoicePrismaService,
     ServiceProcessPrismaService,
     InvoiceDatabaseAdapterService,
+    OrderDatabaseAdapterService,
   ],
 })
 export class DatabaseModule {}

@@ -6,7 +6,4 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from './offer';
-export * from './order';
-export * from './service-process';
-export * from './order-database-adapter.service';
+export * from './all-orders-filter-amqp.dto';

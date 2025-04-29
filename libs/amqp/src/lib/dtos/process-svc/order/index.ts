@@ -11,3 +11,4 @@ export * from './update-order-amqp.dto';
 export * from './order-amqp.dto';
 export * from './service-status-amqp.dto';
 export * from './mocks';
+export * from './params';

@@ -8,7 +8,7 @@
 
 import util from 'node:util';
 import { CreateOfferAmqpDto, CreateOrderAmqpDto, OfferAmqpDto, OrderAmqpDto, ServiceStatusAmqpDto } from '@ap3/amqp';
-import { OfferPrismaService, OrderOverview, OrderPrismaService, ServiceProcessPrismaService } from '@ap3/database';
+import { OfferPrismaService, OrderDatabaseAdapterService, OrderWithDependencies, ServiceProcessPrismaService } from '@ap3/database';
 import { OfferStatesEnum, ServiceStatesEnum } from '@ap3/util';
 import { Injectable, Logger } from '@nestjs/common';
 import { Offer, Prisma } from '@prisma/client';
@@ -20,7 +20,7 @@ export class OrderManagementService {
   private readonly logger = new Logger(OrderManagementService.name);
 
   constructor(
-    private readonly orderPrismaService: OrderPrismaService,
+    private readonly orderDatabaseAdapterService: OrderDatabaseAdapterService,
     private readonly offerPrismaService: OfferPrismaService,
     private readonly serviceProcessService: ServiceProcessService,
     private readonly serviceProcessPrismaService: ServiceProcessPrismaService,
@@ -30,7 +30,7 @@ export class OrderManagementService {
   async create(createOrderDto: CreateOrderAmqpDto): Promise<OrderAmqpDto> {
     this.logger.debug(`Create order: ${util.inspect(createOrderDto)}`);
     const createOrderEntity: Prisma.OrderCreateInput = createOrderDto.toPrismaCreateEntity();
-    const newOrderId: string = (await this.orderPrismaService.createOrder(createOrderEntity)).id;
+    const newOrderId: string = (await this.orderDatabaseAdapterService.createOrder(createOrderEntity)).id;
     try {
       await this.serviceProcessService.updateServiceStatus(newOrderId, ServiceStatesEnum.OPEN);
 
@@ -43,7 +43,7 @@ export class OrderManagementService {
       );
       await this.createOffers(offers);
 
-      const orderOverview: OrderOverview = await this.orderPrismaService.getOverviewOrder(newOrderId);
+      const orderOverview: OrderWithDependencies = await this.orderDatabaseAdapterService.getOrder(newOrderId);
       const currentState: ServiceStatusAmqpDto = OrderAmqpDto.getLatestState(orderOverview.serviceProcess.states);
 
       return OrderAmqpDto.fromPrismaEntity(orderOverview, currentState);
@@ -74,7 +74,7 @@ export class OrderManagementService {
       ]);
       await this.declineOffers(notAcceptedOffers);
 
-      const order = await this.orderPrismaService.getOverviewOrder(orderIdOfOffer);
+      const order = await this.orderDatabaseAdapterService.getOrder(orderIdOfOffer);
       await this.orderSchedulingHandlerService.acceptScheduling(orderIdOfOffer, offer, order);
       await this.serviceProcessPrismaService.setServiceState(orderIdOfOffer, ServiceStatesEnum.PLANNED);
 
@@ -105,10 +105,9 @@ export class OrderManagementService {
   }
 
   async finishOrder(orderId: string): Promise<boolean> {
-    try{
+    try {
       return !!(await this.serviceProcessPrismaService.setServiceState(orderId, ServiceStatesEnum.PRODUCED));
-    }
-    catch(e){
+    } catch (e) {
       this.logger.error(`Couldn't create a PRODUCED state for order: ${orderId}`);
       return false;
     }

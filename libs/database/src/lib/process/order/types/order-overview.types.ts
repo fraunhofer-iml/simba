@@ -9,13 +9,13 @@
 import { Machine, Product, ServiceProcess, ServiceStatus } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 
-export type OrderOverview = {
+export type OrderWithDependencies = {
   id: string;
   buyerOrderRefDocumentId: string | null;
   documentIssueDate: Date;
   vatCurrency: string;
   totalAmountWithoutVat: Decimal | null;
-  orderLines: { item: Product; requestedQuantity: Decimal, netPrice: Decimal | null, unitOfMeasureCodeAgreed: string | null }[];
+  orderLines: { item: Product; requestedQuantity: Decimal; netPrice: Decimal | null; unitOfMeasureCodeAgreed: string | null }[];
   serviceProcess:
     | (ServiceProcess & {
         states: ServiceStatus[];
@@ -31,7 +31,8 @@ export type OrderOverview = {
               } | null;
             }[]
           | null;
-      }) | null;
+      })
+    | null;
   buyer: { id: string; name: string };
   seller: { id: string; name: string };
 };

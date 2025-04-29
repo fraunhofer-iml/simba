@@ -7,6 +7,7 @@
  */
 
 import {
+  AllOrdersFilterAmqpDto,
   AmqpBrokerQueues,
   CreateOrderAmqpDtoWithoutPrismaConverterMock,
   GetMachineAssignmentAMQPMock,
@@ -42,11 +43,11 @@ import { OrdersService } from './orders.service';
 describe('OrdersController', () => {
   let controller: OrdersController;
   let processSvcClientProxy: ClientProxy;
-  let masterDataSvcClientProxy: ClientProxy;
   let productsService: ProductsService;
   let offersService: OffersService;
   let companiesService: CompaniesService;
   let invoicesService: InvoicesService;
+  let request: any;
 
   let sendProcessRequestSpy;
   let companiesServiceSpy;
@@ -91,7 +92,6 @@ describe('OrdersController', () => {
 
     controller = module.get<OrdersController>(OrdersController) as OrdersController;
     processSvcClientProxy = module.get<ClientProxy>(AmqpBrokerQueues.PROCESS_SVC_QUEUE) as ClientProxy;
-    masterDataSvcClientProxy = module.get<ClientProxy>(AmqpBrokerQueues.MASTER_DATA_SVC_QUEUE) as ClientProxy;
 
     productsService = module.get<ProductsService>(ProductsService) as ProductsService;
     offersService = module.get<OffersService>(OffersService) as OffersService;
@@ -108,6 +108,15 @@ describe('OrdersController', () => {
     productServiceLoadSpy.mockResolvedValue(ProductDtoMocks[0]);
     invoicesServiceSpy = jest.spyOn(invoicesService, 'findAllWithFilter');
     invoicesServiceSpy.mockResolvedValue(InvoiceDtoMocks);
+
+    request = {
+      user: {
+        company: CompaniesSeed[0].id,
+        realm_access: {
+          roles: ['ap3_customer'],
+        },
+      },
+    };
   });
 
   it('should create an Order', async () => {
@@ -117,7 +126,7 @@ describe('OrdersController', () => {
       return of(OrderAmqpMock[0]);
     });
 
-    const res: OrderOverviewDto = await controller.create(createOrderMock);
+    const res: OrderOverviewDto = await controller.create(request, createOrderMock);
 
     expect(sendProcessRequestSpy).toHaveBeenCalledWith(OrderMessagePatterns.CREATE, CreateOrderAmqpDtoWithoutPrismaConverterMock);
     expect(offersServiceLoadSpy).toHaveBeenCalledWith(OrderAmqpMock[0]);
@@ -144,9 +153,15 @@ describe('OrdersController', () => {
       return of(OrderAmqpMock);
     });
 
-    const res: OrderOverviewDto[] = await controller.findAll(CompaniesSeed[0].id);
+    const res: OrderOverviewDto[] = await controller.findAll(request, CompaniesSeed[0].id);
 
-    expect(sendProcessRequestSpy).toHaveBeenCalledWith(OrderMessagePatterns.READ_ALL, CompaniesSeed[0].id);
+    expect(sendProcessRequestSpy).toHaveBeenCalledWith(OrderMessagePatterns.READ_ALL, {
+      companyId: CompaniesSeed[0].id,
+      customerName: undefined,
+      productionDateFrom: undefined,
+      productionDateTo: undefined,
+      serviceStates: [],
+    } satisfies AllOrdersFilterAmqpDto);
     expect(res).toEqual(expectedReturnValue);
   });
 

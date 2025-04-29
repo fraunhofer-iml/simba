@@ -6,8 +6,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CreateOrderAmqpDto, OrderAmqpDto, ServiceStatusAmqpDto } from '@ap3/amqp';
-import { OrderOverview, OrderPrismaService } from '@ap3/database';
+import util from 'node:util';
+import { AllOrdersFilterAmqpDto, CreateOrderAmqpDto, OrderAmqpDto, ServiceStatusAmqpDto } from '@ap3/amqp';
+import { OrderDatabaseAdapterService, OrderWithDependencies } from '@ap3/database';
 import { SERVICE_STATES_TO_SHOW } from '@ap3/util';
 import { Injectable, Logger } from '@nestjs/common';
 import { Order } from '@prisma/client';
@@ -18,7 +19,7 @@ export class OrdersService {
   private readonly logger = new Logger(OrdersService.name);
 
   constructor(
-    private readonly orderPrismaService: OrderPrismaService,
+    private readonly orderDatabaseAdapterService: OrderDatabaseAdapterService,
     private readonly orderManagementService: OrderManagementService
   ) {}
 
@@ -26,12 +27,15 @@ export class OrdersService {
     return this.orderManagementService.create(createOrderDto);
   }
 
-  async findAll(companyId: string): Promise<OrderAmqpDto[]> {
+  async findAll(params: AllOrdersFilterAmqpDto): Promise<OrderAmqpDto[]> {
     const orderDtos: OrderAmqpDto[] = [];
-    const orders: OrderOverview[] = await this.orderPrismaService.getOrdersForOverview(companyId);
+    const serviceStatesToShow: string[] =
+      params.serviceStates && params.serviceStates.length > 0 ? params.serviceStates : SERVICE_STATES_TO_SHOW;
+    this.logger.debug(util.inspect(params));
+    const orders: OrderWithDependencies[] = await this.orderDatabaseAdapterService.getOrders(params);
     for (const order of orders) {
       const latestServiceStatus: ServiceStatusAmqpDto = OrderAmqpDto.getLatestState(order.serviceProcess.states);
-      if (SERVICE_STATES_TO_SHOW.includes(latestServiceStatus?.status)) {
+      if (serviceStatesToShow.includes(latestServiceStatus?.status)) {
         orderDtos.push(OrderAmqpDto.fromPrismaEntity(order, latestServiceStatus));
       }
     }
@@ -40,18 +44,18 @@ export class OrdersService {
 
   async findOne(id: string): Promise<OrderAmqpDto> {
     this.logger.debug(id);
-    const order: OrderOverview = await this.orderPrismaService.getOverviewOrder(id);
+    const order: OrderWithDependencies = await this.orderDatabaseAdapterService.getOrder(id);
     const currentState: ServiceStatusAmqpDto = OrderAmqpDto.getLatestState(order.serviceProcess.states);
     return OrderAmqpDto.fromPrismaEntity(order, currentState);
   }
 
   async remove(id: string): Promise<boolean> {
     this.logger.debug(`Remove order with id: ${id}`);
-    const deletedOrder: Order = await this.orderPrismaService.deleteOrder(id);
+    const deletedOrder: Order = await this.orderDatabaseAdapterService.deleteOrder(id);
     return !!deletedOrder;
   }
 
   async finishOrder(offerId: string): Promise<boolean> {
-      return await this.orderManagementService.finishOrder(offerId);
+    return await this.orderManagementService.finishOrder(offerId);
   }
 }

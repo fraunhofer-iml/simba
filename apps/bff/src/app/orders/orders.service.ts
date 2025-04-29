@@ -7,7 +7,7 @@
  */
 
 import * as util from 'node:util';
-import { AmqpBrokerQueues, CreateOrderAmqpDto, OrderAmqpDto, OrderMessagePatterns } from '@ap3/amqp';
+import { AllOrdersFilterAmqpDto, AmqpBrokerQueues, CreateOrderAmqpDto, OrderAmqpDto, OrderMessagePatterns } from '@ap3/amqp';
 import {
   CompanyDto,
   CreateOrderDto,
@@ -58,12 +58,12 @@ export class OrdersService {
     }
   }
 
-  async findAll(companyId: string): Promise<OrderOverviewDto[]> {
+  async findAll(filterAttributes: AllOrdersFilterAmqpDto): Promise<OrderOverviewDto[]> {
     let frontendDtos: OrderOverviewDto[] = [];
     let orders: OrderAmqpDto[] = [];
     try {
-      this.logger.verbose(`Get all orders for company with id: ${companyId}`);
-      orders = await firstValueFrom<OrderAmqpDto[]>(this.processAMQPClient.send(OrderMessagePatterns.READ_ALL, companyId));
+      this.logger.verbose(`Get all orders for company with filter attributes: ${util.inspect(filterAttributes)}`);
+      orders = await firstValueFrom<OrderAmqpDto[]>(this.processAMQPClient.send(OrderMessagePatterns.READ_ALL, filterAttributes));
       frontendDtos = await this.loadOrderReferences(orders);
     } catch (e) {
       this.logger.error(util.inspect(e));

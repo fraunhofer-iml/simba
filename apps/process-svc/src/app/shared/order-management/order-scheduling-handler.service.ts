@@ -14,7 +14,7 @@ import {
   ScheduleOrderRequestDto,
   ScheduleOrderResponseDto,
 } from '@ap3/cpps-scheduler-connector';
-import { OrderOverview } from '@ap3/database';
+import { OrderWithDependencies } from '@ap3/database';
 import { Injectable, Logger } from '@nestjs/common';
 import { Offer } from '@prisma/client';
 
@@ -48,7 +48,7 @@ export class OrderSchedulingHandlerService {
     return createOffers;
   }
 
-  async acceptScheduling(orderId: string, offer: Offer, order: OrderOverview): Promise<void> {
+  async acceptScheduling(orderId: string, offer: Offer, order: OrderWithDependencies): Promise<void> {
     const scheduledProduct = new ScheduledProductDto(order.orderLines[0].item.id, Number(order.orderLines[0].requestedQuantity));
     const acceptRequest = new AcceptScheduledOfferDto(Number(offer.plannedCalendarWeek), Number(offer.plannedYear), scheduledProduct);
 

@@ -7,97 +7,56 @@
  */
 
 import * as util from 'node:util';
+import { ServiceStatesEnum } from '@ap3/util';
 import { Injectable, Logger } from '@nestjs/common';
 import { Order, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma.service';
-import { OrderOverview } from './types';
+import { ordersWithDependenciesSelect } from './orders-with-dependencies.prisma-select';
+import { OrderWithDependencies } from './types';
 
 @Injectable()
 export class OrderPrismaService {
   private logger = new Logger(OrderPrismaService.name);
   constructor(private prisma: PrismaService) {}
 
-  async getOverviewOrder(id: string): Promise<OrderOverview | null> {
-    const whereClause: Prisma.OrderWhereInput = { id: String(id) };
-    const order = await this.getOverviewOrders(whereClause);
-    return order && order.length == 1 ? order[0] : null;
+  async getOrdersWithDependencies({
+    orderId,
+    buyerId,
+    sellerId,
+    machineOwnerId,
+    serviceStates,
+    buyerName,
+    productionDateFrom,
+    productionDateTo,
+  }: {
+    orderId?: string;
+    buyerId?: string;
+    sellerId?: string;
+    machineOwnerId?: string;
+    serviceStates?: ServiceStatesEnum[];
+    buyerName?: string;
+    productionDateFrom?: Date;
+    productionDateTo?: Date;
+  }): Promise<OrderWithDependencies[] | null> {
+    try {
+      const filters: Prisma.OrderWhereInput[][] = this.createCompaniesFilter(buyerId, sellerId, machineOwnerId);
+      const orFilters: Prisma.OrderWhereInput[] = filters[0];
+      const andFilters: Prisma.OrderWhereInput[] = filters[1];
+      andFilters.push(...this.createOrderAndFilter(orderId, serviceStates, buyerName, productionDateFrom, productionDateTo));
+
+      const whereClause: Prisma.OrderWhereInput = {
+        ...(orFilters.length ? { OR: orFilters } : {}),
+        ...(andFilters.length ? { AND: andFilters } : {}),
+      };
+
+      return this.getOrders(whereClause);
+    } catch (e) {
+      this.logger.error(util.inspect(e));
+      throw e;
+    }
   }
 
-  async getOrdersForOverview(companyId: string) {
-    const whereClause: Prisma.OrderWhereInput = {
-      OR: [
-        { buyerId: String(companyId) },
-        { sellerId: String(companyId) },
-        { serviceProcess: { machineAssignments: { some: { machine: { companyId: String(companyId) } } } } },
-      ],
-    };
-    return await this.getOverviewOrders(whereClause);
-  }
-
-  private async getOverviewOrders(whereClause: Prisma.OrderWhereInput): Promise<OrderOverview[] | null> {
-    return this.prisma.order.findMany({
-      where: whereClause,
-      select: {
-        id: true,
-        documentIssueDate: true,
-        buyerOrderRefDocumentId: true,
-        vatCurrency: true,
-        totalAmountWithoutVat: true,
-        orderLines: {
-          select: {
-            item: true,
-            requestedQuantity: true,
-            netPrice: true,
-            unitOfMeasureCodeAgreed: true
-          },
-        },
-        serviceProcess: {
-          include: {
-            acceptedOffer: {
-              select: {
-                id: true,
-                price: true,
-              },
-            },
-            machineAssignments: {
-              include: {
-                machine: true,
-              },
-            },
-            offers: {
-              select: {
-                id: true,
-              },
-            },
-            states: true,
-            invoices: {
-              select: {
-                tradeReceivable: {
-                  select: {
-                    id: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        buyer: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        seller: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
-  }
-
-  async createOrder(data: Prisma.OrderCreateInput): Promise<Order | null> {
+  async createOrder(data: Prisma.OrderCreateInput): Promise<Order> {
     this.logger.debug('Insert new order via prisma');
     try {
       return this.prisma.order.create({ data });
@@ -107,9 +66,80 @@ export class OrderPrismaService {
     }
   }
 
-  async deleteOrder(id: string): Promise<Order | null> {
-    return this.prisma.order.delete({
-      where: { id: String(id) },
+  async deleteOrder(id: string): Promise<Order> {
+    try {
+      return this.prisma.order.delete({
+        where: { id: String(id) },
+      });
+    } catch (e) {
+      this.logger.error(util.inspect(e));
+      throw e;
+    }
+  }
+
+  private async getOrders(whereClause: Prisma.OrderWhereInput): Promise<OrderWithDependencies[] | null> {
+    return this.prisma.order.findMany({
+      where: whereClause,
+      select: ordersWithDependenciesSelect,
     });
+  }
+
+  private createOrderAndFilter(
+    orderId?: string,
+    serviceStates?: ServiceStatesEnum[],
+    buyerName?: string,
+    productionDateFrom?: Date,
+    productionDateTo?: Date
+  ): Prisma.OrderWhereInput[] {
+    const orderIdFilter: Prisma.OrderWhereInput | undefined = orderId ? { id: orderId } : undefined;
+    const stateFilter: Prisma.OrderWhereInput | undefined =
+      serviceStates && serviceStates.length > 0 ? { serviceProcess: { states: { some: { status: { in: serviceStates } } } } } : undefined;
+    const buyerNameFilter: Prisma.OrderWhereInput | undefined = buyerName ? { buyer: { name: buyerName } } : undefined;
+    const productionDateFromFilter: Prisma.OrderWhereInput | undefined = productionDateFrom
+      ? { serviceProcess: { scheduledDate: { gt: productionDateFrom } } }
+      : undefined;
+    const productionDateToFilter: Prisma.OrderWhereInput | undefined = productionDateTo
+      ? { serviceProcess: { scheduledDate: { lt: productionDateTo } } }
+      : undefined;
+
+    return <Prisma.OrderWhereInput[]>(
+      [orderIdFilter, stateFilter, buyerNameFilter, productionDateFromFilter, productionDateToFilter].filter(
+        (filter) => filter !== undefined
+      )
+    );
+  }
+
+  /**
+   * Returns array of "or"-Filters, if id matches between company roles (buyer, seller and machine owner).
+   * Alternatively returns an empty array if only one company role id is set or all ids are different.
+   * @return OrderWhereInput[orFilter[],andFilter[]] array with 2 entries:
+   * first entry is an array of orFilters and the second array is an array of andFilters.
+   */
+  private createCompaniesFilter(buyerId?: string, sellerId?: string, machineOwnerId?: string): Prisma.OrderWhereInput[][] {
+    let orFilters: Prisma.OrderWhereInput[] = [];
+    const andFilters: Prisma.OrderWhereInput[] = [];
+    const buyerFilter: Prisma.OrderWhereInput | undefined = buyerId ? { buyerId: String(buyerId) } : undefined;
+    const sellerFilter: Prisma.OrderWhereInput | undefined = sellerId ? { sellerId: String(sellerId) } : undefined;
+    const machineOwnerFilter: Prisma.OrderWhereInput | undefined = machineOwnerId
+      ? { serviceProcess: { machineAssignments: { some: { machine: { companyId: String(machineOwnerId) } } } } }
+      : undefined;
+
+    if (buyerFilter && sellerFilter && machineOwnerFilter && buyerId === sellerId && buyerId == machineOwnerId) {
+      orFilters = [buyerFilter, sellerFilter, machineOwnerFilter];
+    } else if (buyerFilter && sellerFilter && buyerId === sellerId) {
+      orFilters = [buyerFilter, sellerFilter];
+      if (machineOwnerFilter) andFilters.push(machineOwnerFilter);
+    } else if (buyerFilter && machineOwnerFilter && buyerId === machineOwnerId) {
+      orFilters = [buyerFilter, machineOwnerFilter];
+      if (sellerFilter) andFilters.push(sellerFilter);
+    } else if (sellerFilter && machineOwnerFilter && sellerId === machineOwnerId) {
+      orFilters = [sellerFilter, machineOwnerFilter];
+      if (buyerFilter) andFilters.push(buyerFilter);
+    } else {
+      if (machineOwnerFilter) andFilters.push(machineOwnerFilter);
+      if (sellerFilter) andFilters.push(sellerFilter);
+      if (buyerFilter) andFilters.push(buyerFilter);
+    }
+    return [orFilters, andFilters];
   }
 }

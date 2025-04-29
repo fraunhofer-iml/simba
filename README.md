@@ -41,6 +41,7 @@
 ### 📄 Description <a id="description"></a>
 
 SiMBA (Shopfloor Financial Management with Blockchain and AI) brings financial innovation to the entire production process, from order placement to manufacturing to payment. Leveraging a cyber-physical production system, SiMBA enables dynamic, AI-driven pricing that predicts capacity utilisation and automatically sets prices to balance profitability and system efficiency. Once an order is received and produced, invoices are automatically generated and tokenised based on real-time production data. Finally, SiMBA ensures seamless, use-case-agnostic payment processing via direct debit, stable coins or emerging digital currencies such as CBDCs - making every transaction efficient, transparent and future-proof.
+You can find detailed [documentation](./documentation) in this repository.
 
 ### 🛠️ Built With <a id="built-with"></a>
 
@@ -137,7 +138,7 @@ Dominik Sparer: dominik.sparer@iml.fraunhofer.de
   project under the terms of the [MIT License](https://github.com/vishnubob/wait-for-it/blob/master/LICENSE)
 - [Best-README-Template](https://github.com/othneildrew/Best-README-Template) provided inspiration and structure for creating this README
   file
-- [Img Shields](https://shields.io) enabled the creation of customizable and visually appealing badges for this project
+- [Img Shields](https://shields.io) enabled the creation of customizable and visually appealing badges for this project, which is included unmodified in this readme file under the terms of the [CC0 1.0 Universal](https://github.com/badges/shields/blob/master/LICENSE)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

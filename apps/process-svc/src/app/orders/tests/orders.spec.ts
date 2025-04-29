@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CreateOrderAmqpDtoMock, OrderAmqpMock } from '@ap3/amqp';
+import { AllOrdersFilterAmqpDto, CreateOrderAmqpDtoMock, OrderAmqpMock } from '@ap3/amqp';
 import { CppsSchedulerConnectorModule, ScheduleOrderResponseMock } from '@ap3/cpps-scheduler-connector';
 import {
   CompaniesSeed,
@@ -20,15 +20,15 @@ import {
   PrismaService,
   ServiceProcessesSeed,
 } from '@ap3/database';
+import { ServiceStatesEnum } from '@ap3/util';
 import { forwardRef } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ServiceProcess } from '@prisma/client';
 import { OffersModule } from '../../offers/offers.module';
 import { ServiceProcessModule } from '../../service-process/service-process.module';
+import { OrderManagementModule } from '../../shared/order-management/order-management.module';
 import { OrdersController } from '../orders.controller';
 import { OrdersService } from '../orders.service';
-import { OrderManagementModule } from '../../shared/order-management/order-management.module';
-import { ServiceProcess } from '@prisma/client';
-import { ServiceStatesEnum } from '@ap3/util';
 
 describe('OrdersService', () => {
   let controller: OrdersController;
@@ -100,8 +100,10 @@ describe('OrdersService', () => {
     const prismaFindManySpy = jest.spyOn(prisma.order, 'findMany');
 
     prismaFindManySpy.mockResolvedValue(OrderOverviewPrismaMock);
+    const filter = new AllOrdersFilterAmqpDto();
+    filter.companyId = CompaniesSeed[0].id;
 
-    const res = await controller.findAll(CompaniesSeed[0].id);
+    const res = await controller.findAll(filter);
 
     expect(prisma.order.findMany).toHaveBeenCalledWith(findAllOrdersQueryMock);
     expect(expectedReturnValue).toEqual(res);
@@ -120,14 +122,13 @@ describe('OrdersService', () => {
   });
 
   it('should set the order status to finished', async () => {
-
     const serviceProcessMock: ServiceProcess = {
       id: '0',
       orderId: OrderAmqpMock[0].id,
       dueCalendarWeek: OrderAmqpMock[0].requestedCalendarWeek,
       dueYear: OrderAmqpMock[0].requestedYear,
       scheduledDate: new Date(),
-      acceptedOfferId: "0"
+      acceptedOfferId: '0',
     };
 
     const prismaInputMock = {

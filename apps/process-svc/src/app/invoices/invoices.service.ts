@@ -11,27 +11,24 @@ import {
   AllInvoicesFilterAmqpDto,
   CompanyAndInvoiceAmqpDto,
   InvoiceAmqpDto,
-  InvoiceIdAndPaymentStateAmqpDto, PaymentStatusAmqpDto,
+  InvoiceIdAndPaymentStateAmqpDto,
+  PaymentStatusAmqpDto,
 } from '@ap3/amqp';
+import { CreateInvoiceDto } from '@ap3/api';
 import { ConfigurationService } from '@ap3/config';
 import {
   InvoiceDatabaseAdapterService,
   InvoiceForZugferd,
-  InvoiceWithNFT, OrderOverview,
-  OrderPrismaService,
+  InvoiceWithNFT,
+  OrderDatabaseAdapterService,
+  OrderWithDependencies,
   TradeReceivablePrismaService,
 } from '@ap3/database';
 import { S3Service } from '@ap3/s3';
+import { PAYMENT_DEADLINE_IN_DAYS, PAYMENT_TERMS, PaymentStates, VAT_IN_PERCENT } from '@ap3/util';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Invoice, PaymentStatus, TradeReceivable } from '@prisma/client';
 import { InvoicesZugferdService } from './zugferd/invoices-zugferd.service';
-import { CreateInvoiceDto } from '@ap3/api';
-import {
-  PAYMENT_DEADLINE_IN_DAYS,
-  PAYMENT_TERMS,
-  PaymentStates,
-  VAT_IN_PERCENT
-} from '@ap3/util';
 
 @Injectable()
 export class InvoicesService {
@@ -39,7 +36,7 @@ export class InvoicesService {
   constructor(
     private readonly tradeReceivablePrismaService: TradeReceivablePrismaService,
     private readonly invoicePrismaService: InvoiceDatabaseAdapterService,
-    private readonly orderPrismaService: OrderPrismaService,
+    private readonly orderDatabaseAdapterService: OrderDatabaseAdapterService,
     private readonly invoiceZugferdService: InvoicesZugferdService,
     private readonly config: ConfigurationService,
     private readonly s3Service: S3Service
@@ -142,7 +139,7 @@ export class InvoicesService {
   }
 
   public async createInvoice(createInvoiceDto: CreateInvoiceDto): Promise<InvoiceAmqpDto> {
-    const orderOverview: OrderOverview = await this.orderPrismaService.getOverviewOrder(createInvoiceDto.orderId);
+    const orderOverview: OrderWithDependencies = await this.orderDatabaseAdapterService.getOrder(createInvoiceDto.orderId);
     const dueDate: Date = new Date();
     dueDate.setDate(dueDate.getDate() + PAYMENT_DEADLINE_IN_DAYS);
 
@@ -166,6 +163,6 @@ export class InvoicesService {
       orderOverview.serviceProcess.id
     );
     const newInvoice: Invoice = await this.invoicePrismaService.createInvoice(newInvoiceInput);
-    return InvoiceAmqpDto.fromInvoicePrismaEntity(newInvoice, newInvoiceInput.status)
+    return InvoiceAmqpDto.fromInvoicePrismaEntity(newInvoice, newInvoiceInput.status);
   }
 }

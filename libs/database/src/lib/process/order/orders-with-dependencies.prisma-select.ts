@@ -7,9 +7,8 @@
  */
 
 import { Prisma } from '@prisma/client';
-import { OrdersSeed } from '../../../../../seed';
 
-const ordersOverviewSelect = <Prisma.OrderSelect>{
+export const ordersWithDependenciesSelect = {
   id: true,
   documentIssueDate: true,
   buyerOrderRefDocumentId: true,
@@ -25,23 +24,23 @@ const ordersOverviewSelect = <Prisma.OrderSelect>{
   },
   serviceProcess: {
     include: {
-      machineAssignments: {
-        include: {
-          machine: true,
-        },
-      },
-      states: true,
-      offers: {
-        select: {
-          id: true,
-        },
-      },
       acceptedOffer: {
         select: {
           id: true,
           price: true,
         },
       },
+      machineAssignments: {
+        include: {
+          machine: true,
+        },
+      },
+      offers: {
+        select: {
+          id: true,
+        },
+      },
+      states: true,
       invoices: {
         select: {
           tradeReceivable: {
@@ -65,28 +64,4 @@ const ordersOverviewSelect = <Prisma.OrderSelect>{
       name: true,
     },
   },
-};
-
-export const findSingleOrderMock = <Prisma.OrderWhereInput>{
-  where: { AND: [{ id: String(OrdersSeed[0].id) }] },
-  select: ordersOverviewSelect,
-};
-
-export const findAllOrdersQueryMock = <Prisma.OrderWhereInput>{
-  where: {
-    OR: [
-      { buyerId: 'pt0001' },
-      { sellerId: 'pt0001' },
-      {
-        serviceProcess: {
-          machineAssignments: {
-            some: {
-              machine: { companyId: 'pt0001' },
-            },
-          },
-        },
-      },
-    ],
-  },
-  select: ordersOverviewSelect,
-};
+} satisfies Prisma.OrderSelect;

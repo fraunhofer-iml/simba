@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DatabaseUtil, OrderOverview } from '@ap3/database';
+import { DatabaseUtil, OrderWithDependencies } from '@ap3/database';
 import { ServiceStatus } from '@prisma/client';
 import { ServiceStatusAmqpDto } from './service-status-amqp.dto';
 
@@ -58,7 +58,7 @@ export class OrderAmqpDto {
     this.acceptedOfferId = acceptedOfferId;
   }
 
-  public static fromPrismaEntity(order: OrderOverview, currentState: ServiceStatusAmqpDto): OrderAmqpDto {
+  public static fromPrismaEntity(order: OrderWithDependencies, currentState: ServiceStatusAmqpDto): OrderAmqpDto {
     const tradeReceivableIds: string[] | undefined = order.serviceProcess?.invoices
       ?.map((invoice) => invoice.tradeReceivable?.id)
       ?.filter((id): id is string => id !== undefined);

@@ -29,5 +29,5 @@ export default registerAs(MINIO_IDENTIFIER, () => ({
   secret: process.env['MINIO_SECRET'] || '',
   invoicePrefix: process.env['INVOICE_PREFIX'] || 'INV_',
   metadataPrefix: process.env['METADATA_PREFIX'] || 'METADATA_',
-  objectStorageURL: process.env['OBJECT_STORAGE_URL'] || 'https://minioo.public.apps.blockchain-europe.iml.fraunhofer.de/skala-affds/',
+  objectStorageURL: process.env['OBJECT_STORAGE_URL'] || 'http://localhost:9001/buckets/ap3/',
 }));
