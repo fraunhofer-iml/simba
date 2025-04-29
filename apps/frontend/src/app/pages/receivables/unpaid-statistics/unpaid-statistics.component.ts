@@ -7,10 +7,11 @@
  */
 
 import { UnpaidStatisticsDto } from '@ap3/api';
-import { FinancialRoles } from '@ap3/util';
+import { FinancialRoles, PaymentStates } from '@ap3/util';
 import { Observable, of } from 'rxjs';
 import { Component, Input, OnChanges } from '@angular/core';
 import { AuthService } from '../../../shared/services/auth/auth.service';
+import { InvoiceFilterService } from '../../../shared/services/invoices/filter/invoice-filter.service';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 
 @Component({
@@ -22,9 +23,11 @@ export class UnpaidStatisticsComponent implements OnChanges {
   creditorStatisticsDto$: Observable<UnpaidStatisticsDto>;
   debtorStatisticsDto$: Observable<UnpaidStatisticsDto>;
   @Input({ required: true }) invoiceIds: string[] = [];
+
   constructor(
     private readonly invoiceService: InvoiceService,
-    readonly authService: AuthService
+    readonly authService: AuthService,
+    private readonly filterService: InvoiceFilterService
   ) {
     this.creditorStatisticsDto$ = of();
     this.debtorStatisticsDto$ = of();
@@ -33,5 +36,21 @@ export class UnpaidStatisticsComponent implements OnChanges {
   ngOnChanges(): void {
     this.creditorStatisticsDto$ = this.invoiceService.getUnPaidStatistics(this.invoiceIds, FinancialRoles.CREDITOR);
     this.debtorStatisticsDto$ = this.invoiceService.getUnPaidStatistics(this.invoiceIds, FinancialRoles.DEBTOR);
+  }
+
+  setInvoiceFilterToLiabilities() {
+    this.filterService.setFilter({ debtorId: this.authService.getCurrentlyLoggedInCompanyId() });
+  }
+
+  setInvoiceFilterToDemands() {
+    this.filterService.setFilter({ creditorId: this.authService.getCurrentlyLoggedInCompanyId() });
+  }
+
+  setInvoiceFilterToOpen() {
+    this.filterService.setFilter({ paymentStates: [PaymentStates.OPEN] });
+  }
+
+  setInvoiceFilterToOverdue() {
+    this.filterService.setFilter({ paymentStates: [PaymentStates.EXCEEDED] });
   }
 }

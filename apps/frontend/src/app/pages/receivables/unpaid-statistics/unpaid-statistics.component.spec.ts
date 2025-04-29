@@ -12,6 +12,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDividerModule } from '@angular/material/divider';
 import { AuthService } from '../../../shared/services/auth/auth.service';
+import { InvoiceFilterService } from '../../../shared/services/invoices/filter/invoice-filter.service';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 import { UnpaidStatisticsComponent } from './unpaid-statistics.component';
 
@@ -41,6 +42,7 @@ describe('UnpaidStatisticsComponent', () => {
             getUserRoles: jest.fn().mockReturnValue([]),
           },
         },
+        InvoiceFilterService,
       ],
     }).compileComponents();
 

@@ -1,20 +1,28 @@
+import { BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { InvoiceFilter } from '../../../../model/invoice-filter';
 
 @Injectable()
 export class InvoiceFilterService {
   filter: InvoiceFilter;
+  filterBehaviorSubject: BehaviorSubject<boolean>;
 
   constructor() {
     this.filter = <InvoiceFilter>{};
+    this.filterBehaviorSubject = new BehaviorSubject(false);
   }
 
   getFilter(): InvoiceFilter {
     return this.filter;
   }
 
-  setFilter(newFilter: InvoiceFilter) {
+  getSubject(): BehaviorSubject<boolean> {
+    return this.filterBehaviorSubject;
+  }
+
+  setFilter(newFilter: InvoiceFilter): void {
     this.filter = newFilter;
+    this.filterBehaviorSubject.next(true);
   }
 
   cleanupFilter() {

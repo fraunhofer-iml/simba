@@ -33,6 +33,7 @@ import { TokenDetailsDialogComponent } from './token-details-dialog/token-detail
   styleUrl: './receivables.component.scss',
 })
 export class ReceivablesComponent {
+  filterSubject: Observable<boolean>;
   filteredInvoicesIds: string[];
   activatedFiltersCount: number;
   displayedInvoiceColumns: string[];
@@ -53,6 +54,13 @@ export class ReceivablesComponent {
     readonly authService: AuthService,
     private readonly invoiceFilterService: InvoiceFilterService
   ) {
+    this.filterSubject = this.invoiceFilterService.getSubject().asObservable();
+    this.filterSubject.subscribe((newFilter: boolean) => {
+      if (newFilter) {
+        this.loadInvoices(this.invoiceFilterService.getFilter());
+        this.activatedFiltersCount = this.countSelectedFilterOptions();
+      }
+    });
     this.displayedInvoiceColumns = [
       'select',
       'invoiceNumber',
@@ -233,5 +241,4 @@ export class ReceivablesComponent {
     }
     return selectedOptions;
   }
-
 }
