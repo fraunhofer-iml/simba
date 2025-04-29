@@ -53,7 +53,11 @@ body {
   --greyisch: #e8e6e6;
 }
 
-.bold {
+.mat-sort-header-container{
+  font-weight: bold;
+}
+
+.mat-mdc-tab .mdc-tab__text-label {
   font-weight: bold;
 }
 

@@ -26,6 +26,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { MatTooltip } from '@angular/material/tooltip';
 import { DialogOffersExpiredComponent } from '../../layout/dialog-offers-expired/dialog-offers-expired.component';
 import { MY_FORMATS } from '../../shared/formats/datepicker-format';
@@ -37,11 +38,12 @@ import { CalendarWeekService } from '../../shared/services/util/calendar-week.se
 import { FormatService } from '../../shared/services/util/format.service';
 import { CreateOrderComponent } from './create-order/create-order.component';
 import { OrderDetailsComponent } from './order-details/order-details.component';
+import { OrderTableComponent } from './orders-overview/order-table/order-table.component';
 import { OrdersOverviewComponent } from './orders-overview/orders-overview.component';
 import { OrdersRoutingModule } from './orders-routing.module';
 
 @NgModule({
-  declarations: [OrdersOverviewComponent, CreateOrderComponent, DialogOffersExpiredComponent, OrderDetailsComponent],
+  declarations: [OrdersOverviewComponent, CreateOrderComponent, DialogOffersExpiredComponent, OrderDetailsComponent, OrderTableComponent],
   imports: [
     CommonModule,
     MatIconModule,
@@ -64,6 +66,8 @@ import { OrdersRoutingModule } from './orders-routing.module';
     CountdownComponent,
     TranslateModule,
     MatTooltip,
+    MatTabGroup,
+    MatTab,
   ],
   providers: [
     OffersService,
@@ -76,5 +80,6 @@ import { OrdersRoutingModule } from './orders-routing.module';
     provideMomentDateAdapter(MY_FORMATS),
     AuthService,
   ],
+  exports: [OrderTableComponent],
 })
 export class OrdersModule {}

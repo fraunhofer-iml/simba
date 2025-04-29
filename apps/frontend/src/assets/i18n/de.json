@@ -150,5 +150,8 @@
   "Paginator": {
     "ItemsPerPage": "Elemente pro Seite",
     "Of": "von"
-  }
+  },
+
+  "Open": "Offen",
+  "Closed": "Abgeschlossen"
 }

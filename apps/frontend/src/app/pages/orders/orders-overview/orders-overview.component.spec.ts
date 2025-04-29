@@ -32,6 +32,8 @@ import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
 import { FormatService } from '../../../shared/services/util/format.service';
 import { OrdersOverviewComponent } from './orders-overview.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { OrderTableComponent } from './order-table/order-table.component';
 
 describe('OrdersOverviewComponent', () => {
   let component: OrdersOverviewComponent;
@@ -40,20 +42,14 @@ describe('OrdersOverviewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        MatIconModule,
-        MatCardModule,
-        MatDividerModule,
-        MatListModule,
+        MatTabsModule,
         MatInputModule,
         MatSelectModule,
         MatDatepickerModule,
         MatButtonModule,
-        MatNativeDateModule,
-        MatFormFieldModule,
         ReactiveFormsModule,
         MatFormFieldModule,
         MatTableModule,
-        MatSortModule,
         MatPaginatorModule,
         NoopAnimationsModule,
         RouterModule.forRoot([]),
@@ -81,7 +77,7 @@ describe('OrdersOverviewComponent', () => {
           },
         },
       ],
-      declarations: [OrdersOverviewComponent],
+      declarations: [OrdersOverviewComponent, OrderTableComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OrdersOverviewComponent);

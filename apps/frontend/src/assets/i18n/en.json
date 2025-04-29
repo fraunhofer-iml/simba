@@ -155,5 +155,8 @@
   "CalendarWeek": "CW",
   "MonthLabels": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
   "NoMatchingData": "No data matching the filter ",
-  "CloseSnackBarAction": "Close"
+  "CloseSnackBarAction": "Close",
+
+  "Open": "Open",
+  "Closed": "Closed"
 }
