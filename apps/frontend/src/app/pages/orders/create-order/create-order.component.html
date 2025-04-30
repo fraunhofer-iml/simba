@@ -19,6 +19,13 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field class="order-field">
+          <mat-select [(value)]="unitOfMeasurement" placeholder="{{ 'Orders.Create.UnitOfMeasureCode' | translate }}" formControlName="unitOfMeasurement">
+            <mat-option *ngFor="let unitOfMeasurement of UNITS" [value]="unitOfMeasurement">
+              {{ unitOfMeasurement }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="order-field">
           <input
             matInput
             placeholder="{{ 'Orders.Create.AmountInputField' | translate }}"

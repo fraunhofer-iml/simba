@@ -22,12 +22,14 @@ export class CreateOrderAmqpDto extends PickType(OrderAmqpDto, [
   vatCurrency: string;
   buyerId: string;
   sellerId: string;
+  unitOfMeasureCode: string;
 
-  constructor(vatCurrency: string, buyerId: string, sellerId: string) {
+  constructor(vatCurrency: string, buyerId: string, sellerId: string, unitOfMeasureCode: string) {
     super();
     this.vatCurrency = vatCurrency;
     this.buyerId = buyerId;
     this.sellerId = sellerId;
+    this.unitOfMeasureCode = unitOfMeasureCode;
   }
 
   public toPrismaCreateEntity(): Prisma.OrderCreateInput {
@@ -43,6 +45,8 @@ export class CreateOrderAmqpDto extends PickType(OrderAmqpDto, [
       orderLines: {
         create: {
           requestedQuantity: this.quantity,
+          unitOfMeasureCodeAgreed: this.unitOfMeasureCode,
+          unitOfMeasureCodeRequested: this.unitOfMeasureCode,
           item: {
             connect: {
               id: this.productId,

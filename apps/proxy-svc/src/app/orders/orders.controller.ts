@@ -8,10 +8,10 @@
 
 import { Controller, Param, Put, Request } from '@nestjs/common';
 import { OrdersService } from './orders.service';
-import { AuthRolesEnum, CreateInvoiceDto, TradeReceivableDto } from '@ap3/api';
+import { AuthRolesEnum, TradeReceivableDto } from '@ap3/api';
 import { UserRoles } from '@ap3/util';
 import { Roles } from 'nest-keycloak-connect';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @Controller('orders')
 @ApiTags('Orders')
@@ -22,8 +22,10 @@ export class OrdersController {
   @Put(':id/finish')
   @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
   @ApiOperation({ description: 'Indicates that production is complete and creates an invoice and a trade receivable.' })
-  @ApiBody({
-    type: CreateInvoiceDto,
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Identifying id; Required to identify the order.',
     required: true,
   })
   finish(@Request() req: any, @Param('id') id: string): Promise<TradeReceivableDto>  {

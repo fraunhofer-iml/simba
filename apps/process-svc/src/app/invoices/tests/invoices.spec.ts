@@ -6,16 +6,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllInvoicesFilterAmqpDto, CompanyAndInvoiceAmqpDto, InvoiceAndPaymentStatusDtoAmqpMock, InvoicesAmqpMock } from '@ap3/amqp';
+import {
+  AllInvoicesFilterAmqpDto,
+  CompanyAndInvoiceAmqpDto,
+  InvoiceAndPaymentStatusDtoAmqpMock,
+  InvoicesAmqpMock,
+} from '@ap3/amqp';
 import { ConfigurationModule } from '@ap3/config';
 import {
-  CompaniesSeed,
   CreatePaymentStatusQueryMocks,
   DatabaseModule,
   InvoiceIdQueryMock,
   InvoiceNFTPrismaMock,
   InvoiceSeed,
-  OrderLinesSeed,
   PaymentStatesSeed,
   PaymentStatusMocks,
   PrismaService,
@@ -33,6 +36,8 @@ import { InvoicesStatisticsService } from '../statistics/invoices-statistics.ser
 import { InvoicesZugferdService } from '../zugferd/invoices-zugferd.service';
 import { CreateInvoiceDto, OrderOverviewMock } from '@ap3/api';
 import { OrderMock } from './mock/order.mock';
+import { OfferMock } from './mock/offer.mock';
+import { NotFoundException } from '@nestjs/common';
 
 describe('InvoicesController', () => {
   let controller: InvoicesController;
@@ -64,6 +69,9 @@ describe('InvoicesController', () => {
               create: jest.fn(),
             },
             order: {
+              findMany: jest.fn()
+            },
+            offer: {
               findMany: jest.fn()
             },
             invoice: {
@@ -121,13 +129,24 @@ describe('InvoicesController', () => {
     const prismaOrderSpy = jest.spyOn(prisma.order, 'findMany');
     prismaOrderSpy.mockResolvedValueOnce([OrderMock]);
 
+    const prismaOfferSpy = jest.spyOn(prisma.offer, 'findMany');
+    prismaOfferSpy.mockResolvedValueOnce(OfferMock);
+
     const prismaInvoiceSpy = jest.spyOn(prisma.invoice, 'create');
     prismaInvoiceSpy.mockResolvedValueOnce(InvoiceSeed[2]);
 
     const retVal = await controller.create(new CreateInvoiceDto(OrderOverviewMock[0].id));
+    expect(prisma.offer.findMany).toHaveBeenCalledTimes(1);
     expect(prisma.order.findMany).toHaveBeenCalledTimes(1);
     expect(prisma.invoice.create).toHaveBeenCalledTimes(1);
     expect(expectedReturn).toEqual(retVal);
+  });
+
+  it('create: should not create a new invoice', async () => {
+    const prismaOfferSpy = jest.spyOn(prisma.offer, 'findMany');
+    prismaOfferSpy.mockResolvedValueOnce([OfferMock[1]]);
+
+    await expect(controller.create(new CreateInvoiceDto(OrderOverviewMock[0].id))).rejects.toThrow(new NotFoundException(OrderOverviewMock[0].id));
   });
 
   it('findAll: should return all invoices', async () => {

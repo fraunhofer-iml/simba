@@ -133,6 +133,7 @@ describe('CreateOrderComponent', () => {
       year: component.orderForm.get('date')?.value.year(),
       calendarWeek: component.orderForm.get('selectedCalendarWeek')?.value,
       customerId: '',
+      unitOfMeasureCode: ""
     };
 
     jest.spyOn(orderService, 'createOrder').mockReturnValue(of(OrderOverviewMock[0]));

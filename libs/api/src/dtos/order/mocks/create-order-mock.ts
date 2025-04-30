@@ -14,5 +14,6 @@ export const createOrderMock = new CreateOrderDto(
   +OrderLinesSeed[0].requestedQuantity,
   ServiceProcessesSeed[0].dueYear,
   ServiceProcessesSeed[0].dueCalendarWeek,
-  CompaniesSeed[0].id
+  CompaniesSeed[0].id,
+  OrderLinesSeed[0].unitOfMeasureCodeAgreed ? OrderLinesSeed[0].unitOfMeasureCodeAgreed : ''
 );

@@ -20,14 +20,15 @@ import {
   InvoiceDatabaseAdapterService,
   InvoiceForZugferd,
   InvoiceWithNFT,
-  OrderDatabaseAdapterService,
+  OfferPrismaService,
   OrderWithDependencies,
   TradeReceivablePrismaService,
+  OrderDatabaseAdapterService,
 } from '@ap3/database';
 import { S3Service } from '@ap3/s3';
-import { PAYMENT_DEADLINE_IN_DAYS, PAYMENT_TERMS, PaymentStates, VAT_IN_PERCENT } from '@ap3/util';
+import { OfferStatesEnum, PAYMENT_DEADLINE_IN_DAYS, PAYMENT_TERMS, PaymentStates, VAT_IN_PERCENT } from '@ap3/util';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Invoice, PaymentStatus, TradeReceivable } from '@prisma/client';
+import { Invoice, Offer, PaymentStatus, TradeReceivable } from '@prisma/client';
 import { InvoicesZugferdService } from './zugferd/invoices-zugferd.service';
 
 @Injectable()
@@ -37,6 +38,7 @@ export class InvoicesService {
     private readonly tradeReceivablePrismaService: TradeReceivablePrismaService,
     private readonly invoicePrismaService: InvoiceDatabaseAdapterService,
     private readonly orderDatabaseAdapterService: OrderDatabaseAdapterService,
+    private readonly offerPrismaService: OfferPrismaService,
     private readonly invoiceZugferdService: InvoicesZugferdService,
     private readonly config: ConfigurationService,
     private readonly s3Service: S3Service
@@ -139,9 +141,20 @@ export class InvoicesService {
   }
 
   public async createInvoice(createInvoiceDto: CreateInvoiceDto): Promise<InvoiceAmqpDto> {
+    const offers: Offer[] = await this.offerPrismaService.getOffersByOrderId(createInvoiceDto.orderId);
+    const acceptedOffer: Offer = offers.find((offer: Offer) => offer.status === OfferStatesEnum.ACCEPTED.toString());
+
+    if(!acceptedOffer){
+      throw new NotFoundException(createInvoiceDto.orderId);
+    }
+
     const orderOverview: OrderWithDependencies = await this.orderDatabaseAdapterService.getOrder(createInvoiceDto.orderId);
     const dueDate: Date = new Date();
     dueDate.setDate(dueDate.getDate() + PAYMENT_DEADLINE_IN_DAYS);
+
+    const requestedQuantity: number = Number(orderOverview.orderLines[0].requestedQuantity) || 1;
+    const netPricePerUnit: number = +acceptedOffer.price / requestedQuantity;
+    const totalAmountWithoutVat: number = netPricePerUnit * requestedQuantity;
 
     const newInvoiceInput: InvoiceAmqpDto = new InvoiceAmqpDto(
       '',
@@ -150,14 +163,14 @@ export class InvoicesService {
       orderOverview.id,
       '',
       '',
-      +orderOverview.totalAmountWithoutVat,
+      totalAmountWithoutVat,
       new PaymentStatusAmqpDto(PaymentStates.OPEN, new Date()),
       this.generateInvoiceNumber(),
       dueDate,
       '',
       orderOverview.vatCurrency,
       orderOverview.orderLines[0].unitOfMeasureCodeAgreed,
-      String(orderOverview.orderLines[0].netPrice),
+      String(netPricePerUnit),
       String(VAT_IN_PERCENT),
       PAYMENT_TERMS,
       orderOverview.serviceProcess.id

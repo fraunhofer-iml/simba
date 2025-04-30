@@ -24,6 +24,7 @@ import { ProductService } from '../../../shared/services/product/product.service
 import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
 import { FormatService } from '../../../shared/services/util/format.service';
 import { Countdown } from './model/countdown';
+import { UNITS } from '@ap3/util';
 
 const moment = _rollupMoment || _moment;
 
@@ -44,10 +45,12 @@ export class CreateOrderComponent {
   offers$: Observable<OfferDto[]> | undefined;
   openOffers = false;
   products$: Observable<ProductDto[]> | undefined;
+  unitOfMeasurement: string | undefined;
   countdownConfig: Countdown = {
     leftTime: 60,
     format: 'mm:ss',
   };
+  protected readonly UNITS = UNITS;
 
   constructor(
     private readonly orderService: OrdersService,
@@ -65,6 +68,7 @@ export class CreateOrderComponent {
       product: new FormControl<string>('', Validators.required),
       amount: new FormControl<number | null>(null, [Validators.required, Validators.min(0)]),
       selectedCalendarWeek: new FormControl<number | null>({ value: null, disabled: true }, Validators.required),
+      unitOfMeasurement: new FormControl<string>('', Validators.required),
     });
 
     this.orderForm.get('selectedCalendarWeek')?.disable();
@@ -92,6 +96,7 @@ export class CreateOrderComponent {
       year: this.orderForm.get('date')?.value.year(),
       calendarWeek: this.orderForm.get('selectedCalendarWeek')?.value,
       customerId: '',
+      unitOfMeasureCode: this.orderForm.get('unitOfMeasurement')?.value
     };
     this.orderService
       .createOrder(createOrderDto)

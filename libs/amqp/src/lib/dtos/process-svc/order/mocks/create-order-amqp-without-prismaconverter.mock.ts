@@ -18,4 +18,5 @@ export const CreateOrderAmqpDtoWithoutPrismaConverterMock: CreateOrderAmqpDto = 
   vatCurrency: OrdersSeed[0].vatCurrency,
   buyerId: CompaniesSeed[0].id,
   sellerId: CompaniesSeed[1].id,
+  unitOfMeasureCode: "Stück"
 };

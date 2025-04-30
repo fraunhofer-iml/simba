@@ -62,14 +62,14 @@ export class TradeReceivablesController {
   }
 
   @Get("nft")
-  @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
   @ApiOperation({ description: 'Returns every nft that is stored for the caller.' })
   async readAllNfts(): Promise<TokenReadDto[]> {
     return await this.tradeReceivableService.readAllNfts();
   }
 
   @Get("nft/:invoiceNumber")
-  @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
   @ApiParam({
     name: 'invoiceNumber',
     type: String,

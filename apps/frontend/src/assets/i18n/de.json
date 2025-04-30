@@ -13,6 +13,7 @@
     "Create": {
       "Title": "Auftrag erstellen",
       "ProductInputField": "Produkt",
+      "UnitOfMeasureCode": "Einheit",
       "YearInputField": "Jahr",
       "WeekInputField": "Bevorzugter Produktionszeitraum",
       "AmountInputField": "Stück"

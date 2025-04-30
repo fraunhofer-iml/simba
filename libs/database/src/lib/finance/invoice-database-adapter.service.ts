@@ -39,7 +39,7 @@ export class InvoiceDatabaseAdapterService {
       measuringUnit: invoiceAmqpDto.measuringUnit,
       netPricePerUnit: invoiceAmqpDto.netPricePerUnit,
       totalAmountWithoutVat: invoiceAmqpDto.totalAmountWithoutVat,
-      vat: invoiceAmqpDto.totalAmountWithoutVat,
+      vat: invoiceAmqpDto.vat,
       url: '',
       paymentTerms: invoiceAmqpDto.paymentTerms,
       serviceProcess: { connect: { id: invoiceAmqpDto.serviceProcessId } },

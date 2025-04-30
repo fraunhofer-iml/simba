@@ -13,6 +13,7 @@
     "Create": {
       "Title": "Create order",
       "ProductInputField": "Product",
+      "UnitOfMeasureCode": "Unit",
       "YearInputField": "Year",
       "WeekInputField": "Preferred production period",
       "AmountInputField": "Piece(s)"
