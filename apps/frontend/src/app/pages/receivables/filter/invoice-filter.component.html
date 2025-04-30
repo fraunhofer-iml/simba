@@ -7,8 +7,8 @@
     </div>
   </div>
 
-  <mat-dialog-content class="content">
-    <div [formGroup]="filterFormGroup">
+  <mat-dialog-content>
+    <div [formGroup]="filterFormGroup" class="content">
       @if (authService.isCustomer() || authService.isOperator()) {
         <div class="filter-option">
           <h3>{{ 'Filter.Payee' | translate }}</h3>
@@ -30,7 +30,6 @@
       }
       @if (authService.isContributor() || authService.isOperator()) {
         <div class="filter-option">
-          <h3>{{ 'Filter.Payer' | translate }}</h3>
           <h3>{{ 'Filter.Payer' | translate }}</h3>
           <mat-form-field>
             <input

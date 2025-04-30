@@ -91,15 +91,15 @@ export class InvoicesController {
     @Query('debtorId') debtorId: string = '',
     @Query('paymentStates') paymentStates: PaymentStates[] = []
   ): Promise<InvoiceDto[]> {
-    if (req.user.realm_access.roles.includes(UserRoles.ADMIN)) {
+    if (!req.user.realm_access.roles.includes(UserRoles.ADMIN)) {
       if (!creditorId && !debtorId) {
         creditorId = req.user.company;
         debtorId = req.user.company;
+      } else if (req.user.realm_access.roles.includes(UserRoles.CONTRIBUTOR)) {
+        creditorId = req.user.company;
+      } else if (req.user.realm_access.roles.includes(UserRoles.CUSTOMER)) {
+        debtorId = req.user.company;
       }
-    } else if (req.user.realm_access.roles.includes(UserRoles.CONTRIBUTOR)) {
-      creditorId = req.user.company;
-    } else if (req.user.realm_access.roles.includes(UserRoles.CUSTOMER)) {
-      debtorId = req.user.company;
     }
 
     return await this.invoicesService.findAllWithFilter(

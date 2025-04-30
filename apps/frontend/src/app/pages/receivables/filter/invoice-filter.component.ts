@@ -1,5 +1,5 @@
 import { CompanyDto } from '@ap3/api';
-import { PaymentStates } from '@ap3/util';
+import { PaymentStates, UserRoles } from '@ap3/util';
 import { map, Observable, of, startWith } from 'rxjs';
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -40,7 +40,13 @@ export class InvoiceFilterComponent implements OnInit {
   ngOnInit(): void {
     this.setAutocompletePipes();
     this.setFormGroupWithStaticFilterValues();
-    this.companiesService.getAllAvailableCompanies().subscribe((res) => {
+    this.companiesService.getAllAvailableCompanies().subscribe((res: CompanyDto[]) => {
+      if (this.authService.getCurrentlyLoggedInUserRole() !== UserRoles.ADMIN) {
+        const userCompanyId = this.authService.getCurrentlyLoggedInCompanyId();
+        res = res.filter((company: CompanyDto) => {
+          return company.id !== userCompanyId;
+        });
+      }
       this.availableCompanies = res;
       this.setFormGroupWithAsyncFilterValues();
     });

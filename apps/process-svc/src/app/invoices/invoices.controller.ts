@@ -17,11 +17,11 @@ import {
   PaidStatisticsAmqpDto,
   TRParamsCompanyIdAndYearAndFinancialRole,
 } from '@ap3/amqp';
+import { CreateInvoiceDto } from '@ap3/api';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { InvoicesService } from './invoices.service';
 import { InvoicesStatisticsService } from './statistics/invoices-statistics.service';
-import { CreateInvoiceDto } from '@ap3/api';
 
 @Controller()
 export class InvoicesController {

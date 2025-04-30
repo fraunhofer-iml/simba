@@ -83,7 +83,7 @@ export class ReceivablesComponent {
   private setFilterPredicate(): void {
     this.dataSource.filterPredicate = (data: Invoice, value: string): boolean => {
       return (
-        data.invoiceNumber.includes(value) ||
+        data.invoiceNumber.toLowerCase().includes(value) ||
         data.creditor.toLowerCase().includes(value) ||
         this.getNumberInCurrentLangFormat(Number(data.totalAmountWithoutVat)).includes(value) ||
         data.currency.toLowerCase().includes(value) ||

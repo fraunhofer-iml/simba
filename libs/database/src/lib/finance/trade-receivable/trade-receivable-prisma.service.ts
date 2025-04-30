@@ -222,7 +222,7 @@ export class TradeReceivablePrismaService {
       dueDateFrom,
       dueDateTo
     );
-    
+
     try {
       const res = <TradeReceivable[]>await this.prismaService.$queryRaw`
       SELECT tr."id", tr."nft", tr."invoiceId"

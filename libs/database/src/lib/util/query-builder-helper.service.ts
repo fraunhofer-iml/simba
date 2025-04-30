@@ -29,7 +29,7 @@ export class QueryBuilderHelperService {
       query = Prisma.sql`iv."id" IN (${Prisma.join(ids)})`;
     } else {
       // Prevent creating prisma query for empty filter
-      query = Prisma.sql`true`;
+      query = Prisma.sql`false`;
     }
     return query;
   }

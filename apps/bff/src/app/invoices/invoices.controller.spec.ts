@@ -130,36 +130,6 @@ describe('InvoicesController', () => {
     expect(res).toEqual(expectedReturnValue);
   });
 
-  it('should set creditorId an debtorId as an Admin if none are provided', async () => {
-    const expectedReturnValue = InvoiceDtoMocks;
-    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
-    sendRequestSpy.mockImplementation((messagePattern: InvoiceMessagePatterns, data: any) => {
-      return of(InvoicesAmqpMock);
-    });
-    request.user.realm_access.roles = ['ap3_admin'];
-    const res: InvoiceDto[] = await controller.findAll(
-      request,
-      InvoicesAmqpMock[0].invoiceDueDate,
-      InvoicesAmqpMock[0].invoiceDueDate,
-      InvoicesAmqpMock[0].invoiceNumber,
-      OrderAmqpMock[0].number,
-      undefined,
-      undefined,
-      [PaymentStates.OPEN]
-    );
-    const params = new AllInvoicesFilterAmqpDto(
-      [PaymentStates.OPEN],
-      request.user.company,
-      request.user.company,
-      InvoicesAmqpMock[0].invoiceNumber,
-      InvoicesAmqpMock[0].invoiceDueDate,
-      InvoicesAmqpMock[0].invoiceDueDate,
-      [OrderAmqpMock[0].number]
-    );
-    expect(sendRequestSpy).toHaveBeenCalledWith(InvoiceMessagePatterns.READ_ALL, params);
-    expect(res).toEqual(expectedReturnValue);
-  });
-
   it('should set creditorId if user Role is Contributor', async () => {
     const expectedReturnValue = InvoiceDtoMocks;
     const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
@@ -180,7 +150,7 @@ describe('InvoicesController', () => {
     const params = new AllInvoicesFilterAmqpDto(
       [PaymentStates.OPEN],
       request.user.company,
-      '',
+      request.user.company,
       InvoicesAmqpMock[0].invoiceNumber,
       InvoicesAmqpMock[0].invoiceDueDate,
       InvoicesAmqpMock[0].invoiceDueDate,
