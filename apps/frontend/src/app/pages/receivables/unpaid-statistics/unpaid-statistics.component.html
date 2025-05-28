@@ -12,7 +12,7 @@
 <div class="data">
   <div [ngClass]="{ 'data-row-host': authService.isOperator(), 'data-title-row': !authService.isOperator() }">
     <span class="text-data"> </span>
-    @if (authService.isContributor() || authService.isOperator()) {
+    @if (authService.isCustomer() || authService.isOperator()) {
       <div
         [ngClass]="{ 'column-and-items-host': authService.isOperator(), 'column-and-items': !authService.isContributor() }"
         (click)="setInvoiceFilterToLiabilities()"
@@ -21,7 +21,7 @@
         <h3 class="unpaid-statistics-column-title pointer">{{ 'Invoices.Statistics.UnpaidStatistics.Liabilities' | translate }}</h3>
       </div>
     }
-    @if (authService.isCustomer() || authService.isOperator()) {
+    @if (authService.isContributor() || authService.isOperator()) {
       <div
         [ngClass]="{ 'column-and-items-host': authService.isOperator(), 'column-and-items': !authService.isCustomer() }"
         (click)="setInvoiceFilterToDemands()"

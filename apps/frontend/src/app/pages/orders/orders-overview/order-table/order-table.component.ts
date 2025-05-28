@@ -101,11 +101,27 @@ export class OrderTableComponent implements AfterViewInit {
   }
 
   private setSortingPredicate() {
-    this.dataSource.sortingDataAccessor = (order: any, property: string) => {
-      if (property === 'statusTimestamp' && order.status === OrderStatus.planned) {
-        return this.cwService.getTimestampFromCalendarWeek(order.year, order.calendarWeek).toISOString();
+    this.dataSource.sortingDataAccessor = (data: OrderOverviewDto, property: string): string | number => {
+      let productionDate = '';
+      if (property === 'productionDate') {
+        productionDate =
+          data.status === OrderStatus.planned
+            ? this.getScheduledFor(data.year, data.calendarWeek).toLowerCase()
+            : this.formatService.transformDateToCurrentLanguageFormat(data.statusTimestamp)
       }
-      return order[property];
+
+      return (
+        data.number.toLowerCase() ||
+        this.translate.instant(`OrderStatus.${data.status}`) ||
+        this.getNumberInCurrentLangFormat(data.price) ||
+        data.currency.toLowerCase() ||
+        data.product.toLowerCase() ||
+        data.amount ||
+        data.robots.join(',').toLowerCase() ||
+        productionDate ||
+        data.customerName.toLowerCase() ||
+        data.invoiceNumber.toLowerCase()
+      );
     };
   }
 

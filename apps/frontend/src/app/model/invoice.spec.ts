@@ -8,17 +8,12 @@
 
 import { InvoiceDtoMocks } from '@ap3/api';
 import { TranslateService } from '@ngx-translate/core';
-import { FormatService } from '../shared/services/util/format.service';
 import { Invoice } from './invoice';
 
 describe('Invoice', () => {
-  let dateFormatServiceMock: Partial<FormatService>;
   let translateServiceMock: Partial<TranslateService>;
 
   beforeEach(() => {
-    dateFormatServiceMock = {
-      transformDateToCurrentLanguageFormat: jest.fn(),
-    };
     translateServiceMock = {
       instant: jest.fn(),
       stream: jest.fn(),

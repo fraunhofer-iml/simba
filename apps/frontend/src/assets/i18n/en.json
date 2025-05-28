@@ -88,7 +88,7 @@
       "PaidStatistics": {
         "Title": "Paid invoices",
         "PercentageExplanation": "The payment rate indicates the percentage of due invoices that have been settled within the agreed payment terms.",
-        "VolumeExplanation": "The payment volume represents the total sum of all paid invoice amounts within a specific period.",
+        "VolumeExplanation": "The total volume represents the total sum of all paid invoice amounts within a specific period.",
         "CreditorVolumeChartLabel": "Receivables",
         "CreditorPercentageChartLabel": "Receivables",
         "DebtorVolumeChartLabel": "Liabilities",

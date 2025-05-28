@@ -119,12 +119,12 @@ export class PaidStatisticsComponent implements OnChanges {
   }
 
   getCssColorClassVolume(label: string) {
-    return label === this.mixedChartData.datasets[0].label
+    return label === this.mixedChartData.datasets[1].label
       ? 'paid-statistics-creditor-volume-color option'
       : 'paid-statistics-debtor-volume-color option';
   }
   getCssColorClassRate(label: string) {
-    return label === this.mixedChartData.datasets[1].label
+    return label === this.mixedChartData.datasets[0].label
       ? 'paid-statistics-creditor-percentage-color option'
       : 'paid-statistics-debtor-percentage-color option';
   }

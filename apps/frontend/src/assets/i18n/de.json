@@ -83,8 +83,8 @@
       },
       "PaidStatistics": {
         "Title": "Bezahlte Rechnungen",
-        "PercentageExplanation": "Die Zahlungsquote gibt an, welcher Anteil der fälligen Rechnungen innerhalb der vereinbarten Zahlungsfrist beglichen wurde.",
-        "VolumeExplanation": "Das Zahlungsvolumen gibt die Gesamtsumme aller gezahlten Rechnungsbeträge in einem bestimmten Zeitraum an.",
+        "PercentageExplanation": "Die Zahlungsrate gibt an, welcher Anteil der fälligen Rechnungen innerhalb der vereinbarten Zahlungsfrist beglichen wurde.",
+        "VolumeExplanation": "Das Gesamtvolumen gibt die Gesamtsumme aller gezahlten Rechnungsbeträge in einem bestimmten Zeitraum an.",
         "CreditorVolumeChartLabel": "Forderungen",
         "CreditorPercentageChartLabel": "Forderungen",
         "DebtorVolumeChartLabel": "Verbindlichkeiten",
