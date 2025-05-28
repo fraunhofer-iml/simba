@@ -1,9 +1,8 @@
 import { CompanyDto } from '@ap3/api';
 import { PaymentStates, UserRoles } from '@ap3/util';
 import { map, Observable, of, startWith } from 'rxjs';
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { InvoiceFilter } from '../../../model/invoice-filter';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { CompaniesService } from '../../../shared/services/companies/companies.service';
@@ -29,13 +28,15 @@ export class InvoiceFilterComponent implements OnInit {
 
   filteredPayerOptions: Observable<CompanyDto[]> = of([]);
   filteredPayeeOptions: Observable<CompanyDto[]> = of([]);
+  @Input() filter: InvoiceFilter;
+  @Output() outputFilter = new EventEmitter<InvoiceFilter>();
 
   constructor(
-    public dialogRef: MatDialogRef<InvoiceFilterComponent>,
-    @Inject(MAT_DIALOG_DATA) public filter: InvoiceFilter,
     private readonly companiesService: CompaniesService,
     readonly authService: AuthService
-  ) {}
+  ) {
+    this.filter = {};
+  }
 
   ngOnInit(): void {
     this.setAutocompletePipes();
@@ -154,7 +155,7 @@ export class InvoiceFilterComponent implements OnInit {
 
   onSaveClick(): void {
     this.setFilter();
-    this.dialogRef.close(this.filter);
+    this.outputFilter.emit(this.filter);
   }
 
   resetFormGroup() {

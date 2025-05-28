@@ -6,6 +6,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+.drawer {
+  height: 100%;
+}
+
+.filter-sidebar {
+  display: flex;
+  height: 100%;
+}
+
 .receivables-container {
   margin: 1rem;
   display: flex;
@@ -32,7 +41,6 @@
 .statistics-wrapper > :last-child {
   flex: 1.1;
 }
-
 
 .download-button {
   min-width: 250px;
@@ -99,19 +107,6 @@
 
 .filter-button {
   margin-top: 0.5rem;
-}
-
-/* Materials */
-.mat-mdc-card-content:first-child {
-  padding-top: 0;
-}
-
-.mat-mdc-card-content:last-child {
-  padding-bottom: 0;
-}
-
-.mat-mdc-header-cell {
-  font-weight: bold;
 }
 
 .invoiceNumber:hover {

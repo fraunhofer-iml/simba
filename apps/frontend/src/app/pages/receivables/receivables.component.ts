@@ -26,7 +26,6 @@ import { InvoiceFilterService } from '../../shared/services/invoices/filter/invo
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
 import { FormatService } from '../../shared/services/util/format.service';
 import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
-import { InvoiceFilterComponent } from './filter/invoice-filter.component';
 import { TokenDetailsDialogComponent } from './token-details-dialog/token-details-dialog.component';
 
 @Component({
@@ -173,23 +172,11 @@ export class ReceivablesComponent implements OnInit {
     });
   }
 
-  openFilterDialog(event: MouseEvent) {
-    const dialogRef = this.dialog.open(InvoiceFilterComponent, {
-      position: { top: `${String(event.clientY)}px`, left: `${String(event.clientX)}px` },
-      hasBackdrop: true,
-      disableClose: false,
-      autoFocus: true,
-      data: this.invoiceFilterService.getFilter(),
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result !== undefined) {
-        this.invoiceFilterService.setFilter(result);
-        this.invoiceFilterService.cleanupFilter();
-        this.loadInvoices(this.invoiceFilterService.getFilter());
-        this.activatedFiltersCount = this.countSelectedFilterOptions();
-      }
-    });
+  getFilteredData(filter: InvoiceFilter): void {
+    this.invoiceFilterService.setFilter(filter);
+    this.invoiceFilterService.cleanupFilter();
+    this.loadInvoices(this.invoiceFilterService.getFilter());
+    this.activatedFiltersCount = this.countSelectedFilterOptions();
   }
 
   openTokenDetailsDialog(invoiceNumber: string) {

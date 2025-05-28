@@ -53,7 +53,7 @@ body {
   --greyisch: #e8e6e6;
 }
 
-.mat-sort-header-container{
+.mat-sort-header-container {
   font-weight: bold;
 }
 
@@ -102,6 +102,23 @@ h4 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+//Mat
+
+.mat-drawer {
+  background-color: white !important;
+}
+.mat-mdc-card-content:first-child {
+  padding-top: 0;
+}
+
+.mat-mdc-card-content:last-child {
+  padding-bottom: 0;
+}
+
+.mat-mdc-header-cell {
+  font-weight: bold;
 }
 
 /* All Buttons */
