@@ -7,8 +7,9 @@
  */
 
 import { OrderOverviewDto } from '@ap3/api';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute } from '@angular/router';
 import { ROUTING } from '../../../routing/routing.enum';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
@@ -19,7 +20,7 @@ import { OrderStatus } from './enum/orderStatus';
   templateUrl: './orders-overview.component.html',
   styleUrl: './orders-overview.component.scss',
 })
-export class OrdersOverviewComponent {
+export class OrdersOverviewComponent implements OnInit {
   isCustomer: boolean;
   filterText = '';
   dataSource = new MatTableDataSource<OrderOverviewDto>();
@@ -29,10 +30,18 @@ export class OrdersOverviewComponent {
 
   constructor(
     private readonly orderService: OrdersService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly route: ActivatedRoute
   ) {
     this.isCustomer = this.authService.isCustomer();
     this.loadOrders();
+  }
+
+  ngOnInit(): void {
+    const possibleId = this.route.snapshot.queryParamMap.get('orderId');
+    if (possibleId) {
+      this.filterText = possibleId;
+    }
   }
 
   private loadOrders(): void {

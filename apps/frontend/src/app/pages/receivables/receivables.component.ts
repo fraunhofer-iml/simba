@@ -11,12 +11,14 @@ import { PaymentStates } from '@ap3/util';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute } from '@angular/router';
 import { Invoice } from '../../model/invoice';
 import { InvoiceFilter } from '../../model/invoice-filter';
 import { AuthService } from '../../shared/services/auth/auth.service';
@@ -32,11 +34,12 @@ import { TokenDetailsDialogComponent } from './token-details-dialog/token-detail
   templateUrl: './receivables.component.html',
   styleUrl: './receivables.component.scss',
 })
-export class ReceivablesComponent {
+export class ReceivablesComponent implements OnInit {
   filterSubject: Observable<boolean>;
   filteredInvoicesIds: string[];
   activatedFiltersCount: number;
   displayedInvoiceColumns: string[];
+  searchbar: FormControl<string> = new FormControl();
   private readonly _snackBar = inject(MatSnackBar);
   paymentStates = [PaymentStates.PAID, PaymentStates.FINANCED];
   paymentStatusChanges: InvoiceIdAndPaymentStateDto[];
@@ -52,7 +55,8 @@ export class ReceivablesComponent {
     private readonly dialog: MatDialog,
     private readonly translationService: TranslateService,
     readonly authService: AuthService,
-    private readonly invoiceFilterService: InvoiceFilterService
+    private readonly invoiceFilterService: InvoiceFilterService,
+    private readonly route: ActivatedRoute
   ) {
     this.filterSubject = this.invoiceFilterService.getSubject().asObservable();
     this.filterSubject.subscribe((newFilter: boolean) => {
@@ -78,6 +82,14 @@ export class ReceivablesComponent {
     this.dataSource = new MatTableDataSource<Invoice>();
     this.loadInvoices();
     this.setFilterPredicate();
+  }
+
+  ngOnInit(): void {
+    const possibleId = this.route.snapshot.queryParamMap.get('invoiceNumber');
+    if (possibleId) {
+      this.searchbar.setValue(possibleId);
+      this.convertInputAndResetPaginator(new Event(''), possibleId);
+    }
   }
 
   private setFilterPredicate(): void {
@@ -130,8 +142,8 @@ export class ReceivablesComponent {
     this.dataSource.sort = this.sort ?? null;
   }
 
-  convertInputAndResetPaginator(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
+  convertInputAndResetPaginator(event: Event, queryParam?: string) {
+    const filterValue = queryParam ?? (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
     if (this.dataSource.paginator) {

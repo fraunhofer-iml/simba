@@ -22,19 +22,11 @@
   <div class="table-container card">
     <mat-tab-group>
       <mat-tab label="{{ 'Open' | translate }}">
-        <app-order-table
-          [dataSource]="dataSourceOpen"
-          [filterValue]="filterText"
-          [isCustomer]="isCustomer">
-        </app-order-table>
+        <app-order-table [dataSource]="dataSourceOpen" [filterValue]="filterText" [isCustomer]="isCustomer"> </app-order-table>
       </mat-tab>
 
       <mat-tab label="{{ 'Closed' | translate }}">
-        <app-order-table
-          [dataSource]="dataSourceClosed"
-          [filterValue]="filterText"
-          [isCustomer]="isCustomer">
-        </app-order-table>
+        <app-order-table [dataSource]="dataSourceClosed" [filterValue]="filterText" [isCustomer]="isCustomer"> </app-order-table>
       </mat-tab>
     </mat-tab-group>
   </div>

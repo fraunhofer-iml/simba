@@ -12,7 +12,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../../guards/auth/auth.guard';
 import { ReceivablesComponent } from './receivables.component';
 
-const routes: Routes = [{ path: '', component: ReceivablesComponent, canActivate: [AuthGuard] }];
+const routes: Routes = [
+  { path: '', component: ReceivablesComponent, canActivate: [AuthGuard] },
+  { path: ':id', component: ReceivablesComponent, canActivate: [AuthGuard] },
+];
 
 @NgModule({
   imports: [CommonModule, RouterModule.forChild(routes)],

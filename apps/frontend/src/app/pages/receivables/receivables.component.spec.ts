@@ -25,7 +25,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
+import { appRoutes } from '../../app.routes';
 import { Invoice } from '../../model/invoice';
 import { AuthService } from '../../shared/services/auth/auth.service';
 import { InvoiceFilterService } from '../../shared/services/invoices/filter/invoice-filter.service';
@@ -87,6 +88,8 @@ describe('ReceivablesComponent', () => {
         RouterOutlet,
         MatSelectModule,
         MatMenuModule,
+        NoopAnimationsModule,
+        RouterModule.forRoot(appRoutes),
         TranslateModule.forRoot(),
       ],
       declarations: [ReceivablesComponent, UnpaidStatisticsComponent, PaidStatisticsComponent],

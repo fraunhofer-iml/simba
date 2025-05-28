@@ -12,8 +12,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../../guards/auth/auth.guard';
 import { RoleGuard } from '../../guards/role/role.guard';
 import { CreateOrderComponent } from './create-order/create-order.component';
-import { OrdersOverviewComponent } from './orders-overview/orders-overview.component';
 import { OrderDetailsComponent } from './order-details/order-details.component';
+import { OrdersOverviewComponent } from './orders-overview/orders-overview.component';
 
 const routes: Routes = [
   { path: '', component: OrdersOverviewComponent, canActivate: [AuthGuard] },
