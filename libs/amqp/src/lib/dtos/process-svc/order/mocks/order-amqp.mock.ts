@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MachinesSeed, OrderLinesSeed, OrdersSeed, ServiceProcessesSeed, ServiceStatesSeed } from '@ap3/database';
+import { CompaniesSeed, MachinesSeed, OrderLinesSeed, OrdersSeed, ServiceProcessesSeed, ServiceStatesSeed } from '@ap3/database';
 import { ServiceStatusAmqpDto } from '../index';
 import { OrderAmqpDto } from '../order-amqp.dto';
 
@@ -26,6 +26,8 @@ export const OrderAmqpMock = <OrderAmqpDto[]>[
     customerId: OrdersSeed[0].buyerId,
     tradeReceivableIds: [],
     currency: OrdersSeed[0].vatCurrency,
+    contractorId: OrdersSeed[0].sellerId,
+    contractorName: CompaniesSeed[1].name,
   },
   {
     id: OrdersSeed[1].id,
@@ -42,5 +44,7 @@ export const OrderAmqpMock = <OrderAmqpDto[]>[
     customerId: OrdersSeed[1].buyerId,
     tradeReceivableIds: [],
     currency: OrdersSeed[1].vatCurrency,
+    contractorId: OrdersSeed[1].sellerId,
+    contractorName: CompaniesSeed[1].name,
   },
 ];

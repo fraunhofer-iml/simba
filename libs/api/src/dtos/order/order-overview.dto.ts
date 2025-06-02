@@ -60,6 +60,10 @@ export class OrderOverviewDto {
   customerId: string;
   @ApiProperty()
   customerName: string;
+  @ApiProperty()
+  contractorId: string;
+  @ApiProperty()
+  contractorName: string;
   @ApiProperty({
     type: String,
     enum: CurrenciesEnum,
@@ -81,6 +85,8 @@ export class OrderOverviewDto {
     robots: string[],
     customerId: string,
     customerName: string,
+    contractorId: string,
+    contractorName: string,
     currency: string,
     invoiceNumber: string
   ) {
@@ -96,6 +102,8 @@ export class OrderOverviewDto {
     this.robots = robots;
     this.customerId = customerId;
     this.customerName = customerName;
+    this.contractorId = contractorId;
+    this.contractorName = contractorName;
     this.currency = currency;
     this.invoiceNumber = invoiceNumber;
   }
@@ -120,6 +128,8 @@ export class OrderOverviewDto {
       entity.robots ? entity.robots : [],
       entity.customerId,
       customerName,
+      entity.contractorId,
+      entity.contractorName,
       entity.currency,
       invoice?.invoiceNumber ? invoice.invoiceNumber : ''
     );

@@ -25,6 +25,8 @@ export class OrderAmqpDto {
   customerId: string;
   tradeReceivableIds: string[];
   currency: string;
+  contractorId: string;
+  contractorName: string;
 
   constructor(
     id: string,
@@ -40,6 +42,8 @@ export class OrderAmqpDto {
     tradeReceivableIds: string[] = [],
     offerIds: string[] = [],
     robots: string[] = [],
+    contractorId: string,
+    contractorName: string,
     acceptedOfferId?: string
   ) {
     this.id = id;
@@ -55,6 +59,8 @@ export class OrderAmqpDto {
     this.tradeReceivableIds = tradeReceivableIds;
     this.offerIds = offerIds;
     this.robots = robots;
+    this.contractorId = contractorId;
+    this.contractorName = contractorName;
     this.acceptedOfferId = acceptedOfferId;
   }
 
@@ -77,6 +83,8 @@ export class OrderAmqpDto {
       tradeReceivableIds ? tradeReceivableIds : [],
       order.serviceProcess?.offers.map((offer) => offer.id),
       DatabaseUtil.ExtractMachineIdsFromServiceProcess(order.serviceProcess),
+      order.seller.id,
+      order.seller.name,
       order.serviceProcess?.acceptedOffer?.id
     );
   }
