@@ -64,9 +64,9 @@ export class OrderDetailsComponent {
   getStatusTooltip(allProcessStatus: ServiceProcessStatusDto[], status: string): string {
     const timestamp = this.getStatusTimestamp(allProcessStatus, status);
     if (!timestamp) return '';
-    return `${this.translate.instant('Status')}: ${this.translate.instant('OrderStatus.' + status)}
-            ${this.translate.instant('StartDate')}: ${this.datePipe.transform(timestamp, this.formatService.getDateFormatByCurrentLang())}
-            ${this.translate.instant('Time')}: ${this.datePipe.transform(timestamp, this.formatService.getTimeFormat())}`;
+
+    return `${this.translate.instant('Orders.OrderTable.Status')}: ${this.translate.instant('Orders.Status.' + status)}
+            ${this.translate.instant('Nft.Date')}: ${timestamp}`;
   }
 
   getStatus(allProcessStatus: ServiceProcessStatusDto[], status: string): boolean {

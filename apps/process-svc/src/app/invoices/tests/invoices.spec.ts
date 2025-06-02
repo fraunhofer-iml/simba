@@ -93,7 +93,7 @@ describe('InvoicesController', () => {
       ],
     }).compile();
 
-    jest.useFakeTimers().setSystemTime(new Date('2024-10-11T07:55:55.695Z'));
+    jest.useFakeTimers().setSystemTime(new Date('2024-10-12T00:00:00.000Z'));
     controller = module.get<InvoicesController>(InvoicesController) as InvoicesController;
     prisma = module.get<PrismaService>(PrismaService) as PrismaService;
 
@@ -122,7 +122,7 @@ describe('InvoicesController', () => {
     expectedReturn.paymentTerms = '10 Tage 2%; 60 Tage netto';
     expectedReturn.serviceProcessId = 'sp003';
     expectedReturn.netPricePerUnit = '1';
-    expectedReturn.status.timestamp = new Date('2024-10-11T07:55:55.695Z');
+    expectedReturn.status.timestamp = new Date('2024-10-12T00:00:00.000Z');
     expectedReturn.orderId = "";
     expectedReturn.orderNumber = "";
 
