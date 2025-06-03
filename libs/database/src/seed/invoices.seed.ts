@@ -136,7 +136,7 @@ export const InvoiceSeed = <Invoice[]>[
     url: 'INV_INV-20241120-8.pdf',
     debtorId: CompaniesSeed[1].id,
     creditorId: CompaniesSeed[2].id,
-    serviceProcessId: ServiceProcessesSeed[7].id,
+    serviceProcessId: ServiceProcessesSeed[38].id,
     paymentTerms: '10 Tage 2%; 60 Tage netto',
   },
   {

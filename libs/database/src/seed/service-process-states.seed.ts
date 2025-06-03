@@ -166,11 +166,6 @@ export const ServiceStatesSeed = <ServiceStatus[]>[
     timestamp: new Date('2024-11-20T07:55:55.695Z'),
   },
   {
-    serviceProcessId: 'sp008',
-    status: ServiceStatesEnum.PRODUCED,
-    timestamp: new Date('2024-11-20T00:00:00Z'),
-  },
-  {
     serviceProcessId: 'sp009',
     status: ServiceStatesEnum.OPEN,
     timestamp: new Date('2024-11-11T07:55:55.695Z'),
