@@ -1,0 +1,159 @@
+/*!
+ * Copyright Fraunhofer Institute for Material Flow and Logistics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * For details on the licensing terms, see the LICENSE file.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+.selection-list mat-list-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+  border-radius: 8px;
+  margin: 4px 0;
+}
+
+.site-policies{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+.site-policies-links{
+  text-decoration: none;
+  color: inherit;
+
+}
+
+#flags {
+  margin-right: 0.5rem;
+  width: 1rem;
+}
+
+.selection-list mat-list-item.active {
+  background-color: var(--creme-color);
+}
+
+.selection-list mat-list-item img {
+  margin-right: 16px;
+}
+
+.spacer {
+  max-width: 100em;
+}
+
+.drawer-content-container {
+  margin: 0 1rem 0 1rem;
+  height: 90%;
+}
+
+.user-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  background-color: var(--dark-blue-color);
+  color: white;
+  border-radius: 8px;
+}
+
+/* User Information */
+.user-information {
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.user-information img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 15px;
+  color: white;
+}
+
+/* Logout Button */
+.user-container button {
+  border: none;
+  border-radius: 4px;
+  color: white;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.user-container button img {
+  width: 24px;
+  height: 24px;
+}
+
+.user-container button:hover {
+  background-color: var(--dark-blue-color);
+}
+
+.logos-container {
+  margin-top: 4em;
+  justify-content: space-between;
+  display: flex;
+}
+
+.icon {
+  color: white;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin-bottom: 1em;
+  margin-left: 0.5em;
+  color: var(--dark-blue-color);
+  margin-top: 1em;
+  font-weight: bold;
+}
+
+.image {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+#simba {
+  height: 40px;
+  width: 40px;
+}
+
+.logos {
+  width: 150px;
+  height: 25px;
+}
+
+.footer {
+  padding: 1em;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.sidebar-container {
+  background: var(--lavendel-color);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.mat-drawer {
+  background-color: white !important;
+}
+
+.language-button-container {
+  margin-left: auto;
+}

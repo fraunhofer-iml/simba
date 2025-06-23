@@ -1,0 +1,72 @@
+<!--
+  ~ Copyright Fraunhofer Institute for Material Flow and Logistics
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License").
+  ~ For details on the licensing terms, see the LICENSE file.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<mat-dialog-content>
+  <img src="assets/icons/close.svg" alt="Icon" id="close" (keyup)="dialogRef.close()" (click)="dialogRef.close()" />
+
+  <div *ngIf="invoiceNft | async as invoiceNft; else errorTemplate">
+    <span class="token-batch">{{ 'Nft.Token' | translate }}: {{ invoiceNft.tokenId }}</span>
+    <h3 class="title">{{ 'Nft.Invoice' | translate }} {{ invoiceNft.remoteId }}</h3>
+
+    <div class="split-parts">
+      <div class="card">
+        <h3>{{ 'Nft.Addresses' | translate }}</h3>
+        <div class="grid-variables">
+          <p class="bold">Token</p>
+          <span class="text">{{ invoiceNft.tokenAddress }}</span>
+          <p class="bold">{{ 'Nft.Owner' | translate }}</p>
+          <span class="text">{{ invoiceNft.ownerAddress }}</span>
+          <p class="bold">{{ 'Nft.Minter' | translate }}</p>
+          <span class="text">{{ invoiceNft.minterAddress }}</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>{{ 'Nft.Date' | translate }}</h3>
+        <div class="grid-variables">
+          <p class="bold">{{ 'Nft.Created' | translate }}</p>
+          <span class="text">{{ invoiceNft.createdOn | date: 'yyyy-MM-dd HH:mm' }}</span>
+          <p class="bold">{{ 'Nft.Updated' | translate }}</p>
+          <span class="text">{{ invoiceNft.lastUpdatedOn | date: 'yyyy-MM-dd HH:mm' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="split-parts">
+      <div class="card">
+        <h3>{{ 'Nft.Asset' | translate }}</h3>
+        <div class="grid-variables">
+          <p class="bold">Uri</p>
+          <span class="text">{{ invoiceNft.asset.uri }}</span>
+          <p class="bold">Hash</p>
+          <span class="text wrap-text">{{ invoiceNft.asset.hash }}</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>{{ 'Nft.MetaData' | translate }}</h3>
+        <div class="grid-variables">
+          <p class="bold">Uri</p>
+          <span class="text">{{ invoiceNft.metadata.uri }}</span>
+          <p class="bold">Hash</p>
+          <span class="text wrap-text">{{ invoiceNft.metadata.hash }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="card grid-variables">
+      <p class="bold">{{ 'Nft.Information' | translate }}</p>
+      <span class="text wrap-text">{{ invoiceNft.additionalData }}</span>
+    </div>
+  </div>
+
+  <ng-template #errorTemplate>
+    <div class="error-message">
+      <p>{{ 'Nft.ErrorNft' | translate }}</p>
+    </div>
+  </ng-template>
+</mat-dialog-content>

@@ -1,0 +1,109 @@
+<!--
+  ~ Copyright Fraunhofer Institute for Material Flow and Logistics
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License").
+  ~ For details on the licensing terms, see the LICENSE file.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<div class="creation-container">
+  <h1>{{ 'Orders.Title' | translate }}</h1>
+  <div class="card">
+    <mat-card-content>
+      <form class="order-content" [formGroup]="orderForm">
+        <mat-form-field class="order-field">
+          <mat-select placeholder="{{ 'Orders.Create.ProductInputField' | translate }}" formControlName="product">
+            @for (product of products$ | async; track product) {
+              <mat-option [value]="product">{{ product.name }} </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="order-field">
+          <mat-select
+            [(value)]="unitOfMeasurement"
+            placeholder="{{ 'Orders.Create.UnitOfMeasureCode' | translate }}"
+            formControlName="unitOfMeasurement"
+          >
+            <mat-option *ngFor="let unitOfMeasurement of UNITS" [value]="unitOfMeasurement">
+              {{ unitOfMeasurement }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="order-field">
+          <input
+            matInput
+            placeholder="{{ 'Orders.Create.AmountInputField' | translate }}"
+            formControlName="amount"
+            type="number"
+            value="number"
+            min="1"
+            pattern="\d*"
+          />
+        </mat-form-field>
+        <mat-form-field class="order-field" id="order-year">
+          <input
+            placeholder="{{ 'Orders.Create.YearInputField' | translate }}"
+            matInput
+            readonly
+            [matDatepickerFilter]="datePickerFilter"
+            [matDatepicker]="dp"
+            formControlName="date"
+          />
+          <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+          <mat-datepicker #dp startView="multi-year" (yearSelected)="setYear($event, dp)" panelClass="year-picker"> </mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="order-field" id="order-week">
+          <mat-select placeholder="{{ 'Orders.Create.WeekInputField' | translate }}" formControlName="selectedCalendarWeek">
+            @for (week of allCalendarWeeks; track week) {
+              <mat-option [value]="week">{{ 'CalendarWeek' | translate }} {{ week }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <div class="create-button-container">
+          <button class="create-button" (click)="createOrder()" mat-flat-button [disabled]="!orderForm.valid">
+            {{ 'Buttons.Create' | translate }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </div>
+
+  <!-- Offers -->
+  <div class="card offer-container" *ngIf="openOffers">
+    <div class="offers-header">
+      <h1 class="title">{{ 'Offers.Title' | translate }}</h1>
+      <div class="deadline">
+        <p>{{ 'Offers.TimerText' | translate }}</p>
+        <countdown [config]="countdownConfig" (event)="onEvent($event)"></countdown>
+      </div>
+    </div>
+    <div class="offers-container">
+      @for (offer of offers$ | async; track $index) {
+        <div class="card offers">
+          <div class="offerIdAndDate">
+            <p id="offerId" class="grey">ID {{ offer.id }}</p>
+          </div>
+          <p id="offerName">{{ orderForm.get('product')?.value.name }}</p>
+          <div class="offer-details-grid">
+            <div class="offer-details-grid-label">{{ 'Offers.ProductionWeek' | translate }}:</div>
+            <div class="offer-details-grid-value">{{ getScheduledFor(offer.plannedCalendarWeek, offer.plannedYear) }}</div>
+            <div class="offer-details-grid-label">{{ 'Offers.Amount' | translate }}:</div>
+            <div class="offer-details-grid-value">{{ orderForm.get('amount')?.value }}</div>
+            <div class="offer-details-grid-label">{{ 'Offers.OfferedPrice' | translate }}:</div>
+            <div class="offer-details-grid-value">
+              {{ offer.basePrice + offer.fixedCosts + offer.utilizationPrice | currency: 'EUR' : 'symbol' : '1.2-2' }}
+            </div>
+          </div>
+          <div class="button-container">
+            <button mat-flat-button class="accept-button" (click)="acceptOffer(offer.id)">{{ 'Buttons.Accept' | translate }}</button>
+          </div>
+        </div>
+      }
+    </div>
+    <div class="button-container">
+      <button mat-flat-button class="decline-button" (click)="declineAllOffers(); navigateToOrders()">
+        {{ 'Offers.DeclineAllOffers' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

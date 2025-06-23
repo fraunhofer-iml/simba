@@ -1,0 +1,97 @@
+<table mat-table [dataSource]="dataSource" class="background-white" matSort>
+  <ng-container matColumnDef="select">
+    <th mat-header-cell *matHeaderCellDef>
+      <mat-checkbox
+        (change)="$event ? toggleSelectionForAllRows() : null"
+        [checked]="selection.hasValue() && isAllSelected()"
+        [indeterminate]="selection.hasValue() && !isAllSelected()"
+      >
+      </mat-checkbox>
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <mat-checkbox
+        (click)="$event.stopPropagation()"
+        (keyup)="$event ? toggleSelectionForAllRows() : null"
+        (change)="$event ? selection.toggle(row) : null"
+        [checked]="selection.isSelected(row)"
+      >
+      </mat-checkbox>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="invoiceNumber">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="invoiceNumber">{{ 'Invoices.Table.Number' | translate }}</th>
+    <td
+      mat-cell
+      class="invoiceNumber"
+      *matCellDef="let row"
+      (keyup)="openTokenDetailsDialog(row.invoiceNumber)"
+      (click)="openTokenDetailsDialog(row.invoiceNumber)"
+    >
+      {{ row.invoiceNumber }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="creditor">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="creditor">{{ 'Invoices.Table.Payee' | translate }}</th>
+    <td mat-cell *matCellDef="let row">{{ row.creditor }}</td>
+  </ng-container>
+  <ng-container matColumnDef="totalAmountWithoutVat">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="totalAmountWithoutVat">{{ 'Invoices.Table.Amount' | translate }}</th>
+    <td mat-cell class="center-row" *matCellDef="let row">{{ formatService.transformNumberToCurrentLanguageFormat(row.totalAmountWithoutVat) }}</td>
+  </ng-container>
+  <ng-container matColumnDef="currency">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="currency">{{ 'Invoices.Table.Currency' | translate }}</th>
+    <td mat-cell *matCellDef="let row">{{ row.currency }}</td>
+  </ng-container>
+  <ng-container matColumnDef="invoiceDueDate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="invoiceDueDate">{{ 'Invoices.Table.DueDate' | translate }}</th>
+    <td mat-cell *matCellDef="let row">{{ row.invoiceDueDate | date: formatService.getDateFormatByCurrentLang() }}</td>
+  </ng-container>
+  <ng-container matColumnDef="debtor">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="debtor">{{ 'Invoices.Table.Payer' | translate }}</th>
+    <td mat-cell *matCellDef="let row">{{ row.debtor }}</td>
+  </ng-container>
+  <ng-container matColumnDef="orderNumber">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="orderNumber">{{ 'Invoices.Table.OrderNumber' | translate }}</th>
+    <td mat-cell *matCellDef="let row">{{ row.orderNumber }}</td>
+  </ng-container>
+  <ng-container matColumnDef="paymentStatus">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="paymentStatus">{{ 'Invoices.Table.FinancialState' | translate }}</th>
+    <td mat-cell *matCellDef="let row">
+      <div class="paymentStatus-container">
+        <span [ngClass]="{ 'paymentStatus-changed': isChanged(row.id), 'paymentStatus-unchanged': !isChanged(row.id) }">
+          {{ 'PaymentStatus.' + row.displayedStatus | translate }}</span
+        >
+        @if (
+          !authService.isCustomer() && authService.isCurrentlyLoggedInCompany(row.creditorId) && !paymentStates.includes(row.paymentStatus)
+        ) {
+          <button class="paymentStatus-options-button" mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon><img src="assets/icons/arrow_down.svg" alt="Icon" /></mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            @if (row.paymentStatus !== row.displayedStatus) {
+              <mat-option (click)="changePaymentStatus(row.paymentStatus, row)" onkeyup="">
+                {{ 'PaymentStatus.' + row.paymentStatus | translate }}
+              </mat-option>
+            }
+            @for (state of paymentStates; track state) {
+              @if (state !== row.displayedStatus && state !== row.paymentStatus) {
+                <mat-option (click)="changePaymentStatus(state, row)" onkeyup="">
+                  {{ 'PaymentStatus.' + state | translate }}
+                </mat-option>
+              }
+            }
+          </mat-menu>
+        }
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedInvoiceColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedInvoiceColumns"></tr>
+
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" colspan="4">{{ 'NoMatchingData' | translate }}</td>
+  </tr>
+</table>
+<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users" class="background-white"></mat-paginator>

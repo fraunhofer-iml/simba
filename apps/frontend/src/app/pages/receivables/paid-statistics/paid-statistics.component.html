@@ -1,0 +1,82 @@
+<!--
+  ~ Copyright Fraunhofer Institute for Material Flow and Logistics
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License").
+  ~ For details on the licensing terms, see the LICENSE file.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<div class="transactions-statistics-card">
+  <div class="transactions-header">
+    <h2>{{ 'Invoices.Statistics.PaidStatistics.Title' | translate }}</h2>
+    <div class="years-container">
+      <div class="year">
+        <span>{{ 'Invoices.Statistics.PaidStatistics.Year' | translate }}</span>
+        <span> {{ selectedYear }}</span>
+      </div>
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon><img ngSrc="assets/icons/calendar.svg" alt="Icon" height="24" width="24" /></mat-icon>
+      </button>
+      <mat-menu class="year-selector" #menu="matMenu" xPosition="before" cdkScrollable="true">
+        @for (year of selectableYears; track year) {
+          <button mat-menu-item (click)="onYearSelection(year)">
+            <span>{{ year }}</span>
+          </button>
+        }
+      </mat-menu>
+    </div>
+  </div>
+  <div class="legend-with-chart">
+    <mat-list>
+      <div class="heading-legend">
+        <span matListItemTitle>{{ 'Invoices.Statistics.PaidStatistics.VolumeChartLabel' | translate }}</span>
+        <span
+          class="material-symbols-outlined"
+          [matTooltip]="'Invoices.Statistics.PaidStatistics.VolumeExplanation' | translate"
+          matTooltipPosition="right"
+        >
+          info
+        </span>
+      </div>
+      <mat-selection-list>
+        @for (dataset of mixedChartData.datasets; track dataset; let index = $index) {
+          @if (dataset.label && dataset.yAxisID === volumeYAxis) {
+            <mat-list-option
+              [ngClass]="getCssColorClassVolume(dataset.label)"
+              [selected]="!(mixedChartData.datasets[index].hidden ?? false)"
+              (click)="toggleDatasetVisibility(index)"
+            >
+              <span matListItemLine> {{ 'Invoices.Statistics.PaidStatistics.' + dataset.label | translate }} </span>
+            </mat-list-option>
+          }
+        }
+      </mat-selection-list>
+      <div class="heading-legend">
+        <span matListItemTitle>{{ 'Invoices.Statistics.PaidStatistics.PercentageChartLabel' | translate }}</span>
+        <span
+          class="material-symbols-outlined"
+          [matTooltip]="'Invoices.Statistics.PaidStatistics.PercentageExplanation' | translate"
+          matTooltipPosition="right"
+        >
+          info
+        </span>
+      </div>
+      <mat-selection-list>
+        @for (dataset of mixedChartData.datasets; track dataset; let index = $index) {
+          @if (dataset.label && dataset.yAxisID === percentageYAxis) {
+            <mat-list-option
+              [ngClass]="getCssColorClassRate(dataset.label)"
+              [selected]="!(mixedChartData.datasets[index].hidden ?? false)"
+              (click)="toggleDatasetVisibility(index)"
+            >
+              <span matListItemLine> {{ 'Invoices.Statistics.PaidStatistics.' + dataset.label | translate }} </span>
+            </mat-list-option>
+          }
+        }
+      </mat-selection-list>
+    </mat-list>
+    <div class="chart-wrapper">
+      <canvas baseChart [data]="mixedChartData" [labels]="mixedChartData.labels" [options]="mixedChartOptions"> </canvas>
+    </div>
+  </div>
+</div>

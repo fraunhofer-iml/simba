@@ -1,0 +1,167 @@
+{
+  "Sidebar": {
+    "ProjectName": "SiMBA",
+    "Imprint": "Impressum",
+    "PrivacyPolicy": "Datenschutzerklärung",
+    "Orders": "Aufträge",
+    "Production": "Produktion",
+    "Receivables": "Rechnungen"
+  },
+
+  "Orders": {
+    "Title": "Aufträge",
+    "Create": {
+      "Title": "Auftrag erstellen",
+      "ProductInputField": "Produkt",
+      "UnitOfMeasureCode": "Einheit",
+      "YearInputField": "Jahr",
+      "WeekInputField": "Bevorzugter Produktionszeitraum",
+      "AmountInputField": "Stück"
+    },
+    "OrderTable": {
+      "Id": "Auftrags ID",
+      "Status": "Status",
+      "ProductionDate": "Produktionsdatum",
+      "Price": "Preis",
+      "Currency": "Währung",
+      "ProductName": "Produkt",
+      "Quantity": "Stück",
+      "Robots": "Roboter",
+      "CustomerName": "Kunde",
+      "InvoiceNumber": "Rechnungsnummer"
+    },
+    "Status": {
+      "open": "offen",
+      "planned": "geplant",
+      "scheduled": "scheduled",
+      "produced": "produziert"
+    },
+    "Details": {
+      "Table": { "StartDate": "Startzeitraum", "EndDate": "Endzeitraum", "RobotId": "Roboter ID", "Participant": "Maschineneigentümer" },
+      "Number": "Nummer",
+      "Title": "Auftrag",
+      "Contractor": "Auftragnehmer",
+      "Quantity": "Menge",
+      "Time": "Uhrzeit",
+      "Status": "Prozessstatus",
+      "ProductionProcess": "Produktionsablauf",
+      "Diagram": {
+        "DoughnutTitle": "Zusammensetzung des Preises",
+        "DoughnutLabels": ["Grundpreis", "Auslastung", "Zeitzuschlag"],
+        "DoughnutDescriptions": [
+          "Der Grundpreis wird täglich anhand der durchschnittlichen Nachfrage bestimmt und stellt die Basis des Gesamtpreises dar.",
+          "Die Systemauslastung stellt eine dynamische Preiskomponente dar. Abhängig vom Auslastungsgrad der Maschinen verändert sie sich und spiegelt so die Nachfrage bei begrenzten Kapazitäten wieder.",
+          "Der Zeitzuschlag ist eine Gebühr, die sich je nach Dringlichkeit der Produktion erhöht. Je schneller ein Produkt hergestellt werden muss, desto höher fällt dieser Zuschlag aus."
+        ]
+      }
+    }
+  },
+
+  "Offers": {
+    "Title": "Angebote",
+    "OfferedPrice": "Angebotspreis",
+    "TimerText": "Verbleibende Zeit",
+    "ProductionWeek": "Angebotener Produktionszeitraum",
+    "Amount": "Stück",
+    "DeclineAllOffers": "Alle Ablehnen",
+    "OffersExpired": "Das tut uns leid, Ihre Angebote sind abgelaufen."
+  },
+
+  "PaymentStatus": {
+    "open": "offen",
+    "financed": "finanziert",
+    "paid": "bezahlt",
+    "exceeded": "überfällig",
+    "PaymentStateChangeSuccessfulSnackBarMessage": "Der Status wurden erfolgreich geändert",
+    "PaymentStateErrorSnackBarMessage": "Etwas ist schiefgelaufen. Der Status konnte nicht geändert werden. :("
+  },
+
+  "Invoices": {
+    "Title": "Rechnungen",
+    "Details": "Rechnungsdetails",
+    "Statistics": {
+      "Title": "Analyse der Rechnungen",
+      "UnpaidStatistics": {
+        "Title": "Offene Rechnungen",
+        "Receivables": "Forderungen",
+        "Liabilities": "Verbindlichkeiten",
+        "CountOpen": "Anzahl offener",
+        "ValueOpen": "Gesamtwert offener",
+        "CountOverdue": "Anzahl überfälliger",
+        "ValueOverdue": "Gesamtwert überfälliger"
+      },
+      "PaidStatistics": {
+        "Title": "Bezahlte Rechnungen",
+        "PercentageExplanation": "Die Zahlungsrate gibt an, welcher Anteil der fälligen Rechnungen innerhalb der vereinbarten Zahlungsfrist beglichen wurde.",
+        "VolumeExplanation": "Das Gesamtvolumen gibt die Gesamtsumme aller gezahlten Rechnungsbeträge in einem bestimmten Zeitraum an.",
+        "CreditorVolumeChartLabel": "Forderungen",
+        "CreditorPercentageChartLabel": "Forderungen",
+        "DebtorVolumeChartLabel": "Verbindlichkeiten",
+        "DebtorPercentageChartLabel": "Verbindlichkeiten",
+        "VolumeChartLabel": "Gesamtvolumen",
+        "PercentageChartLabel": "Zahlungsrate",
+        "Year": "Jahr"
+      }
+    },
+    "Table": {
+      "Title": "Rechnungsdetails",
+      "ShowInvoice": "Rechnung anzeigen",
+      "Number": "Rechnungsnummer",
+      "Payee": "Kreditor",
+      "Amount": "Rechnungsbetrag",
+      "Currency": "Währung",
+      "DueDate": "Fälligkeitsdatum",
+      "Payer": "Schuldner",
+      "FinancialState": "Finanzstatus",
+      "OrderNumber": "Auftrags ID"
+    }
+  },
+
+  "Filter": {
+    "Title": "Filter",
+    "Payer": "Schuldner",
+    "Payee": " Kreditor",
+    "Date": " Zeitraum",
+    "FinancialStatus": "Finanzstatus",
+    "ExampleCompany": "Name des Unternehmens",
+    "ExampleStartDate": "Anfangsdatum",
+    "ExampleEndDate": "Enddatum"
+  },
+
+  "Buttons": {
+    "Reset": "Zurücksetzen",
+    "Save": "Sichern",
+    "Download": "Herunterladen",
+    "Cancel": "Abbrechen",
+    "Change": "Änderungen anwenden",
+    "Create": "Erstellen",
+    "Accept": "Akzeptieren"
+  },
+
+  "Nft": {
+    "Token": "Forderungstoken ID",
+    "Invoice": "Rechnung",
+    "Addresses": "Adressen",
+    "Owner": "Besitzer",
+    "Minter": "Ersteller",
+    "Date": "Datum",
+    "Created": "Erstellt am",
+    "Updated": "Aktualisiert am",
+    "Asset": "Ressource",
+    "MetaData": "Metadaten",
+    "Information": "Zusätzliche Information",
+    "ErrorNft": "Keine NFT-Daten für diese Rechnung gefunden."
+  },
+
+  "NoMatchingData": "Es wurden keine Daten gefunden, die dem Filter entsprechen ",
+  "CalendarWeek": "KW",
+  "MonthLabels": ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
+  "CloseSnackBarAction": "Schließen",
+  "Paginator": {
+    "ItemsPerPage": "Elemente pro Seite",
+    "Of": "von"
+  },
+
+  "Open": "Offen",
+  "Closed": "Abgeschlossen"
+}

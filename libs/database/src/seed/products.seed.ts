@@ -1,0 +1,1 @@
+export const ProductsSeed = [ { id: 'prod1', name: 'Quadrocopter', variant: 'V001' } ]

@@ -1,0 +1,181 @@
+/*!
+ * Copyright Fraunhofer Institute for Material Flow and Logistics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * For details on the licensing terms, see the LICENSE file.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+@use 'material-symbols';
+@import '@angular/material/prebuilt-themes/azure-blue.css';
+
+@font-face {
+  font-family: 'roboto';
+  src: url('/assets/fonts/Roboto/Roboto-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'roboto-bold';
+  src: url('/assets/fonts/Roboto/Roboto-Bold.ttf');
+  font-weight: bold;
+  font-style: normal;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+html,
+body {
+  margin: 0;
+  font-family: roboto, 'Helvetica Neue', sans-serif;
+  height: 100%;
+}
+
+/* Main Design Features */
+.grey {
+  color: #737373;
+}
+
+:root {
+  --creme-color: #d9ddef;
+  --lavendel-color: #f4f4f4;
+  --dark-blue-color: #042836;
+  --frosted-orange: #d3831a;
+  --light-frosted-orange: #f9a81b;
+  --oliv-green-color: #005c56;
+  --mint-green-color: #56ada8;
+  --greyisch: #e8e6e6;
+}
+
+.mat-sort-header-container {
+  font-weight: bold;
+}
+
+.mat-mdc-tab .mdc-tab__text-label {
+  font-weight: bold;
+}
+
+.mat-mdc-table {
+  background-color: white;
+}
+
+.mat-mdc-paginator {
+  background-color: white;
+}
+
+h1 {
+  font-size: x-large;
+  font-weight: bold;
+  color: var(--dark-blue-color);
+}
+
+h2 {
+  font-size: large;
+  font-weight: bold;
+  color: var(--dark-blue-color);
+}
+
+h3 {
+  font-size: medium;
+  font-weight: bold;
+  color: var(--dark-blue-color);
+  overflow: hidden;
+}
+
+h4 {
+  font-size: small;
+  font-weight: bold;
+  color: var(--dark-blue-color);
+  overflow: hidden;
+}
+
+.card {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.searchbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+//Mat
+
+.mat-drawer {
+  background-color: white !important;
+}
+.mat-mdc-card-content:first-child {
+  padding-top: 0;
+}
+
+.mat-mdc-card-content:last-child {
+  padding-bottom: 0;
+}
+
+.mat-mdc-header-cell {
+  font-weight: bold;
+}
+
+/* All Buttons */
+.mat-mdc-unelevated-button:not(:disabled) {
+  background-color: var(--dark-blue-color) !important;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: white !important;
+}
+
+/* Checkbox */
+
+.paid-statistics-debtor-volume-color .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+.mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+  background-color: var(--dark-blue-color) !important;
+  border-color: var(--dark-blue-color) !important;
+}
+
+.paid-statistics-debtor-percentage-color .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+.mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+  background-color: var(--creme-color) !important;
+  border-color: var(--creme-color) !important;
+}
+
+.paid-statistics-creditor-volume-color .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+.mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+  background-color: var(--frosted-orange) !important;
+  border-color: var(--frosted-orange) !important;
+}
+
+.paid-statistics-creditor-percentage-color .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+.mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+  background-color: var(--light-frosted-orange) !important;
+  border-color: var(--light-frosted-orange) !important;
+}
+
+.mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+.mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+  background-color: var(--dark-blue-color) !important;
+  border-color: var(--dark-blue-color) !important;
+}
+
+.mat-dialog-container,
+.mat-mdc-dialog-container {
+  max-width: none !important;
+  max-height: none !important;
+}
+.mat-mdc-dialog-content {
+  max-height: 90vh !important;
+}

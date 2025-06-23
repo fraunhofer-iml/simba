@@ -1,0 +1,56 @@
+/*!
+ * Copyright Fraunhofer Institute for Material Flow and Logistics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * For details on the licensing terms, see the LICENSE file.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+.transactions-statistics-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.years-container {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.transactions-header {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.year {
+  display: flex;
+  gap: 0.5em;
+}
+
+.year-selector {
+  margin: 2px 0.5em 0 0.5em;
+  min-width: 3em;
+}
+
+.chart-wrapper {
+  height: 250px;
+}
+
+.legend-with-chart {
+  display: grid;
+  height: 100%;
+  grid-template-columns: 25% 75%;
+}
+
+.option {
+  max-height: 20px;
+}
+
+.heading-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-direction: row;
+}

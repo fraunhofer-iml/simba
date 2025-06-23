@@ -1,0 +1,193 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Offer {
+  id                  String    @id @default(cuid())
+  creationDate        DateTime  @default(now())
+  decisionDate        DateTime?
+  plannedCalendarWeek Decimal
+  plannedYear         Decimal
+  price               Decimal   @db.Money
+  status              String
+
+  serviceProcess     ServiceProcess  @relation("OrderOffers", fields: [serviceProcessId], references: [id])
+  serviceProcessId   String
+  acceptedForProcess ServiceProcess? @relation("ProcessAcceptedOffer")
+}
+
+model Product {
+  id      String @id @default(cuid())
+  name    String
+  variant String
+
+  orderLines OrderLine[]
+}
+
+model Machine {
+  id                 String              @id @default(cuid())
+  cppsId             String?
+  description        String
+  minimalPrice       Decimal             @db.Money
+  company            Company             @relation(fields: [companyId], references: [id])
+  companyId          String
+  machineAssignments MachineAssignment[]
+}
+
+model Company {
+  id                        String  @id @default(cuid())
+  name                      String
+  city                      String
+  countryCode               String
+  address                   String
+  zip                       String
+  vatId                     String
+  commercialRegisterNumber  String
+  telephone                 String?
+  emailAddress              String?
+  electronicAddress         String?
+  electronicAddressSchemeId String?
+
+  paymentInformation PaymentInformation[]
+  invoicesAsCreditor Invoice[]            @relation("creditorRel")
+  invoicesAsDeptor   Invoice[]            @relation("deptorRel")
+  ordersAsBuyer      Order[]              @relation("buyer")
+  ordersAsSeller     Order[]              @relation("seller")
+  machinery          Machine[]
+}
+
+model PaymentInformation {
+  id        String  @id @default(cuid())
+  company   Company @relation(fields: [companyId], references: [id])
+  companyId String
+  IBAN      String
+  BIC       String
+}
+
+model Invoice {
+  id                    String   @id @default(cuid())
+  invoiceNumber         String
+  creationDate          DateTime @default(now())
+  dueDate               DateTime @default(now())
+  contractCurrency      String
+  measuringUnit         String
+  netPricePerUnit       String
+  totalAmountWithoutVat Decimal  @db.Money
+  vat                   Decimal  @db.Money
+  url                   String
+  paymentTerms          String
+
+  serviceProcess   ServiceProcess? @relation("InvoiceServiceProcess", fields: [serviceProcessId], references: [id])
+  serviceProcessId String?
+
+  debtor     Company? @relation(name: "deptorRel", fields: [debtorId], references: [id])
+  debtorId   String?
+  creditor   Company? @relation(name: "creditorRel", fields: [creditorId], references: [id])
+  creditorId String?
+
+  tradeReceivable TradeReceivable?
+}
+
+model TradeReceivable {
+  id     String          @id @default(cuid())
+  nft    String
+  states PaymentStatus[]
+
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+  invoiceId String  @unique
+}
+
+model PaymentStatus {
+  tradeReceivableId String
+  status            String
+  timestamp         DateTime        @default(now())
+  tradeReceivable   TradeReceivable @relation(fields: [tradeReceivableId], references: [id])
+
+  @@id([tradeReceivableId, timestamp, status])
+}
+
+model ServiceProcess {
+  id              String    @id @default(cuid())
+  dueCalendarWeek Int
+  dueYear         Int
+  scheduledDate   DateTime?
+
+  order   Order?  @relation(fields: [orderId], references: [id])
+  orderId String? @unique
+
+  states             ServiceStatus[]
+  offers             Offer[]             @relation("OrderOffers")
+  acceptedOffer      Offer?              @relation("ProcessAcceptedOffer", fields: [acceptedOfferId], references: [id])
+  acceptedOfferId    String?             @unique
+  invoices           Invoice[]           @relation("InvoiceServiceProcess")
+  machineAssignments MachineAssignment[]
+}
+
+model Order {
+  id                       String   @id @default(cuid())
+  documentIssueDate        DateTime @default(now())
+  noteContent              String?
+  referencedBuyerOrderLine String?
+  buyerOrderRefDocumentId  String?
+  sumOfLinesAmount         Int?
+  totalAmountWithoutVat    Decimal? @db.Money
+  vatCurrency              String
+  buyerAccountingRefId     String?
+
+  buyerId String
+  buyer   Company @relation("buyer", fields: [buyerId], references: [id])
+
+  sellerId String
+  seller   Company @relation("seller", fields: [sellerId], references: [id])
+
+  orderLines     OrderLine[]
+  serviceProcess ServiceProcess?
+}
+
+model OrderLine {
+  id                         String   @id @default(cuid())
+  netPrice                   Decimal? @db.Money
+  partialDeliveryAllowed     Boolean?
+  requestedQuantity          Decimal
+  unitOfMeasureCodeRequested String?
+  unitOfMeasureCodeAgreed    String?
+  lineTotalAmount            Decimal? @db.Money
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  itemId String
+  item   Product @relation(fields: [itemId], references: [id])
+}
+
+model ServiceStatus {
+  serviceProcessId String
+  status           String
+  timestamp        DateTime       @default(now())
+  serviceProcess   ServiceProcess @relation(fields: [serviceProcessId], references: [id])
+
+  @@id([serviceProcessId, status])
+}
+
+model MachineAssignment {
+  serviceProcessId String
+  machineId        String
+  start            DateTime @default(now())
+  end              DateTime @default(now())
+
+  serviceProcess ServiceProcess @relation(fields: [serviceProcessId], references: [id])
+  machine        Machine        @relation(fields: [machineId], references: [id])
+
+  @@id([serviceProcessId, machineId, start])
+}

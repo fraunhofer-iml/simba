@@ -1,0 +1,68 @@
+= Software Documentation for the {projectName}
+:doctype: book
+:toc: left
+:toclevels: 3
+:sectnumlevels: 5
+:leveloffset: 1
+:icons: font
+:copyright: Apache License 2.0
+:projectName: Simba
+
+[[section-preface]]
+= Preface
+
+== Documentation Approach
+
+The documentation of this project is in English and is based on the https://arc42.de/template[arc42 template].
+
+The https://agilemanifesto.org/[Agile Manifesto] says: "Working software over comprehensive documentation".
+It does *not* say "no documentation".
+Even in lean, agile and iterative development approaches, an appropriate amount of documentation will help numerous stakeholders doing a better job.
+arc42 is completely process-agnostic, and especially well-suited for lean and agile development approaches.
+It is supposed to be used "on demand" - you provide only the type or amount of information required for your specific documentation purpose.
+Documentation shall be part of your Definition-of-Done.
+Therefore, arc42 is _automatically_ included in Scrum processes.
+
+== Main Authors
+
+[cols="1e,2e",options="header"]
+|===
+| Name
+| E-Mail
+
+| Leon Krebs (Product Owner)
+| leon.jonathan.krebs@iml.fraunhofer.de
+
+| Christoph Pott (Product Owner)
+| christoph.pott@tu-dortmund.de
+
+| Timo Erler (Scrum Master)
+| timo.erler@iml.fraunhofer.de
+
+| Dominik Sparer (Lead Developer)
+| dominik.sparer@iml.fraunhofer.de
+
+| Kristin Bäßler (Developer)
+| kristin.baessler@iml.fraunhofer.de
+
+| Lukas Grieger (Developer)
+| lukas.grieger@iml.fraunhofer.de
+
+| Lukas Wegler (Developer)
+| lukas.wegler@iml.fraunhofer.de
+|===
+
+<<<
+include::01-introduction-and-goals.adoc[]
+
+<<<
+include::02-building-block-view.adoc[]
+
+<<<
+include::03-runtime-view.adoc[]
+
+<<<
+include::04-deployment-view.adoc[]
+
+<<<
+include::05-tutorial.adoc[]

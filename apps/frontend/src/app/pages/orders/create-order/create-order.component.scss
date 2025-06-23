@@ -1,0 +1,161 @@
+/*!
+ * Copyright Fraunhofer Institute for Material Flow and Logistics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * For details on the licensing terms, see the LICENSE file.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+.offer-details-grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.offer-details-grid-value{
+  justify-content: flex-end;
+  align-items: end;
+  display: flex;
+}
+
+.deadline {
+  grid-column: 2 / 3;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.offers-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.offers-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.offer-container {
+  margin-top: 1em;
+}
+
+.order-card {
+  margin: 1em 0 1em 0;
+}
+
+.order-content {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.order-field {
+  width: 100%;
+}
+
+.title {
+  font-size: large;
+}
+
+.decline-button {
+  width: 200px;
+  color: white;
+}
+
+.button-container {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.accept-button {
+  background-color: var(--creme-color) !important;
+  color: black;
+}
+
+.create-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.creation-container {
+  margin: 0 1rem 0 1rem;
+}
+
+.offerPrice {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: -1em;
+}
+
+.offerIdAndDate {
+  margin-top: 1em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: space-between;
+}
+
+#expiration {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#offerId {
+  font-size: small;
+  margin-top: -0.5em;
+}
+
+#offerName {
+  font-size: 1.5em;
+  margin-top: -0.1em;
+}
+
+#offerAmount {
+  margin-top: -1em;
+}
+
+#offerDate {
+  font-size: 0.8rem;
+  margin-top: -0.5em;
+}
+
+@media (max-width: 60em) {
+  .offers-container {
+    display: block;
+  }
+
+  .offers {
+    max-width: 100%;
+  }
+
+  .order-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .year-picker .mat-calendar-body-cell-content {
+    display: none;
+  }
+
+  .offerIdAndDate {
+    display: block;
+  }
+}
+
+@media (max-width: 95em) {
+  .order-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+  }
+
+  .order-content > * {
+    flex: 1 1 calc(50% - 1em);
+  }
+}

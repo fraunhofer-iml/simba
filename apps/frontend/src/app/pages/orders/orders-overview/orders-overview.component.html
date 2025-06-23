@@ -1,0 +1,33 @@
+<!--
+  ~ Copyright Fraunhofer Institute for Material Flow and Logistics
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License").
+  ~ For details on the licensing terms, see the LICENSE file.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<div class="overview-container">
+  <h1>{{ 'Orders.Title' | translate }}</h1>
+
+  <div class="searchbar-container card">
+    <mat-form-field class="searchbar">
+      <img matIconPrefix src="assets/icons/search.svg" alt="Icon" />
+      <input matInput (keyup)="applyFilter($event)" #input />
+    </mat-form-field>
+    @if (isCustomer) {
+      <button mat-flat-button class="create-button" routerLink="{{ ROUTING.newOrders }}">{{ 'Orders.Create.Title' | translate }}</button>
+    }
+  </div>
+
+  <div class="table-container card">
+    <mat-tab-group>
+      <mat-tab label="{{ 'Open' | translate }}">
+        <app-order-table [dataSource]="dataSourceOpen" [filterValue]="filterText" [isCustomer]="isCustomer"> </app-order-table>
+      </mat-tab>
+
+      <mat-tab label="{{ 'Closed' | translate }}">
+        <app-order-table [dataSource]="dataSourceClosed" [filterValue]="filterText" [isCustomer]="isCustomer"> </app-order-table>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

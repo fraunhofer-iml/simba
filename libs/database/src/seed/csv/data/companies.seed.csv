@@ -1,0 +1,10 @@
+id,name,city,countryCode,address,zip,vatId,commercialRegisterNumber,telephone,emailAddress,electronicAddress,electronicAddressSchemeId
+pt0001,EcoTrade Solutions AG,Dortmund,DE,Joseph-von-Fraunhofer-Straße 3,44227,DE5976717450,HRA 5647,089266460,info@zv.fraunhofer.de,85289711-0342-22,
+pt0002,SmartPay Solutions AG,München,DE,Hansastraße 27c,80686,DE395680713,HRB 5648,08912050,info@zv.fraunhofer.de,16066069-0001-81,
+pt0003,FinTech Innovations GmbH,Dublin,EN,Moonavenue 3,43016,DE275650896,HRA 5649,491573571898,Starlight@gmbh.de,24086761-0013-79,
+pt0004,GreenEnergy Systems GmbH,Berlin,DE,Friedrichstraße 88,10117,DE710345892,HRB 8934,030765432,contact@smartpay.de,54321098-0076-54,
+pt0005,Quantum Supply Chain AG,Stuttgart,DE,Königstraße 27,70173,DE908765432,HRB 6789,0711987654,support@fintech-innovations.de,23456789-0012-89,
+pt0006,AI Vision Technologies GmbH,Köln,DE,Rheinpromenade 21,50678,DE567890123,HRB 3456,0221987654,info@ecotrade.de,45678912-0034-76,
+pt0007,VR Technologies GmbH,Düsseldorf,DE,Kaiserswerther Straße 45,40474,DE678901234,HRB 7891,0211898765,contact@ai-vision.de,78901234-0045-32,
+pt0008,AI Supply Chain AG,Leipzig,DE,Augustusplatz 7,04109,DE789012345,HRB 8902,0341987654,info@quantum-sc.de,89012345-0023-67,
+pt0009,New Energy Systems GmbH,Bremen,DE,Am Wall 10,28195,DE890123456,HRB 9012,0421987654,info@greenenergy-systems.de,90123456-0056-43,

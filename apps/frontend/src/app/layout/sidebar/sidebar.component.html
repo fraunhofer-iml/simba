@@ -1,0 +1,74 @@
+<!--
+  ~ Copyright Fraunhofer Institute for Material Flow and Logistics
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License").
+  ~ For details on the licensing terms, see the LICENSE file.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<mat-drawer-container class="sidebar-container" autosize>
+  <mat-drawer mode="side" opened disableClose="true">
+    <div class="drawer-content-container">
+      <div class="title">
+        <span class="material-symbols-outlined">pets</span>
+        <p>{{ 'Sidebar.ProjectName' | translate }}</p>
+        <div class="language-button-container">
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <div class="image">
+              <img src="assets/icons/languages.svg" alt="Icon" />
+            </div>
+          </button>
+          <mat-menu #menu="matMenu">
+            @for (language of languages; track language) {
+              <button mat-menu-item (click)="setLanguage(language.label)">
+                <img src="{{ language.img }}" alt="flags" id="flags" />
+                {{ language.label }}
+              </button>
+            }
+          </mat-menu>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <mat-selection-list class="selection-list">
+        <mat-list-item [routerLink]="ROUTING.orders" routerLinkActive="active">
+          <div class="image">
+            <img src="assets/icons/orders.svg" alt="Icon" />
+            {{ 'Sidebar.Orders' | translate }}
+          </div>
+        </mat-list-item>
+        <mat-list-item [routerLink]="ROUTING.production" routerLinkActive="active">
+          <div class="image">
+            <img src="assets/icons/precision_manufacturing.svg" alt="Icon" />
+            {{ 'Sidebar.Production' | translate }}
+          </div>
+        </mat-list-item>
+        <mat-list-item [routerLink]="ROUTING.receivables" routerLinkActive="active">
+          <div class="image">
+            <img src="assets/icons/receivables.svg" alt="Icon" id="receivables" />
+            {{ 'Sidebar.Receivables' | translate }}
+          </div>
+        </mat-list-item>
+      </mat-selection-list>
+      <div class="footer">
+        <div class="user-container">
+          <div class="user-information">
+            <img src="assets/icons/account_circle.svg" alt="Icon" class="icon" />
+            <span> {{ userName }} </span>
+          </div>
+          <button mat-button>
+            <img src="assets/icons/logout.svg" alt="Icon" (click)="logout()" (keydown)="logout()" />
+          </button>
+        </div>
+        <div class="site-policies">
+          <a class="site-policies-links" href="/imprint"> {{ 'Sidebar.Imprint' | translate }} </a>
+          <a class="site-policies-links" href="/privacy-policy"> {{ 'Sidebar.PrivacyPolicy' | translate }} </a>
+        </div>
+        <div class="logos-container">
+        </div>
+      </div>
+    </div>
+  </mat-drawer>
+  <mat-drawer-content>
+    <ng-content></ng-content>
+  </mat-drawer-content>
+</mat-drawer-container>

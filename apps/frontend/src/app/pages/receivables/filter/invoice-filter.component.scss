@@ -1,0 +1,42 @@
+.filter-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0.5rem;
+}
+
+.content {
+  display: grid;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.filter-option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.financial-states-container {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.date-range-input-size {
+  flex-grow: 1;
+  min-width: 19rem;
+}

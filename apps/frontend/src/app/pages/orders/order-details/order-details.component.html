@@ -1,0 +1,115 @@
+<!--
+  ~ Copyright Fraunhofer Institute for Material Flow and Logistics
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License").
+  ~ For details on the licensing terms, see the LICENSE file.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<div *ngIf="orderDetails$ | async as orderDetail" class="details-container">
+  <header class="header">
+    <a routerLink="/orders" class="link">{{ 'Orders.Title' | translate }}</a>
+    <img src="assets/icons/chevron_right.svg" alt="Icon" />
+    <span class="orderId"> {{ 'Orders.Details.Title' | translate }} {{ orderDetail.order.number }}</span>
+  </header>
+
+  <h1>{{ 'Orders.Details.Title' | translate }} {{ orderDetail.order.number }}</h1>
+
+  <div class="grid">
+
+    <div class="card">
+      <h2 class="title">Details</h2>
+      <div class="data-row">
+        <span class="description">{{ 'Orders.OrderTable.CustomerName' | translate }}</span>
+        <span class="text-end">{{ orderDetail.order.customerName }}</span>
+      </div>
+      <mat-divider class="details-border"></mat-divider>
+      <div class="data-row">
+        <span class="description">{{ 'Orders.Details.Contractor' | translate }}</span>
+        <span class="text-end">{{ orderDetail.order.contractorName }}</span>
+      </div>
+      <mat-divider class="details-border"></mat-divider>
+      <div class="data-row">
+        <span class="description">{{ 'Orders.OrderTable.ProductName' | translate }}</span>
+        <span class="text-end">{{ orderDetail.order.product }}</span>
+      </div>
+      <mat-divider class="details-border"></mat-divider>
+      <div class="data-row">
+        <span class="description">{{ 'Orders.Details.Quantity' | translate }}</span>
+        <span class="text-end">{{ orderDetail.order.amount }}</span>
+      </div>
+      <mat-divider class="details-border"></mat-divider>
+      <div class="data-row">
+        <span class="description">{{ 'Orders.OrderTable.Price' | translate }}</span>
+        <span class="text-end" *ngIf="orderDetail.offer"
+          >{{ orderDetail.offer.basePrice + orderDetail.offer.utilizationPrice + orderDetail.offer.fixedCosts | currency:'EUR':'symbol':'1.2-2': formatService.getCurrentLocaleFormatter() }}</span
+        >
+      </div>
+    </div>
+
+    <div class="card" *ngIf="orderDetail.offer">
+      <h2 class="title">{{ 'Orders.Details.Diagram.DoughnutTitle' | translate }}</h2>
+      <div chartType="doughnut">
+        <canvas
+          baseChart
+          [plugins]="plugins"
+          [data]="doughnutChartData"
+          [labels]="doughnutChartData.labels"
+          [options]="doughnutChartOptions"
+          [type]="'doughnut'"
+        ></canvas>
+      </div>
+    </div>
+
+    <div class="card status">
+      <h2 class="title">{{ 'Orders.Details.Status' | translate }}</h2>
+      <div class="status-container">
+        <div *ngFor="let status of allFinancialStatus; let i = index" class="status-wrapper">
+          <div
+            [matTooltip]="getStatusTooltip(orderDetail.processStateHistory, status)"
+            class="status-circle"
+            [ngClass]="{
+              current:
+                getStatus(orderDetail.processStateHistory, status) &&
+                !getStatus(orderDetail.processStateHistory, allFinancialStatus[i + 1]),
+              done:
+                getStatus(orderDetail.processStateHistory, status) && getStatus(orderDetail.processStateHistory, allFinancialStatus[i + 1]),
+              pending: !getStatus(orderDetail.processStateHistory, status),
+            }"
+          >
+            <img class="status-icon" [src]="getStatusIcon(status)" alt="{{ status }} Icon" />
+          </div>
+          <mat-divider *ngIf="i < allFinancialStatus.length - 1" class="status-line"></mat-divider>
+        </div>
+      </div>
+    </div>
+
+    <div class="production-container" *ngIf="orderDetail.machineAssignments.length > 0">
+      <h1>{{ 'Orders.Details.ProductionProcess' | translate }}</h1>
+      <div class="card table-container">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="robots">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="machineId">{{ 'Orders.Details.Table.RobotId' | translate }}</th>
+            <td mat-cell *matCellDef="let row">{{ row.machineId }}</td>
+          </ng-container>
+          <ng-container matColumnDef="startDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="start">{{ 'Orders.Details.Table.StartDate' | translate }}</th>
+            <td mat-cell *matCellDef="let row">{{ row.start | date: formatService.getDateTimeFormatByCurrentLang() }}</td>
+          </ng-container>
+          <ng-container matColumnDef="endDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="end">{{ 'Orders.Details.Table.EndDate' | translate }}</th>
+            <td mat-cell *matCellDef="let row">{{ row.end | date: formatService.getDateTimeFormatByCurrentLang() }}</td>
+          </ng-container>
+          <ng-container matColumnDef="ownerName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="ownerName">{{ 'Orders.Details.Table.Participant' | translate }}</th>
+            <td mat-cell *matCellDef="let row">{{ row.ownerName }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsCustomer"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsCustomer"></tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>

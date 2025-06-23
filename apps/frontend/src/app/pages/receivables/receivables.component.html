@@ -1,0 +1,74 @@
+<!--
+  ~ Copyright Fraunhofer Institute for Material Flow and Logistics
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License").
+  ~ For details on the licensing terms, see the LICENSE file.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+<mat-drawer-container class="drawer">
+  <mat-drawer #drawer mode="side" position="end">
+    <app-invoice-filter (outputFilter)="getFilteredData($event)" class="drawer"></app-invoice-filter>
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <div class="receivables-container">
+      <!-- Statistics-Part -->
+      <h1>{{ 'Invoices.Title' | translate }}</h1>
+      <div class="statistics-wrapper">
+        <app-unpaid-statistics class="card" [invoiceIds]="filteredInvoicesIds"></app-unpaid-statistics>
+        <app-paid-statistics class="card" [invoiceIds]="filteredInvoicesIds"></app-paid-statistics>
+      </div>
+      <h1>{{ 'Invoices.Details' | translate }}</h1>
+
+      <!-- Invoice-Part -->
+      <div class="searchbar-container card">
+        <div class="filter-with-searchbar-container">
+          <button
+            mat-mini-fab
+            [matBadge]="activatedFiltersCount"
+            matBadgeHidden="{{ activatedFiltersCount === 0 }}"
+            (click)="drawer.toggle()"
+            class="filter-button"
+          >
+            <span mat-icon class="material-symbols-outlined"> filter_alt </span>
+          </button>
+
+          <mat-form-field class="searchbar">
+            <img matIconPrefix src="assets/icons/search.svg" alt="Icon" />
+            <input matInput (keyup)="convertInputAndResetPaginator($event)" />
+          </mat-form-field>
+        </div>
+        <button mat-flat-button class="download-button" [disabled]="!selection.hasValue()" (click)="openDownloadInvoiceDialog()">
+          {{ 'Invoices.Table.ShowInvoice' | translate }}
+        </button>
+      </div>
+
+      <div class="table-container card">
+        <div class="apply-changes-button-container">
+          <button mat-flat-button class="buttons" *ngIf="paymentStatusChanges.length !== 0" (click)="sendChangeRequest()">
+            ({{ paymentStatusChanges.length }}) {{ 'Buttons.Change' | translate }}
+          </button>
+        </div>
+
+        <mat-tab-group>
+          <mat-tab label="{{ 'Open' | translate }}">
+            <app-invoice-table
+              [dataSource]="dataSourceOpen"
+              [filterValue]="filterText"
+              [selection]="selection"
+              [paymentStatusChanges]="paymentStatusChanges"
+            ></app-invoice-table>
+          </mat-tab>
+          <mat-tab label="{{ 'Closed' | translate }}">
+            <app-invoice-table
+              [dataSource]="dataSourceClosed"
+              [filterValue]="filterText"
+              [selection]="selection"
+              [paymentStatusChanges]="paymentStatusChanges"
+            ></app-invoice-table>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

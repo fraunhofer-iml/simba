@@ -1,0 +1,98 @@
+<!--
+  ~ Copyright Fraunhofer Institute for Material Flow and Logistics
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License").
+  ~ For details on the licensing terms, see the LICENSE file.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<h2 [ngClass]="{ 'titleStatistic-host': authService.isOperator(), titleStatistic: !authService.isOperator() }">
+  {{ 'Invoices.Statistics.UnpaidStatistics.Title' | translate }}
+</h2>
+<div class="data">
+  <div [ngClass]="{ 'data-row-host': authService.isOperator(), 'data-title-row': !authService.isOperator() }">
+    <span class="text-data"> </span>
+    @if (authService.isCustomer() || authService.isOperator()) {
+      <div
+        [ngClass]="{ 'column-and-items-host': authService.isOperator(), 'column-and-items': !authService.isContributor() }"
+        (click)="setInvoiceFilterToLiabilities()"
+        onkeyup=""
+      >
+        <h3 class="unpaid-statistics-column-title pointer">{{ 'Invoices.Statistics.UnpaidStatistics.Liabilities' | translate }}</h3>
+      </div>
+    }
+    @if (authService.isContributor() || authService.isOperator()) {
+      <div
+        [ngClass]="{ 'column-and-items-host': authService.isOperator(), 'column-and-items': !authService.isCustomer() }"
+        (click)="setInvoiceFilterToDemands()"
+        onkeyup=""
+      >
+        <h3 class="unpaid-statistics-column-title pointer">{{ 'Invoices.Statistics.UnpaidStatistics.Receivables' | translate }}</h3>
+      </div>
+    }
+  </div>
+
+  <div [ngClass]="{ 'data-row-host': authService.isOperator(), 'data-row': !authService.isOperator() }">
+    <span class="text-lines pointer" (click)="setInvoiceFilterToOpen()" onKeyUp>{{ 'Invoices.Statistics.UnpaidStatistics.CountOpen' | translate }}</span>
+    @if (authService.isCustomer() || authService.isOperator()) {
+      <div class="text-lines text-end" [ngClass]="{ 'column-and-items-host': authService.isOperator() }">
+        <span [ngClass]="{ 'column-and-items': !authService.isOperator() }" *ngIf="debtorStatisticsDto$ | async as dStatDto">{{
+          dStatDto.outStandingReceivables
+        }}</span>
+      </div>
+    }
+    @if (authService.isContributor() || authService.isOperator()) {
+      <div class="text-lines text-end" [ngClass]="{ 'column-and-items-host': authService.isOperator() }">
+        <span *ngIf="creditorStatisticsDto$ | async as cStatDto">{{ cStatDto.outStandingReceivables }}</span>
+      </div>
+    }
+  </div>
+
+  <div [ngClass]="{ 'data-row-host': authService.isOperator(), 'data-row': !authService.isOperator() }">
+    <span class="text-lines pointer" (click)="setInvoiceFilterToOpen()" onKeyUp>{{ 'Invoices.Statistics.UnpaidStatistics.ValueOpen' | translate }}</span>
+    @if (authService.isCustomer() || authService.isOperator()) {
+      <div class="text-lines text-end" [ngClass]="{ 'column-and-items-host': authService.isOperator() }">
+        <span [ngClass]="{ 'column-and-items': !authService.isOperator() }" *ngIf="debtorStatisticsDto$ | async as dStatDto"
+          >{{ dStatDto.outStandingReceivablesTotalValue | currency:'EUR':'symbol':'1.2-2': formatService.getCurrentLocaleFormatter() }}</span
+        >
+      </div>
+    }
+    @if (authService.isContributor() || authService.isOperator()) {
+      <div class="text-lines text-end" [ngClass]="{ 'column-and-items-host': authService.isOperator() }">
+        <span *ngIf="creditorStatisticsDto$ | async as cStatDto">{{ cStatDto.outStandingReceivablesTotalValue | currency:'EUR':'symbol':'1.2-2': formatService.getCurrentLocaleFormatter() }}</span>
+      </div>
+    }
+  </div>
+
+  <div [ngClass]="{ 'data-row-host': authService.isOperator(), 'data-row': !authService.isOperator() }">
+    <span class="text-lines pointer" (click)="setInvoiceFilterToOverdue()" onKeyUp>{{ 'Invoices.Statistics.UnpaidStatistics.CountOverdue' | translate }}</span>
+    @if (authService.isCustomer() || authService.isOperator()) {
+      <div class="text-lines text-end" [ngClass]="{ 'column-and-items-host': authService.isOperator() }">
+        <span [ngClass]="{ 'column-and-items': !authService.isOperator() }" *ngIf="debtorStatisticsDto$ | async as dStatDto">{{
+          dStatDto.overdueReceivables
+        }}</span>
+      </div>
+    }
+    @if (authService.isContributor() || authService.isOperator()) {
+      <div class="text-lines text-end" [ngClass]="{ 'column-and-items-host': authService.isOperator() }">
+        <span *ngIf="creditorStatisticsDto$ | async as cStatDto">{{ cStatDto.overdueReceivables }}</span>
+      </div>
+    }
+  </div>
+
+  <div [ngClass]="{ 'data-row-host': authService.isOperator(), 'data-row': !authService.isOperator() }">
+    <span class="text-lines-end">{{ 'Invoices.Statistics.UnpaidStatistics.ValueOverdue' | translate }}</span>
+    @if (authService.isCustomer() || authService.isOperator()) {
+      <div class="text-lines-end text-end" [ngClass]="{ 'column-and-items-host': authService.isOperator() }">
+        <span [ngClass]="{ 'column-and-items': !authService.isOperator() }" *ngIf="debtorStatisticsDto$ | async as dStatDto"
+          >{{ dStatDto.overdueReceivablesTotalValue| currency:'EUR':'symbol':'1.2-2': formatService.getCurrentLocaleFormatter() }}</span
+        >
+      </div>
+    }
+    @if (authService.isContributor() || authService.isOperator()) {
+      <div class="text-lines-end text-end" [ngClass]="{ 'column-and-items-host': authService.isOperator() }">
+        <span *ngIf="creditorStatisticsDto$ | async as cStatDto">{{ cStatDto.overdueReceivablesTotalValue| currency:'EUR':'symbol':'1.2-2': formatService.getCurrentLocaleFormatter() }}</span>
+      </div>
+    }
+  </div>
+</div>

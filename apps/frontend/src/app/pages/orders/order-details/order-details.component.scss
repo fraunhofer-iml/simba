@@ -1,0 +1,142 @@
+/*!
+ * Copyright Fraunhofer Institute for Material Flow and Logistics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * For details on the licensing terms, see the LICENSE file.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 0.5em;
+  font-size: small;
+}
+
+.link {
+  color: gray;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+  color: var(--dark-blue-color);
+}
+
+.orderId {
+  color: var(--dark-blue-color);
+}
+
+.details-container {
+  margin: 0 1rem 0 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1em;
+}
+
+.data-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5em 0 0.5em 0.5em;
+}
+
+.description {
+  display: block;
+  font-weight: bold;
+  color: var(--dark-blue-color);
+}
+
+.text-end {
+  text-align: right;
+}
+
+.details-border {
+  border-color: var(--lavendel-color);
+  border-width: 2px;
+}
+
+.status {
+  grid-column: span 2;
+}
+
+.status-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1em;
+  gap: 1em;
+}
+
+.status-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+}
+
+.status-line {
+  width: 80px;
+  background-color: var(--lavendel-color);
+}
+
+.status-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: x-small;
+  font-weight: bold;
+  color: white;
+  background-color: var(--dark-blue-color);
+}
+
+.current {
+  border-color: var(--light-frosted-orange);
+  border-width: 5px;
+  border-style: solid;
+}
+
+.pending {
+  background-color: gray;
+}
+
+.production-container {
+  grid-column: span 2;
+}
+
+table {
+  background-color: white;
+}
+
+.mat-mdc-header-cell {
+  font-weight: bold;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+@media (max-width: 62em) {
+  .grid {
+    display: block;
+  }
+  .status-container {
+    flex-direction: column;
+    gap: 1em;
+  }
+
+  .tooltip {
+    bottom: 0;
+  }
+
+  .status-line {
+    display: none;
+  }
+}

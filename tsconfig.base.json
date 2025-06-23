@@ -1,0 +1,29 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2020",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@ap3/amqp": ["libs/amqp/src/index.ts"],
+      "@ap3/api": ["libs/api/src/index.ts"],
+      "@ap3/blockchain-connector": ["libs/blockchain-connector/src/index.ts"],
+      "@ap3/config": ["libs/config/src/index.ts"],
+      "@ap3/cpps-scheduler-connector": ["libs/cpps-scheduler-connector/src/index.ts"],
+      "@ap3/database": ["libs/database/src/index.ts"],
+      "@ap3/s3": ["libs/s3/src/index.ts"],
+      "@ap3/util": ["libs/util/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

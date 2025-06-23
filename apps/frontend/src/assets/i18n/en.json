@@ -1,0 +1,172 @@
+{
+  "Sidebar": {
+    "ProjectName": "SiMBA",
+    "Imprint": "Imprint",
+    "PrivacyPolicy": "Privacy policy",
+    "Orders": "Orders",
+    "Production": "Production",
+    "Receivables": "Invoices"
+  },
+
+  "Orders": {
+    "Title": "Orders",
+    "Create": {
+      "Title": "Create order",
+      "ProductInputField": "Product",
+      "UnitOfMeasureCode": "Unit",
+      "YearInputField": "Year",
+      "WeekInputField": "Preferred production period",
+      "AmountInputField": "Piece(s)"
+    },
+    "OrderTable": {
+      "Id": "Order ID",
+      "Status": "Status",
+      "ProductionDate": "Production date",
+      "Price": "Price",
+      "Currency": "Currency",
+      "ProductName": "Product",
+      "Quantity": "Quantity",
+      "Robots": "Robots",
+      "CustomerName": "Customer",
+      "InvoiceNumber": "Invoice no."
+    },
+    "Status": {
+      "open": "open",
+      "planned": "planned",
+      "scheduled": "scheduled",
+      "produced": "produced"
+    },
+    "Details": {
+      "Table": {
+        "StartDate": "Start date",
+        "EndDate": "End date",
+        "RobotId": "Robot ID",
+        "Participant": "Asset owner"
+      },
+      "Title": "Order",
+      "Number": "Number",
+      "Contractor": "Contractor",
+      "Quantity": "Quantity",
+      "Time": "Time",
+      "Status": "Process status",
+      "ProductionProcess": "Production process",
+      "Diagram": {
+        "DoughnutTitle": "Price Composition",
+        "DoughnutLabels": ["Basic price", "Utilization", "Time surcharge"],
+        "DoughnutDescriptions": [
+          "The base price is determined daily based on average demand and serves as the foundation of the total price.",
+          "System utilization is a dynamic pricing component. It changes depending on how much the machines are being used – increasing with high utilization and decreasing with low utilization – and thus reflects demand under limited capacity. ",
+          "The time surcharge is a fee that increases based on the urgency of the Production. The sooner a product needs to be produced, the more this surcharge increases."
+        ]
+      }
+    }
+  },
+
+  "Offers": {
+    "Title": "Offers",
+    "OfferedPrice": "Offered price",
+    "TimerText": "Expiration time",
+    "DeclineAllOffers": "Decline all",
+    "ProductionWeek": "Offered production period",
+    "Amount": "Stück",
+    "OffersExpired": "We're sorry, your offers have expired."
+  },
+
+  "PaymentStatus": {
+    "open": "open",
+    "financed": "financed",
+    "paid": "paid",
+    "exceeded": "exceeded",
+    "PaymentStateChangeSuccessfulSnackBarMessage": "Status changed successfully",
+    "PaymentStateErrorSnackBarMessage": "Something went wrong. Your status could not be changed. :("
+  },
+
+  "Invoices": {
+    "Title": "Invoice analysis",
+    "Details": "Invoice Details",
+    "Statistics": {
+      "UnpaidStatistics": {
+        "Title": "Open invoices",
+        "Receivables": "Receivables",
+        "Liabilities": "Liabilities",
+        "CountOpen": "Number of open",
+        "ValueOpen": "Total value of open",
+        "CountOverdue": "Number of overdue",
+        "ValueOverdue": "Total value of overdue"
+      },
+      "PaidStatistics": {
+        "Title": "Paid invoices",
+        "PercentageExplanation": "The payment rate indicates the percentage of due invoices that have been settled within the agreed payment terms.",
+        "VolumeExplanation": "The total volume represents the total sum of all paid invoice amounts within a specific period.",
+        "CreditorVolumeChartLabel": "Receivables",
+        "CreditorPercentageChartLabel": "Receivables",
+        "DebtorVolumeChartLabel": "Liabilities",
+        "DebtorPercentageChartLabel": "Liabilities",
+        "VolumeChartLabel": "Total volume",
+        "PercentageChartLabel": "Payment rate",
+        "Year": "Year"
+      }
+    },
+    "Table": {
+      "Title": "Invoice details",
+      "ShowInvoice": "Show invoice",
+      "Number": "Invoice no.",
+      "Payee": "Payee",
+      "Amount": "Invoice amount",
+      "Currency": "Currency",
+      "DueDate": "Invoice due date",
+      "Payer": "Payer",
+      "FinancialState": "Financial status",
+      "OrderNumber": "Order id"
+    }
+  },
+
+  "Filter": {
+    "Title": "Filter",
+    "Payer": "Payer",
+    "Payee": " Payee",
+    "Date": " Date Range",
+    "FinancialStatus": "Financial status",
+    "ExampleCompany": "Name of the company",
+    "ExampleStartDate": "Start date",
+    "ExampleEndDate": "End date"
+  },
+
+  "Buttons": {
+    "Reset": "Reset",
+    "Save": "Save",
+    "Download": "Download",
+    "Cancel": "Cancel",
+    "Change": "Apply changes",
+    "Create": "Create",
+    "Accept": "Accept"
+  },
+
+  "Nft": {
+    "Token": "Trade receivable token ID",
+    "Invoice": "Invoice",
+    "Addresses": "Addresses",
+    "Owner": "Owner",
+    "Minter": "Minter",
+    "Date": "Date",
+    "Created": "Created on",
+    "Updated": "Updated on",
+    "Asset": "Asset",
+    "MetaData": "Metadata",
+    "Information": "Additional information",
+    "ErrorNft": "No NFT data found for this invoice."
+  },
+
+  "Paginator": {
+    "ItemsPerPage": "Items per page",
+    "Of": "of"
+  },
+
+  "CalendarWeek": "CW",
+  "MonthLabels": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+  "NoMatchingData": "No data matching the filter ",
+  "CloseSnackBarAction": "Close",
+
+  "Open": "Open",
+  "Closed": "Closed"
+}
