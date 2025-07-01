@@ -30,11 +30,12 @@
       "CustomerName": "Customer",
       "InvoiceNumber": "Invoice no."
     },
+
     "Status": {
-      "open": "open",
-      "planned": "planned",
-      "scheduled": "scheduled",
-      "produced": "produced"
+      "Open": "open",
+      "Planned": "planned",
+      "Scheduled": "scheduled",
+      "Produced": "produced"
     },
     "Details": {
       "Table": {
@@ -73,10 +74,10 @@
   },
 
   "PaymentStatus": {
-    "open": "open",
-    "financed": "financed",
-    "paid": "paid",
-    "exceeded": "exceeded",
+    "Open": "open",
+    "Financed": "financed",
+    "Paid": "paid",
+    "Exceeded": "exceeded",
     "PaymentStateChangeSuccessfulSnackBarMessage": "Status changed successfully",
     "PaymentStateErrorSnackBarMessage": "Something went wrong. Your status could not be changed. :("
   },
@@ -122,9 +123,20 @@
   },
 
   "Filter": {
+    "Orders": {
+      "Title": "Filter",
+      "Customer": "Customer",
+      "Company": "Company",
+      "ServiceStatus": "Status",
+      "Date": "Date Range",
+      "ExampleCompany": "Name of the company",
+      "ExampleCustomer": "Name of the customer",
+      "ExampleStartDate": "Start date",
+      "ExampleEndDate": "End date"
+    },
     "Title": "Filter",
     "Payer": "Payer",
-    "Payee": " Payee",
+    "Payee": "Payee",
     "Date": " Date Range",
     "FinancialStatus": "Financial status",
     "ExampleCompany": "Name of the company",

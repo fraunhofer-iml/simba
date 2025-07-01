@@ -1,164 +1,77 @@
 import { CompanyDto } from '@ap3/api';
-import { PaymentStates, UserRoles } from '@ap3/util';
-import { map, Observable, of, startWith } from 'rxjs';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { PaymentStates } from '@ap3/util';
+import { Component, EventEmitter, output } from '@angular/core';
 import { InvoiceFilter } from '../../../model/invoice-filter';
+import { AutocompleteCompanyFilterConfig } from '../../../shared/components/filter/autocomplete-company-filter/autocomplete-company-filter-config';
+import { CheckBoxFilterConfig } from '../../../shared/components/filter/checkbox-filter/checkbox-filter-config';
+import { DateRangeFilterConfig } from '../../../shared/components/filter/date-range-filter/date-range-filter-config';
 import { AuthService } from '../../../shared/services/auth/auth.service';
-import { CompaniesService } from '../../../shared/services/companies/companies.service';
+import { FilterService } from '../../../shared/services/filter/filter.service';
+import {
+  creditorAutocompleteFilterConfig,
+  dateRangeFilterConfig,
+  debtorAutocompleteFilterConfig,
+  paymentStatesCheckboxFilterConfig,
+} from './invoice-filter-util';
 
 @Component({
   selector: 'app-invoice-filter',
   templateUrl: './invoice-filter.component.html',
-  styleUrl: './invoice-filter.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InvoiceFilterComponent implements OnInit {
-  availableCompanies: CompanyDto[] = [];
-  paymentStates: string[] = Object.values(PaymentStates);
-  filterFormGroup = new FormGroup({
-    payer: new FormControl<CompanyDto | undefined>(undefined),
-    payee: new FormControl<CompanyDto | undefined>(undefined),
-    dateRange: new FormGroup({
-      start: new FormControl<Date | null>(null),
-      end: new FormControl<Date | null>(null),
-    }),
-    selectedFinancialStates: new FormControl<string[]>([]),
-  });
+export class InvoiceFilterComponent {
+  outPutFilter = output<InvoiceFilter>();
 
-  filteredPayerOptions: Observable<CompanyDto[]> = of([]);
-  filteredPayeeOptions: Observable<CompanyDto[]> = of([]);
-  @Input() filter: InvoiceFilter;
-  @Output() outputFilter = new EventEmitter<InvoiceFilter>();
+  resetEventEmitter: EventEmitter<string> = new EventEmitter();
+
+  debtorId?: string;
+  creditorId?: string;
+  dueDateFrom?: Date;
+  dueDateTo?: Date;
+  paymentStates?: string[];
+  possibleStates: string[] = Object.values(PaymentStates);
+
+  debtorAutocompleteFilterConfig: AutocompleteCompanyFilterConfig = debtorAutocompleteFilterConfig;
+  creditorAutocompleteFilterConfig: AutocompleteCompanyFilterConfig = creditorAutocompleteFilterConfig;
+  dateRangeFilterConfig: DateRangeFilterConfig = dateRangeFilterConfig;
+  paymentStatesCheckboxFilterConfig: CheckBoxFilterConfig = paymentStatesCheckboxFilterConfig;
 
   constructor(
-    private readonly companiesService: CompaniesService,
+    private readonly filterService: FilterService<InvoiceFilter>,
     readonly authService: AuthService
-  ) {
-    this.filter = {};
+  ) {}
+
+  reset() {
+    this.resetEventEmitter.emit('reset');
   }
 
-  ngOnInit(): void {
-    this.setAutocompletePipes();
-    this.setFormGroupWithStaticFilterValues();
-    this.companiesService.getAllAvailableCompanies().subscribe((res: CompanyDto[]) => {
-      if (this.authService.getCurrentlyLoggedInUserRole() !== UserRoles.ADMIN) {
-        const userCompanyId = this.authService.getCurrentlyLoggedInCompanyId();
-        res = res.filter((company: CompanyDto) => {
-          return company.id !== userCompanyId;
-        });
-      }
-      this.availableCompanies = res;
-      this.setFormGroupWithAsyncFilterValues();
-    });
+  save() {
+    let filter: InvoiceFilter = new InvoiceFilter(this.debtorId, this.creditorId, this.dueDateFrom, this.dueDateTo, this.paymentStates);
+    this.filterService.setFilter(filter);
+    filter = this.filterService.getFilter();
+    this.outPutFilter.emit(filter);
   }
 
-  setAutocompletePipes() {
-    this.filteredPayerOptions = this.filterFormGroup.controls['payer']?.valueChanges.pipe(
-      startWith(''),
-      map((value) => {
-        const name = typeof value === 'string' ? value : '';
-        return name ? this.filterCompanies(name) : this.availableCompanies.slice();
-      })
-    );
-    this.filteredPayeeOptions = this.filterFormGroup.controls['payee']?.valueChanges.pipe(
-      startWith(''),
-      map((value) => {
-        const name = typeof value === 'string' ? value : '';
-        return name ? this.filterCompanies(name) : this.availableCompanies.slice();
-      })
-    );
-  }
-
-  setFormGroupWithStaticFilterValues() {
-    if (this.filter.dueDateFrom) {
-      this.filterFormGroup.controls['dateRange']?.controls['start'].setValue(this.filter.dueDateFrom);
-    }
-    if (this.filter.dueDateTo) {
-      this.filterFormGroup.controls['dateRange']?.controls['end'].setValue(this.filter.dueDateTo);
-    }
-    if (this.filter.paymentStates) {
-      this.filterFormGroup.controls['selectedFinancialStates']?.setValue(this.filter.paymentStates);
-    }
-  }
-
-  setFormGroupWithAsyncFilterValues() {
-    if (this.filter.creditorId) {
-      this.filterFormGroup.controls['payee']?.setValue(
-        this.availableCompanies.find((company) => {
-          return company.id === this.filter.creditorId;
-        })
-      );
-    }
-    if (this.filter.debtorId) {
-      this.filterFormGroup.controls['payer']?.setValue(
-        this.availableCompanies.find((company) => {
-          return company.id === this.filter.debtorId;
-        })
-      );
-    }
-  }
-
-  setFilter() {
-    if (this.filterFormGroup.controls['payer']?.value) {
-      this.filter.debtorId = this.filterFormGroup.controls['payer']?.value.id;
+  listenToDebtorFilter(company: CompanyDto | undefined) {
+    if (company) {
+      this.debtorId = company.id;
     } else {
-      this.filter.debtorId = '';
+      this.debtorId = '';
     }
-    if (this.filterFormGroup.controls['payee']?.value) {
-      this.filter.creditorId = this.filterFormGroup.controls['payee']?.value.id;
+  }
+  listenToCreditorFilter(company: CompanyDto | undefined) {
+    if (company) {
+      this.creditorId = company.id;
     } else {
-      this.filter.creditorId = '';
-    }
-    if (this.filterFormGroup.controls['selectedFinancialStates']?.value) {
-      this.filter.paymentStates = this.filterFormGroup.controls['selectedFinancialStates']?.value;
-    } else {
-      this.filter.paymentStates = [];
-    }
-    if (this.filterFormGroup.controls['dateRange']?.controls['start'].value) {
-      this.filter.dueDateFrom = this.filterFormGroup.controls['dateRange']?.controls['start'].value;
-    } else {
-      this.filter.dueDateFrom = undefined;
-    }
-    if (this.filterFormGroup.controls['dateRange']?.controls['end'].value) {
-      this.filter.dueDateTo = this.filterFormGroup.controls['dateRange']?.controls['end'].value;
-    } else {
-      this.filter.dueDateTo = undefined;
+      this.creditorId = '';
     }
   }
-
-  displayCompanies(company: CompanyDto): string {
-    return company ? company.name : '';
+  listenToDueDateFromFilter(date: Date | undefined) {
+    this.dueDateFrom = date;
   }
-
-  private filterCompanies(name: string): CompanyDto[] {
-    const filterValue = name.toLowerCase();
-    return this.availableCompanies.filter((company) => company.name.toLowerCase().includes(filterValue));
+  listenToDueDateToFilter(date: Date | undefined) {
+    this.dueDateTo = date;
   }
-
-  onCheckBoxChange(selectedState: string) {
-    let states = this.filterFormGroup.controls['selectedFinancialStates'].value;
-    if (states && !states.includes(selectedState)) {
-      states.push(selectedState);
-      this.filterFormGroup.controls['selectedFinancialStates'].setValue(states);
-    } else if (states) {
-      states = states.filter((state) => state !== selectedState);
-      this.filterFormGroup.controls['selectedFinancialStates'].setValue(states);
-    }
-  }
-
-  isCheckBoxChecked(value: string): boolean {
-    return this.filterFormGroup.controls['selectedFinancialStates'].value
-      ? this.filterFormGroup.controls['selectedFinancialStates'].value.includes(value)
-      : false;
-  }
-
-  onSaveClick(): void {
-    this.setFilter();
-    this.outputFilter.emit(this.filter);
-  }
-
-  resetFormGroup() {
-    this.filterFormGroup.reset();
+  listenToPaymentstatesFilter(states: string[] | undefined) {
+    this.paymentStates = states;
   }
 }

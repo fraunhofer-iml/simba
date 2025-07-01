@@ -1,0 +1,10 @@
+<div class="filter-option">
+  <h3>{{ inputConfig().translateString | translate }}</h3>
+  <div class="states-container">
+    @for (state of possibleStatesInput(); track state) {
+      <mat-checkbox (change)="onCheckBoxChange(state)" [checked]="isCheckBoxChecked(state)">
+        {{ inputConfig().stateTranslateString + (state | titlecase) | translate }}
+      </mat-checkbox>
+    }
+  </div>
+</div>

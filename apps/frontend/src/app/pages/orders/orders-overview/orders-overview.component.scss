@@ -21,13 +21,30 @@
   width: 50%;
 }
 
+.searchbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10%;
+}
+
 .create-button {
   min-width: 150px;
   margin-top: 1em;
 }
 
+.drawer {
+  min-height: 100%;
+}
+
+.filter-and-searchbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 50%;
+}
 @media (max-width: 60em) {
-  .searchbar-container{
+  .searchbar-container {
     gap: 10%;
   }
 }

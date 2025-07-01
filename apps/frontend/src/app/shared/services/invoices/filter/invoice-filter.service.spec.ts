@@ -1,12 +1,13 @@
-import { InvoiceFilterService } from './invoice-filter.service';
 import { BehaviorSubject } from 'rxjs';
+import { InvoiceFilter } from '../../../../model/invoice-filter';
 import { invoiceFilterMock } from '../../../mocks/invoiceFilterMock';
+import { FilterService } from '../../filter/filter.service';
 
 describe('InvoiceFilterService', () => {
-  let service: InvoiceFilterService;
+  let service: FilterService<InvoiceFilter>;
 
   beforeEach(() => {
-    service = new InvoiceFilterService();
+    service = new FilterService<InvoiceFilter>();
   });
 
   it('should initialize with empty filter and BehaviorSubject', () => {
@@ -22,12 +23,15 @@ describe('InvoiceFilterService', () => {
   });
 
   it('should retain valid filter fields after cleanup', () => {
-    const cleaned = service.cleanupFilter(invoiceFilterMock);
+    service.filter = invoiceFilterMock;
+
+    service.cleanupFilter();
+    const cleaned = service.getFilter();
 
     expect(cleaned).toEqual({
       creditorId: '675',
-      debtorId: "123",
-      paymentStates: ['FINANCED']
+      debtorId: '123',
+      paymentStates: ['FINANCED'],
     });
   });
 });

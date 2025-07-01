@@ -10,8 +10,9 @@ import { UnpaidStatisticsDto } from '@ap3/api';
 import { FinancialRoles, PaymentStates } from '@ap3/util';
 import { Observable, of } from 'rxjs';
 import { Component, Input, OnChanges } from '@angular/core';
+import { InvoiceFilter } from '../../../model/invoice-filter';
 import { AuthService } from '../../../shared/services/auth/auth.service';
-import { InvoiceFilterService } from '../../../shared/services/invoices/filter/invoice-filter.service';
+import { FilterService } from '../../../shared/services/filter/filter.service';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 import { FormatService } from '../../../shared/services/util/format.service';
 
@@ -29,7 +30,7 @@ export class UnpaidStatisticsComponent implements OnChanges {
     public readonly formatService: FormatService,
     private readonly invoiceService: InvoiceService,
     readonly authService: AuthService,
-    private readonly filterService: InvoiceFilterService
+    private readonly filterService: FilterService<InvoiceFilter>
   ) {
     this.creditorStatisticsDto$ = of();
     this.debtorStatisticsDto$ = of();

@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright Fraunhofer Institute for Material Flow and Logistics
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -7,8 +7,6 @@
  */
 
 import { TranslateModule } from '@ngx-translate/core';
-import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { FileSaverModule } from 'ngx-filesaver';
 import { CommonModule, DatePipe, NgOptimizedImage } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -37,33 +35,18 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { InvoiceFilter } from '../../model/invoice-filter';
-import { FilterModule } from '../../shared/components/filter/filter.module';
-import { AuthService } from '../../shared/services/auth/auth.service';
-import { CompaniesService } from '../../shared/services/companies/companies.service';
-import { FilterService } from '../../shared/services/filter/filter.service';
-import { InvoiceService } from '../../shared/services/invoices/invoices.service';
-import { FinancialRoleService } from '../../shared/services/util/financial-role.service';
-import { FormatService } from '../../shared/services/util/format.service';
-import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
-import { InvoiceFilterComponent } from './filter/invoice-filter.component';
-import { InvoiceTableComponent } from './invoice-table/invoice-table.component';
-import { PaidStatisticsComponent } from './paid-statistics/paid-statistics.component';
-import { ReceivablesRoutingModule } from './receivables-routing.module';
-import { ReceivablesComponent } from './receivables.component';
-import { TokenDetailsDialogComponent } from './token-details-dialog/token-details-dialog.component';
-import { UnpaidStatisticsComponent } from './unpaid-statistics/unpaid-statistics.component';
+import { AuthService } from '../../services/auth/auth.service';
+import { CompaniesService } from '../../services/companies/companies.service';
+import { FilterService } from '../../services/filter/filter.service';
+import { FinancialRoleService } from '../../services/util/financial-role.service';
+import { FormatService } from '../../services/util/format.service';
+import { AutocompleteCompanyFilterComponent } from './autocomplete-company-filter/autocomplete-company-filter.component';
+import { CheckboxFilterComponent } from './checkbox-filter/checkbox-filter.component';
+import { DateRangeFilterComponent } from './date-range-filter/date-range-filter.component';
 
 @NgModule({
-  declarations: [
-    ReceivablesComponent,
-    PaidStatisticsComponent,
-    UnpaidStatisticsComponent,
-    DownloadInvoiceDialogComponent,
-    TokenDetailsDialogComponent,
-    InvoiceFilterComponent,
-    InvoiceTableComponent,
-  ],
+  declarations: [AutocompleteCompanyFilterComponent, CheckboxFilterComponent, DateRangeFilterComponent],
+  exports: [AutocompleteCompanyFilterComponent, CheckboxFilterComponent, DateRangeFilterComponent],
   imports: [
     CommonModule,
     MatSidenavModule,
@@ -75,18 +58,15 @@ import { UnpaidStatisticsComponent } from './unpaid-statistics/unpaid-statistics
     MatSortModule,
     MatPaginatorModule,
     MatIconModule,
-    ReceivablesRoutingModule,
     MatGridListModule,
     TranslateModule,
     MatCheckbox,
     MatButton,
-    BaseChartDirective,
     MatSelectModule,
     MatMenuModule,
     MatButtonModule,
     MatTabsModule,
     MatDialogModule,
-    FileSaverModule,
     MatButtonToggleModule,
     MatListModule,
     MatTooltipModule,
@@ -97,14 +77,11 @@ import { UnpaidStatisticsComponent } from './unpaid-statistics/unpaid-statistics
     FormsModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
-    FilterModule,
   ],
   providers: [
     provideNativeDateAdapter(),
     provideHttpClient(withInterceptorsFromDi()),
-    provideCharts(withDefaultRegisterables()),
-    InvoiceService,
-    FilterService<InvoiceFilter>,
+    FilterService,
     FormatService,
     DatePipe,
     FinancialRoleService,
@@ -112,4 +89,4 @@ import { UnpaidStatisticsComponent } from './unpaid-statistics/unpaid-statistics
     CompaniesService,
   ],
 })
-export class ReceivablesModule {}
+export class FilterModule {}

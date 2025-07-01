@@ -19,7 +19,7 @@ describe('PaidStatisticsUtil', () => {
     expect(dataset.datasets[1].type).toBe('bar');
     expect(dataset.datasets[2].type).toBe('line');
     expect(dataset.datasets[3].type).toBe('bar');
-    expect(dataset.datasets.every(ds => ds.data.length === 0)).toBe(true);
+    expect(dataset.datasets.every((ds) => ds.data.length === 0)).toBe(true);
   });
 
   it('should build chart options with correct scale config', () => {

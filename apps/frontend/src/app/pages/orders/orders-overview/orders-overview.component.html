@@ -6,28 +6,49 @@
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 
-<div class="overview-container">
-  <h1>{{ 'Orders.Title' | translate }}</h1>
+<mat-drawer-container class="drawer">
+  <mat-drawer #drawer mode="side" position="end">
+    <app-orders-filter (outPutFilter)="getFilteredData($event)" class="drawer"></app-orders-filter>
+  </mat-drawer>
 
-  <div class="searchbar-container card">
-    <mat-form-field class="searchbar">
-      <img matIconPrefix src="assets/icons/search.svg" alt="Icon" />
-      <input matInput (keyup)="applyFilter($event)" #input />
-    </mat-form-field>
-    @if (isCustomer) {
-      <button mat-flat-button class="create-button" routerLink="{{ ROUTING.newOrders }}">{{ 'Orders.Create.Title' | translate }}</button>
-    }
-  </div>
+  <mat-drawer-content class="drawer">
+    <div class="overview-container">
+      <h1>{{ 'Orders.Title' | translate }}</h1>
 
-  <div class="table-container card">
-    <mat-tab-group>
-      <mat-tab label="{{ 'Open' | translate }}">
-        <app-order-table [dataSource]="dataSourceOpen" [filterValue]="filterText" [isCustomer]="isCustomer"> </app-order-table>
-      </mat-tab>
+      <div class="searchbar-container card">
+        <div class="filter-and-searchbar">
+          <button
+            mat-mini-fab
+            [matBadge]="activatedFiltersCount"
+            matBadgeHidden="{{ activatedFiltersCount === 0 }}"
+            (click)="drawer.toggle()"
+            class="filter-button"
+          >
+            <span mat-icon class="material-symbols-outlined"> filter_alt </span>
+          </button>
+          <mat-form-field class="searchbar">
+            <img matIconPrefix src="assets/icons/search.svg" alt="Icon" />
+            <input matInput (keyup)="applyFilter($event)" #input />
+          </mat-form-field>
+        </div>
+        @if (authService.isCustomer()) {
+          <button mat-flat-button class="create-button" routerLink="{{ ROUTING.newOrders }}">
+            {{ 'Orders.Create.Title' | translate }}
+          </button>
+        }
+      </div>
 
-      <mat-tab label="{{ 'Closed' | translate }}">
-        <app-order-table [dataSource]="dataSourceClosed" [filterValue]="filterText" [isCustomer]="isCustomer"> </app-order-table>
-      </mat-tab>
-    </mat-tab-group>
-  </div>
-</div>
+      <div class="table-container card">
+        <mat-tab-group>
+          <mat-tab label="{{ 'Open' | translate }}">
+            <app-order-table [dataSource]="dataSourceOpen" [filterValue]="filterText" [isCustomer]="isCustomer"> </app-order-table>
+          </mat-tab>
+
+          <mat-tab label="{{ 'Closed' | translate }}">
+            <app-order-table [dataSource]="dataSourceClosed" [filterValue]="filterText" [isCustomer]="isCustomer"> </app-order-table>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

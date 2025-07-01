@@ -1,0 +1,11 @@
+<div class="filter-option">
+  <h3>{{ inputConfig().translateString | translate }}</h3>
+  <mat-form-field appearance="outline">
+    <mat-date-range-input [rangePicker]="picker">
+      <input [formControl]="dueDateFrom" matStartDate placeholder="{{ inputConfig().placeholderFromTranslateString | translate }}" />
+      <input [formControl]="dueDateTo" matEndDate placeholder="{{ inputConfig().placeholderToTranslateString | translate }}" />
+    </mat-date-range-input>
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker></mat-date-range-picker>
+  </mat-form-field>
+</div>

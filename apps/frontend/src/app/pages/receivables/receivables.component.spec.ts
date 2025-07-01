@@ -20,8 +20,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterOutlet } from '@angular/router';
+import { InvoiceFilter } from '../../model/invoice-filter';
 import { AuthService } from '../../shared/services/auth/auth.service';
-import { InvoiceFilterService } from '../../shared/services/invoices/filter/invoice-filter.service';
+import { FilterService } from '../../shared/services/filter/filter.service';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
 import { FinancialRoleService } from '../../shared/services/util/financial-role.service';
 import { FormatService } from '../../shared/services/util/format.service';
@@ -54,7 +55,7 @@ describe('ReceivablesComponent', () => {
         AuthService,
         InvoiceService,
         provideHttpClient(),
-        InvoiceFilterService,
+        FilterService<InvoiceFilter>,
         {
           provide: KeycloakService,
           useValue: {

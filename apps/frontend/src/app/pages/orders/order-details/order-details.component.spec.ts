@@ -14,7 +14,9 @@ import { HttpClient, HttpHandler } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Router } from '@angular/router';
+import { OrderFilter } from '../../../model/order-filter';
 import { AuthService } from '../../../shared/services/auth/auth.service';
+import { FilterService } from '../../../shared/services/filter/filter.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { FormatService } from '../../../shared/services/util/format.service';
 import { OrderDetailsComponent } from './order-details.component';
@@ -38,6 +40,7 @@ describe('OrderDetailsComponent', () => {
       ],
       providers: [
         OrdersService,
+        FilterService<OrderFilter>,
         HttpClient,
         HttpHandler,
         Router,

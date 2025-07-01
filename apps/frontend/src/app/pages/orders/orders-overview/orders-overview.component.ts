@@ -11,9 +11,12 @@ import { ServiceStatesEnum } from '@ap3/util';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
+import { OrderFilter } from '../../../model/order-filter';
 import { ROUTING } from '../../../routing/routing.enum';
 import { AuthService } from '../../../shared/services/auth/auth.service';
+import { FilterService } from '../../../shared/services/filter/filter.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
+import { convertToOrderFilter } from '../util/order-filter-util';
 
 @Component({
   selector: 'app-orders-overview',
@@ -23,6 +26,7 @@ import { OrdersService } from '../../../shared/services/orders/orders.service';
 export class OrdersOverviewComponent implements OnInit {
   isCustomer: boolean;
   filterText = '';
+  activatedFiltersCount: number;
   dataSource = new MatTableDataSource<OrderOverviewDto>();
   dataSourceOpen = new MatTableDataSource<OrderOverviewDto>();
   dataSourceClosed = new MatTableDataSource<OrderOverviewDto>();
@@ -30,11 +34,14 @@ export class OrdersOverviewComponent implements OnInit {
 
   constructor(
     private readonly orderService: OrdersService,
-    private readonly authService: AuthService,
-    private readonly route: ActivatedRoute
+    readonly authService: AuthService,
+    private readonly route: ActivatedRoute,
+    private readonly orderFilterService: FilterService<OrderFilter>
   ) {
+    this.orderFilterService.resetFilter();
+    this.activatedFiltersCount = this.orderFilterService.countSelectedFilterOptions();
     this.isCustomer = this.authService.isCustomer();
-    this.loadOrders();
+    this.loadOrders(orderFilterService.getFilter());
   }
 
   ngOnInit(): void {
@@ -44,8 +51,8 @@ export class OrdersOverviewComponent implements OnInit {
     }
   }
 
-  private loadOrders(): void {
-    this.orderService.getOrders().subscribe((orders: OrderOverviewDto[]) => {
+  private loadOrders(filter: OrderFilter): void {
+    this.orderService.getOrders(filter).subscribe((orders: OrderOverviewDto[]) => {
       this.dataSourceOpen.data = orders.filter((order: OrderOverviewDto) => order.status !== ServiceStatesEnum.PRODUCED);
       this.dataSourceClosed.data = orders.filter((order: OrderOverviewDto) => order.status === ServiceStatesEnum.PRODUCED);
     });
@@ -53,5 +60,11 @@ export class OrdersOverviewComponent implements OnInit {
 
   applyFilter(event: Event) {
     this.filterText = (event.target as HTMLInputElement).value;
+  }
+
+  getFilteredData(filter: OrderFilter): void {
+    this.orderFilterService.setFilter(filter);
+    this.loadOrders(convertToOrderFilter(this.orderFilterService.getFilter()));
+    this.activatedFiltersCount = this.orderFilterService.countSelectedFilterOptions();
   }
 }

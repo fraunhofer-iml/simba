@@ -14,9 +14,11 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,13 +27,17 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { MatTooltip } from '@angular/material/tooltip';
 import { DialogOffersExpiredComponent } from '../../layout/dialog-offers-expired/dialog-offers-expired.component';
-import { MY_FORMATS } from '../../shared/formats/datepicker-format';
+import { OrderFilter } from '../../model/order-filter';
+import { FilterModule } from '../../shared/components/filter/filter.module';
+import { YEAR_FORMAT } from '../../shared/formats/datepicker-format';
 import { AuthService } from '../../shared/services/auth/auth.service';
+import { FilterService } from '../../shared/services/filter/filter.service';
 import { OffersService } from '../../shared/services/offers/offers.service';
 import { OrdersService } from '../../shared/services/orders/orders.service';
 import { ProductService } from '../../shared/services/product/product.service';
@@ -39,12 +45,20 @@ import { CalendarWeekService } from '../../shared/services/util/calendar-week.se
 import { FormatService } from '../../shared/services/util/format.service';
 import { CreateOrderComponent } from './create-order/create-order.component';
 import { OrderDetailsComponent } from './order-details/order-details.component';
+import { OrdersFilterComponent } from './orders-filter/orders-filter.component';
 import { OrderTableComponent } from './orders-overview/order-table/order-table.component';
 import { OrdersOverviewComponent } from './orders-overview/orders-overview.component';
 import { OrdersRoutingModule } from './orders-routing.module';
 
 @NgModule({
-  declarations: [OrdersOverviewComponent, CreateOrderComponent, DialogOffersExpiredComponent, OrderDetailsComponent, OrderTableComponent],
+  declarations: [
+    OrdersFilterComponent,
+    OrdersOverviewComponent,
+    CreateOrderComponent,
+    DialogOffersExpiredComponent,
+    OrderDetailsComponent,
+    OrderTableComponent,
+  ],
   imports: [
     CommonModule,
     MatIconModule,
@@ -53,6 +67,8 @@ import { OrdersRoutingModule } from './orders-routing.module';
     MatListModule,
     MatInputModule,
     MatSelectModule,
+    MatBadgeModule,
+    MatSidenavModule,
     MatDatepickerModule,
     MatButtonModule,
     MatNativeDateModule,
@@ -62,6 +78,7 @@ import { OrdersRoutingModule } from './orders-routing.module';
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
+    MatAutocompleteModule,
     OrdersRoutingModule,
     NgOptimizedImage,
     CountdownComponent,
@@ -70,6 +87,7 @@ import { OrdersRoutingModule } from './orders-routing.module';
     MatTooltip,
     MatTabGroup,
     MatTab,
+    FilterModule,
   ],
   providers: [
     OffersService,
@@ -80,7 +98,9 @@ import { OrdersRoutingModule } from './orders-routing.module';
     CalendarWeekService,
     FormatService,
     DatePipe,
-    provideMomentDateAdapter(MY_FORMATS),
+    FilterService<OrderFilter>,
+    provideNativeDateAdapter(),
+    provideMomentDateAdapter(YEAR_FORMAT),
     AuthService,
   ],
   exports: [OrderTableComponent],

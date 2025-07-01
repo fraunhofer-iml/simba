@@ -6,33 +6,40 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../auth/auth.service';
-import { OrdersService } from './orders.service';
 import { OrderDetailsDto } from '@ap3/api';
 import { of } from 'rxjs';
-import { ApiEndpoints } from '../../constants/endpoints';
+import { HttpClient } from '@angular/common/http';
 import { BASE_URL } from '../../../../environments/environment';
+import { OrderFilter } from '../../../model/order-filter';
 import { ROUTING } from '../../../routing/routing.enum';
-import { ordersOverviewMock } from '../../mocks/orderOverviewMock';
+import { ApiEndpoints } from '../../constants/endpoints';
 import { createOrderMock } from '../../mocks/createOrderMock';
+import { ordersOverviewMock } from '../../mocks/orderOverviewMock';
+import { AuthService } from '../auth/auth.service';
+import { FilterService } from '../filter/filter.service';
+import { OrdersService } from './orders.service';
 
 describe('OrdersService', () => {
   let service: OrdersService;
   let httpClientMock: jest.Mocked<HttpClient>;
   let authServiceMock: jest.Mocked<AuthService>;
+  let filterServiceMock: jest.Mocked<FilterService<OrderFilter>>;
 
   beforeEach(() => {
     httpClientMock = {
       post: jest.fn(),
-      get: jest.fn()
+      get: jest.fn(),
     } as any;
 
     authServiceMock = {
-      getCurrentlyLoggedInCompanyId: jest.fn()
+      getCurrentlyLoggedInCompanyId: jest.fn(),
     } as any;
 
-    service = new OrdersService(httpClientMock, authServiceMock);
+    filterServiceMock = {
+      processFiltersToHttpParams: jest.fn(),
+    } as any;
+
+    service = new OrdersService(httpClientMock, authServiceMock, filterServiceMock);
   });
 
   it('should create order with customerId from authService', (done) => {
@@ -42,10 +49,7 @@ describe('OrdersService', () => {
     service.createOrder(createOrderMock).subscribe((res) => {
       expect(res).toEqual(ordersOverviewMock[0]);
       expect(createOrderMock.customerId).toBe('company');
-      expect(httpClientMock.post).toHaveBeenCalledWith(
-        `${BASE_URL}${ApiEndpoints.orders.getAllOrders}`,
-        createOrderMock
-      );
+      expect(httpClientMock.post).toHaveBeenCalledWith(`${BASE_URL}${ApiEndpoints.orders.getAllOrders}`, createOrderMock);
       done();
     });
   });
@@ -57,10 +61,9 @@ describe('OrdersService', () => {
     service.getOrders().subscribe((order) => {
       expect(order[0].id).toBe('ORD2506020916050');
       expect(order[1].id).toBe('ORD25060278786050');
-      expect(httpClientMock.get).toHaveBeenCalledWith(
-        `${BASE_URL}${ApiEndpoints.orders.getAllOrders}`,
-        { params: { companyId: 'company' } }
-      );
+      expect(httpClientMock.get).toHaveBeenCalledWith(`${BASE_URL}${ApiEndpoints.orders.getAllOrders}`, {
+        params: { companyId: 'company' },
+      });
       done();
     });
   });
@@ -69,8 +72,8 @@ describe('OrdersService', () => {
     const orderDetailsMock: OrderDetailsDto = {
       order: ordersOverviewMock[0],
       processStateHistory: [],
-      machineAssignments: []
-    }
+      machineAssignments: [],
+    };
 
     authServiceMock.getCurrentlyLoggedInCompanyId.mockReturnValue('company');
     httpClientMock.get.mockReturnValue(of(orderDetailsMock));

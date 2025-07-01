@@ -37,7 +37,9 @@
   </ng-container>
   <ng-container matColumnDef="totalAmountWithoutVat">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="totalAmountWithoutVat">{{ 'Invoices.Table.Amount' | translate }}</th>
-    <td mat-cell class="center-row" *matCellDef="let row">{{ formatService.transformNumberToCurrentLanguageFormat(row.totalAmountWithoutVat) }}</td>
+    <td mat-cell class="center-row" *matCellDef="let row">
+      {{ formatService.transformNumberToCurrentLanguageFormat(row.totalAmountWithoutVat) }}
+    </td>
   </ng-container>
   <ng-container matColumnDef="currency">
     <th mat-header-cell *matHeaderCellDef mat-sort-header="currency">{{ 'Invoices.Table.Currency' | translate }}</th>
@@ -60,7 +62,7 @@
     <td mat-cell *matCellDef="let row">
       <div class="paymentStatus-container">
         <span [ngClass]="{ 'paymentStatus-changed': isChanged(row.id), 'paymentStatus-unchanged': !isChanged(row.id) }">
-          {{ 'PaymentStatus.' + row.displayedStatus | translate }}</span
+          {{ 'PaymentStatus.' + (row.displayedStatus | titlecase) | translate }}</span
         >
         @if (
           !authService.isCustomer() && authService.isCurrentlyLoggedInCompany(row.creditorId) && !paymentStates.includes(row.paymentStatus)

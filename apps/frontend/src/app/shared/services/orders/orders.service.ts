@@ -6,20 +6,23 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CreateOrderDto, OrderOverviewDto, OrderDetailsDto } from '@ap3/api';
+import { CreateOrderDto, OrderDetailsDto, OrderOverviewDto } from '@ap3/api';
 import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BASE_URL } from '../../../../environments/environment';
+import { OrderFilter } from '../../../model/order-filter';
+import { ROUTING } from '../../../routing/routing.enum';
 import { ApiEndpoints } from '../../constants/endpoints';
 import { AuthService } from '../auth/auth.service';
-import { ROUTING } from '../../../routing/routing.enum';
+import { FilterService } from '../filter/filter.service';
 
 @Injectable()
 export class OrdersService {
   constructor(
     private readonly httpClient: HttpClient,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly orderFilterService: FilterService<OrderFilter>
   ) {}
 
   public createOrder(order: CreateOrderDto): Observable<OrderOverviewDto> {
@@ -27,14 +30,21 @@ export class OrdersService {
     return this.httpClient.post<OrderOverviewDto>(`${BASE_URL}${ApiEndpoints.orders.getAllOrders}`, order);
   }
 
-  public getOrders(): Observable<OrderOverviewDto[]> {
+  public getOrders(filter?: OrderFilter): Observable<OrderOverviewDto[]> {
     const companyId = this.authService.getCurrentlyLoggedInCompanyId();
     return this.httpClient
-      .get<OrderOverviewDto[]>(`${BASE_URL}${ApiEndpoints.orders.getAllOrders}`, {
-        params: {
-          companyId: companyId,
-        },
-      })
+      .get<OrderOverviewDto[]>(
+        `${BASE_URL}${ApiEndpoints.orders.getAllOrders}`,
+        filter
+          ? {
+              params: this.orderFilterService.processFiltersToHttpParams(filter),
+            }
+          : {
+              params: {
+                companyId: companyId,
+              },
+            }
+      )
       .pipe(
         map((orders: OrderOverviewDto[]) => {
           return orders.sort((a, b) => {

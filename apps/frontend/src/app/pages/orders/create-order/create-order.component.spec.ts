@@ -32,7 +32,9 @@ import { MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { DialogOffersExpiredComponent } from '../../../layout/dialog-offers-expired/dialog-offers-expired.component';
+import { OrderFilter } from '../../../model/order-filter';
 import { AuthService } from '../../../shared/services/auth/auth.service';
+import { FilterService } from '../../../shared/services/filter/filter.service';
 import { OffersService } from '../../../shared/services/offers/offers.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { ProductService } from '../../../shared/services/product/product.service';
@@ -75,6 +77,7 @@ describe('CreateOrderComponent', () => {
         KeycloakAngularModule,
       ],
       providers: [
+        FilterService<OrderFilter>,
         OffersService,
         OrdersService,
         ProductService,
@@ -133,7 +136,7 @@ describe('CreateOrderComponent', () => {
       year: component.orderForm.get('date')?.value.year(),
       calendarWeek: component.orderForm.get('selectedCalendarWeek')?.value,
       customerId: '',
-      unitOfMeasureCode: ""
+      unitOfMeasureCode: '',
     };
 
     jest.spyOn(orderService, 'createOrder').mockReturnValue(of(OrderOverviewMock[0]));

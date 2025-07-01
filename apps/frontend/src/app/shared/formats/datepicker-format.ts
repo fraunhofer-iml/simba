@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export const MY_FORMATS = {
+export const YEAR_FORMAT = {
   parse: {
     dateInput: 'YYYY',
   },
@@ -15,5 +15,17 @@ export const MY_FORMATS = {
     monthYearLabel: 'YYYY',
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'YYYY',
+  },
+};
+
+export const FULLDATE_FORMAT = {
+  parse: {
+    dateInput: 'DD.MM.YYYY',
+  },
+  display: {
+    dateInput: 'DD.MM.YYYY',
+    monthYearLabel: 'MM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MM YYYY',
   },
 };

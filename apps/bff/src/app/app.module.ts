@@ -15,8 +15,8 @@ import { InvoicesModule } from './invoices/invoices.module';
 import { OffersModule } from './offers/offers.module';
 import { OrdersModule } from './orders/orders.module';
 import { ProductsModule } from './products/products.module';
-import { TradeReceivablesModule } from './trade-receivables/trade-receivables.module';
 import { ServiceProcessModule } from './service-process/service-process.module';
+import { TradeReceivablesModule } from './trade-receivables/trade-receivables.module';
 
 @Module({
   imports: [
@@ -43,7 +43,7 @@ import { ServiceProcessModule } from './service-process/service-process.module';
     {
       provide: APP_GUARD,
       useClass: RoleGuard,
-    }
+    },
   ],
 })
 export class AppModule {}

@@ -31,10 +31,10 @@
       "InvoiceNumber": "Rechnungsnummer"
     },
     "Status": {
-      "open": "offen",
-      "planned": "geplant",
-      "scheduled": "scheduled",
-      "produced": "produziert"
+      "Open": "offen",
+      "Planned": "geplant",
+      "Scheduled": "scheduled",
+      "Produced": "produziert"
     },
     "Details": {
       "Table": { "StartDate": "Startzeitraum", "EndDate": "Endzeitraum", "RobotId": "Roboter ID", "Participant": "Maschineneigentümer" },
@@ -68,10 +68,10 @@
   },
 
   "PaymentStatus": {
-    "open": "offen",
-    "financed": "finanziert",
-    "paid": "bezahlt",
-    "exceeded": "überfällig",
+    "Open": "offen",
+    "Financed": "finanziert",
+    "Paid": "bezahlt",
+    "Exceeded": "überfällig",
     "PaymentStateChangeSuccessfulSnackBarMessage": "Der Status wurden erfolgreich geändert",
     "PaymentStateErrorSnackBarMessage": "Etwas ist schiefgelaufen. Der Status konnte nicht geändert werden. :("
   },
@@ -118,10 +118,21 @@
   },
 
   "Filter": {
+    "Orders": {
+      "Title": "Filter",
+      "Customer": "Kunde",
+      "Company": "Firma",
+      "ServiceStatus": "Status",
+      "Date": "Zeitraum",
+      "ExampleCompany": "Name des Unternehmens",
+      "ExampleCustomer": "Name des Kunden",
+      "ExampleStartDate": "Anfangsdatum",
+      "ExampleEndDate": "Enddatum"
+    },
     "Title": "Filter",
     "Payer": "Schuldner",
-    "Payee": " Kreditor",
-    "Date": " Zeitraum",
+    "Payee": "Kreditor",
+    "Date": "Zeitraum",
     "FinancialStatus": "Finanzstatus",
     "ExampleCompany": "Name des Unternehmens",
     "ExampleStartDate": "Anfangsdatum",

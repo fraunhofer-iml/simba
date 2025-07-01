@@ -16,21 +16,29 @@ import { provideHttpClient } from '@angular/common/http';
 import { LOCALE_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { ordersOverviewMock } from '../../../shared/mocks/orderOverviewMock';
+import { OrderFilter } from '../../../model/order-filter';
+import { FilterModule } from '../../../shared/components/filter/filter.module';
 import { AuthService } from '../../../shared/services/auth/auth.service';
+import { FilterService } from '../../../shared/services/filter/filter.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
 import { FormatService } from '../../../shared/services/util/format.service';
+import { OrdersFilterComponent } from '../orders-filter/orders-filter.component';
 import { OrderTableComponent } from './order-table/order-table.component';
 import { OrdersOverviewComponent } from './orders-overview.component';
 import localeDe from '@angular/common/locales/de';
@@ -50,28 +58,34 @@ describe('OrdersOverviewComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [
+        MatCheckboxModule,
         MatTabsModule,
         MatInputModule,
         MatSelectModule,
         MatDatepickerModule,
         MatButtonModule,
+        MatBadgeModule,
         ReactiveFormsModule,
         MatFormFieldModule,
+        MatSidenavModule,
         MatTableModule,
         MatPaginatorModule,
         NoopAnimationsModule,
         RouterModule.forRoot([]),
         TranslateModule.forRoot(),
         KeycloakAngularModule,
+        FilterModule,
       ],
       providers: [
         { provide: OrdersService, useValue: mockOrdersService },
         { provide: LOCALE_ID, useValue: 'de-DE' },
         provideHttpClient(),
+        provideNativeDateAdapter(),
         DatePipe,
         AuthService,
         FormatService,
         CalendarWeekService,
+        FilterService<OrderFilter>,
         {
           provide: KeycloakService,
           useValue: {
@@ -86,7 +100,7 @@ describe('OrdersOverviewComponent', () => {
           },
         },
       ],
-      declarations: [OrdersOverviewComponent, OrderTableComponent],
+      declarations: [OrdersOverviewComponent, OrderTableComponent, OrdersFilterComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OrdersOverviewComponent);

@@ -1,0 +1,47 @@
+<div class="filter-container">
+  <div class="content">
+    <div class="header">
+      <span mat-icon class="material-symbols-outlined"> filter_alt </span>
+      <h2>{{ 'Filter.Title' | translate }}</h2>
+    </div>
+    @if (authService.isCustomer() || authService.isOperator()) {
+      <div class="filter-option">
+        <app-autocomplete-company-filter
+          [inputConfig]="companyAutocompleteFilterConfig"
+          (selectedCompany)="listenToCompanyFilter($event)"
+          [resetEventEmitter]="resetEventEmitter"
+        ></app-autocomplete-company-filter>
+      </div>
+    }
+    @if (authService.isContributor() || authService.isOperator()) {
+      <div class="filter-option">
+        <app-autocomplete-company-filter
+          [inputConfig]="customerAutocompleteFilterConfig"
+          (selectedCompany)="listenToCustomerFilter($event)"
+          [resetEventEmitter]="resetEventEmitter"
+        ></app-autocomplete-company-filter>
+      </div>
+    }
+    <div class="filter-option">
+      <app-date-range-filter
+        [inputConfig]="ordersDateRangeFilterConfig"
+        (dueDateToOutput)="listenToDueDateToFilter($event)"
+        (dueDateFromOutput)="listenToDueDateFromFilter($event)"
+        [resetEventEmitter]="resetEventEmitter"
+      ></app-date-range-filter>
+    </div>
+    <div class="filter-option">
+      <app-checkbox-filter
+        [inputConfig]="serviceStatesCheckboxFilterConfig"
+        [possibleStatesInput]="possibleStates"
+        (selectedStatesOutput)="listenToServiceStatesFilter($event)"
+        [resetEventEmitter]="resetEventEmitter"
+      ></app-checkbox-filter>
+    </div>
+
+    <div class="button-container">
+      <button mat-flat-button (click)="reset()">{{ 'Buttons.Reset' | translate }}</button>
+      <button mat-flat-button (click)="save()">{{ 'Buttons.Save' | translate }}</button>
+    </div>
+  </div>
+</div>

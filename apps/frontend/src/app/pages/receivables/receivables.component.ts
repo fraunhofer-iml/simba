@@ -17,7 +17,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Invoice } from '../../model/invoice';
 import { InvoiceFilter } from '../../model/invoice-filter';
-import { InvoiceFilterService } from '../../shared/services/invoices/filter/invoice-filter.service';
+import { FilterService } from '../../shared/services/filter/filter.service';
 import { InvoiceService } from '../../shared/services/invoices/invoices.service';
 import { DownloadInvoiceDialogComponent } from './download-invoice-dialog/download-invoice-dialog.component';
 
@@ -41,12 +41,12 @@ export class ReceivablesComponent {
     private readonly dialog: MatDialog,
     private readonly invoiceService: InvoiceService,
     private readonly translationService: TranslateService,
-    private readonly invoiceFilterService: InvoiceFilterService
+    private readonly filterService: FilterService<InvoiceFilter>
   ) {
-    this.filterSubject = this.invoiceFilterService.getSubject().asObservable();
+    this.filterSubject = this.filterService.getSubject().asObservable();
     this.filterSubject.subscribe((newFilter: boolean) => {
       if (newFilter) {
-        this.loadInvoices(this.invoiceFilterService.getFilter());
+        this.loadInvoices(this.filterService.getFilter());
         this.activatedFiltersCount = this.countSelectedFilterOptions();
       }
     });
@@ -69,22 +69,20 @@ export class ReceivablesComponent {
   }
 
   getFilteredData(filter: InvoiceFilter): void {
-    const cleanedFilter = this.invoiceFilterService.cleanupFilter(filter);
-    this.invoiceFilterService.setFilter(cleanedFilter);
-    this.loadInvoices(cleanedFilter);
+    this.loadInvoices(this.filterService.getFilter());
     this.activatedFiltersCount = this.countSelectedFilterOptions();
   }
 
   sendChangeRequest() {
     this.invoiceService.createNewPaymentStatus(this.paymentStatusChanges).subscribe({
       complete: () => this.handleStatusChangeResult(true),
-      error: () => this.handleStatusChangeResult(false)
+      error: () => this.handleStatusChangeResult(false),
     });
   }
 
   countSelectedFilterOptions(): number {
     let selectedOptions = 0;
-    for (const option of Object.values(this.invoiceFilterService.getFilter())) {
+    for (const option of Object.values(this.filterService.getFilter())) {
       if (option) {
         selectedOptions++;
       }

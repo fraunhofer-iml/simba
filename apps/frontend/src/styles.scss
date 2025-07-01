@@ -179,3 +179,37 @@ h4 {
 .mat-mdc-dialog-content {
   max-height: 90vh !important;
 }
+
+/* Filter */
+.filter-option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.filter-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0.5rem;
+}
+
+.content {
+  display: grid;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 2rem;
+}
