@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { KeycloakService } from 'keycloak-angular';
 import { provideHttpClient } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -33,9 +33,9 @@ describe('PaidStatisticsComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [PaidStatisticsComponent],
       providers: [
+        AuthService,
         InvoiceService,
         provideHttpClient(),
-        { provide: TranslatePipe, useValue: jest.fn((value: string) => value) },
         FinancialRoleService,
         {
           provide: KeycloakService,
@@ -50,11 +50,9 @@ describe('PaidStatisticsComponent', () => {
             getUserRoles: jest.fn().mockReturnValue([]),
           },
         },
-
-        AuthService,
       ],
       imports: [TranslateModule.forRoot(), MatMenuModule],
-      schemas: [NO_ERRORS_SCHEMA], // since provideCharts(withDefaultRegisterables()) doesnt get recognized as a function, canvas cant be given the datasets property
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PaidStatisticsComponent);
@@ -64,5 +62,36 @@ describe('PaidStatisticsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should initialize selectable years and chart', () => {
+    expect(component.selectableYears.length).toBeGreaterThan(0);
+    expect(component.mixedChartOptions).toBeDefined();
+    expect(component.mixedChartData.datasets.length).toBe(4);
+  });
+
+  it('should toggle dataset visibility', () => {
+    const viability = component.mixedChartData.datasets[0].hidden;
+    component.toggleDatasetVisibility(0);
+    expect(component.mixedChartData.datasets[0].hidden).toBe(!viability);
+  });
+
+  it('should handle year selection and update chart', () => {
+    const spy = jest.spyOn(component, 'updateChartDataSet');
+    component.onYearSelection(2022);
+    expect(component.selectedYear).toBe(2022);
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should return correct CSS class for volume', () => {
+    component.mixedChartData.datasets[1] = { label: 'paid-statistics-creditor-volume-color', data: [] };
+    const result = component.getCssColorClassVolume('paid-statistics-creditor-volume-color');
+    expect(result).toBe('paid-statistics-creditor-volume-color option');
+  });
+
+  it('should return correct CSS class for rate', () => {
+    component.mixedChartData.datasets[0] = { label: 'paid-statistics-creditor-percentage-color', data: [] };
+    const result = component.getCssColorClassRate('paid-statistics-creditor-percentage-color');
+    expect(result).toBe('paid-statistics-creditor-percentage-color option');
   });
 });

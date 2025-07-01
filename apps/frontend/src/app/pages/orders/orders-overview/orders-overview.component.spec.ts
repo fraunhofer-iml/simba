@@ -1,3 +1,4 @@
+;
 /*
  * Copyright Fraunhofer Institute for Material Flow and Logistics
  *
@@ -6,40 +7,47 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ServiceStatesEnum } from '@ap3/util';
 import { TranslateModule } from '@ngx-translate/core';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+import { of } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
+import { LOCALE_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
+import { ordersOverviewMock } from '../../../shared/mocks/orderOverviewMock';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
 import { FormatService } from '../../../shared/services/util/format.service';
-import { OrdersOverviewComponent } from './orders-overview.component';
-import { MatTabsModule } from '@angular/material/tabs';
 import { OrderTableComponent } from './order-table/order-table.component';
+import { OrdersOverviewComponent } from './orders-overview.component';
+import localeDe from '@angular/common/locales/de';
+import { registerLocaleData } from '@angular/common';
 
 describe('OrdersOverviewComponent', () => {
   let component: OrdersOverviewComponent;
   let fixture: ComponentFixture<OrdersOverviewComponent>;
+  let mockOrdersService: jest.Mocked<OrdersService>;
 
   beforeEach(async () => {
+    registerLocaleData(localeDe);
+
+    mockOrdersService = {
+      getOrders: jest.fn().mockReturnValue(of(ordersOverviewMock)),
+    } as unknown as jest.Mocked<OrdersService>;
+
     await TestBed.configureTestingModule({
       imports: [
         MatTabsModule,
@@ -57,7 +65,8 @@ describe('OrdersOverviewComponent', () => {
         KeycloakAngularModule,
       ],
       providers: [
-        OrdersService,
+        { provide: OrdersService, useValue: mockOrdersService },
+        { provide: LOCALE_ID, useValue: 'de-DE' },
         provideHttpClient(),
         DatePipe,
         AuthService,
@@ -87,5 +96,26 @@ describe('OrdersOverviewComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should load orders and split open/closed correctly', () => {
+    expect(mockOrdersService.getOrders).toHaveBeenCalled();
+    expect(component.dataSourceOpen.data.length).toBe(1);
+    expect(component.dataSourceClosed.data.length).toBe(1);
+
+    const openOrder = component.dataSourceOpen.data[0];
+    const closedOrder = component.dataSourceClosed.data[0];
+
+    expect(openOrder.status).not.toBe(ServiceStatesEnum.PRODUCED);
+    expect(closedOrder.status).toBe(ServiceStatesEnum.PRODUCED);
+  });
+
+  it('should update filterText on applyFilter', () => {
+    const mockEvent = {
+      target: { value: 'EcoTrade Solutions AG' },
+    } as unknown as Event;
+
+    component.applyFilter(mockEvent);
+    expect(component.filterText).toBe('EcoTrade Solutions AG');
   });
 });

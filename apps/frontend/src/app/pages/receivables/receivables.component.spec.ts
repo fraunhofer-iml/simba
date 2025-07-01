@@ -12,6 +12,7 @@ import { DatePipe } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -40,6 +41,10 @@ describe('ReceivablesComponent', () => {
   let component: ReceivablesComponent;
   let fixture: ComponentFixture<ReceivablesComponent>;
 
+  const mockDialog = {
+    open: jest.fn(),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       providers: [
@@ -63,6 +68,7 @@ describe('ReceivablesComponent', () => {
             getUserRoles: jest.fn().mockReturnValue([]),
           },
         },
+        { provide: MatDialog, useValue: mockDialog },
         FinancialRoleService,
       ],
       imports: [
@@ -92,5 +98,10 @@ describe('ReceivablesComponent', () => {
     const event = { target: { value: 'test' } } as unknown as Event;
     component.convertInputAndResetPaginator(event);
     expect(component.filterText).toBe('test');
+  });
+
+  it('should open download dialog', () => {
+    component.openDownloadInvoiceDialog();
+    expect(mockDialog.open).toHaveBeenCalled();
   });
 });

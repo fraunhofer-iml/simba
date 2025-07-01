@@ -1,0 +1,41 @@
+import { OrderOverviewDto } from '@ap3/api';
+import { ServiceStatesEnum } from '@ap3/util';
+
+export const ordersOverviewMock: OrderOverviewDto[] = [
+  {
+    id: 'ORD2506020916050',
+    number: '1001',
+    product: 'Robot 1',
+    amount: 5,
+    calendarWeek: 22,
+    year: 2025,
+    status: ServiceStatesEnum.PLANNED,
+    statusTimestamp: '2025-05-28T10:15:00Z',
+    price: 12000,
+    robots: ['rt001', 'rt002'],
+    customerId: '002',
+    customerName: 'EcoTrade Solutions AG',
+    contractorId: '001',
+    contractorName: 'SmartPay Solutions AG',
+    currency: 'EUR',
+    invoiceNumber: 'INV-1001',
+  },
+  {
+    id: 'ORD25060278786050',
+    number: '1002',
+    product: 'Robot 1',
+    amount: 5,
+    calendarWeek: 22,
+    year: 2025,
+    status: ServiceStatesEnum.PRODUCED,
+    statusTimestamp: '2025-05-28T10:15:00Z',
+    price: 12000,
+    robots: ['rt001', 'rt002'],
+    customerId: '002',
+    customerName: 'EcoTrade Solutions AG',
+    contractorId: '002',
+    contractorName: 'SmartPay Solutions AG',
+    currency: 'EUR',
+    invoiceNumber: 'INV-1002',
+  },
+];

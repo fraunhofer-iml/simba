@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ServiceProcessStatusDto } from '@ap3/api';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { DatePipe } from '@angular/common';
@@ -17,13 +18,10 @@ import { AuthService } from '../../../shared/services/auth/auth.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { FormatService } from '../../../shared/services/util/format.service';
 import { OrderDetailsComponent } from './order-details.component';
+import { ServiceStatesEnum } from '@ap3/util';
 
-jest.mock('ng2-charts', () => ({
-  BaseChartDirective: jest.fn().mockImplementation(() => ({
-    ngOnInit: jest.fn(),
-    ngOnChanges: jest.fn(),
-    update: jest.fn(),
-  })),
+jest.mock('lodash-es', () => ({
+  debounce: (fn: any) => fn,
 }));
 
 describe('OrderDetailsComponent', () => {
@@ -33,7 +31,11 @@ describe('OrderDetailsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [OrderDetailsComponent],
-      imports: [NoopAnimationsModule, TranslateModule.forRoot(), KeycloakAngularModule],
+      imports: [
+        NoopAnimationsModule,
+        TranslateModule.forRoot(),
+        KeycloakAngularModule
+      ],
       providers: [
         OrdersService,
         HttpClient,
@@ -81,5 +83,28 @@ describe('OrderDetailsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should return true for a status that exists', () => {
+    const serviceProcessStatusMock: ServiceProcessStatusDto[] = [
+      {
+        orderId: 'ORD2506020916050',
+        status: ServiceStatesEnum.PLANNED,
+        timestamp: new Date(),
+      },
+    ];
+
+    const result = component.getStatus(serviceProcessStatusMock, ServiceStatesEnum.PLANNED);
+    expect(result).toBe(true);
+  });
+
+  it('should return the correct icon path for a given status', () => {
+    const iconPath = component.getStatusIcon(ServiceStatesEnum.PLANNED);
+    expect(iconPath).toBe('./assets/icons/planned.svg');
+  });
+
+  it('should return empty tooltip if timestamp is missing', () => {
+    const tooltip = component.getStatusTooltip([], ServiceStatesEnum.PLANNED);
+    expect(tooltip).toBe('');
   });
 });
