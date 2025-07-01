@@ -14,3 +14,4 @@ export * from './states/payment-states.enum';
 export * from './states/service-states.enum';
 export * from './states/offer-states.enum';
 export * from './general.statics';
+export * from './nft.error-messages.enum';

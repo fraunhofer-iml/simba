@@ -13,6 +13,6 @@ import { DataIntegrityModule, TokenModule } from 'nft-folder-blockchain-connecto
 @Module({
   imports: [DataIntegrityModule, TokenModule],
   providers: [BlockchainConnectorService],
-  exports: [BlockchainConnectorService],
+  exports: [BlockchainConnectorService, DataIntegrityModule, TokenModule],
 })
 export class BlockchainConnectorModule {}

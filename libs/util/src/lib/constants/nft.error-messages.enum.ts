@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from './lib/blockchain-connector.module';
-export * from './lib/blockchain-connector.service';
-export * from './lib/additional.data.dto';
+export enum NftErrorMessagesEnum {
+  NotFound = 'The nft does not exist.',
+  NotCreated = 'Could not create a new nft.',
+}

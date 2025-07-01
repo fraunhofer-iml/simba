@@ -20,6 +20,7 @@ export abstract class CsvParser {
   protected static invoicesFileContent = this.loadFile('invoices.seed.csv');
   protected static machineAssignmentsFileContent = this.loadFile('machine-assignments.seed.csv');
   protected static machinesFileContent = this.loadFile('machines.seed.csv');
+  protected static nftFileContent = this.loadFile('nft.seed.csv');
   protected static offersFileContent = this.loadFile('offers.seed.csv');
   protected static orderLinesFileContent = this.loadFile('order-lines.seed.csv');
   protected static ordersFileContent = this.loadFile('orders.seed.csv');

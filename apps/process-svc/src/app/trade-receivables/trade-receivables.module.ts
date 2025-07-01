@@ -17,10 +17,24 @@ import { MetadataService } from './metadata/metadata.service';
 import { TradeReceivablesController } from './trade-receivables.controller';
 import { TradeReceivablesCronJob } from './trade-receivables.cron-job';
 import { TradeReceivablesService } from './trade-receivables.service';
+import { NftDatabaseService } from './nft/nft-database.service';
+import { NftBlockchainService } from './nft/nft-blockchain.service';
 
 @Module({
   imports: [DatabaseModule, S3Module, ConfigurationModule, BlockchainConnectorModule, ScheduleModule.forRoot()],
   controllers: [TradeReceivablesController],
-  providers: [TradeReceivablesService, InvoicesStatisticsService, MetadataService, TradeReceivablesCronJob],
+  providers: [
+    TradeReceivablesService,
+    InvoicesStatisticsService,
+    MetadataService,
+    TradeReceivablesCronJob,
+    NftDatabaseService,
+    NftBlockchainService,
+    {
+      provide: 'NftService',
+      useClass: process.env['BCC_ENABLED'] == 'true' ? NftBlockchainService : NftDatabaseService
+    }
+  ],
+
 })
 export class TradeReceivablesModule {}

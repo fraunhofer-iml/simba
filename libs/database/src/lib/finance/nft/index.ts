@@ -6,6 +6,4 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from './lib/blockchain-connector.module';
-export * from './lib/blockchain-connector.service';
-export * from './lib/additional.data.dto';
+export * from './nft-prisma.service';

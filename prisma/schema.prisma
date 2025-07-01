@@ -191,3 +191,18 @@ model MachineAssignment {
 
   @@id([serviceProcessId, machineId, start])
 }
+
+model Nft {
+  id               Int      @id @default(autoincrement())
+  remoteId         String
+  ownerAddress     String
+  minterAddress    String
+  createdOn        DateTime @default(now())
+  lastUpdatedOn    DateTime @default(now())
+  tokenAddress     String
+  assetInvoiceUrl  String
+  assetInvoiceHash String
+  metadataUrl      String
+  metadataHash     String
+  additionalData   String
+}

@@ -10,19 +10,21 @@ import {
   AmqpBrokerQueues,
   CreateTradeReceivableAMQPMock,
   InvoiceAndPaymentStatusDtoAmqpMock,
+  InvoiceIdAndPaymentStateAmqpDto,
   TradeReceivableAMQPMock,
   TradeReceivableMessagePatterns,
 } from '@ap3/amqp';
 import { CreateNftDto, createTradeReceivableDtoMock, TokenReadDtoMock, TradeReceivableMock } from '@ap3/api';
-import { CompaniesSeed } from '@ap3/database';
 import { TokenReadDto } from 'nft-folder-blockchain-connector-besu';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TradeReceivablesController } from './trade-receivables.controller';
 import { TradeReceivablesService } from './trade-receivables.service';
+import { NotFoundException } from '@nestjs/common';
+import { NftErrorMessagesEnum, PaymentStates } from '@ap3/util';
 
-describe('OrdersController', () => {
+describe('TradeReceivableController', () => {
   let controller: TradeReceivablesController;
   let processSvcClientProxy: ClientProxy;
 
@@ -113,5 +115,41 @@ describe('OrdersController', () => {
     const res: TokenReadDto = await controller.readNftByInvoiceNumber(inputTradeReceivableId);
     expect(sendRequestSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.READ_BY_ID, inputTradeReceivableId);
     expect(res).toEqual(expectedReturnValue);
+  });
+
+  it('should not create nft due to an error', async () => {
+    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
+    sendRequestSpy.mockImplementationOnce(() => {
+      return of(null);
+    });
+    try {
+      await controller.createNft(new CreateNftDto('testInvoiceId'));
+    } catch (error) {
+      expect(error).toEqual(new NotFoundException(NftErrorMessagesEnum.NotCreated));
+    }
+  });
+
+  it('should not update nft due to a missing nft', async () => {
+    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
+    sendRequestSpy.mockImplementationOnce(() => {
+      return of(null);
+    });
+    try {
+      await controller.updateNftPaymentStatus([new InvoiceIdAndPaymentStateAmqpDto('testInvoiceId', PaymentStates.PAID)]);
+    } catch (error) {
+      expect(error).toEqual(new NotFoundException(NftErrorMessagesEnum.NotFound));
+    }
+  });
+
+  it('should not get nft by invoice number due to a missing nft', async () => {
+    const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
+    sendRequestSpy.mockImplementationOnce(() => {
+        return of(null);
+    });
+    try {
+      await controller.readNftByInvoiceNumber('wrongInvoiceNumber');
+    } catch (error) {
+      expect(error).toEqual(new NotFoundException(NftErrorMessagesEnum.NotFound));
+    }
   });
 });

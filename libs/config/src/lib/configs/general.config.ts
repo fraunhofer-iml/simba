@@ -27,6 +27,7 @@ export interface generalConfig {
   };
   scheduledNftUpdateEnabled: boolean;
   scheduledNftUpdateCronJobExpression: string;
+  bccEnabled: boolean;
 }
 
 export default registerAs(GENERAL_IDENTIFIER, () => ({
@@ -42,4 +43,5 @@ export default registerAs(GENERAL_IDENTIFIER, () => ({
     enabled: process.env['SCHEDULED_NFT_UPDATE_ENABLED'] == 'true' || false,
     interval: process.env['SCHEDULED_NFT_UPDATE_CRON_JOB_EXPRESSION'] || CronExpression.EVERY_HOUR,
   },
+  bccEnabled: process.env['BCC_ENABLED'] == 'true' || false,
 }));

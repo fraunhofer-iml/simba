@@ -12,7 +12,7 @@ import {
   TradeReceivableAmqpDto,
   TradeReceivableAMQPMock,
 } from '@ap3/amqp';
-import { CreateNftDto, TokenReadDtoMock, TokenUpdateDtoMock, UpdateNftPaymentStatusDto } from '@ap3/api';
+import { CreateNftDto, TokenReadDtoMock, TokenUpdateDtoMock } from '@ap3/api';
 import { BlockchainConnectorService } from '@ap3/blockchain-connector';
 import { ConfigurationModule } from '@ap3/config';
 import {
@@ -39,6 +39,8 @@ import {
 } from 'nft-folder-blockchain-connector-besu';
 import { ReadableMock } from './mocks/minio-object.mock';
 import { ScheduleModule } from '@nestjs/schedule';
+import { NftDatabaseService } from '../nft/nft-database.service';
+import { NftBlockchainService } from '../nft/nft-blockchain.service';
 
 describe('TradeReceivables', () => {
   let controller: TradeReceivablesController;
@@ -56,6 +58,12 @@ describe('TradeReceivables', () => {
         InvoicesStatisticsService,
         MetadataService,
         BlockchainConnectorService,
+        NftDatabaseService,
+        NftBlockchainService,
+        {
+          provide: 'NftService',
+          useClass: NftBlockchainService
+        },
         S3Service,
         {
           provide: PrismaService,

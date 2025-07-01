@@ -37,6 +37,24 @@ export class MasterDataParser extends CsvParser {
     return retVal;
   }
 
+  public static parseNfts(): Machine[] {
+    const retVal: Machine[] = parse(this.sanitizeCsv(this.nftFileContent), {
+      delimiter: ',',
+      columns: true,
+      cast: (value, context) => {
+        if (context.column === 'id') {
+          return Number(value);
+        }
+        if(context.column == 'createdOn' || context.column == 'lastUpdatedOn') {
+          return !value || value === 'null' ? null : new Date(value);
+        }
+        return value === 'null' ? null : value;
+      },
+    });
+    this.evaluate(retVal, 'nft.seed.ts', `export const NftSeed = `);
+    return retVal;
+  }
+
   public static parsePaymentInformation(): PaymentInformation[] {
     const retVal: PaymentInformation[] = parse(this.sanitizeCsv(this.paymentInformationFileContent), {
       delimiter: ',',

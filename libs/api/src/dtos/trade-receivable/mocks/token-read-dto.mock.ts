@@ -9,15 +9,15 @@
 import { TokenAssetDto, TokenHierarchyDto, TokenMetadataDto, TokenReadDto } from 'nft-folder-blockchain-connector-besu';
 
 export const TokenReadDtoMock: TokenReadDto = new TokenReadDto(
-  'remoteId',
-  new TokenAssetDto('assetUri', 'assetHash'),
-  new TokenMetadataDto('metadataUri', 'metadataHash'),
-  "{\"serviceProcessId\":\"sp001\",\"serviceProcessHash\":\"b614c49f21dfd1525dee019f62d1a273993e466fc875cffe1332244b56ac4502\",\"status\":\"Open\"}",
-  new TokenHierarchyDto(true, [], []),
-  'ownerAddress',
-  'minterAddress',
-  '2025-03-31T14:49:55.836Z',
-  'lastUpdatedOn',
+  'INV-20241012-1',
+  new TokenAssetDto('INV_INV-20241012-1.pdf', 'b28c94b2195c8ed259f0b415aaee3f39b0b2920a4537611499fa044956917a21'),
+  new TokenMetadataDto('METADATA_sp001.json', 'dfb95c68429c22041014e3eb9da9d74bf72ce08d96123861b2d6263074ceac65'),
+  "{\"serviceProcessId\":\"sp001\",\"serviceProcessHash\":\"a71fe6f6ba01a16c83d7fea369a3bb828bd24f7da6e2eb4c2449aa91dbc44b1e\",\"status\":\"open\"}",
+  new TokenHierarchyDto(false, [], []),
+  '0x72e37d393c70823113a7176aC1F7C579d2C5623E',
+  '0x72e37d393c70823113a7176aC1F7C579d2C5623E',
+  '2024-10-12T00:00:00.000Z',
+  '2024-11-12T00:00:00.000Z',
   0,
-  'tokenAddress'
+  '0x2B2f78c5BF6D9C12Ee1225D5F374aa91204580c3'
 );

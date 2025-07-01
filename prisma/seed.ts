@@ -30,6 +30,11 @@ const dataSets: Entity[] = [
     createRecord: async (data: any) => await prisma.machine.create({ data }),
   },
   {
+    name: 'nft',
+    records: MasterDataParser.parseNfts(),
+    createRecord: async (data: any) => await prisma.nft.create({ data }),
+  },
+  {
     name: 'product',
     records: MasterDataParser.parseProducts(),
     createRecord: async (data: any) => await prisma.product.create({ data }),
