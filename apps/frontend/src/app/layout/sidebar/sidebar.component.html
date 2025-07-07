@@ -10,8 +10,12 @@
   <mat-drawer mode="side" opened disableClose="true">
     <div class="drawer-content-container">
       <div class="title">
-        <span class="material-symbols-outlined">pets</span>
-        <p>{{ 'Sidebar.ProjectName' | translate }}</p>
+        @if (!titleLogoUrl) {
+          <span class="material-symbols-outlined">pets</span>
+          <p>{{ 'Sidebar.ProjectName' | translate }}</p>
+        } @else {
+          <img class="logo" src="{{ titleLogoUrl }}" alt="title-logo" />
+        }
         <div class="language-button-container">
           <button mat-icon-button [matMenuTriggerFor]="menu">
             <div class="image">
@@ -64,6 +68,8 @@
           <a class="site-policies-links" href="/privacy-policy"> {{ 'Sidebar.PrivacyPolicy' | translate }} </a>
         </div>
         <div class="logos-container">
+          <img class="logo" src="{{ subLogoOne }}" alt="logo one" *ngIf="subLogoOne" />
+          <img class="logo" src="{{ subLogoTwo }}" alt="logo two" *ngIf="subLogoTwo" />
         </div>
       </div>
     </div>

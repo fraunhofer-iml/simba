@@ -15,4 +15,7 @@ export const environment = {
   KEYCLOAK_URL: 'https://kc.public.apps.blockchain-europe.iml.fraunhofer.de',
   KEYCLOAK_REALM: 'skala',
   KEYCLOAK_GRANT_TYPE: 'client_credentials',
+  SIMBA_LOGO_URL: '',
+  SIDEBAR_SUB_LOGO_ONE: '',
+  SIDEBAR_SUB_LOGO_TWO: '',
 };

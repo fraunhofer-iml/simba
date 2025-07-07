@@ -97,9 +97,10 @@
 }
 
 .logos-container {
-  margin-top: 4em;
-  justify-content: space-between;
-  display: flex;
+  margin-top: 2em;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 1em;
 }
 
 .icon {
@@ -129,9 +130,9 @@
   width: 40px;
 }
 
-.logos {
-  width: 150px;
-  height: 25px;
+.logo {
+  height: auto;
+  width: 125px;
 }
 
 .footer {
