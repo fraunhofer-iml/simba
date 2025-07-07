@@ -148,6 +148,11 @@
   }
 }
 
+.diagram {
+  padding: 2em;
+  max-width: 100%;
+}
+
 @media (max-width: 95em) {
   .order-content {
     display: flex;

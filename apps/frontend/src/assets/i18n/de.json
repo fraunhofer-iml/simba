@@ -59,12 +59,18 @@
 
   "Offers": {
     "Title": "Angebote",
+    "Pricing": "Preisgestaltung pro Kalenderwoche",
+    "Price": "Preis",
     "OfferedPrice": "Angebotspreis",
     "TimerText": "Verbleibende Zeit",
     "ProductionWeek": "Angebotener Produktionszeitraum",
     "Amount": "Stück",
     "DeclineAllOffers": "Alle Ablehnen",
-    "OffersExpired": "Das tut uns leid, Ihre Angebote sind abgelaufen."
+    "OffersExpired": "Das tut uns leid, Ihre Angebote sind abgelaufen.",
+    "BasePrice": "Grundpreis",
+    "Utilization": "Auslastung",
+    "TimeUntilOrderBegins": "Zeit bis zum Produktionsbeginn",
+    "CalendarWeek": "Kalenderwoche"
   },
 
   "PaymentStatus": {
@@ -72,7 +78,7 @@
     "Financed": "finanziert",
     "Paid": "bezahlt",
     "Exceeded": "überfällig",
-    "PaymentStateChangeSuccessfulSnackBarMessage": "Der Status wurden erfolgreich geändert",
+    "PaymentStateChangeSuccessfulSnackBarMessage": "Der Status wurde erfolgreich geändert",
     "PaymentStateErrorSnackBarMessage": "Etwas ist schiefgelaufen. Der Status konnte nicht geändert werden. :("
   },
 

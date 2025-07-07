@@ -7,11 +7,15 @@
  */
 
 import { CreateOrderDto, OfferDto, OrderOverviewDto, ProductDto } from '@ap3/api';
+import { UNITS } from '@ap3/util';
 import { TranslateService } from '@ngx-translate/core';
+import { Chart, ChartDataset, ChartOptions } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import _moment, { default as _rollupMoment, Moment } from 'moment';
+import { BaseChartDirective } from 'ng2-charts';
 import { CountdownEvent } from 'ngx-countdown';
 import { catchError, Observable, of } from 'rxjs';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
@@ -22,11 +26,12 @@ import { OffersService } from '../../../shared/services/offers/offers.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { ProductService } from '../../../shared/services/product/product.service';
 import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
-import { FormatService } from '../../../shared/services/util/format.service';
-import { Countdown } from './model/countdown';
-import { UNITS } from '@ap3/util';
+import { countdownConfig } from './config/countdown.config';
+import { CreateOrderUtils } from './create-order.util';
+import { OfferPricingStatistic } from './model/offer-pricing-statistics';
 
 const moment = _rollupMoment || _moment;
+Chart.register(ChartDataLabels);
 
 @Component({
   selector: 'app-create-order',
@@ -34,7 +39,23 @@ const moment = _rollupMoment || _moment;
   styleUrl: './create-order.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateOrderComponent {
+export class CreateOrderComponent implements OnInit {
+  public barChartOptions: ChartOptions | undefined;
+  public barChartLabels: string[] = [];
+  public barChartLegend = true;
+  public barChartPlugins = [ChartDataLabels];
+  public barChartData: ChartDataset<'bar'>[] = [];
+
+  private baseWeek = 0;
+  private offerPricingStatistic!: OfferPricingStatistic;
+
+  private readonly basePrice: number[] = [];
+  private readonly utilization: number[] = [];
+  private readonly timeUntilOrderBegins: number[] = [];
+  protected readonly countdownConfig = countdownConfig;
+
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
+
   datePickerFilter = (d: Moment | null): boolean => {
     const year = (d || moment()).year();
     return year >= moment().year();
@@ -46,22 +67,17 @@ export class CreateOrderComponent {
   openOffers = false;
   products$: Observable<ProductDto[]> | undefined;
   unitOfMeasurement: string | undefined;
-  countdownConfig: Countdown = {
-    leftTime: 60,
-    format: 'mm:ss',
-  };
   protected readonly UNITS = UNITS;
 
   constructor(
-    private readonly orderService: OrdersService,
-    private readonly builder: FormBuilder,
-    private readonly offerService: OffersService,
     private readonly router: Router,
     private readonly dialog: MatDialog,
+    private readonly builder: FormBuilder,
+    private readonly orderService: OrdersService,
+    private readonly translate: TranslateService,
+    private readonly offerService: OffersService,
     private readonly productService: ProductService,
-    private readonly calendarWeekService: CalendarWeekService,
-    private readonly formatService: FormatService,
-    private readonly translate: TranslateService
+    private readonly calendarWeekService: CalendarWeekService
   ) {
     this.orderForm = builder.group({
       date: new FormControl<Moment | null>(null, Validators.required),
@@ -75,6 +91,12 @@ export class CreateOrderComponent {
     this.orderId = '';
     this.products$ = this.productService.getProducts();
     this.allCalendarWeeks = [];
+  }
+
+  ngOnInit() {
+    this.translate.onLangChange.subscribe(() => {
+      this.updatePagedChartData();
+    });
   }
 
   setYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
@@ -96,7 +118,7 @@ export class CreateOrderComponent {
       year: this.orderForm.get('date')?.value.year(),
       calendarWeek: this.orderForm.get('selectedCalendarWeek')?.value,
       customerId: '',
-      unitOfMeasureCode: this.orderForm.get('unitOfMeasurement')?.value
+      unitOfMeasureCode: this.orderForm.get('unitOfMeasurement')?.value,
     };
     this.orderService
       .createOrder(createOrderDto)
@@ -108,9 +130,26 @@ export class CreateOrderComponent {
       .subscribe((order: OrderOverviewDto | null) => {
         if (order) {
           this.orderId = order.id;
-          this.offers$ = this.offerService.getOffersByOrderId(order.id);
           this.openOffers = true;
           this.orderForm.disable();
+
+          this.offers$ = this.offerService.getOffersByOrderId(order.id);
+          this.offers$.subscribe((offers: OfferDto[]) => {
+            offers.forEach((offer: OfferDto) => {
+              this.basePrice.push(offer.basePrice);
+              this.timeUntilOrderBegins.push(offer.fixedCosts);
+              this.utilization.push(offer.utilizationPrice);
+            });
+
+            this.offerPricingStatistic = {
+              timeUntilOrderBegins: this.timeUntilOrderBegins,
+              basePrice: this.basePrice,
+              utilization: this.utilization,
+            };
+
+            this.baseWeek = this.orderForm.get('selectedCalendarWeek')?.value;
+            this.updatePagedChartData();
+          });
         }
       });
   }
@@ -147,6 +186,10 @@ export class CreateOrderComponent {
     this.router.navigate([ROUTING.orders]);
   }
 
+  getScheduledFor(cw: number, year: number) {
+    return `${this.translate.instant('CalendarWeek')} ${cw}, ${year}`;
+  }
+
   private showDialog() {
     const dialogRef = this.dialog.open(DialogOffersExpiredComponent);
     dialogRef.afterClosed().subscribe(() => {
@@ -155,7 +198,10 @@ export class CreateOrderComponent {
     });
   }
 
-  getScheduledFor(cw: number, year: number) {
-    return `${this.translate.instant('CalendarWeek')} ${cw}, ${year}`;
+  private updatePagedChartData() {
+    this.barChartOptions = CreateOrderUtils.buildBarChartOptions(this.translate);
+    this.barChartData = CreateOrderUtils.buildChartData(this.translate, this.offerPricingStatistic);
+    this.barChartLabels = CreateOrderUtils.buildChartLabels(this.translate, this.baseWeek);
+    this.chart?.update();
   }
 }

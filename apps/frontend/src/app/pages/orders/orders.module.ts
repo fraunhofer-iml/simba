@@ -1,3 +1,4 @@
+;
 /*
  * Copyright Fraunhofer Institute for Material Flow and Logistics
  *
@@ -92,6 +93,7 @@ import { OrdersRoutingModule } from './orders-routing.module';
   providers: [
     OffersService,
     OrdersService,
+    provideNativeDateAdapter(),
     provideHttpClient(withInterceptorsFromDi()),
     provideCharts(withDefaultRegisterables()),
     ProductService,

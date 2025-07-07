@@ -42,6 +42,14 @@ import { CalendarWeekService } from '../../../shared/services/util/calendar-week
 import { FormatService } from '../../../shared/services/util/format.service';
 import { CreateOrderComponent } from './create-order.component';
 
+jest.mock('ng2-charts', () => ({
+  BaseChartDirective: jest.fn().mockImplementation(() => ({
+    ngOnInit: jest.fn(),
+    ngOnChanges: jest.fn(),
+    update: jest.fn(),
+  })),
+}));
+
 describe('CreateOrderComponent', () => {
   let component: CreateOrderComponent;
   let fixture: ComponentFixture<CreateOrderComponent>;

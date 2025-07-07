@@ -65,12 +65,18 @@
 
   "Offers": {
     "Title": "Offers",
+    "Pricing": "Pricing per Calender Week",
+    "Price": "Price",
     "OfferedPrice": "Offered price",
     "TimerText": "Expiration time",
     "DeclineAllOffers": "Decline all",
     "ProductionWeek": "Offered production period",
     "Amount": "Stück",
-    "OffersExpired": "We're sorry, your offers have expired."
+    "OffersExpired": "We're sorry, your offers have expired.",
+    "BasePrice": "Base price",
+    "Utilization": "Utilization",
+    "TimeUntilOrderBegins": "Time until order begins",
+    "CalendarWeek": "Calenderweek"
   },
 
   "PaymentStatus": {
