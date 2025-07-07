@@ -46,7 +46,7 @@
               [selected]="!(mixedChartData.datasets[index].hidden ?? false)"
               (click)="toggleDatasetVisibility(index)"
             >
-              <span matListItemLine> {{ 'Invoices.Statistics.PaidStatistics.' + dataset.label | translate }} </span>
+              <span matListItemLine> {{ dataset.label | translate }} </span>
             </mat-list-option>
           }
         }
@@ -69,7 +69,7 @@
               [selected]="!(mixedChartData.datasets[index].hidden ?? false)"
               (click)="toggleDatasetVisibility(index)"
             >
-              <span matListItemLine> {{ 'Invoices.Statistics.PaidStatistics.' + dataset.label | translate }} </span>
+              <span matListItemLine> {{ dataset.label | translate }} </span>
             </mat-list-option>
           }
         }

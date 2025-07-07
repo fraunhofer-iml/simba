@@ -9,7 +9,7 @@
 import { TranslateModule } from '@ngx-translate/core';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { CountdownComponent } from 'ngx-countdown';
-import { CommonModule, DatePipe, NgOptimizedImage } from '@angular/common';
+import { CommonModule, DatePipe, NgOptimizedImage, TitleCasePipe } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -101,6 +101,7 @@ import { OrdersRoutingModule } from './orders-routing.module';
     FilterService<OrderFilter>,
     provideNativeDateAdapter(),
     provideMomentDateAdapter(YEAR_FORMAT),
+    TitleCasePipe,
     AuthService,
   ],
   exports: [OrderTableComponent],

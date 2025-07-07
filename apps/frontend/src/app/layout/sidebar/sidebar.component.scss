@@ -18,17 +18,16 @@
   margin: 4px 0;
 }
 
-.site-policies{
+.site-policies {
   display: flex;
   justify-content: space-between;
   margin-top: 1rem;
   cursor: pointer;
 }
 
-.site-policies-links{
+.site-policies-links {
   text-decoration: none;
-  color: inherit;
-
+  color: var(--link-color);
 }
 
 #flags {

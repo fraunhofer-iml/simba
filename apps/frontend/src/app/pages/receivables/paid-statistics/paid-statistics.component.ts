@@ -12,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { forkJoin, map, Subscription } from 'rxjs';
-import { Component, Input, OnChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 import { DiagramData } from './model/diagram-data';
@@ -50,8 +50,10 @@ export class PaidStatisticsComponent implements OnChanges {
       .subscribe();
   }
 
-  ngOnChanges(): void {
-    this.updateChartDataSet();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.invoiceIds.length !== 0) {
+      this.updateChartDataSet();
+    }
   }
 
   initPaidStatisticsChart() {
@@ -63,7 +65,6 @@ export class PaidStatisticsComponent implements OnChanges {
       this.volumeYAxis,
       this.percentageYAxis
     );
-    this.updateChartDataSet();
     this.updateLabelTranslations();
   }
 
@@ -91,15 +92,21 @@ export class PaidStatisticsComponent implements OnChanges {
 
   updateLabelTranslations() {
     if (this.authService.isContributor() || this.authService.isOperator()) {
-      this.mixedChartData.datasets[0].label = this.translationService.instant('CreditorPercentageChartLabel');
+      this.mixedChartData.datasets[0].label = this.translationService.instant(
+        'Invoices.Statistics.PaidStatistics.CreditorPercentageChartLabel'
+      );
       this.mixedChartData.datasets[0].hidden = false;
-      this.mixedChartData.datasets[1].label = this.translationService.instant('CreditorVolumeChartLabel');
+      this.mixedChartData.datasets[1].label = this.translationService.instant(
+        'Invoices.Statistics.PaidStatistics.CreditorVolumeChartLabel'
+      );
       this.mixedChartData.datasets[1].hidden = false;
     }
     if (this.authService.isCustomer() || this.authService.isOperator()) {
-      this.mixedChartData.datasets[2].label = this.translationService.instant('DebtorPercentageChartLabel');
+      this.mixedChartData.datasets[2].label = this.translationService.instant(
+        'Invoices.Statistics.PaidStatistics.DebtorPercentageChartLabel'
+      );
       this.mixedChartData.datasets[2].hidden = false;
-      this.mixedChartData.datasets[3].label = this.translationService.instant('DebtorVolumeChartLabel');
+      this.mixedChartData.datasets[3].label = this.translationService.instant('Invoices.Statistics.PaidStatistics.DebtorVolumeChartLabel');
       this.mixedChartData.datasets[3].hidden = false;
     }
     this.mixedChartData.labels = this.translationService.instant('MonthLabels');

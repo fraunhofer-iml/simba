@@ -43,6 +43,7 @@ export class ReceivablesComponent {
     private readonly translationService: TranslateService,
     private readonly filterService: FilterService<InvoiceFilter>
   ) {
+    this.filterService.resetFilter();
     this.filterSubject = this.filterService.getSubject().asObservable();
     this.filterSubject.subscribe((newFilter: boolean) => {
       if (newFilter) {

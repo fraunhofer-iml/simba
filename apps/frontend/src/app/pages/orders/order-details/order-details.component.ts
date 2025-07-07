@@ -13,6 +13,7 @@ import { ChartData, ChartOptions, Plugin } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { BaseChartDirective } from 'ng2-charts';
 import { map, Observable, Subscription, tap } from 'rxjs';
+import { TitleCasePipe } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -27,6 +28,7 @@ import { OrderDetailsUtils } from './order-details.util';
   selector: 'app-order-details',
   templateUrl: './order-details.component.html',
   styleUrl: './order-details.component.scss',
+  providers: [TitleCasePipe],
 })
 export class OrderDetailsComponent {
   translation: Subscription;
@@ -58,7 +60,8 @@ export class OrderDetailsComponent {
     public readonly formatService: FormatService,
     private readonly ordersService: OrdersService,
     private readonly route: ActivatedRoute,
-    private readonly translate: TranslateService
+    private readonly translate: TranslateService,
+    private readonly titleCasePipe: TitleCasePipe
   ) {
     this.id$ = this.route.snapshot.paramMap.get('id');
     if (!this.id$) throw new Error('ID parameter is missing from the route.');
@@ -89,7 +92,7 @@ export class OrderDetailsComponent {
     const timestamp = this.getStatusTimestamp(allProcessStatus, status);
     if (!timestamp) return '';
 
-    return `${this.translate.instant('Orders.OrderTable.Status')}: ${this.translate.instant('Orders.Status.' + status)}
+    return `${this.translate.instant('Orders.OrderTable.Status')}: ${this.translate.instant('Orders.Status.' + this.titleCasePipe.transform(status))} 
             ${this.translate.instant('Nft.Date')}: ${timestamp}`;
   }
 
