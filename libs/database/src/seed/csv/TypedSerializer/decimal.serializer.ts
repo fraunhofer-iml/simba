@@ -13,6 +13,3 @@ export class DecimalSerializer extends Number {
     return `new Prisma.Decimal(${this.valueOf()})`;
   }
 }
-
-const decimal = new DecimalSerializer();
-console.log(util.inspect(decimal));

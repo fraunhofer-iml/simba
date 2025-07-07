@@ -7,11 +7,11 @@
  */
 import { parse } from 'csv-parse/sync';
 import { Invoice, PaymentStatus, Prisma, TradeReceivable } from '@prisma/client';
-import { CsvParser } from './csv-parser';
+import { CsvParser, SeedFileNames } from './csv-parser';
 
 export class FinanceDataParser extends CsvParser {
   public static parseInvoices(): Invoice[] {
-    const retVal: Invoice[] = parse(this.sanitizeCsv(this.invoicesFileContent), {
+    const retVal: Invoice[] = parse(this.loadAndSanitizeFile(SeedFileNames.INVOICES), {
       delimiter: ',',
       columns: true,
       cast: (value, context) => {
@@ -28,7 +28,7 @@ export class FinanceDataParser extends CsvParser {
   }
 
   public static parsePaymentStates(): PaymentStatus[] {
-    const retVal: PaymentStatus[] = parse(this.sanitizeCsv(this.paymentStatesFileContent), {
+    const retVal: PaymentStatus[] = parse(this.loadAndSanitizeFile(SeedFileNames.PAYMENT_STATES), {
       delimiter: ',',
       columns: true,
       cast: (value, context) => {
@@ -43,7 +43,7 @@ export class FinanceDataParser extends CsvParser {
   }
 
   public static parseTradeReceivables(): TradeReceivable[] {
-    const retVal: TradeReceivable[] = parse(this.sanitizeCsv(this.tradeReceivablesFileContent), {
+    const retVal: TradeReceivable[] = parse(this.loadAndSanitizeFile(SeedFileNames.TRADE_RECEIVABLES), {
       delimiter: ',',
       columns: true,
       cast: (value, context) => {

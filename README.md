@@ -1,17 +1,12 @@
 <a id="readme-top"></a>
-
-[![Stars][stars-shield]][stars-url] [![Forks][forks-shield]][forks-url] [![Watchers][watchers-shield]][watchers-url]
-[![Contributors][contributors-shield]][contributors-url] [![Commit Activity][commitactivity-shield]][commitactivity-url]
-[![Last Commit][lastcommit-shield]][lastcommit-url] [![Issues][issues-shield]][issues-url] [![License][license-shield]][license-url]
-
 <br />
 <div align="center">
-<h2 align="center">Simba</h3>
+<h2 align="center">Shopfloor Financial Management with Blockchain and AI (SiMBA)</h3>
   <p align="center">
-    A NestJS-based application.
+    A NestJS-based application.s
     <br />
-    <a href="https://github.com/fraunhofer-iml/forest-guard/issues/new?labels=bug&template=bug-report---.md">🐞 Report Bug</a> &middot;
-    <a href="https://github.com/fraunhofer-iml/forest-guard/issues/new?labels=enhancement&template=feature-request---.md">💡 Request Feature</a>
+    <a href="https://github.com/fraunhofer-iml/simba/issues/new?labels=bug&template=bug-report---.md">🐞 Report Bug</a> &middot;
+    <a href="https://github.com/fraunhofer-iml/simba/issues/new?labels=enhancement&template=feature-request---.md">💡 Request Feature</a>
   </p>
 </div>
 
@@ -40,7 +35,7 @@
 
 ### 📄 Description <a id="description"></a>
 
-SiMBA (Shopfloor Financial Management with Blockchain and AI) brings financial innovation to the entire production process, from order placement to manufacturing to payment. Leveraging a cyber-physical production system, SiMBA enables dynamic, AI-driven pricing that predicts capacity utilisation and automatically sets prices to balance profitability and system efficiency. Once an order is received and produced, invoices are automatically generated and tokenised based on real-time production data. Finally, SiMBA ensures seamless, use-case-agnostic payment processing via direct debit, stable coins or emerging digital currencies such as CBDCs - making every transaction efficient, transparent and future-proof.
+SiMBA brings financial innovation to the entire production process, from order placement to manufacturing to payment. Leveraging a cyber-physical production system, SiMBA enables dynamic, AI-driven pricing that predicts capacity utilisation and automatically sets prices to balance profitability and system efficiency. Once an order is received and produced, invoices are automatically generated and tokenised based on real-time production data. Finally, SiMBA ensures seamless, use-case-agnostic payment processing via direct debit, stable coins or emerging digital currencies such as CBDCs - making every transaction efficient, transparent and future-proof.
 You can find detailed [documentation](./documentation) in this repository.
 
 ### 🛠️ Built With <a id="built-with"></a>
@@ -63,7 +58,6 @@ You can find detailed [documentation](./documentation) in this repository.
 - [![Prettier][prettier-shield]][prettier-url] Code formatter for consistent style
 - [![Prisma][prisma-shield]][prisma-url] ORM for database management
 - [![RabbitMQ][rabbitmq-shield]][rabbitmq-url] Message broker for distributed systems, supporting AMQP
-- [![RxJS][rxjs-shield]][rxjs-url] Library for managing asynchronous events
 - [![Swagger][swagger-shield]][swagger-url] Tools for designing and documenting APIs
 - [![TypeScript][typescript-shield]][typescript-url] Strongly typed programming language that enhances JavaScript
 
@@ -96,8 +90,8 @@ The project consists of the following components:
 ## 🚀 Getting Started <a id="getting-started"></a>
 
 To set up and run Simba locally, please consult the chapters
-[Deployment View](https://github.com/fraunhofer-iml/forest-guard/blob/main/documentation/07-deployment-view.adoc) and
-[Tutorial](https://github.com/fraunhofer-iml/forest-guard/blob/main/documentation/12-tutorial.adoc) in our documentation. These two chapters
+[Deployment View](https://github.com/fraunhofer-iml/simba/blob/main/documentation/04-deployment-view.adoc) and
+[Tutorial](https://github.com/fraunhofer-iml/simba/blob/main/documentation/05-tutorial.adoc) in our documentation. These two chapters
 provide step-by-step instructions to guide you through the process of installing, configuring and running SIMBA on your local machine.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -127,6 +121,8 @@ Licensed under the Apache License 2.0. See `LICENSE` for details.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 📬 Contact <a id="contact"></a>
+
+Leon-Jonathan Krebs: leon.jonathan.krebs@iml.fraunhofer.de
 
 Dominik Sparer: dominik.sparer@iml.fraunhofer.de
 

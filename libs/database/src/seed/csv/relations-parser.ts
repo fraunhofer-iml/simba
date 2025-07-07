@@ -7,12 +7,12 @@
  */
 import { parse } from 'csv-parse/sync';
 import { Prisma } from '@prisma/client';
-import { CsvParser } from './csv-parser';
+import { CsvParser, SeedFileNames } from './csv-parser';
 
 export class RelationsParser extends CsvParser {
   public static parseServiceProcessRelations(): Prisma.ServiceProcessUpdateManyArgs[] {
     const relationIdTuples: { serviceProcessId: string; acceptedOfferId: string }[] = parse(
-      this.sanitizeCsv(this.serviceProcessRelationsFileContent),
+      this.loadAndSanitizeFile(SeedFileNames.SERVICE_PROCESS_RELATIONS),
       {
         delimiter: ',',
         columns: true,

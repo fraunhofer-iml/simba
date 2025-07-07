@@ -7,11 +7,11 @@
  */
 import { parse } from 'csv-parse/sync';
 import { MachineAssignment, Offer, Order, Prisma, ServiceProcess, ServiceStatus } from '@prisma/client';
-import { CsvParser } from './csv-parser';
+import { CsvParser, SeedFileNames } from './csv-parser';
 
 export class ProcessDataParser extends CsvParser {
   public static parseOffer(): Offer[] {
-    const retVal: Offer[] = parse(this.sanitizeCsv(this.offersFileContent), {
+    const retVal: Offer[] = parse(this.loadAndSanitizeFile(SeedFileNames.OFFERS), {
       delimiter: ',',
       columns: true,
       cast: (value, context) => {
@@ -28,7 +28,7 @@ export class ProcessDataParser extends CsvParser {
   }
 
   public static parseOrders(): Order[] {
-    const retVal: Order[] = parse(this.sanitizeCsv(this.ordersFileContent), {
+    const retVal: Order[] = parse(this.loadAndSanitizeFile(SeedFileNames.ORDERS), {
       delimiter: ',',
       columns: true,
       cast: (value, context) => {
@@ -47,7 +47,7 @@ export class ProcessDataParser extends CsvParser {
   }
 
   public static parseOrderLines(): Order[] {
-    const retVal: Order[] = parse(this.sanitizeCsv(this.orderLinesFileContent), {
+    const retVal: Order[] = parse(this.loadAndSanitizeFile(SeedFileNames.ORDER_LINES), {
       delimiter: ',',
       columns: true,
       cast: (value, context) => {
@@ -64,7 +64,7 @@ export class ProcessDataParser extends CsvParser {
   }
 
   public static parseMachineAssignments(): MachineAssignment[] {
-    const retVal: MachineAssignment[] = parse(this.sanitizeCsv(this.machineAssignmentsFileContent), {
+    const retVal: MachineAssignment[] = parse(this.loadAndSanitizeFile(SeedFileNames.MACHINE_ASSIGNMENTS), {
       delimiter: ',',
       columns: true,
       cast: (value, context) => {
@@ -79,7 +79,7 @@ export class ProcessDataParser extends CsvParser {
   }
 
   public static parseServiceStates(): ServiceStatus[] {
-    const retVal: ServiceStatus[] = parse(this.sanitizeCsv(this.serviceProcessStatesFileContent), {
+    const retVal: ServiceStatus[] = parse(this.loadAndSanitizeFile(SeedFileNames.SERVICE_PROCESS_STATES), {
       delimiter: ',',
       columns: true,
       cast: (value, context) => {
@@ -94,7 +94,7 @@ export class ProcessDataParser extends CsvParser {
   }
 
   public static parseServiceProcesses(): ServiceProcess[] {
-    const retVal: ServiceProcess[] = parse(this.sanitizeCsv(this.serviceProcessesFileContent), {
+    const retVal: ServiceProcess[] = parse(this.loadAndSanitizeFile(SeedFileNames.SERVICE_PROCESSES), {
       delimiter: ',',
       columns: true,
       cast: (value, context) => {

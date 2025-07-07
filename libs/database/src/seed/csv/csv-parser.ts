@@ -13,43 +13,46 @@ import { Prisma } from '@prisma/client';
 import { DateSerializer } from './TypedSerializer/date.serializer';
 import { DecimalSerializer } from './TypedSerializer/decimal.serializer';
 
+export enum SeedFileNames {
+  INVOICES = 'invoices.seed.csv',
+  COMPANIES = 'companies.seed.csv',
+  MACHINE_ASSIGNMENTS = 'machine-assignments.seed.csv',
+  MACHINES = 'machines.seed.csv',
+  NFTS = 'nft.seed.csv',
+  OFFERS = 'offers.seed.csv',
+  ORDER_LINES = 'order-lines.seed.csv',
+  ORDERS = 'orders.seed.csv',
+  PAYMENT_INFORMATION = 'payment-information.seed.csv',
+  PAYMENT_STATES = 'payment-states.seed.csv',
+  PRODUCTS = 'products.seed.csv',
+  SERVICE_PROCESSES = 'service-processes.seed.csv',
+  SERVICE_PROCESS_STATES = 'service-process-states.seed.csv',
+  SERVICE_PROCESS_RELATIONS = 'service-process-relations.seed.csv',
+  TRADE_RECEIVABLES = 'trade-receivables.seed.csv',
+}
 export abstract class CsvParser {
   protected static prismaImport = `import { Prisma } from '@prisma/client';`;
   private static folder = 'libs/database/src/seed/csv/data';
-  protected static companiesFileContent = this.loadFile('companies.seed.csv');
-  protected static invoicesFileContent = this.loadFile('invoices.seed.csv');
-  protected static machineAssignmentsFileContent = this.loadFile('machine-assignments.seed.csv');
-  protected static machinesFileContent = this.loadFile('machines.seed.csv');
-  protected static nftFileContent = this.loadFile('nft.seed.csv');
-  protected static offersFileContent = this.loadFile('offers.seed.csv');
-  protected static orderLinesFileContent = this.loadFile('order-lines.seed.csv');
-  protected static ordersFileContent = this.loadFile('orders.seed.csv');
-  protected static paymentInformationFileContent = this.loadFile('payment-information.seed.csv');
-  protected static paymentStatesFileContent = this.loadFile('payment-states.seed.csv');
-  protected static productsFileContent = this.loadFile('products.seed.csv');
-  protected static serviceProcessesFileContent = this.loadFile('service-processes.seed.csv');
-  protected static serviceProcessStatesFileContent = this.loadFile('service-process-states.seed.csv');
-  protected static serviceProcessRelationsFileContent = this.loadFile('service-process-relations.seed.csv');
-  protected static tradeReceivablesFileContent = this.loadFile('trade-receivables.seed.csv');
 
-  protected static loadFile(fileName: string): string {
+  protected static loadAndSanitizeFile(fileName: string): string {
     try {
-      return fs.readFileSync(path.resolve(process.cwd(), this.folder, fileName), {
+      const fileContent = fs.readFileSync(path.resolve(process.cwd(), this.folder, fileName), {
         encoding: 'utf-8',
       });
+      return this.sanitizeCsv(fileContent);
     } catch (e) {
       console.error(e);
       return '';
     }
   }
 
-  protected static sanitizeCsv(content: string) {
+  private static sanitizeCsv(content: string): string {
     content.replace(/^\ufeff/, '');
     content.trim();
     return content;
   }
 
-  protected static evaluate(seedObjects: any[], tsFileName: string, tsFileDeclaration: string) {
+  protected static evaluate(seedObjects: any[], tsFileName: string, tsFileDeclaration: string): void {
     if (seedObjects && seedObjects.length > 0) {
       try {
         const seedObjectsCopy = cloneDeep(seedObjects);

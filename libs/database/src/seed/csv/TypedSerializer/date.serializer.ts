@@ -13,6 +13,3 @@ export class DateSerializer extends Date {
     return `new Date("${this.toISOString()}")`;
   }
 }
-
-const date = new DateSerializer();
-console.log(util.inspect(date));

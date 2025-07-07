@@ -8,10 +8,7 @@
 
 import { PrismaClient } from '@prisma/client';
 import { FinanceDataParser, MasterDataParser, ProcessDataParser, RelationsParser } from '../libs/database/src/seed';
-import { ServiceProcessesRelationSeed } from '../libs/database/src/seed/service-process-relations.seed';
 import { Entity, importEntities } from './data_import';
-
-const serviceProcessRelations = ServiceProcessesRelationSeed;
 
 const dataSets: Entity[] = [
   {

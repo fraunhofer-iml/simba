@@ -7,11 +7,11 @@
  */
 import { parse } from 'csv-parse/sync';
 import { Company, Machine, PaymentInformation, Prisma, Product } from '@prisma/client';
-import { CsvParser } from './csv-parser';
+import { CsvParser, SeedFileNames } from './csv-parser';
 
 export class MasterDataParser extends CsvParser {
   public static parseCompanies(): Company[] {
-    const retVal: Company[] = parse(this.sanitizeCsv(this.companiesFileContent), {
+    const retVal: Company[] = parse(this.loadAndSanitizeFile(SeedFileNames.COMPANIES), {
       delimiter: ',',
       columns: true,
       cast: (value, context) => {
@@ -23,7 +23,7 @@ export class MasterDataParser extends CsvParser {
   }
 
   public static parseMachines(): Machine[] {
-    const retVal: Machine[] = parse(this.sanitizeCsv(this.machinesFileContent), {
+    const retVal: Machine[] = parse(this.loadAndSanitizeFile(SeedFileNames.MACHINES), {
       delimiter: ',',
       columns: true,
       cast: (value, context) => {
@@ -38,14 +38,14 @@ export class MasterDataParser extends CsvParser {
   }
 
   public static parseNfts(): Machine[] {
-    const retVal: Machine[] = parse(this.sanitizeCsv(this.nftFileContent), {
+    const retVal: Machine[] = parse(this.loadAndSanitizeFile(SeedFileNames.NFTS), {
       delimiter: ',',
       columns: true,
       cast: (value, context) => {
         if (context.column === 'id') {
           return Number(value);
         }
-        if(context.column == 'createdOn' || context.column == 'lastUpdatedOn') {
+        if (context.column == 'createdOn' || context.column == 'lastUpdatedOn') {
           return !value || value === 'null' ? null : new Date(value);
         }
         return value === 'null' ? null : value;
@@ -56,7 +56,7 @@ export class MasterDataParser extends CsvParser {
   }
 
   public static parsePaymentInformation(): PaymentInformation[] {
-    const retVal: PaymentInformation[] = parse(this.sanitizeCsv(this.paymentInformationFileContent), {
+    const retVal: PaymentInformation[] = parse(this.loadAndSanitizeFile(SeedFileNames.PAYMENT_INFORMATION), {
       delimiter: ',',
       columns: true,
       cast: (value, context) => {
@@ -68,7 +68,7 @@ export class MasterDataParser extends CsvParser {
   }
 
   public static parseProducts(): Product[] {
-    const retVal: Product[] = parse(this.sanitizeCsv(this.productsFileContent), {
+    const retVal: Product[] = parse(this.loadAndSanitizeFile(SeedFileNames.PRODUCTS), {
       delimiter: ',',
       columns: true,
       cast: (value, context) => {
