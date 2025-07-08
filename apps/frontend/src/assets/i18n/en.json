@@ -52,7 +52,7 @@
       "Status": "Process status",
       "ProductionProcess": "Production process",
       "Diagram": {
-        "DoughnutTitle": "Price Composition",
+        "DoughnutTitle": "Price composition",
         "DoughnutLabels": ["Basic price", "Utilization", "Time surcharge"],
         "DoughnutDescriptions": [
           "The base price is determined daily based on average demand and serves as the foundation of the total price.",
@@ -65,18 +65,18 @@
 
   "Offers": {
     "Title": "Offers",
-    "Pricing": "Pricing per Calender Week",
+    "Pricing": "Pricing per calendar week",
     "Price": "Price",
     "OfferedPrice": "Offered price",
     "TimerText": "Expiration time",
     "DeclineAllOffers": "Decline all",
     "ProductionWeek": "Offered production period",
-    "Amount": "Stück",
+    "Amount": "Piece(s)",
     "OffersExpired": "We're sorry, your offers have expired.",
     "BasePrice": "Base price",
     "Utilization": "Utilization",
-    "TimeUntilOrderBegins": "Time until order begins",
-    "CalendarWeek": "Calenderweek"
+    "TimeUntilOrderBegins": "Time until production",
+    "CalendarWeek": "Calendar week"
   },
 
   "PaymentStatus": {
@@ -90,7 +90,7 @@
 
   "Invoices": {
     "Title": "Invoice analysis",
-    "Details": "Invoice Details",
+    "Details": "Invoice details",
     "Statistics": {
       "UnpaidStatistics": {
         "Title": "Open invoices",

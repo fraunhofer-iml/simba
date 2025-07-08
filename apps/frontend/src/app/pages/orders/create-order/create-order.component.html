@@ -78,8 +78,7 @@
       </div>
     </div>
 
-    <div class="diagram">
-      <h2 class="title">{{ 'Offers.Pricing' | translate }}</h2>
+    <div class="price-diagram">
       <canvas
         baseChart
         [datasets]="barChartData"
@@ -98,16 +97,18 @@
             <p id="offerId" class="grey">ID {{ offer.id }}</p>
           </div>
           <p id="offerName">{{ orderForm.get('product')?.value.name }}</p>
-          <div class="offer-details-grid">
-            <div class="offer-details-grid-label">{{ 'Offers.ProductionWeek' | translate }}:</div>
-            <div class="offer-details-grid-value">{{ getScheduledFor(offer.plannedCalendarWeek, offer.plannedYear) }}</div>
-            <div class="offer-details-grid-label">{{ 'Offers.Amount' | translate }}:</div>
-            <div class="offer-details-grid-value">{{ orderForm.get('amount')?.value }}</div>
-            <div class="offer-details-grid-label">{{ 'Offers.OfferedPrice' | translate }}:</div>
-            <div class="offer-details-grid-value">
-              {{ offer.basePrice + offer.fixedCosts + offer.utilizationPrice | currency: 'EUR' : 'symbol' : '1.2-2' }}
-            </div>
-          </div>
+          <dl class="offer-details-grid">
+            <dt>{{ 'Offers.ProductionWeek' | translate }}:</dt>
+            <dd>{{ getScheduledFor(offer.plannedCalendarWeek, offer.plannedYear) }}</dd>
+
+            <dt>{{ 'Offers.Amount' | translate }}:</dt>
+            <dd>{{ orderForm.get('amount')?.value }}</dd>
+
+            <dt>{{ 'Offers.OfferedPrice' | translate }}:</dt>
+            <dd>
+              {{ offer.basePrice + offer.fixedCosts + offer.utilizationPrice | currency: 'EUR' : 'symbol' : '1.2-2': formatService.getCurrentLocaleFormatter() }}
+            </dd>
+          </dl>
           <div class="button-container">
             <button mat-flat-button class="accept-button" (click)="acceptOffer(offer.id)">{{ 'Buttons.Accept' | translate }}</button>
           </div>

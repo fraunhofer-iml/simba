@@ -26,6 +26,7 @@ import { OffersService } from '../../../shared/services/offers/offers.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { ProductService } from '../../../shared/services/product/product.service';
 import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
+import { FormatService } from '../../../shared/services/util/format.service';
 import { countdownConfig } from './config/countdown.config';
 import { CreateOrderUtils } from './create-order.util';
 import { OfferPricingStatistic } from './model/offer-pricing-statistics';
@@ -70,6 +71,7 @@ export class CreateOrderComponent implements OnInit {
   protected readonly UNITS = UNITS;
 
   constructor(
+    public readonly formatService: FormatService,
     private readonly router: Router,
     private readonly dialog: MatDialog,
     private readonly builder: FormBuilder,
