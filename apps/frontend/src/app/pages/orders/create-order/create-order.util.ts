@@ -55,17 +55,12 @@ export class CreateOrderUtils {
         },
       },
       scales: {
-        x: {
-          title: {
-            display: true,
-            text: translate.instant('Offers.CalendarWeek'),
-          },
-        },
+        x: {},
         y: {
           beginAtZero: true,
           ticks: {
             callback: function (value) {
-              return parseFloat(value.toString()).toFixed(2) + ' €';
+              return parseFloat(value.toString()).toFixed(0) + ' €';
             },
           },
         },

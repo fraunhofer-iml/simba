@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export const BASE_URL = 'https://affds-bff-dev.apps.blockchain-europe.iml.fraunhofer.de';
+export const BASE_URL = 'https://affds-bff-dev.public.apps.blockchain-europe.iml.fraunhofer.de';
 
 export const environment = {
   production: true,
