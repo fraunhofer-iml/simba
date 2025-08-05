@@ -106,7 +106,10 @@
 
             <dt>{{ 'Offers.OfferedPrice' | translate }}:</dt>
             <dd>
-              {{ offer.basePrice + offer.fixedCosts + offer.utilizationPrice | currency: 'EUR' : 'symbol' : '1.2-2': formatService.getCurrentLocaleFormatter() }}
+              {{
+                offer.basicPrice + offer.timeUntilProduction + offer.utilization
+                  | currency: 'EUR' : 'symbol' : '1.2-2' : formatService.getCurrentLocaleFormatter()
+              }}
             </dd>
           </dl>
           <div class="button-container">

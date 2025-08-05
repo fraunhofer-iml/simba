@@ -41,21 +41,25 @@ export class OfferPrismaService {
     this.logger.verbose(`Return all offers by Id ${orderId} from database`);
     try {
       let whereStatus: Prisma.OfferWhereInput = {};
-      if(states){
-        whereStatus = { status: {
-        in: states,
-        }}
+      if (states) {
+        whereStatus = {
+          status: {
+            in: states,
+          },
+        };
       }
       return await this.prisma.offer.findMany({
         where: {
-          AND: [{
-            serviceProcess: {
-              orderId: {
-                equals: String(orderId),
+          AND: [
+            {
+              serviceProcess: {
+                orderId: {
+                  equals: String(orderId),
+                },
               },
-            }},
-            whereStatus
-          ]
+            },
+            whereStatus,
+          ],
         },
         include: {
           serviceProcess: {

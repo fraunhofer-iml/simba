@@ -29,7 +29,7 @@ export class OffersController {
   })
   @ApiResponse({ type: [OfferDto] })
   async findAll(@Query('orderId') orderId?: string): Promise<OfferDto[]> {
-    return await this.offersService.findAll(orderId);
+    return this.offersService.findAll(orderId);
   }
 
   @Get(':id')

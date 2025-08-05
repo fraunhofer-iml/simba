@@ -71,18 +71,12 @@ describe('OfferController', () => {
   });
 
   it('findAll: should return all offers', async () => {
-    const expectedReturn = OfferAmqpMock;
+    const expectedReturn = [OfferAmqpMock[0]];
     const prismaSpy = jest.spyOn(prisma.offer, 'findMany');
-    const prismaServiceProcessSpy = jest.spyOn(prisma.serviceProcess, 'findUnique');
+    const prismaServiceProcessSpy = jest.spyOn(prisma.serviceProcess, 'findMany');
 
-    prismaServiceProcessSpy
-      .mockResolvedValueOnce(ServiceProcessesSeed[0])
-      .mockResolvedValueOnce(ServiceProcessesSeed[0])
-      .mockResolvedValueOnce(ServiceProcessesSeed[0])
-      .mockResolvedValueOnce(ServiceProcessesSeed[0])
-      .mockResolvedValueOnce(ServiceProcessesSeed[1])
-      .mockResolvedValueOnce(ServiceProcessesSeed[1]);
-    prismaSpy.mockResolvedValue([OffersSeed[0], OffersSeed[1], OffersSeed[2], OffersSeed[3], OffersSeed[4], OffersSeed[5]]);
+    prismaServiceProcessSpy.mockResolvedValueOnce([ServiceProcessesSeed[0]]);
+    prismaSpy.mockResolvedValue([OffersSeed[0]]);
 
     const retVal = await controller.findAll();
     expect(prisma.offer.findMany).toHaveBeenCalled();
@@ -92,7 +86,10 @@ describe('OfferController', () => {
   it('findAllByOrderId: should return offers by order id', async () => {
     const expectedReturn = [OfferAmqpMock[0], OfferAmqpMock[1], OfferAmqpMock[2], OfferAmqpMock[3]];
     const prismaServiceProcessSpy = jest.spyOn(prisma.serviceProcess, 'findUnique');
-    prismaServiceProcessSpy.mockResolvedValue(ServiceProcessesSeed[0]);
+    prismaServiceProcessSpy.mockResolvedValueOnce(ServiceProcessesSeed[0]);
+    prismaServiceProcessSpy.mockResolvedValueOnce(ServiceProcessesSeed[1]);
+    prismaServiceProcessSpy.mockResolvedValueOnce(ServiceProcessesSeed[2]);
+    prismaServiceProcessSpy.mockResolvedValueOnce(ServiceProcessesSeed[3]);
 
     const retVal = await controller.findAllByOrderId(expectedReturn[0].orderId);
     expect(prisma.offer.findMany).toHaveBeenCalledWith(queryOffersToShowWithOrder);

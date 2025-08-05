@@ -34,12 +34,13 @@ export class OrderSchedulingHandlerService {
     const product = new ScheduledProductDto(productId, quantity);
     const orderToSchedule = new ScheduleOrderRequestDto(orderId, calendarWeek, year, new Date(), [product]);
     const scheduledOrder: ScheduleOrderResponseDto = await this.cppsSchedulerConnector.scheduleOrder(orderToSchedule);
-
     const createOffers: CreateOfferAmqpDto[] = [];
     for (const cwPrice of scheduledOrder.pricesPerCW) {
       const offer = new CreateOfferAmqpDto();
       offer.orderId = orderId;
-      offer.price = cwPrice.price;
+      offer.basicPrice = cwPrice.basePrice;
+      offer.utilization = cwPrice.utilization;
+      offer.timeToProduction = cwPrice.timeUntilProduction;
       offer.plannedCalendarWeek = cwPrice.cw;
       offer.plannedYear = cwPrice.year;
       createOffers.push(offer);

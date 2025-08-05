@@ -9,11 +9,11 @@
 import { ScheduledPricesCwDto } from './scheduled-prices-cw.dto';
 
 export class ScheduleOrderResponseDto {
-  orderId: string;
+  id: string;
   pricesPerCW: ScheduledPricesCwDto[];
 
   constructor(orderId: string, pricesPerCW: ScheduledPricesCwDto[]) {
-    this.orderId = orderId;
+    this.id = orderId;
     this.pricesPerCW = pricesPerCW;
   }
 }

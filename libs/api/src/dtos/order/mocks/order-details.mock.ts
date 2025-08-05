@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { OpenOffersMock } from '../../offer';
+import { offerDtosMock } from '../../offer';
 import { GetMachineAssignmentsDtoMock } from '../../service-process';
 import { ProcessStateHistoryMock } from '../../service-process/mocks/process-state-history.mock';
 import { OrderDetailsDto } from '../order-details.dto';
@@ -22,6 +22,6 @@ export const OrderDetailsMock = <OrderDetailsDto[]>[
     order: OrderOverviewMock[1],
     processStateHistory: [ProcessStateHistoryMock[2]],
     machineAssignments: [GetMachineAssignmentsDtoMock[2]],
-    offer: OpenOffersMock[0],
+    offer: offerDtosMock[1],
   },
 ];

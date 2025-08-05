@@ -7,6 +7,7 @@
  */
 
 import { ConfigurationService } from '@ap3/config';
+import { firstValueFrom, of } from 'rxjs';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { GET_CURRENCT_SCHEDULING, POST_SCHEDULE_ORDER, PUT_ACCEPT_OFFER } from './cpps-scheduler-endpoints.enum';
 import { AcceptScheduledOfferDto, CurrentSchedulingDto, ScheduleOrderRequestDto, ScheduleOrderResponseDto } from './dtos';
@@ -27,9 +28,13 @@ export class CppsSchedulerConnectorService {
     });
 
     const response = await fetch(request);
-    return response.ok ? await response.json() : this.throwSchedulerException(response);
+    if (!response.ok) {
+      this.throwSchedulerException(response);
+    }
+    return await response.json();
   }
 
+  //This function is Mocked until Scheduler has been modified to return basicPrice, utilization and timeUntilProduction data
   public async scheduleOrder(order: ScheduleOrderRequestDto): Promise<ScheduleOrderResponseDto> {
     this.logger.verbose(`Schedule order ${this.baseURL + POST_SCHEDULE_ORDER} #${order.id}`);
     const request = new Request(this.baseURL + POST_SCHEDULE_ORDER, {
@@ -39,7 +44,11 @@ export class CppsSchedulerConnectorService {
     });
 
     const response = await fetch(request);
-    return response.ok ? await response.json() : this.throwSchedulerException(response);
+    if (!response.ok) {
+      this.throwSchedulerException(response);
+    }
+
+    return await response.json();
   }
 
   public async acceptOffer(orderId: string, acceptDto: AcceptScheduledOfferDto): Promise<AcceptScheduledOfferDto> {
@@ -51,7 +60,10 @@ export class CppsSchedulerConnectorService {
     });
 
     const response = await fetch(request);
-    return response.ok ? await response.json() : this.throwSchedulerException(response);
+    if (!response.ok) {
+      this.throwSchedulerException(response);
+    }
+    return await response.json();
   }
 
   private throwSchedulerException(response: Response) {

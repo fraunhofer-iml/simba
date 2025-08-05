@@ -25,9 +25,10 @@ export class OffersService {
   async findAll(): Promise<OfferAmqpDto[]> {
     const offerDtos: OfferAmqpDto[] = [];
     const offers: Offer[] = await this.offerPrismaService.getOffers();
+    const idsToQuery = offers.map((offer) => offer.serviceProcessId);
+    const serviceProcesses = await this.serviceProcessPrismaService.getServiceProcessByIds(idsToQuery);
     for (const offer of offers) {
-      const serviceProcess = await this.serviceProcessPrismaService.getServiceProcessById(offer.serviceProcessId);
-      offerDtos.push(OfferAmqpDto.fromPrismaEntity(offer, serviceProcess.orderId));
+      offerDtos.push(OfferAmqpDto.fromPrismaEntity(offer, serviceProcesses.find((sp) => sp.id === offer.serviceProcessId).orderId));
     }
     return offerDtos;
   }

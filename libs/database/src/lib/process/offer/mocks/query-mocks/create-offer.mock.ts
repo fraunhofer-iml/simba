@@ -12,7 +12,9 @@ import { OffersSeed, ServiceProcessesSeed } from '../../../../../seed';
 
 export const createOfferQuery = <Prisma.OfferCreateInput>{
   creationDate: new Date('2024-08-16T10:09:41.295Z'),
-  price: 0.4,
+  basicPrice: 0.4,
+  timeToProduction: 3.1,
+  utilization: 2.3,
   status: OfferStatesEnum.OPEN,
   serviceProcess: {
     connect: {

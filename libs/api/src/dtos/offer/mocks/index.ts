@@ -6,4 +6,4 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from './open-offers.mock';
+export * from './offer-dtos.mock';

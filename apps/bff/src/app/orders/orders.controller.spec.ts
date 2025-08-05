@@ -24,7 +24,7 @@ import {
   createOrderMock,
   InvoiceDtoMocks,
   KeycloakUser,
-  OpenOffersMock,
+  offerDtosMock,
   OrderDetailsDto,
   OrderDetailsMock,
   OrderOverviewDto,
@@ -107,7 +107,7 @@ describe('OrdersController', () => {
     companiesServiceSpy = jest.spyOn(companiesService, 'findOne');
     companiesServiceSpy.mockResolvedValue(CompanyDtoMock[0]);
     offersServiceLoadSpy = jest.spyOn(offersService, 'loadAcceptedOfferRef');
-    offersServiceLoadSpy.mockResolvedValue(OpenOffersMock[0]);
+    offersServiceLoadSpy.mockResolvedValue(offerDtosMock[0]);
     productServiceLoadSpy = jest.spyOn(productsService, 'loadProductRefs');
     productServiceLoadSpy.mockResolvedValue(ProductDtoMocks[0]);
     invoicesServiceSpy = jest.spyOn(invoicesService, 'findAllWithFilter');
@@ -143,8 +143,8 @@ describe('OrdersController', () => {
     companiesServiceSpy.mockResolvedValueOnce(CompanyDtoMock[0]);
     companiesServiceSpy.mockResolvedValueOnce(CompanyDtoMock[1]);
 
-    offersServiceLoadSpy.mockResolvedValueOnce(OpenOffersMock[0]);
-    offersServiceLoadSpy.mockResolvedValueOnce(OpenOffersMock[1]);
+    offersServiceLoadSpy.mockResolvedValueOnce(offerDtosMock[0]);
+    offersServiceLoadSpy.mockResolvedValueOnce(offerDtosMock[1]);
 
     productServiceLoadSpy.mockResolvedValueOnce(ProductDtoMocks[0]);
     productServiceLoadSpy.mockResolvedValueOnce(ProductDtoMocks[0]);
@@ -217,6 +217,7 @@ describe('OrdersController', () => {
   it('should find order details by Id with an offer', async () => {
     const expectedReturnValue = OrderDetailsMock[1];
 
+    offersServiceLoadSpy.mockResolvedValue(offerDtosMock[1]);
     sendProcessRequestSpy.mockImplementationOnce((messagePattern: OrderMessagePatterns.READ_BY_ID, data: any) => {
       return of(OrderAmqpMock[1]);
     });
@@ -229,8 +230,8 @@ describe('OrdersController', () => {
     sendProcessRequestSpy.mockImplementationOnce((messagePattern: OrderMessagePatterns.READ_BY_ID, data: any) => {
       return of(OrderAmqpMock[1]);
     });
-    sendProcessRequestSpy.mockImplementation((messagePattern: OfferMessagePatterns.READ_BY_ID, data: any) => {
-      return of(OfferAmqpMock[2]);
+    sendProcessRequestSpy.mockImplementationOnce((messagePattern: OfferMessagePatterns.READ_BY_ID, data: any) => {
+      return of(OfferAmqpMock[1]);
     });
 
     const res: OrderDetailsDto = await controller.findOneDetails(OrderOverviewMock[1].id);

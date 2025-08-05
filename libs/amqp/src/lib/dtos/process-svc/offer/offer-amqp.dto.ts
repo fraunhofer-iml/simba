@@ -11,7 +11,9 @@ import { Offer } from '@prisma/client';
 export class OfferAmqpDto {
   id: string;
   creationDate: Date;
-  price: number;
+  basicPrice: number;
+  timeToProduction: number;
+  utilization: number;
   status: string;
   orderId: string;
   plannedCalendarWeek: number;
@@ -21,7 +23,9 @@ export class OfferAmqpDto {
   constructor(
     id: string,
     creationDate: Date,
-    price: number,
+    basicPrice: number,
+    timeToProduction: number,
+    utilization: number,
     status: string,
     orderId: string,
     plannedCalendarWeek: number,
@@ -30,7 +34,9 @@ export class OfferAmqpDto {
   ) {
     this.id = id;
     this.creationDate = creationDate;
-    this.price = price;
+    this.timeToProduction = timeToProduction;
+    this.basicPrice = basicPrice;
+    this.utilization = utilization;
     this.status = status;
     this.orderId = orderId;
     this.plannedCalendarWeek = plannedCalendarWeek;
@@ -51,7 +57,9 @@ export class OfferAmqpDto {
       id: offer.id,
       creationDate: offer.creationDate,
       decisionDate: offer.decisionDate ? offer.decisionDate : null,
-      price: Number(offer.price),
+      basicPrice: Number(offer.basicPrice),
+      timeToProduction: Number(offer.timeToProduction),
+      utilization: Number(offer.utilization),
       status: offer.status,
       orderId: orderId,
       plannedCalendarWeek: Number(offer.plannedCalendarWeek),

@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { OfferDto, OpenOffersMock } from '@ap3/api';
+import { OfferDto, offerDtosMock } from '@ap3/api';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
@@ -32,7 +32,7 @@ describe('OffersService', () => {
   });
 
   it('should get offers', () => {
-    const mockOffers: OfferDto[] = OpenOffersMock;
+    const mockOffers: OfferDto[] = offerDtosMock;
     const orderId = '123';
 
     service.getOffersByOrderId(orderId).subscribe((offers) => {
@@ -45,7 +45,7 @@ describe('OffersService', () => {
   });
 
   it('should get one offer', () => {
-    const mockOffer: OfferDto = OpenOffersMock[0];
+    const mockOffer: OfferDto = offerDtosMock[0];
     const offerId = '1';
 
     service.getOfferById(offerId).subscribe((offer) => {
@@ -58,7 +58,7 @@ describe('OffersService', () => {
   });
 
   it('should accept an offer', () => {
-    const mockOffer: OfferDto = OpenOffersMock[0];
+    const mockOffer: OfferDto = offerDtosMock[0];
     const offerId = '1';
 
     service.acceptOffer(offerId).subscribe((offer) => {

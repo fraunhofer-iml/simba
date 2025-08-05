@@ -41,7 +41,7 @@
       <div class="data-row">
         <span class="description">{{ 'Orders.OrderTable.Price' | translate }}</span>
         <span class="text-end" *ngIf="orderDetail.offer">{{
-          orderDetail.offer.basePrice + orderDetail.offer.utilizationPrice + orderDetail.offer.fixedCosts
+          orderDetail.offer.basicPrice + orderDetail.offer.utilization + orderDetail.offer.timeUntilProduction
             | currency: 'EUR' : 'symbol' : '1.2-2' : formatService.getCurrentLocaleFormatter()
         }}</span>
       </div>

@@ -21,9 +21,9 @@ import {
   InvoiceForZugferd,
   InvoiceWithNFT,
   OfferPrismaService,
+  OrderDatabaseAdapterService,
   OrderWithDependencies,
   TradeReceivablePrismaService,
-  OrderDatabaseAdapterService,
 } from '@ap3/database';
 import { S3Service } from '@ap3/s3';
 import { OfferStatesEnum, PAYMENT_DEADLINE_IN_DAYS, PAYMENT_TERMS, PaymentStates, VAT_IN_PERCENT } from '@ap3/util';
@@ -144,7 +144,7 @@ export class InvoicesService {
     const offers: Offer[] = await this.offerPrismaService.getOffersByOrderId(createInvoiceDto.orderId);
     const acceptedOffer: Offer = offers.find((offer: Offer) => offer.status === OfferStatesEnum.ACCEPTED.toString());
 
-    if(!acceptedOffer){
+    if (!acceptedOffer) {
       throw new NotFoundException(createInvoiceDto.orderId);
     }
 
@@ -153,7 +153,8 @@ export class InvoicesService {
     dueDate.setDate(dueDate.getDate() + PAYMENT_DEADLINE_IN_DAYS);
 
     const requestedQuantity: number = Number(orderOverview.orderLines[0].requestedQuantity) || 1;
-    const netPricePerUnit: number = +acceptedOffer.price / requestedQuantity;
+    const netPricePerUnit: number =
+      (Number(acceptedOffer.basicPrice) + Number(acceptedOffer.utilization) + Number(acceptedOffer.timeToProduction)) / requestedQuantity;
     const totalAmountWithoutVat: number = netPricePerUnit * requestedQuantity;
 
     const newInvoiceInput: InvoiceAmqpDto = new InvoiceAmqpDto(
@@ -177,12 +178,16 @@ export class InvoicesService {
     );
     const newInvoice: Invoice = await this.invoicePrismaService.createInvoice(newInvoiceInput);
     const newInvoiceWithNft: InvoiceWithNFT = { ...newInvoice, serviceProcess: null, tradeReceivable: null };
-    return InvoiceAmqpDto.fromPrismaEntity(newInvoiceWithNft, [
-      {
-        tradeReceivableId: '',
-        status: newInvoiceInput.status.status,
-        timestamp: newInvoiceInput.status.timestamp
-      }
-    ], this.config.getMinioConfig().objectStorageURL);
+    return InvoiceAmqpDto.fromPrismaEntity(
+      newInvoiceWithNft,
+      [
+        {
+          tradeReceivableId: '',
+          status: newInvoiceInput.status.status,
+          timestamp: newInvoiceInput.status.timestamp,
+        },
+      ],
+      this.config.getMinioConfig().objectStorageURL
+    );
   }
 }

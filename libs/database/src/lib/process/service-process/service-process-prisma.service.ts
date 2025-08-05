@@ -31,6 +31,16 @@ export class ServiceProcessPrismaService {
     }
   }
 
+  async getServiceProcessByIds(ids: string[]): Promise<ServiceProcess[]> {
+    return await this.prismaService.serviceProcess.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
+  }
+
   async setServiceProcessAcceptedOffer(id: string, offerId: string): Promise<ServiceProcess | null> {
     try {
       return await this.prismaService.serviceProcess.update({

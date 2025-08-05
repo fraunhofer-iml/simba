@@ -39,7 +39,9 @@ const ordersOverviewSelect = <Prisma.OrderSelect>{
       acceptedOffer: {
         select: {
           id: true,
-          price: true,
+          basicPrice: true,
+          timeToProduction: true,
+          utilization: true,
         },
       },
       invoices: {

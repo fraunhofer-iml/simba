@@ -15,7 +15,13 @@ export class ProcessDataParser extends CsvParser {
       delimiter: ',',
       columns: true,
       cast: (value, context) => {
-        if (context.column === 'plannedCalendarWeek' || context.column === 'plannedYear' || context.column === 'price') {
+        if (
+          context.column === 'plannedCalendarWeek' ||
+          context.column === 'plannedYear' ||
+          context.column === 'basicPrice' ||
+          context.column === 'timeToProduction' ||
+          context.column === 'utilization'
+        ) {
           return new Prisma.Decimal(value);
         } else if (context.column === 'creationDate' || context.column === 'decisionDate') {
           return !value || value === 'null' ? null : new Date(value);

@@ -21,7 +21,7 @@ export const ScheduledProductionPlanMock = <ScheduledProductionPlanDto>{
         },
       ],
       orderId: ServiceProcessesSeed[0].orderId,
-      price: Number(OffersSeed[0].price),
+      price: +OffersSeed[0].basicPrice + +OffersSeed[0].utilization + +OffersSeed[0].timeToProduction,
     },
   ],
 };

@@ -31,8 +31,8 @@ import { InvoicesController } from '../invoices.controller';
 import { InvoicesService } from '../invoices.service';
 import { InvoicesStatisticsService } from '../statistics/invoices-statistics.service';
 import { InvoicesZugferdService } from '../zugferd/invoices-zugferd.service';
-import { OfferMock } from './mock/offer.mock';
-import { OrderMock } from './mock/order.mock';
+import { offerMock } from './mock/offer.mock';
+import { orderMock } from './mock/order.mock';
 
 describe('InvoicesController', () => {
   let controller: InvoicesController;
@@ -61,10 +61,10 @@ describe('InvoicesController', () => {
           useValue: {
             getMinioConfig: jest.fn(() => {
               return {
-                objectStorageURL: ''
-              }
-            })
-          }
+                objectStorageURL: '',
+              };
+            }),
+          },
         },
         {
           provide: PrismaService,
@@ -126,10 +126,10 @@ describe('InvoicesController', () => {
     const expectedReturn = InvoicesAmqpMock[2];
 
     const prismaOrderSpy = jest.spyOn(prisma.order, 'findMany');
-    prismaOrderSpy.mockResolvedValueOnce([OrderMock]);
+    prismaOrderSpy.mockResolvedValueOnce([orderMock]);
 
     const prismaOfferSpy = jest.spyOn(prisma.offer, 'findMany');
-    prismaOfferSpy.mockResolvedValueOnce(OfferMock);
+    prismaOfferSpy.mockResolvedValueOnce(offerMock);
 
     const prismaInvoiceSpy = jest.spyOn(prisma.invoice, 'create');
     prismaInvoiceSpy.mockResolvedValueOnce(InvoiceSeed[2]);
@@ -143,7 +143,7 @@ describe('InvoicesController', () => {
 
   it('create: should not create a new invoice', async () => {
     const prismaOfferSpy = jest.spyOn(prisma.offer, 'findMany');
-    prismaOfferSpy.mockResolvedValueOnce([OfferMock[1]]);
+    prismaOfferSpy.mockResolvedValueOnce([offerMock[1]]);
 
     await expect(controller.create(new CreateInvoiceDto(OrderOverviewMock[0].id))).rejects.toThrow(
       new NotFoundException(OrderOverviewMock[0].id)

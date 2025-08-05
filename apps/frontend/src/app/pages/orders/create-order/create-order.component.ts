@@ -50,7 +50,7 @@ export class CreateOrderComponent implements OnInit {
   private baseWeek = 0;
   private offerPricingStatistic!: OfferPricingStatistic;
 
-  private readonly basePrice: number[] = [];
+  private readonly basicPrice: number[] = [];
   private readonly utilization: number[] = [];
   private readonly timeUntilOrderBegins: number[] = [];
   protected readonly countdownConfig = countdownConfig;
@@ -138,14 +138,14 @@ export class CreateOrderComponent implements OnInit {
           this.offers$ = this.offerService.getOffersByOrderId(order.id);
           this.offers$.subscribe((offers: OfferDto[]) => {
             offers.forEach((offer: OfferDto) => {
-              this.basePrice.push(offer.basePrice);
-              this.timeUntilOrderBegins.push(offer.fixedCosts);
-              this.utilization.push(offer.utilizationPrice);
+              this.basicPrice.push(offer.basicPrice);
+              this.timeUntilOrderBegins.push(offer.timeUntilProduction);
+              this.utilization.push(offer.utilization);
             });
 
             this.offerPricingStatistic = {
               timeUntilOrderBegins: this.timeUntilOrderBegins,
-              basePrice: this.basePrice,
+              basePrice: this.basicPrice,
               utilization: this.utilization,
             };
 

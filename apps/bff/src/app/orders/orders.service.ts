@@ -118,6 +118,7 @@ export class OrdersService {
         products.set(order.productId, await this.productService.loadProductRefs(order));
       }
       const offerRef = await this.offerService.loadAcceptedOfferRef(order);
+
       retVal.push(
         OrderOverviewDto.toOrderOverviewDto(
           order,

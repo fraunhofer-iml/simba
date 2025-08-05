@@ -1,16 +1,19 @@
 import { OffersSeed } from '@ap3/database';
-import { Offer } from '@prisma/client';
 import { OfferStatesEnum } from '@ap3/util';
+import { Offer } from '@prisma/client';
 
-export const OfferMock: Offer[] = [{
-  id: OffersSeed[2].id,
-  creationDate: OffersSeed[2].creationDate,
-  decisionDate: new Date(),
-  plannedCalendarWeek: OffersSeed[2].plannedCalendarWeek,
-  plannedYear: OffersSeed[2].plannedYear,
-  price: OffersSeed[2].price,
-  status: OfferStatesEnum.ACCEPTED,
-  serviceProcessId: 'o001'
+export const offerMock: Offer[] = [
+  {
+    id: OffersSeed[2].id,
+    creationDate: OffersSeed[2].creationDate,
+    decisionDate: new Date(),
+    plannedCalendarWeek: OffersSeed[2].plannedCalendarWeek,
+    plannedYear: OffersSeed[2].plannedYear,
+    basicPrice: OffersSeed[2].basicPrice,
+    utilization: OffersSeed[2].utilization,
+    timeToProduction: OffersSeed[2].timeToProduction,
+    status: OfferStatesEnum.ACCEPTED,
+    serviceProcessId: 'o001',
   },
   {
     id: OffersSeed[2].id,
@@ -18,7 +21,10 @@ export const OfferMock: Offer[] = [{
     decisionDate: new Date(),
     plannedCalendarWeek: OffersSeed[2].plannedCalendarWeek,
     plannedYear: OffersSeed[2].plannedYear,
-    price: OffersSeed[2].price,
+    basicPrice: OffersSeed[2].basicPrice,
+    utilization: OffersSeed[2].utilization,
+    timeToProduction: OffersSeed[2].timeToProduction,
     status: OfferStatesEnum.REFUSED,
-    serviceProcessId: 'o001'
-  }];
+    serviceProcessId: 'o001',
+  },
+];

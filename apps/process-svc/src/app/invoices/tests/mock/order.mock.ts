@@ -2,7 +2,7 @@ import { CompaniesSeed, OrderLinesSeed } from '@ap3/database';
 import { Order } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 
-export const OrderMock = <Order>{
+export const orderMock = <Order>{
   id: 'o001',
   documentIssueDate: new Date(),
   buyerOrderRefDocumentId: '202410291549-726762',

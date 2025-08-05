@@ -8,7 +8,6 @@
 
 import { OfferAmqpDto } from '@ap3/amqp';
 import { ApiProperty } from '@nestjs/swagger';
-import { APIUtil } from '../../util/util';
 
 export class OfferDto {
   @ApiProperty()
@@ -16,12 +15,11 @@ export class OfferDto {
   @ApiProperty()
   creationDate: string;
   @ApiProperty()
-  basePrice: number;
+  basicPrice: number;
   @ApiProperty()
-  utilizationPrice: number;
+  utilization: number;
   @ApiProperty()
-  fixedCosts: number;
-
+  timeUntilProduction: number;
   @ApiProperty()
   status: string;
   @ApiProperty()
@@ -36,7 +34,7 @@ export class OfferDto {
     creationDate: string,
     basePrice: number,
     utilizationPrice: number,
-    fixedCosts: number,
+    timeUntilProduction: number,
     status: string,
     orderId: string,
     plannedCalendarWeek: number,
@@ -44,25 +42,22 @@ export class OfferDto {
   ) {
     this.id = id;
     this.creationDate = creationDate;
-    this.basePrice = basePrice;
-    this.utilizationPrice = utilizationPrice;
-    this.fixedCosts = fixedCosts;
+    this.basicPrice = basePrice;
+    this.utilization = utilizationPrice;
+    this.timeUntilProduction = timeUntilProduction;
     this.status = status;
     this.orderId = orderId;
     this.plannedCalendarWeek = plannedCalendarWeek;
     this.plannedYear = plannedYear;
   }
 
-  // BasePrice, UtilizationPrice and FixedCosts remain Mocked until Backend OfferEntity gets added the necessary Attributes
   public static toOfferDto(offer: OfferAmqpDto): OfferDto {
-    const mockPrices = APIUtil.getMockOfferPrices(offer);
-
     return new OfferDto(
       offer.id,
       new Date(offer.creationDate).toISOString(),
-      mockPrices.basePrice,
-      mockPrices.utilityPrice,
-      mockPrices.fixedCosts,
+      offer.basicPrice,
+      offer.utilization,
+      offer.timeToProduction,
       offer.status,
       offer.orderId,
       offer.plannedCalendarWeek,

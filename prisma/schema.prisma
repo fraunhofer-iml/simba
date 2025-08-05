@@ -19,7 +19,9 @@ model Offer {
   decisionDate        DateTime?
   plannedCalendarWeek Decimal
   plannedYear         Decimal
-  price               Decimal   @db.Money
+  basicPrice          Decimal   @db.Money
+  timeToProduction    Decimal   @db.Money
+  utilization         Decimal   @db.Money
   status              String
 
   serviceProcess     ServiceProcess  @relation("OrderOffers", fields: [serviceProcessId], references: [id])

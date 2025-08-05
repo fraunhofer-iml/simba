@@ -124,7 +124,7 @@ export class OrderOverviewDto {
       offerDto ? offerDto.plannedYear : 0,
       entity.status.status,
       entity.status.timestamp,
-      offerDto ? offerDto.basePrice + offerDto.utilizationPrice + offerDto.fixedCosts : 0,
+      offerDto ? offerDto.basicPrice + offerDto.utilization + offerDto.timeUntilProduction : 0,
       entity.robots ? entity.robots : [],
       entity.customerId,
       customerName,

@@ -9,11 +9,15 @@
 export class ScheduledPricesCwDto {
   cw: number;
   year: number;
-  price: number;
+  basePrice: number;
+  timeUntilProduction: number;
+  utilization: number;
 
-  constructor(cw: number, year: number, price: number) {
+  constructor(cw: number, year: number, basePrice: number, timeUntilProduction: number, utilization: number) {
     this.cw = cw;
     this.year = year;
-    this.price = price;
+    this.basePrice = basePrice;
+    this.timeUntilProduction = timeUntilProduction;
+    this.utilization = utilization;
   }
 }

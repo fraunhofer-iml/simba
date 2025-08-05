@@ -5,7 +5,7 @@
  * For details on the licensing terms, see the LICENSE file.
  * SPDX-License-Identifier: Apache-2.0
  */
-import { OffersSeed, ServiceProcessesSeed } from '@ap3/database';
+import { OffersSeed, OrdersSeed } from '@ap3/database';
 import { OfferAmqpDto } from '../index';
 
 export const OfferAmqpMock = <OfferAmqpDto[]>[
@@ -15,9 +15,11 @@ export const OfferAmqpMock = <OfferAmqpDto[]>[
     decisionDate: OffersSeed[0].decisionDate,
     plannedCalendarWeek: Number(OffersSeed[0].plannedCalendarWeek),
     plannedYear: Number(OffersSeed[0].plannedYear),
-    price: Number(OffersSeed[0].price),
+    basicPrice: Number(OffersSeed[0].basicPrice),
+    timeToProduction: Number(OffersSeed[0].timeToProduction),
+    utilization: Number(OffersSeed[0].utilization),
     status: OffersSeed[0].status,
-    orderId: ServiceProcessesSeed[0].orderId,
+    orderId: OrdersSeed[0].id,
   },
   {
     id: OffersSeed[1].id,
@@ -25,9 +27,11 @@ export const OfferAmqpMock = <OfferAmqpDto[]>[
     decisionDate: OffersSeed[1].decisionDate,
     plannedCalendarWeek: Number(OffersSeed[1].plannedCalendarWeek),
     plannedYear: Number(OffersSeed[1].plannedYear),
-    price: Number(OffersSeed[1].price),
+    basicPrice: Number(OffersSeed[1].basicPrice),
+    timeToProduction: Number(OffersSeed[1].timeToProduction),
+    utilization: Number(OffersSeed[1].utilization),
     status: OffersSeed[1].status,
-    orderId: ServiceProcessesSeed[0].orderId,
+    orderId: OrdersSeed[1].id,
   },
   {
     id: OffersSeed[2].id,
@@ -35,9 +39,11 @@ export const OfferAmqpMock = <OfferAmqpDto[]>[
     decisionDate: OffersSeed[2].decisionDate,
     plannedCalendarWeek: Number(OffersSeed[2].plannedCalendarWeek),
     plannedYear: Number(OffersSeed[2].plannedYear),
-    price: Number(OffersSeed[2].price),
+    basicPrice: Number(OffersSeed[2].basicPrice),
+    timeToProduction: Number(OffersSeed[2].timeToProduction),
+    utilization: Number(OffersSeed[2].utilization),
     status: OffersSeed[2].status,
-    orderId: ServiceProcessesSeed[0].orderId,
+    orderId: OrdersSeed[2].id,
   },
   {
     id: OffersSeed[3].id,
@@ -45,9 +51,11 @@ export const OfferAmqpMock = <OfferAmqpDto[]>[
     decisionDate: OffersSeed[3].decisionDate,
     plannedCalendarWeek: Number(OffersSeed[3].plannedCalendarWeek),
     plannedYear: Number(OffersSeed[3].plannedYear),
-    price: Number(OffersSeed[3].price),
+    basicPrice: Number(OffersSeed[3].basicPrice),
+    timeToProduction: Number(OffersSeed[3].timeToProduction),
+    utilization: Number(OffersSeed[3].utilization),
     status: OffersSeed[3].status,
-    orderId: ServiceProcessesSeed[0].orderId,
+    orderId: OrdersSeed[3].id,
   },
   {
     id: OffersSeed[4].id,
@@ -55,9 +63,11 @@ export const OfferAmqpMock = <OfferAmqpDto[]>[
     decisionDate: OffersSeed[4].decisionDate,
     plannedCalendarWeek: Number(OffersSeed[4].plannedCalendarWeek),
     plannedYear: Number(OffersSeed[4].plannedYear),
-    price: Number(OffersSeed[4].price),
+    basicPrice: Number(OffersSeed[4].basicPrice),
+    timeToProduction: Number(OffersSeed[4].timeToProduction),
+    utilization: Number(OffersSeed[4].utilization),
     status: OffersSeed[4].status,
-    orderId: ServiceProcessesSeed[1].orderId,
+    orderId: OrdersSeed[4].id,
   },
   {
     id: OffersSeed[5].id,
@@ -65,8 +75,10 @@ export const OfferAmqpMock = <OfferAmqpDto[]>[
     decisionDate: OffersSeed[5].decisionDate,
     plannedCalendarWeek: Number(OffersSeed[5].plannedCalendarWeek),
     plannedYear: Number(OffersSeed[5].plannedYear),
-    price: Number(OffersSeed[5].price),
+    basicPrice: Number(OffersSeed[5].basicPrice),
+    timeToProduction: Number(OffersSeed[5].timeToProduction),
+    utilization: Number(OffersSeed[5].utilization),
     status: OffersSeed[5].status,
-    orderId: ServiceProcessesSeed[1].orderId,
+    orderId: OrdersSeed[5].id,
   },
 ];

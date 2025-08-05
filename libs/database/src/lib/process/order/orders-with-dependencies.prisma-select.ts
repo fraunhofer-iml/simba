@@ -27,7 +27,9 @@ export const ordersWithDependenciesSelect = {
       acceptedOffer: {
         select: {
           id: true,
-          price: true,
+          basicPrice: true,
+          timeToProduction: true,
+          utilization: true,
         },
       },
       machineAssignments: {

@@ -23,7 +23,7 @@ export type OrderWithDependencies = {
           machine: Machine;
         }[];
         offers: { id: string }[];
-        acceptedOffer: { id: string; price: Decimal } | null;
+        acceptedOffer: { id: string; basicPrice: Decimal; timeToProduction: Decimal; utilization: Decimal } | null;
         invoices:
           | {
               tradeReceivable: {

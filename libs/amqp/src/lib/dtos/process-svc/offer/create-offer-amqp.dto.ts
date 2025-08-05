@@ -11,11 +11,21 @@ import { PickType } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { OfferAmqpDto } from './offer-amqp.dto';
 
-export class CreateOfferAmqpDto extends PickType(OfferAmqpDto, ['price', 'status', 'orderId', 'plannedCalendarWeek', 'plannedYear']) {
+export class CreateOfferAmqpDto extends PickType(OfferAmqpDto, [
+  'basicPrice',
+  'timeToProduction',
+  'utilization',
+  'status',
+  'orderId',
+  'plannedCalendarWeek',
+  'plannedYear',
+]) {
   public toPrismaEntity(): Prisma.OfferCreateInput {
     return <Prisma.OfferCreateInput>{
       creationDate: new Date(),
-      price: this.price,
+      basicPrice: this.basicPrice,
+      timeToProduction: this.timeToProduction,
+      utilization: this.utilization,
       status: OfferStatesEnum.OPEN,
       plannedCalendarWeek: this.plannedCalendarWeek,
       plannedYear: this.plannedYear,

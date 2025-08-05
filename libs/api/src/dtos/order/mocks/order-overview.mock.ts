@@ -7,7 +7,7 @@
  */
 
 import { CompaniesSeed, InvoiceSeed, MachinesSeed, OrderLinesSeed, OrdersSeed, ServiceStatesSeed } from '@ap3/database';
-import { OpenOffersMock } from '../../offer';
+import { offerDtosMock } from '../../offer';
 import { ProductDtoMocks } from '../../product';
 import { OrderOverviewDto } from '../order-overview.dto';
 
@@ -17,11 +17,11 @@ export const OrderOverviewMock: OrderOverviewDto[] = [
     number: OrdersSeed[0].buyerOrderRefDocumentId ? OrdersSeed[0].buyerOrderRefDocumentId : '',
     product: ProductDtoMocks[0].name,
     amount: +OrderLinesSeed[0].requestedQuantity,
-    year: OpenOffersMock[0].plannedYear,
-    calendarWeek: OpenOffersMock[0].plannedCalendarWeek,
+    year: offerDtosMock[0].plannedYear,
+    calendarWeek: offerDtosMock[0].plannedCalendarWeek,
     status: ServiceStatesSeed[0].status,
     statusTimestamp: ServiceStatesSeed[0].timestamp.toISOString(),
-    price: OpenOffersMock[0].basePrice + OpenOffersMock[0].utilizationPrice + OpenOffersMock[0].fixedCosts,
+    price: offerDtosMock[0].basicPrice + offerDtosMock[0].utilization + offerDtosMock[0].timeUntilProduction,
     robots: [MachinesSeed[0].id, MachinesSeed[1].id],
     customerId: CompaniesSeed[0].id,
     customerName: CompaniesSeed[0].name,
@@ -35,11 +35,11 @@ export const OrderOverviewMock: OrderOverviewDto[] = [
     number: OrdersSeed[1].buyerOrderRefDocumentId ? OrdersSeed[1].buyerOrderRefDocumentId : '',
     product: ProductDtoMocks[0].name,
     amount: +OrderLinesSeed[1].requestedQuantity,
-    year: OpenOffersMock[1].plannedYear,
-    calendarWeek: OpenOffersMock[1].plannedCalendarWeek,
+    year: offerDtosMock[1].plannedYear,
+    calendarWeek: offerDtosMock[1].plannedCalendarWeek,
     status: ServiceStatesSeed[5].status,
     statusTimestamp: ServiceStatesSeed[5].timestamp.toISOString(),
-    price: OpenOffersMock[1].basePrice + OpenOffersMock[1].utilizationPrice + OpenOffersMock[1].fixedCosts,
+    price: offerDtosMock[1].basicPrice + offerDtosMock[1].utilization + offerDtosMock[1].timeUntilProduction,
     robots: [MachinesSeed[0].id, MachinesSeed[1].id],
     customerId: OrdersSeed[1].buyerId,
     customerName: CompaniesSeed[0].name,

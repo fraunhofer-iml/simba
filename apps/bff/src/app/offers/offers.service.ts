@@ -25,6 +25,7 @@ export class OffersService {
       offers = await firstValueFrom<OfferAmqpDto[]>(this.processAMQPClient.send(OfferMessagePatterns.READ_BY_ORDER_ID, orderId));
     } else {
       this.logger.debug(`Get all offers`);
+
       offers = await firstValueFrom<OfferAmqpDto[]>(this.processAMQPClient.send(OfferMessagePatterns.READ_ALL, {}));
     }
     return OfferDto.toOfferDtos(offers);

@@ -1,21 +1,15 @@
-import { OfferAmqpDto } from '@ap3/amqp';
+/*
+ * Copyright Fraunhofer Institute for Material Flow and Logistics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * For details on the licensing terms, see the LICENSE file.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { UserRoles } from '@ap3/util';
 import { KeycloakUser } from '../auth';
 
 export class APIUtil {
-  public static getMockOfferPrices(offer: OfferAmqpDto): { basePrice: number; utilityPrice: number; fixedCosts: number } {
-    const basePrice = parseFloat((offer.price * APIUtil.getRandomPercentage(40, 60)).toFixed(2));
-    const utilityPrice = parseFloat((offer.price * APIUtil.getRandomPercentage(20, 40)).toFixed(2));
-    const fixedCosts = parseFloat((offer.price - basePrice - utilityPrice).toFixed(2));
-    return { basePrice: basePrice, utilityPrice: utilityPrice, fixedCosts: fixedCosts };
-  }
-
-  public static getRandomPercentage(min: number, max: number): number {
-    const random = Math.random();
-    const value = (min + random * (max - min)) / 100;
-    return parseFloat(value.toFixed(2));
-  }
-
   public static isAdminOrLoggedInCompany(user: KeycloakUser, companyId: string): boolean {
     return this.isAdmin(user) || companyId === user.company;
   }

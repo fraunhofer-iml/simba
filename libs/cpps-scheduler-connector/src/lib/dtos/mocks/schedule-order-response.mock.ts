@@ -11,27 +11,35 @@ import { ScheduleOrderResponseDto } from '../schedule-order-response.dto';
 import { ScheduledPricesCwDto } from '../scheduled-prices-cw.dto';
 
 export const ScheduleOrderResponseMock = <ScheduleOrderResponseDto>{
-  orderId: ServiceProcessesSeed[0].orderId,
+  id: ServiceProcessesSeed[0].orderId,
   pricesPerCW: <ScheduledPricesCwDto[]>[
     {
       cw: Number(OffersSeed[0].plannedCalendarWeek),
       year: Number(OffersSeed[0].plannedYear),
-      price: Number(OffersSeed[0].price),
+      basePrice: +OffersSeed[0].basicPrice,
+      utilization: +OffersSeed[0].utilization,
+      timeUntilProduction: +OffersSeed[0].timeToProduction,
     },
     {
       cw: Number(OffersSeed[1].plannedCalendarWeek),
       year: Number(OffersSeed[1].plannedYear),
-      price: Number(OffersSeed[1].price),
+      basePrice: +OffersSeed[1].basicPrice,
+      utilization: +OffersSeed[1].utilization,
+      timeUntilProduction: +OffersSeed[1].timeToProduction,
     },
     {
       cw: Number(OffersSeed[2].plannedCalendarWeek),
       year: Number(OffersSeed[2].plannedYear),
-      price: Number(OffersSeed[2].price),
+      basePrice: +OffersSeed[2].basicPrice,
+      utilization: +OffersSeed[2].utilization,
+      timeUntilProduction: +OffersSeed[2].timeToProduction,
     },
     {
       cw: Number(OffersSeed[3].plannedCalendarWeek),
       year: Number(OffersSeed[3].plannedYear),
-      price: Number(OffersSeed[3].price),
+      basePrice: +OffersSeed[3].basicPrice,
+      utilization: +OffersSeed[3].utilization,
+      timeUntilProduction: +OffersSeed[3].timeToProduction,
     },
   ],
 };

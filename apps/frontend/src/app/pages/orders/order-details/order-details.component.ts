@@ -69,7 +69,7 @@ export class OrderDetailsComponent {
       tap((orderDetail: OrderDetailsDto): void => {
         this.dataSource.data = orderDetail.machineAssignments;
         if (orderDetail.offer) {
-          this.initDoughnutChart([orderDetail.offer.basePrice, orderDetail.offer.utilizationPrice, orderDetail.offer.fixedCosts]);
+          this.initDoughnutChart([orderDetail.offer.basicPrice, orderDetail.offer.utilization, orderDetail.offer.timeUntilProduction]);
         }
       })
     );
