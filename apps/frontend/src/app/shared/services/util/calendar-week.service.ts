@@ -54,4 +54,15 @@ export class CalendarWeekService {
     const firstMonday = startOfWeek(firstDayOfYear, { weekStartsOn: 1 });
     return addWeeks(firstMonday, calendarWeek - 1);
   }
+
+  public getCalendarWeekFromTimestamp(timestamp: Date): number {
+    const firstDayOfYear = new Date(new Date(timestamp).getFullYear(), 0, 1);
+    // Adjust to the first Monday (start of the ISO week)
+    const firstMonday = startOfWeek(firstDayOfYear, { weekStartsOn: 1 });
+    // Determine time passed since start of year
+    const timeDifferenceInMilliseconds = new Date(timestamp).getTime() - firstMonday.getTime();
+    // Convert to calendar weeks
+    const calendarWeeks = Math.ceil(timeDifferenceInMilliseconds / 604800000);
+    return calendarWeeks;
+  }
 }

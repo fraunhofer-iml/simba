@@ -29,6 +29,18 @@
       </div>
       <mat-divider class="details-border"></mat-divider>
       <div class="data-row">
+        <span class="description">{{ 'Orders.Details.Status' | translate }}</span>
+        <span class="text-end">
+          {{ 'Orders.Status.' + (getLatestServiceProcessDto(orderDetail.processStateHistory).status | titlecase) | translate | titlecase }}
+          @if (getLatestServiceProcessDto(orderDetail.processStateHistory).status === OrderStatus.PRODUCED) {
+            : {{ getLatestServiceProcessDto(orderDetail.processStateHistory).timestamp | date }}
+          } @else {
+            : {{ 'CalendarWeek' | translate }} {{ buildCwDate(getLatestServiceProcessDto(orderDetail.processStateHistory)) }}
+          }
+        </span>
+      </div>
+      <mat-divider class="details-border"></mat-divider>
+      <div class="data-row">
         <span class="description">{{ 'Orders.OrderTable.ProductName' | translate }}</span>
         <span class="text-end">{{ orderDetail.order.product }}</span>
       </div>

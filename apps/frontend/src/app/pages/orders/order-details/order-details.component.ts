@@ -7,7 +7,7 @@
  */
 
 import { GetMachineAssignmentDto, OrderDetailsDto, ServiceProcessStatusDto } from '@ap3/api';
-import { ALL_SERVICE_STATES_FOR_DETAILS } from '@ap3/util';
+import { ALL_SERVICE_STATES_FOR_DETAILS, ServiceStatesEnum } from '@ap3/util';
 import { TranslateService } from '@ngx-translate/core';
 import { ChartData, ChartOptions, Plugin } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -20,9 +20,10 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
+import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
 import { FormatService } from '../../../shared/services/util/format.service';
 import { centerTextPlugin } from './diagram-plugins/diagram-plugins';
-import { OrderDetailsUtils } from './order-details.util';
+import { OrderDetailsUtils } from '../util/order-details.util';
 
 @Component({
   selector: 'app-order-details',
@@ -31,6 +32,7 @@ import { OrderDetailsUtils } from './order-details.util';
   providers: [TitleCasePipe],
 })
 export class OrderDetailsComponent {
+  protected readonly OrderStatus = ServiceStatesEnum;
   translation: Subscription;
   id$: string | null;
   orderDetails$: Observable<OrderDetailsDto>;
@@ -61,7 +63,8 @@ export class OrderDetailsComponent {
     private readonly ordersService: OrdersService,
     private readonly route: ActivatedRoute,
     private readonly translate: TranslateService,
-    private readonly titleCasePipe: TitleCasePipe
+    private readonly titleCasePipe: TitleCasePipe,
+    private readonly cwService: CalendarWeekService
   ) {
     this.id$ = this.route.snapshot.paramMap.get('id');
     if (!this.id$) throw new Error('ID parameter is missing from the route.');
@@ -121,5 +124,13 @@ export class OrderDetailsComponent {
   updateLabelTranslations() {
     this.doughnutChartData.labels = this.translate.instant('Orders.Details.Diagram.DoughnutLabels');
     this.chart?.update();
+  }
+
+  getLatestServiceProcessDto(serviceProcessStatusDtos: ServiceProcessStatusDto[]) {
+    return OrderDetailsUtils.getLatestStatus(serviceProcessStatusDtos);
+  }
+
+  buildCwDate(statusDto: ServiceProcessStatusDto): number {
+    return this.cwService.getCalendarWeekFromTimestamp(statusDto.timestamp);
   }
 }

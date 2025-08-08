@@ -7,6 +7,7 @@
  */
 
 import { ServiceProcessStatusDto } from '@ap3/api';
+import { ServiceStatesEnum } from '@ap3/util';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { DatePipe } from '@angular/common';
@@ -18,9 +19,9 @@ import { OrderFilter } from '../../../model/order-filter';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { FilterService } from '../../../shared/services/filter/filter.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
+import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
 import { FormatService } from '../../../shared/services/util/format.service';
 import { OrderDetailsComponent } from './order-details.component';
-import { ServiceStatesEnum } from '@ap3/util';
 
 jest.mock('lodash-es', () => ({
   debounce: (fn: any) => fn,
@@ -33,11 +34,7 @@ describe('OrderDetailsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [OrderDetailsComponent],
-      imports: [
-        NoopAnimationsModule,
-        TranslateModule.forRoot(),
-        KeycloakAngularModule
-      ],
+      imports: [NoopAnimationsModule, TranslateModule.forRoot(), KeycloakAngularModule],
       providers: [
         OrdersService,
         FilterService<OrderFilter>,
@@ -45,6 +42,7 @@ describe('OrderDetailsComponent', () => {
         HttpHandler,
         Router,
         TranslateService,
+        CalendarWeekService,
         DatePipe,
         AuthService,
         FormatService,

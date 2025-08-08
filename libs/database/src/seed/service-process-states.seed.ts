@@ -763,15 +763,5 @@ export const ServiceStatesSeed = [
     serviceProcessId: 'sp039',
     status: 'planned',
     timestamp: new Date("2025-06-03T09:12:00.198Z")
-  },
-  {
-    serviceProcessId: 'sp039',
-    status: 'scheduled',
-    timestamp: new Date("2025-06-03T09:12:00.198Z")
-  },
-  {
-    serviceProcessId: 'sp039',
-    status: 'produced',
-    timestamp: new Date("2025-06-03T09:12:00.198Z")
   }
 ]
