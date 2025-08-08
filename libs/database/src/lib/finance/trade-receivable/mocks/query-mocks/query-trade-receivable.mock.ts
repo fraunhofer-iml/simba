@@ -8,12 +8,12 @@
 
 import { PaymentStates } from '@ap3/util';
 import { Prisma } from '@prisma/client';
-import { InvoiceSeed, OrdersSeed, PaymentStatesSeed, TradeReceivablesSeed } from '../../../../../seed';
+import { invoiceSeed, ordersSeed, paymentStatesSeed, tradeReceivablesSeed } from '../../../../../seed';
 
 export const createTradeReceivableQuery = <Prisma.TradeReceivableCreateInput>{
-  nft: TradeReceivablesSeed[0].nft,
-  invoice: { connect: { id: InvoiceSeed[0].id } },
-  states: { create: { status: PaymentStates.OPEN, timestamp: PaymentStatesSeed[3].timestamp } },
+  nft: tradeReceivablesSeed[0].nft,
+  invoice: { connect: { id: invoiceSeed[0].id } },
+  states: { create: { status: PaymentStates.OPEN, timestamp: paymentStatesSeed[3].timestamp } },
 };
 
 const trQueryInclude = <Prisma.TradeReceivableInclude>{
@@ -35,32 +35,32 @@ const trQueryInclude = <Prisma.TradeReceivableInclude>{
   },
 };
 
-export const InvoicesByDebtorQueryMock = {
+export const invoicesByDebtorQueryMock = {
   where: {
-    OR: [{ debtorId: InvoiceSeed[0].debtorId }],
+    OR: [{ debtorId: invoiceSeed[0].debtorId }],
   },
   include: trQueryInclude,
 };
 
-export const InvoicesByCreditorQueryMock = {
+export const invoicesByCreditorQueryMock = {
   where: {
-    OR: [{ creditorId: InvoiceSeed[0].creditorId }],
+    OR: [{ creditorId: invoiceSeed[0].creditorId }],
   },
   include: trQueryInclude,
 };
 
-export const InvoicesByOrderQueryMock = {
+export const invoicesByOrderQueryMock = {
   where: {
-    OR: [{ creditorId: InvoiceSeed[0].debtorId }, { debtorId: InvoiceSeed[0].debtorId }],
-    AND: [{ serviceProcess: { orderId: OrdersSeed[0].id } }],
+    OR: [{ creditorId: invoiceSeed[0].debtorId }, { debtorId: invoiceSeed[0].debtorId }],
+    AND: [{ serviceProcess: { orderId: ordersSeed[0].id } }],
   },
   include: trQueryInclude,
 };
 
-export const InvoiceIdQueryMock = {
+export const invoiceIdQueryMock = {
   where: {
-    OR: [{ creditorId: InvoiceSeed[0].debtorId }, { debtorId: InvoiceSeed[0].debtorId }],
-    AND: [{ id: { in: [InvoiceSeed[0].id] } }],
+    OR: [{ creditorId: invoiceSeed[0].debtorId }, { debtorId: invoiceSeed[0].debtorId }],
+    AND: [{ id: { in: [invoiceSeed[0].id] } }],
   },
   include: trQueryInclude,
 };

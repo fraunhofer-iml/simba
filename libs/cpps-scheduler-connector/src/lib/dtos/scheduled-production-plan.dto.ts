@@ -6,9 +6,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CurrentSchedulingDto } from "./current-scheduling.dto";
+import { CurrentSchedulingDto } from './current-scheduling.dto';
 
-export class ScheduledProductionPlanDto{
+export class ScheduledProductionPlanDto {
   isOptimized: boolean;
   productionPlan: CurrentSchedulingDto[];
 

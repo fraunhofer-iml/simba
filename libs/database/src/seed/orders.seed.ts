@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client'; 
- export const OrdersSeed = [
+ export const ordersSeed = [
   {
     id: 'o001',
     documentIssueDate: new Date("2024-10-01T07:55:55.695Z"),

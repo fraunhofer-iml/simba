@@ -1,4 +1,4 @@
-export const MachineAssignmentSeed = [
+export const machineAssignmentSeed = [
   {
     serviceProcessId: 'sp001',
     machineId: 'rt001',

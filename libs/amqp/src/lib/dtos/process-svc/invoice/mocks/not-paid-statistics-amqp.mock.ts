@@ -8,7 +8,7 @@
 
 import { NotPaidStatisticsAmqpDto } from '../not-paid-statistics-amqp.dto';
 
-export const NotPaidStatisticsAmqpMock = <NotPaidStatisticsAmqpDto>{
+export const notPaidStatisticsAmqpMock = <NotPaidStatisticsAmqpDto>{
   overdueTradeReceivableCount: 4,
   overdueTradeReceivableValue: 15.0,
   outstandingTradeReceivableCount: 10,

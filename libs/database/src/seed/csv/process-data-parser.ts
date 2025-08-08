@@ -29,7 +29,7 @@ export class ProcessDataParser extends CsvParser {
         return value === 'null' ? null : value;
       },
     });
-    this.evaluate(retVal, 'offers.seed.ts', `export const OffersSeed = `);
+    this.evaluate(retVal, 'offers.seed.ts', `export const offersSeed = `);
     return retVal;
   }
 
@@ -48,7 +48,7 @@ export class ProcessDataParser extends CsvParser {
         return value === 'null' ? null : value;
       },
     });
-    this.evaluate(retVal, 'orders.seed.ts', `export const OrdersSeed = `);
+    this.evaluate(retVal, 'orders.seed.ts', `export const ordersSeed = `);
     return retVal;
   }
 
@@ -65,7 +65,7 @@ export class ProcessDataParser extends CsvParser {
         return value === 'null' ? null : value;
       },
     });
-    this.evaluate(retVal, 'order-lines.seed.ts', `export const OrderLinesSeed = `);
+    this.evaluate(retVal, 'order-lines.seed.ts', `export const orderLinesSeed = `);
     return retVal;
   }
 
@@ -80,7 +80,7 @@ export class ProcessDataParser extends CsvParser {
         return value === 'null' ? null : value;
       },
     });
-    this.evaluate(retVal, 'machine-assignments.seed.ts', `export const MachineAssignmentSeed = `);
+    this.evaluate(retVal, 'machine-assignments.seed.ts', `export const machineAssignmentSeed = `);
     return retVal;
   }
 
@@ -95,7 +95,7 @@ export class ProcessDataParser extends CsvParser {
         return value === 'null' ? null : value;
       },
     });
-    this.evaluate(retVal, 'service-process-states.seed.ts', `export const ServiceStatesSeed = `);
+    this.evaluate(retVal, 'service-process-states.seed.ts', `export const serviceStatesSeed = `);
     return retVal;
   }
 
@@ -112,7 +112,7 @@ export class ProcessDataParser extends CsvParser {
         return value === 'null' ? null : value;
       },
     });
-    this.evaluate(retVal, 'service-process.seed.ts', `export const ServiceProcessesSeed = `);
+    this.evaluate(retVal, 'service-process.seed.ts', `export const serviceProcessesSeed = `);
     return retVal;
   }
 }

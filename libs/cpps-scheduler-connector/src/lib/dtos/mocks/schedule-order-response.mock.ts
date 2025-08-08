@@ -6,40 +6,40 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { OffersSeed, ServiceProcessesSeed } from '@ap3/database';
+import { offersSeed, serviceProcessesSeed } from '@ap3/database';
 import { ScheduleOrderResponseDto } from '../schedule-order-response.dto';
 import { ScheduledPricesCwDto } from '../scheduled-prices-cw.dto';
 
-export const ScheduleOrderResponseMock = <ScheduleOrderResponseDto>{
-  id: ServiceProcessesSeed[0].orderId,
+export const scheduleOrderResponseMock = <ScheduleOrderResponseDto>{
+  id: serviceProcessesSeed[0].orderId,
   pricesPerCW: <ScheduledPricesCwDto[]>[
     {
-      cw: Number(OffersSeed[0].plannedCalendarWeek),
-      year: Number(OffersSeed[0].plannedYear),
-      basePrice: +OffersSeed[0].basicPrice,
-      utilization: +OffersSeed[0].utilization,
-      timeUntilProduction: +OffersSeed[0].timeToProduction,
+      cw: Number(offersSeed[0].plannedCalendarWeek),
+      year: Number(offersSeed[0].plannedYear),
+      basePrice: +offersSeed[0].basicPrice,
+      utilization: +offersSeed[0].utilization,
+      timeUntilProduction: +offersSeed[0].timeToProduction,
     },
     {
-      cw: Number(OffersSeed[1].plannedCalendarWeek),
-      year: Number(OffersSeed[1].plannedYear),
-      basePrice: +OffersSeed[1].basicPrice,
-      utilization: +OffersSeed[1].utilization,
-      timeUntilProduction: +OffersSeed[1].timeToProduction,
+      cw: Number(offersSeed[1].plannedCalendarWeek),
+      year: Number(offersSeed[1].plannedYear),
+      basePrice: +offersSeed[1].basicPrice,
+      utilization: +offersSeed[1].utilization,
+      timeUntilProduction: +offersSeed[1].timeToProduction,
     },
     {
-      cw: Number(OffersSeed[2].plannedCalendarWeek),
-      year: Number(OffersSeed[2].plannedYear),
-      basePrice: +OffersSeed[2].basicPrice,
-      utilization: +OffersSeed[2].utilization,
-      timeUntilProduction: +OffersSeed[2].timeToProduction,
+      cw: Number(offersSeed[2].plannedCalendarWeek),
+      year: Number(offersSeed[2].plannedYear),
+      basePrice: +offersSeed[2].basicPrice,
+      utilization: +offersSeed[2].utilization,
+      timeUntilProduction: +offersSeed[2].timeToProduction,
     },
     {
-      cw: Number(OffersSeed[3].plannedCalendarWeek),
-      year: Number(OffersSeed[3].plannedYear),
-      basePrice: +OffersSeed[3].basicPrice,
-      utilization: +OffersSeed[3].utilization,
-      timeUntilProduction: +OffersSeed[3].timeToProduction,
+      cw: Number(offersSeed[3].plannedCalendarWeek),
+      year: Number(offersSeed[3].plannedYear),
+      basePrice: +offersSeed[3].basicPrice,
+      utilization: +offersSeed[3].utilization,
+      timeUntilProduction: +offersSeed[3].timeToProduction,
     },
   ],
 };

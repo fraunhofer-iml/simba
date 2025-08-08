@@ -1,4 +1,4 @@
-export const NftSeed = [
+export const nftSeed = [
   {
     id: 0,
     remoteId: 'INV-20241012-1',

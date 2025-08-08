@@ -6,12 +6,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ProductsSeed } from '@ap3/database';
+import { productsSeed } from '@ap3/database';
 import { ProductDto } from '../product.dto';
 
-export const ProductDtoMocks: ProductDto[] = [
+export const productDtoMocks: ProductDto[] = [
   {
-    name: ProductsSeed[0].name,
-    id: ProductsSeed[0].id,
+    name: productsSeed[0].name,
+    id: productsSeed[0].id,
   },
 ];

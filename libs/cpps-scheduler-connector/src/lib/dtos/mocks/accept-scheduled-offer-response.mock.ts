@@ -6,15 +6,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { OffersSeed, OrderLinesSeed } from '@ap3/database';
+import { offersSeed, orderLinesSeed } from '@ap3/database';
 import { AcceptScheduledOfferDto } from '../accept-scheduled-offer.dto';
 
-export const AcceptScheduledOfferResponseMock = <AcceptScheduledOfferDto>{
-  cw: Number(OffersSeed[0].plannedCalendarWeek),
+export const acceptScheduledOfferResponseMock = <AcceptScheduledOfferDto>{
+  cw: Number(offersSeed[0].plannedCalendarWeek),
   message: 'Order orAE23 accepted',
-  year: Number(OffersSeed[0].plannedYear),
+  year: Number(offersSeed[0].plannedYear),
   product: {
-    id: OrderLinesSeed[0].itemId,
-    quantity: Number(OrderLinesSeed[0].requestedQuantity),
+    id: orderLinesSeed[0].itemId,
+    quantity: Number(orderLinesSeed[0].requestedQuantity),
   },
 };

@@ -7,21 +7,21 @@
  */
 
 import { offerDtosMock } from '../../offer';
-import { GetMachineAssignmentsDtoMock } from '../../service-process';
-import { ProcessStateHistoryMock } from '../../service-process/mocks/process-state-history.mock';
+import { getMachineAssignmentsDtoMock } from '../../service-process';
+import { processStateHistoryMock } from '../../service-process/mocks/process-state-history.mock';
 import { OrderDetailsDto } from '../order-details.dto';
-import { OrderOverviewMock } from './order-overview.mock';
+import { orderOverviewMock } from './order-overview.mock';
 
-export const OrderDetailsMock = <OrderDetailsDto[]>[
+export const orderDetailsMock = <OrderDetailsDto[]>[
   {
-    order: OrderOverviewMock[0],
-    processStateHistory: [ProcessStateHistoryMock[0], ProcessStateHistoryMock[1]],
-    machineAssignments: [GetMachineAssignmentsDtoMock[0], GetMachineAssignmentsDtoMock[1]],
+    order: orderOverviewMock[0],
+    processStateHistory: [processStateHistoryMock[0], processStateHistoryMock[1]],
+    machineAssignments: [getMachineAssignmentsDtoMock[0], getMachineAssignmentsDtoMock[1]],
   },
   {
-    order: OrderOverviewMock[1],
-    processStateHistory: [ProcessStateHistoryMock[2]],
-    machineAssignments: [GetMachineAssignmentsDtoMock[2]],
+    order: orderOverviewMock[1],
+    processStateHistory: [processStateHistoryMock[2]],
+    machineAssignments: [getMachineAssignmentsDtoMock[2]],
     offer: offerDtosMock[1],
   },
 ];

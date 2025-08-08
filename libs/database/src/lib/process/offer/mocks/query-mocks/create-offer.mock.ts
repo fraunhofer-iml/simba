@@ -8,7 +8,7 @@
 
 import { OfferStatesEnum, ServiceStatesEnum } from '@ap3/util';
 import { Prisma } from '@prisma/client';
-import { OffersSeed, ServiceProcessesSeed } from '../../../../../seed';
+import { offersSeed, serviceProcessesSeed } from '../../../../../seed';
 
 export const createOfferQuery = <Prisma.OfferCreateInput>{
   creationDate: new Date('2024-08-16T10:09:41.295Z'),
@@ -18,13 +18,13 @@ export const createOfferQuery = <Prisma.OfferCreateInput>{
   status: OfferStatesEnum.OPEN,
   serviceProcess: {
     connect: {
-      orderId: ServiceProcessesSeed[0].orderId,
+      orderId: serviceProcessesSeed[0].orderId,
     },
   },
 };
 
 export const setServiceStateToAcceptedQuery = <Prisma.OrderUpdateInput>{
-  where: { orderId: String(ServiceProcessesSeed[0].orderId) },
+  where: { orderId: String(serviceProcessesSeed[0].orderId) },
   include: { order: true },
   data: {
     states: {
@@ -37,7 +37,7 @@ export const setServiceStateToAcceptedQuery = <Prisma.OrderUpdateInput>{
 };
 
 export const setServiceStateToCanceledQuery = <Prisma.OrderUpdateInput>{
-  where: { orderId: String(ServiceProcessesSeed[0].orderId) },
+  where: { orderId: String(serviceProcessesSeed[0].orderId) },
   include: { order: true },
   data: {
     states: {
@@ -50,14 +50,14 @@ export const setServiceStateToCanceledQuery = <Prisma.OrderUpdateInput>{
 };
 
 export const setAcceptedForServiceQuery = <Prisma.OrderUpdateInput>{
-  where: { id: String(ServiceProcessesSeed[0].id) },
+  where: { id: String(serviceProcessesSeed[0].id) },
   data: {
-    acceptedOfferId: OffersSeed[0].id,
+    acceptedOfferId: offersSeed[0].id,
   },
 };
 
 export const setOfferStateToAcceptedQuery = <Prisma.OfferUpdateInput>{
-  where: { id: OffersSeed[0].id },
+  where: { id: offersSeed[0].id },
   data: {
     status: OfferStatesEnum.ACCEPTED.toString(),
     decisionDate: new Date('2024-08-16T10:09:41.295Z'),
@@ -65,7 +65,7 @@ export const setOfferStateToAcceptedQuery = <Prisma.OfferUpdateInput>{
 };
 
 export const setOfferStateToDeclinedQuery = <Prisma.OfferUpdateInput>{
-  where: { id: OffersSeed[3].id },
+  where: { id: offersSeed[3].id },
   data: {
     status: OfferStatesEnum.REFUSED,
     decisionDate: new Date('2024-08-16T10:09:41.295Z'),

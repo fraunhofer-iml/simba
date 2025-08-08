@@ -8,11 +8,11 @@
 
 import { TokenAssetDto, TokenHierarchyDto, TokenMetadataDto, TokenReadDto } from 'nft-folder-blockchain-connector-besu';
 
-export const TokenReadDtoMock: TokenReadDto = new TokenReadDto(
+export const tokenReadDtoMock: TokenReadDto = new TokenReadDto(
   'INV-20241012-1',
   new TokenAssetDto('INV_INV-20241012-1.pdf', 'b28c94b2195c8ed259f0b415aaee3f39b0b2920a4537611499fa044956917a21'),
   new TokenMetadataDto('METADATA_sp001.json', 'dfb95c68429c22041014e3eb9da9d74bf72ce08d96123861b2d6263074ceac65'),
-  "{\"serviceProcessId\":\"sp001\",\"serviceProcessHash\":\"a71fe6f6ba01a16c83d7fea369a3bb828bd24f7da6e2eb4c2449aa91dbc44b1e\",\"status\":\"open\"}",
+  '{"serviceProcessId":"sp001","serviceProcessHash":"a71fe6f6ba01a16c83d7fea369a3bb828bd24f7da6e2eb4c2449aa91dbc44b1e","status":"open"}',
   new TokenHierarchyDto(false, [], []),
   '0x72e37d393c70823113a7176aC1F7C579d2C5623E',
   '0x72e37d393c70823113a7176aC1F7C579d2C5623E',

@@ -8,21 +8,21 @@
 
 import {
   AmqpBrokerQueues,
-  CreateTradeReceivableAMQPMock,
-  InvoiceAndPaymentStatusDtoAmqpMock,
+  createTradeReceivableAMQPMock,
+  invoiceAndPaymentStatusDtoAmqpMock,
   InvoiceIdAndPaymentStateAmqpDto,
-  TradeReceivableAMQPMock,
+  tradeReceivableAMQPMock,
   TradeReceivableMessagePatterns,
 } from '@ap3/amqp';
-import { CreateNftDto, createTradeReceivableDtoMock, TokenReadDtoMock, TradeReceivableMock } from '@ap3/api';
+import { CreateNftDto, createTradeReceivableDtoMock, tokenReadDtoMock, tradeReceivableMock } from '@ap3/api';
+import { NftErrorMessagesEnum, PaymentStates } from '@ap3/util';
 import { TokenReadDto } from 'nft-folder-blockchain-connector-besu';
 import { of } from 'rxjs';
+import { NotFoundException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TradeReceivablesController } from './trade-receivables.controller';
 import { TradeReceivablesService } from './trade-receivables.service';
-import { NotFoundException } from '@nestjs/common';
-import { NftErrorMessagesEnum, PaymentStates } from '@ap3/util';
 
 describe('TradeReceivableController', () => {
   let controller: TradeReceivablesController;
@@ -54,22 +54,22 @@ describe('TradeReceivableController', () => {
   });
 
   it('should create a Tradereceivable', async () => {
-    const expectedReturnValue = TradeReceivableMock[0];
+    const expectedReturnValue = tradeReceivableMock[0];
     const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
     sendRequestSpy.mockImplementation((messagePattern: TradeReceivableMessagePatterns, data: any) => {
-      return of(TradeReceivableAMQPMock[0]);
+      return of(tradeReceivableAMQPMock[0]);
     });
 
     const res = await controller.create(createTradeReceivableDtoMock);
-    expect(sendRequestSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.CREATE, CreateTradeReceivableAMQPMock);
+    expect(sendRequestSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.CREATE, createTradeReceivableAMQPMock);
     expect(res).toEqual(expectedReturnValue);
   });
 
   it('should create a nft', async () => {
-    const expectedReturnValue = TokenReadDtoMock;
+    const expectedReturnValue = tokenReadDtoMock;
     const createNftSpy = jest.spyOn(processSvcClientProxy, 'send');
     createNftSpy.mockImplementation(() => {
-      return of(TokenReadDtoMock);
+      return of(tokenReadDtoMock);
     });
 
     const createNftDto: CreateNftDto = {
@@ -87,16 +87,16 @@ describe('TradeReceivableController', () => {
       return of(true);
     });
 
-    const res = await controller.updateNftPaymentStatus(InvoiceAndPaymentStatusDtoAmqpMock);
-    expect(updateNftSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.UPDATE_NFT, InvoiceAndPaymentStatusDtoAmqpMock);
+    const res = await controller.updateNftPaymentStatus(invoiceAndPaymentStatusDtoAmqpMock);
+    expect(updateNftSpy).toHaveBeenCalledWith(TradeReceivableMessagePatterns.UPDATE_NFT, invoiceAndPaymentStatusDtoAmqpMock);
     expect(res).toBeTruthy();
   });
 
   it('should read all nfts', async () => {
-    const expectedReturnValue = [TokenReadDtoMock];
+    const expectedReturnValue = [tokenReadDtoMock];
     const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
     sendRequestSpy.mockImplementation((messagePattern: TradeReceivableMessagePatterns, data: any) => {
-      return of([TokenReadDtoMock]);
+      return of([tokenReadDtoMock]);
     });
 
     const res: TokenReadDto[] = await controller.readAllNfts();
@@ -106,10 +106,10 @@ describe('TradeReceivableController', () => {
 
   it('should read a single nft', async () => {
     const inputTradeReceivableId = 'testId';
-    const expectedReturnValue = TokenReadDtoMock;
+    const expectedReturnValue = tokenReadDtoMock;
     const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
     sendRequestSpy.mockImplementation((messagePattern: TradeReceivableMessagePatterns, data: any) => {
-      return of(TokenReadDtoMock);
+      return of(tokenReadDtoMock);
     });
 
     const res: TokenReadDto = await controller.readNftByInvoiceNumber(inputTradeReceivableId);
@@ -144,7 +144,7 @@ describe('TradeReceivableController', () => {
   it('should not get nft by invoice number due to a missing nft', async () => {
     const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
     sendRequestSpy.mockImplementationOnce(() => {
-        return of(null);
+      return of(null);
     });
     try {
       await controller.readNftByInvoiceNumber('wrongInvoiceNumber');

@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client'; 
- export const OrderLinesSeed = [
+ export const orderLinesSeed = [
   {
     id: 'ol001',
     netPrice: new Prisma.Decimal(30),

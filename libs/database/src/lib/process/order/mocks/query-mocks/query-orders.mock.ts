@@ -7,7 +7,7 @@
  */
 
 import { Prisma } from '@prisma/client';
-import { OrdersSeed } from '../../../../../seed';
+import { ordersSeed } from '../../../../../seed';
 
 const ordersOverviewSelect = <Prisma.OrderSelect>{
   id: true,
@@ -70,7 +70,7 @@ const ordersOverviewSelect = <Prisma.OrderSelect>{
 };
 
 export const findSingleOrderMock = <Prisma.OrderWhereInput>{
-  where: { AND: [{ id: String(OrdersSeed[0].id) }] },
+  where: { AND: [{ id: String(ordersSeed[0].id) }] },
   select: ordersOverviewSelect,
 };
 

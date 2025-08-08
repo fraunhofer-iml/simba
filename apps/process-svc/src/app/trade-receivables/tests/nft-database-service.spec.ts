@@ -6,12 +6,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { tokenReadDtoMock } from '@ap3/api';
 import { ConfigurationModule } from '@ap3/config';
-import { DatabaseModule, NftSeed, PrismaService, ServiceProcessesSeed } from '@ap3/database';
+import { DatabaseModule, nftSeed, PrismaService, serviceProcessesSeed } from '@ap3/database';
+import { PaymentStates } from '@ap3/util';
 import { Test, TestingModule } from '@nestjs/testing';
 import { NftDatabaseService } from '../nft/nft-database.service';
-import { TokenReadDtoMock } from '@ap3/api';
-import { PaymentStates } from '@ap3/util';
 
 describe('NftDatabaseService', () => {
   let service: NftDatabaseService;
@@ -41,57 +41,50 @@ describe('NftDatabaseService', () => {
   });
 
   it('mintNFT: should create a new nft', async () => {
-
     const prismaNftSpy = jest.spyOn(prisma.nft, 'create');
-    prismaNftSpy.mockResolvedValue(NftSeed[0]);
+    prismaNftSpy.mockResolvedValue(nftSeed[0]);
 
-    const retVal = await service.mintNFT(
-      ServiceProcessesSeed[0],
-      'remoteId',
-      'test pdf',
-      'test url',
-      'test metadata',
-      'test metadata url');
-    expect(TokenReadDtoMock).toEqual(retVal);
+    const retVal = await service.mintNFT(serviceProcessesSeed[0], 'remoteId', 'test pdf', 'test url', 'test metadata', 'test metadata url');
+    expect(tokenReadDtoMock).toEqual(retVal);
   });
 
   it('readNFT: should read nft', async () => {
     const prismaNftSpy = jest.spyOn(prisma.nft, 'findUnique');
-    prismaNftSpy.mockResolvedValue(NftSeed[0]);
+    prismaNftSpy.mockResolvedValue(nftSeed[0]);
 
     const retVal = await service.readNFT(0);
-    expect(TokenReadDtoMock).toEqual(retVal);
+    expect(tokenReadDtoMock).toEqual(retVal);
   });
 
   it('readNFTForInvoiceNumber: should read nft for invoice number', async () => {
     const prismaNftSpy = jest.spyOn(prisma.nft, 'findMany');
-    prismaNftSpy.mockResolvedValue(NftSeed);
+    prismaNftSpy.mockResolvedValue(nftSeed);
 
     const retVal = await service.readNFTForInvoiceNumber('invoiceNumber');
-    expect(TokenReadDtoMock).toEqual(retVal);
+    expect(tokenReadDtoMock).toEqual(retVal);
   });
 
   it('getPaymentState: should return the payment state of an nft', async () => {
-    const retVal = service.getPaymentState(TokenReadDtoMock);
-    expect(JSON.parse(TokenReadDtoMock.additionalData).status).toEqual(retVal);
+    const retVal = service.getPaymentState(tokenReadDtoMock);
+    expect(JSON.parse(tokenReadDtoMock.additionalData).status).toEqual(retVal);
   });
 
   it('updateNFTStatus: should update nft status', async () => {
     const prismaNftReadSpy = jest.spyOn(prisma.nft, 'findUnique');
-    prismaNftReadSpy.mockResolvedValue(NftSeed[0]);
+    prismaNftReadSpy.mockResolvedValue(nftSeed[0]);
 
     const prismaNftUpdateSpy = jest.spyOn(prisma.nft, 'update');
-    prismaNftUpdateSpy.mockResolvedValue(NftSeed[0]);
+    prismaNftUpdateSpy.mockResolvedValue(nftSeed[0]);
 
     const retVal = await service.updateNFTStatus(0, PaymentStates.PAID);
-    expect(TokenReadDtoMock).toEqual(retVal);
+    expect(tokenReadDtoMock).toEqual(retVal);
   });
 
   it('readAllNfts: should return all Nfts', async () => {
     const prismaNftSpy = jest.spyOn(prisma.nft, 'findMany');
-    prismaNftSpy.mockResolvedValue([NftSeed[0]]);
+    prismaNftSpy.mockResolvedValue([nftSeed[0]]);
 
     const retVal = await service.readAllNfts();
-    expect([TokenReadDtoMock]).toEqual(retVal);
+    expect([tokenReadDtoMock]).toEqual(retVal);
   });
 });

@@ -7,13 +7,13 @@
  */
 
 import { Prisma } from '@prisma/client';
-import { OrdersSeed } from '../../../../../seed/orders.seed';
+import { ordersSeed } from '../../../../../seed/orders.seed';
 
 export const findLatestServiceStatusQuery = <Prisma.ServiceStatusFindFirstArgs[]>[
   {
     where: {
       serviceProcess: {
-        orderId: OrdersSeed[0].id,
+        orderId: ordersSeed[0].id,
       },
     },
     include: {
@@ -30,7 +30,7 @@ export const findLatestServiceStatusQuery = <Prisma.ServiceStatusFindFirstArgs[]
   {
     where: {
       serviceProcess: {
-        orderId: OrdersSeed[1].id,
+        orderId: ordersSeed[1].id,
       },
     },
     include: {

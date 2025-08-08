@@ -6,19 +6,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NotPaidStatisticsAmqpMock, PaidStatisticsAmqpMock, TRParamsCompanyIdAndYearAndFinancialRole } from '@ap3/amqp';
+import { notPaidStatisticsAmqpMock, paidStatisticsAmqpMock, TRParamsCompanyIdAndYearAndFinancialRole } from '@ap3/amqp';
 import { ConfigurationModule } from '@ap3/config';
 import {
-  AggregationSumNovember,
-  AggregationSumSeptember,
-  CompaniesSeed,
+  aggregationSumNovember,
+  aggregationSumSeptember,
+  companiesSeed,
   DatabaseModule,
-  DueInvoiceCount,
-  PaidInvoiceIdsNovember,
-  PaidInvoiceIdsSeptember,
-  PaidOnTimeInvoiceCount,
+  dueInvoiceCount,
+  paidInvoiceIdsNovember,
+  paidInvoiceIdsSeptember,
+  paidOnTimeInvoiceCount,
   PrismaService,
-  TradeReceivablePaymentStatusCountMock,
+  tradeReceivablePaymentStatusCountMock,
 } from '@ap3/database';
 import { S3Module } from '@ap3/s3';
 import { FinancialRoles } from '@ap3/util';
@@ -58,7 +58,7 @@ describe('InvoicesStatisticsController', () => {
   });
 
   it('calcPaidTradeReceivableVolumePerMonth: should create a statistic about paid and due trade receivables', async () => {
-    const expectedReturn = PaidStatisticsAmqpMock;
+    const expectedReturn = paidStatisticsAmqpMock;
 
     const prismaRawSpy = jest.spyOn(prisma, '$queryRaw');
     prismaRawSpy
@@ -70,33 +70,33 @@ describe('InvoicesStatisticsController', () => {
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([])
-      .mockResolvedValueOnce(PaidInvoiceIdsSeptember)
-      .mockResolvedValueOnce(PaidInvoiceIdsNovember)
+      .mockResolvedValueOnce(paidInvoiceIdsSeptember)
+      .mockResolvedValueOnce(paidInvoiceIdsNovember)
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([]);
 
-    prismaRawSpy.mockResolvedValueOnce(DueInvoiceCount);
+    prismaRawSpy.mockResolvedValueOnce(dueInvoiceCount);
 
-    prismaRawSpy.mockResolvedValueOnce(PaidOnTimeInvoiceCount);
+    prismaRawSpy.mockResolvedValueOnce(paidOnTimeInvoiceCount);
 
     const prismaInvoiceSpy = jest.spyOn(prisma.invoice, 'aggregate');
-    prismaInvoiceSpy.mockResolvedValueOnce(AggregationSumSeptember).mockResolvedValueOnce(AggregationSumNovember);
+    prismaInvoiceSpy.mockResolvedValueOnce(aggregationSumSeptember).mockResolvedValueOnce(aggregationSumNovember);
 
     const retVal = await controller.calcPaidTradeReceivableVolumePerMonth(
-      new TRParamsCompanyIdAndYearAndFinancialRole([], CompaniesSeed[0].id, 2024, FinancialRoles.DEBTOR)
+      new TRParamsCompanyIdAndYearAndFinancialRole([], companiesSeed[0].id, 2024, FinancialRoles.DEBTOR)
     );
     expect(expectedReturn).toEqual(retVal);
   });
 
   it('findAllOverdueByCreditorId: should return outstanding trade receivables', async () => {
-    const expectedReturn = NotPaidStatisticsAmqpMock;
+    const expectedReturn = notPaidStatisticsAmqpMock;
 
     const prismaRawSpy = jest.spyOn(prisma, '$queryRaw');
-    prismaRawSpy.mockResolvedValue(TradeReceivablePaymentStatusCountMock);
+    prismaRawSpy.mockResolvedValue(tradeReceivablePaymentStatusCountMock);
 
     const retVal = await controller.getTradeReceivableNotPaidStatistics({
       invoiceIds: [],
-      companyId: CompaniesSeed[0].id,
+      companyId: companiesSeed[0].id,
       financialRole: FinancialRoles.DEBTOR,
     });
 

@@ -7,17 +7,17 @@
  */
 
 import { Prisma } from '@prisma/client';
-import { PaymentStatusMocks } from '../payment-status-mock';
+import { paymentStatusMocks } from '../payment-status-mock';
 
-export const CreatePaymentStatusQueryMocks: Prisma.PaymentStatusCreateInput[] = [
+export const createPaymentStatusQueryMocks: Prisma.PaymentStatusCreateInput[] = [
   <Prisma.PaymentStatusCreateInput>{
-    status: PaymentStatusMocks[0].status,
-    timestamp: PaymentStatusMocks[0].timestamp,
-    tradeReceivable: { connect: { id: PaymentStatusMocks[0].tradeReceivableId } },
+    status: paymentStatusMocks[0].status,
+    timestamp: paymentStatusMocks[0].timestamp,
+    tradeReceivable: { connect: { id: paymentStatusMocks[0].tradeReceivableId } },
   },
   <Prisma.PaymentStatusCreateInput>{
-    status: PaymentStatusMocks[1].status,
-    timestamp: PaymentStatusMocks[0].timestamp,
-    tradeReceivable: { connect: { id: PaymentStatusMocks[1].tradeReceivableId } },
+    status: paymentStatusMocks[1].status,
+    timestamp: paymentStatusMocks[0].timestamp,
+    tradeReceivable: { connect: { id: paymentStatusMocks[1].tradeReceivableId } },
   },
 ];

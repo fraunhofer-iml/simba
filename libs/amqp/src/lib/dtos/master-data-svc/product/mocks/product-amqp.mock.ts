@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ProductsSeed } from '@ap3/database';
+import { productsSeed } from '@ap3/database';
 import { ProductAmqpDto } from '../product-amqp.dto';
 
-export const ProductAmqpMock = <ProductAmqpDto[]>[{ id: ProductsSeed[0].id, name: ProductsSeed[0].name, variant: ProductsSeed[0].variant }];
+export const productAmqpMock = <ProductAmqpDto[]>[{ id: productsSeed[0].id, name: productsSeed[0].name, variant: productsSeed[0].variant }];

@@ -6,20 +6,20 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllInvoicesFilterAmqpDto, CompanyAndInvoiceAmqpDto, InvoiceAndPaymentStatusDtoAmqpMock, InvoicesAmqpMock } from '@ap3/amqp';
-import { CreateInvoiceDto, OrderOverviewMock } from '@ap3/api';
+import { AllInvoicesFilterAmqpDto, CompanyAndInvoiceAmqpDto, invoiceAndPaymentStatusDtoAmqpMock, invoicesAmqpMock } from '@ap3/amqp';
+import { CreateInvoiceDto, orderOverviewMock } from '@ap3/api';
 import { ConfigurationModule, ConfigurationService } from '@ap3/config';
 import {
-  CreatePaymentStatusQueryMocks,
+  createPaymentStatusQueryMocks,
   DatabaseModule,
-  InvoiceIdQueryMock,
-  InvoiceNFTPrismaMock,
-  InvoiceSeed,
-  PaymentStatesSeed,
-  PaymentStatusMocks,
+  invoiceIdQueryMock,
+  invoiceNFTPrismaMock,
+  invoiceSeed,
+  paymentStatesSeed,
+  paymentStatusMocks,
   PrismaService,
-  TradeReceivableMocks,
-  TradeReceivablesSeed,
+  tradeReceivableMocks,
+  tradeReceivablesSeed,
 } from '@ap3/database';
 import { S3Module, S3Service } from '@ap3/s3';
 import { PaymentStates } from '@ap3/util';
@@ -103,19 +103,19 @@ describe('InvoicesController', () => {
     prisma = module.get<PrismaService>(PrismaService) as PrismaService;
 
     prismaIVManySpy = jest.spyOn(prisma.invoice, 'findMany');
-    prismaIVManySpy.mockResolvedValue(InvoiceNFTPrismaMock);
+    prismaIVManySpy.mockResolvedValue(invoiceNFTPrismaMock);
 
     prismaPSCreateSpy = jest.spyOn(prisma.paymentStatus, 'create');
-    prismaPSCreateSpy.mockResolvedValueOnce(PaymentStatusMocks[0]);
-    prismaPSCreateSpy.mockResolvedValueOnce(PaymentStatusMocks[1]);
+    prismaPSCreateSpy.mockResolvedValueOnce(paymentStatusMocks[0]);
+    prismaPSCreateSpy.mockResolvedValueOnce(paymentStatusMocks[1]);
 
     prismaTRFindSpy = jest.spyOn(prisma.tradeReceivable, 'findUnique');
-    prismaTRFindSpy.mockResolvedValueOnce(TradeReceivableMocks[0]);
-    prismaTRFindSpy.mockResolvedValueOnce(TradeReceivableMocks[0]);
+    prismaTRFindSpy.mockResolvedValueOnce(tradeReceivableMocks[0]);
+    prismaTRFindSpy.mockResolvedValueOnce(tradeReceivableMocks[0]);
 
     prismaPSSpy = jest.spyOn(prisma.paymentStatus, 'findMany');
-    prismaPSSpy.mockResolvedValueOnce([PaymentStatesSeed[0], PaymentStatesSeed[1]]);
-    prismaPSSpy.mockResolvedValueOnce([PaymentStatesSeed[2], PaymentStatesSeed[3]]);
+    prismaPSSpy.mockResolvedValueOnce([paymentStatesSeed[0], paymentStatesSeed[1]]);
+    prismaPSSpy.mockResolvedValueOnce([paymentStatesSeed[2], paymentStatesSeed[3]]);
   });
 
   it('should be defined', () => {
@@ -123,7 +123,7 @@ describe('InvoicesController', () => {
   });
 
   it('create: should create a new invoice', async () => {
-    const expectedReturn = InvoicesAmqpMock[2];
+    const expectedReturn = invoicesAmqpMock[2];
 
     const prismaOrderSpy = jest.spyOn(prisma.order, 'findMany');
     prismaOrderSpy.mockResolvedValueOnce([orderMock]);
@@ -132,9 +132,9 @@ describe('InvoicesController', () => {
     prismaOfferSpy.mockResolvedValueOnce(offerMock);
 
     const prismaInvoiceSpy = jest.spyOn(prisma.invoice, 'create');
-    prismaInvoiceSpy.mockResolvedValueOnce(InvoiceSeed[2]);
+    prismaInvoiceSpy.mockResolvedValueOnce(invoiceSeed[2]);
 
-    const retVal = await controller.create(new CreateInvoiceDto(OrderOverviewMock[0].id));
+    const retVal = await controller.create(new CreateInvoiceDto(orderOverviewMock[0].id));
     expect(prisma.offer.findMany).toHaveBeenCalledTimes(1);
     expect(prisma.order.findMany).toHaveBeenCalledTimes(1);
     expect(prisma.invoice.create).toHaveBeenCalledTimes(1);
@@ -145,23 +145,23 @@ describe('InvoicesController', () => {
     const prismaOfferSpy = jest.spyOn(prisma.offer, 'findMany');
     prismaOfferSpy.mockResolvedValueOnce([offerMock[1]]);
 
-    await expect(controller.create(new CreateInvoiceDto(OrderOverviewMock[0].id))).rejects.toThrow(
-      new NotFoundException(OrderOverviewMock[0].id)
+    await expect(controller.create(new CreateInvoiceDto(orderOverviewMock[0].id))).rejects.toThrow(
+      new NotFoundException(orderOverviewMock[0].id)
     );
   });
 
   it('findAll: should return all invoices', async () => {
-    const expectedReturn = [InvoicesAmqpMock[0], InvoicesAmqpMock[1]];
+    const expectedReturn = [invoicesAmqpMock[0], invoicesAmqpMock[1]];
     const prismaRawSpy = jest.spyOn(prisma, '$queryRaw');
-    prismaRawSpy.mockResolvedValue([TradeReceivablesSeed[0], TradeReceivablesSeed[1]]);
+    prismaRawSpy.mockResolvedValue([tradeReceivablesSeed[0], tradeReceivablesSeed[1]]);
 
     const params = new AllInvoicesFilterAmqpDto(
       [PaymentStates.PAID],
-      InvoiceSeed[0].creditorId,
-      InvoiceSeed[0].debtorId,
-      InvoicesAmqpMock[0].invoiceNumber,
-      InvoicesAmqpMock[0].invoiceDueDate,
-      InvoicesAmqpMock[0].invoiceDueDate
+      invoiceSeed[0].creditorId,
+      invoiceSeed[0].debtorId,
+      invoicesAmqpMock[0].invoiceNumber,
+      invoicesAmqpMock[0].invoiceDueDate,
+      invoicesAmqpMock[0].invoiceDueDate
     );
     const retVal = await controller.findAll(params);
     expect(prisma.invoice.findMany).toHaveBeenCalled();
@@ -169,24 +169,24 @@ describe('InvoicesController', () => {
   });
 
   it('findOneById: should return invoices by id', async () => {
-    const expectedReturn = InvoicesAmqpMock[0];
-    prismaIVManySpy.mockResolvedValue([InvoiceNFTPrismaMock[0]]);
+    const expectedReturn = invoicesAmqpMock[0];
+    prismaIVManySpy.mockResolvedValue([invoiceNFTPrismaMock[0]]);
 
     const prismaPSSpy = jest.spyOn(prisma.paymentStatus, 'findMany');
-    prismaPSSpy.mockResolvedValueOnce([PaymentStatesSeed[0], PaymentStatesSeed[1]]);
+    prismaPSSpy.mockResolvedValueOnce([paymentStatesSeed[0], paymentStatesSeed[1]]);
 
-    const retVal = await controller.findOneById(new CompanyAndInvoiceAmqpDto(InvoiceSeed[0].debtorId, expectedReturn.id));
-    expect(prisma.invoice.findMany).toHaveBeenCalledWith(InvoiceIdQueryMock);
+    const retVal = await controller.findOneById(new CompanyAndInvoiceAmqpDto(invoiceSeed[0].debtorId, expectedReturn.id));
+    expect(prisma.invoice.findMany).toHaveBeenCalledWith(invoiceIdQueryMock);
     expect(retVal).toEqual(expectedReturn);
   });
 
   it('should update the Paymentstatus of an existing Invoice by its Id ', async () => {
     const expectedReturn = true;
 
-    const retVal = await controller.createPaymentStateForInvoice(InvoiceAndPaymentStatusDtoAmqpMock);
+    const retVal = await controller.createPaymentStateForInvoice(invoiceAndPaymentStatusDtoAmqpMock);
 
-    expect(prisma.paymentStatus.create).toHaveBeenNthCalledWith(1, { data: CreatePaymentStatusQueryMocks[0] });
-    expect(prisma.paymentStatus.create).toHaveBeenNthCalledWith(2, { data: CreatePaymentStatusQueryMocks[1] });
+    expect(prisma.paymentStatus.create).toHaveBeenNthCalledWith(1, { data: createPaymentStatusQueryMocks[0] });
+    expect(prisma.paymentStatus.create).toHaveBeenNthCalledWith(2, { data: createPaymentStatusQueryMocks[1] });
     expect(retVal).toEqual(expectedReturn);
   });
 });

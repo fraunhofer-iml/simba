@@ -1,4 +1,4 @@
-export const PaymentInformationSeed = [
+export const paymentInformationSeed = [
   {
     id: 'pi001',
     companyId: 'pt0001',

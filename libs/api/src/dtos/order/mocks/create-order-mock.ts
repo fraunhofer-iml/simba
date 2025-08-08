@@ -6,24 +6,24 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CompaniesSeed, OrderLinesSeed, ProductsSeed, ServiceProcessesSeed } from '@ap3/database';
+import { companiesSeed, orderLinesSeed, productsSeed, serviceProcessesSeed } from '@ap3/database';
 import { CreateOrderDto } from '../create-order.dto';
 
 export const createOrderMock = [
   new CreateOrderDto(
-    ProductsSeed[0].id,
-    +OrderLinesSeed[0].requestedQuantity,
-    ServiceProcessesSeed[0].dueYear,
-    ServiceProcessesSeed[0].dueCalendarWeek,
-    CompaniesSeed[0].id,
-    OrderLinesSeed[0].unitOfMeasureCodeAgreed ? OrderLinesSeed[0].unitOfMeasureCodeAgreed : ''
+    productsSeed[0].id,
+    +orderLinesSeed[0].requestedQuantity,
+    serviceProcessesSeed[0].dueYear,
+    serviceProcessesSeed[0].dueCalendarWeek,
+    companiesSeed[0].id,
+    orderLinesSeed[0].unitOfMeasureCodeAgreed ? orderLinesSeed[0].unitOfMeasureCodeAgreed : ''
   ),
   new CreateOrderDto(
-    ProductsSeed[0].id,
-    +OrderLinesSeed[1].requestedQuantity,
-    ServiceProcessesSeed[1].dueYear,
-    ServiceProcessesSeed[1].dueCalendarWeek,
-    CompaniesSeed[1].id,
-    OrderLinesSeed[1].unitOfMeasureCodeAgreed ? OrderLinesSeed[1].unitOfMeasureCodeAgreed : ''
+    productsSeed[0].id,
+    +orderLinesSeed[1].requestedQuantity,
+    serviceProcessesSeed[1].dueYear,
+    serviceProcessesSeed[1].dueCalendarWeek,
+    companiesSeed[1].id,
+    orderLinesSeed[1].unitOfMeasureCodeAgreed ? orderLinesSeed[1].unitOfMeasureCodeAgreed : ''
   ),
 ];

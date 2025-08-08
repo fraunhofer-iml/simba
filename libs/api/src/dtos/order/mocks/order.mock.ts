@@ -7,45 +7,45 @@
  */
 
 import {
-  CompaniesSeed,
-  MachinesSeed,
-  OffersSeed,
-  OrderLinesSeed,
-  OrdersSeed,
-  ProductsSeed,
-  ServiceProcessesSeed,
-  ServiceStatesSeed,
-  TradeReceivablesSeed,
+  companiesSeed,
+  machinesSeed,
+  offersSeed,
+  orderLinesSeed,
+  ordersSeed,
+  productsSeed,
+  serviceProcessesSeed,
+  serviceStatesSeed,
+  tradeReceivablesSeed,
 } from '@ap3/database';
 import { OrderDto } from '../order.dto';
 
-export const OrderDtosMock: OrderDto[] = [
+export const orderDtosMock: OrderDto[] = [
   new OrderDto(
-    OrdersSeed[0].id,
-    ProductsSeed[0].id,
-    +OrderLinesSeed[0].requestedQuantity,
-    ServiceProcessesSeed[0].dueYear,
-    ServiceProcessesSeed[0].dueCalendarWeek,
-    OrdersSeed[0].documentIssueDate.toISOString(),
-    ServiceStatesSeed[1].status,
-    OffersSeed[0].id,
-    [OffersSeed[0].id, OffersSeed[1].id, OffersSeed[2].id, OffersSeed[3].id],
-    [MachinesSeed[0].id, MachinesSeed[1].id],
-    CompaniesSeed[0].id,
-    TradeReceivablesSeed[0].id
+    ordersSeed[0].id,
+    productsSeed[0].id,
+    +orderLinesSeed[0].requestedQuantity,
+    serviceProcessesSeed[0].dueYear,
+    serviceProcessesSeed[0].dueCalendarWeek,
+    ordersSeed[0].documentIssueDate.toISOString(),
+    serviceStatesSeed[1].status,
+    offersSeed[0].id,
+    [offersSeed[0].id, offersSeed[1].id, offersSeed[2].id, offersSeed[3].id],
+    [machinesSeed[0].id, machinesSeed[1].id],
+    companiesSeed[0].id,
+    tradeReceivablesSeed[0].id
   ),
   new OrderDto(
-    OrdersSeed[1].id,
-    ProductsSeed[0].id,
-    +OrderLinesSeed[1].requestedQuantity,
-    ServiceProcessesSeed[1].dueYear,
-    ServiceProcessesSeed[1].dueCalendarWeek,
-    OrdersSeed[1].documentIssueDate.toISOString(),
-    ServiceStatesSeed[4].status,
+    ordersSeed[1].id,
+    productsSeed[0].id,
+    +orderLinesSeed[1].requestedQuantity,
+    serviceProcessesSeed[1].dueYear,
+    serviceProcessesSeed[1].dueCalendarWeek,
+    ordersSeed[1].documentIssueDate.toISOString(),
+    serviceStatesSeed[4].status,
     '',
     [],
     [],
-    CompaniesSeed[0].id,
+    companiesSeed[0].id,
     ''
   ),
 ];

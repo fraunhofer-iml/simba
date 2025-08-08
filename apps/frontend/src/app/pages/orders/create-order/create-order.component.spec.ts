@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CreateOrderDto, OrderOverviewMock } from '@ap3/api';
+import { CreateOrderDto, orderOverviewMock } from '@ap3/api';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import moment from 'moment';
@@ -147,12 +147,12 @@ describe('CreateOrderComponent', () => {
       unitOfMeasureCode: '',
     };
 
-    jest.spyOn(orderService, 'createOrder').mockReturnValue(of(OrderOverviewMock[0]));
+    jest.spyOn(orderService, 'createOrder').mockReturnValue(of(orderOverviewMock[0]));
     jest.spyOn(offerService, 'getOffersByOrderId').mockReturnValue(of([]));
 
     component.createOrder();
     expect(orderService.createOrder).toHaveBeenCalledWith(createOrderFrontendDto);
-    expect(offerService.getOffersByOrderId).toHaveBeenCalledWith(OrderOverviewMock[0].id);
+    expect(offerService.getOffersByOrderId).toHaveBeenCalledWith(orderOverviewMock[0].id);
     expect(component.openOffers).toBe(true);
   });
 

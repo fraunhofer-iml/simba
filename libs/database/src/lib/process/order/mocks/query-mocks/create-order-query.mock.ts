@@ -7,23 +7,23 @@
  */
 
 import { Prisma } from '@prisma/client';
-import { OrderLinesSeed, OrdersSeed, ServiceProcessesSeed } from '../../../../../seed';
+import { orderLinesSeed, ordersSeed, serviceProcessesSeed } from '../../../../../seed';
 
 export const createOrderQueryMock = <Prisma.OrderCreateInput>{
-  totalAmountWithoutVat: OrdersSeed[0].totalAmountWithoutVat,
-  vatCurrency: OrdersSeed[0].vatCurrency,
-  buyer: { connect: { id: OrdersSeed[0].buyerId } },
-  seller: { connect: { id: OrdersSeed[0].sellerId } },
+  totalAmountWithoutVat: ordersSeed[0].totalAmountWithoutVat,
+  vatCurrency: ordersSeed[0].vatCurrency,
+  buyer: { connect: { id: ordersSeed[0].buyerId } },
+  seller: { connect: { id: ordersSeed[0].sellerId } },
   serviceProcess: {
-    create: { dueCalendarWeek: ServiceProcessesSeed[0].dueCalendarWeek, dueYear: ServiceProcessesSeed[0].dueYear },
+    create: { dueCalendarWeek: serviceProcessesSeed[0].dueCalendarWeek, dueYear: serviceProcessesSeed[0].dueYear },
   },
   orderLines: {
     create: {
-      requestedQuantity: OrderLinesSeed[0].requestedQuantity,
-      netPrice: OrderLinesSeed[0].netPrice,
+      requestedQuantity: orderLinesSeed[0].requestedQuantity,
+      netPrice: orderLinesSeed[0].netPrice,
       item: {
         connect: {
-          id: OrderLinesSeed[0].itemId,
+          id: orderLinesSeed[0].itemId,
         },
       },
     },

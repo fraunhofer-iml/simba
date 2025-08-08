@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client'; 
- export const MachinesSeed = [
+ export const machinesSeed = [
   {
     id: 'rt001',
     cppsId: 'cpps1',

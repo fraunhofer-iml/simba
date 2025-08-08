@@ -7,17 +7,17 @@
  */
 
 import { PaymentStatus } from '@prisma/client';
-import { PaymentStatesSeed } from '../../../../seed/payment-states.seed';
+import { paymentStatesSeed } from '../../../../seed/payment-states.seed';
 
-export const PaymentStatusMocks: PaymentStatus[] = [
+export const paymentStatusMocks: PaymentStatus[] = [
   <PaymentStatus>{
-    tradeReceivableId: PaymentStatesSeed[0].tradeReceivableId,
-    status: PaymentStatesSeed[0].status,
-    timestamp: PaymentStatesSeed[0].timestamp,
+    tradeReceivableId: paymentStatesSeed[0].tradeReceivableId,
+    status: paymentStatesSeed[0].status,
+    timestamp: paymentStatesSeed[0].timestamp,
   },
   <PaymentStatus>{
-    tradeReceivableId: PaymentStatesSeed[1].tradeReceivableId,
-    status: PaymentStatesSeed[1].status,
-    timestamp: PaymentStatesSeed[0].timestamp,
+    tradeReceivableId: paymentStatesSeed[1].tradeReceivableId,
+    status: paymentStatesSeed[1].status,
+    timestamp: paymentStatesSeed[0].timestamp,
   },
 ];

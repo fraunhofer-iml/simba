@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AmqpBrokerQueues, MachineAssignmentAMQPMock, ServiceProcessPattern } from '@ap3/amqp';
-import { MachineAssignmentsDtoMock } from '@ap3/api';
+import { AmqpBrokerQueues, machineAssignmentAMQPMock, ServiceProcessPattern } from '@ap3/amqp';
+import { machineAssignmentsDtoMock } from '@ap3/api';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -46,8 +46,8 @@ describe('ServiceProcessController', () => {
       return of(true);
     });
 
-    await controller.addMachineAssignments(MachineAssignmentsDtoMock);
+    await controller.addMachineAssignments(machineAssignmentsDtoMock);
 
-    expect(sendRequestSpy).toHaveBeenCalledWith(ServiceProcessPattern.ADD_MACHINE_ASSIGNMENT, MachineAssignmentAMQPMock);
+    expect(sendRequestSpy).toHaveBeenCalledWith(ServiceProcessPattern.ADD_MACHINE_ASSIGNMENT, machineAssignmentAMQPMock);
   });
 });

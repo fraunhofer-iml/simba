@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ProductAmqpDto, ProductAmqpMock } from '@ap3/amqp';
-import { DatabaseModule, GET_PRODUCT_BY_ID_QUERY_MOCK, PrismaService, ProductsSeed } from '@ap3/database';
+import { ProductAmqpDto, productAmqpMock } from '@ap3/amqp';
+import { DatabaseModule, getProductByIdQueryMock, PrismaService, productsSeed } from '@ap3/database';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
@@ -44,10 +44,10 @@ describe('ProductsController', () => {
   });
 
   it('findAll: should return all products', async () => {
-    const expectedReturn: ProductAmqpDto[] = ProductAmqpMock;
+    const expectedReturn: ProductAmqpDto[] = productAmqpMock;
 
     const prismaSpy = jest.spyOn(prisma.product, 'findMany');
-    prismaSpy.mockResolvedValue(ProductsSeed);
+    prismaSpy.mockResolvedValue(productsSeed);
 
     const retVal = await controller.findAll();
     expect(prisma.product.findMany).toHaveBeenCalled();
@@ -55,13 +55,13 @@ describe('ProductsController', () => {
   });
 
   it('findOne: should return product by id', async () => {
-    const expectedReturn = ProductAmqpMock[0];
+    const expectedReturn = productAmqpMock[0];
 
     const prismaSpy = jest.spyOn(prisma.product, 'findUnique');
-    prismaSpy.mockResolvedValue(ProductsSeed[0]);
+    prismaSpy.mockResolvedValue(productsSeed[0]);
 
-    const retVal = await controller.findOne(ProductsSeed[0].id);
-    expect(prisma.product.findUnique).toHaveBeenCalledWith(GET_PRODUCT_BY_ID_QUERY_MOCK);
+    const retVal = await controller.findOne(productsSeed[0].id);
+    expect(prisma.product.findUnique).toHaveBeenCalledWith(getProductByIdQueryMock);
     expect(expectedReturn).toEqual(retVal);
   });
 
@@ -70,8 +70,8 @@ describe('ProductsController', () => {
     prismaSpy.mockResolvedValue(null);
 
     await expect(async () => {
-      await controller.findOne(ProductsSeed[0].id);
+      await controller.findOne(productsSeed[0].id);
     }).rejects.toThrow();
-    expect(prisma.product.findUnique).toHaveBeenCalledWith(GET_PRODUCT_BY_ID_QUERY_MOCK);
+    expect(prisma.product.findUnique).toHaveBeenCalledWith(getProductByIdQueryMock);
   });
 });

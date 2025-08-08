@@ -6,54 +6,54 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CompaniesSeed } from '@ap3/database';
+import { companiesSeed } from '@ap3/database';
 import { CompanyDto } from '../company.dto';
-import { PaymentInformationDtoMocks } from './payment-information-dto.mocks';
+import { paymentInformationDtoMocks } from './payment-information-dto.mocks';
 
-export const CompanyDtoMock: CompanyDto[] = [
+export const companyDtoMock: CompanyDto[] = [
   new CompanyDto(
-    CompaniesSeed[0].id,
-    CompaniesSeed[0].name,
-    CompaniesSeed[0].city,
-    CompaniesSeed[0].countryCode,
-    CompaniesSeed[0].address,
-    CompaniesSeed[0].zip,
-    CompaniesSeed[0].vatId,
-    CompaniesSeed[0].commercialRegisterNumber,
-    [PaymentInformationDtoMocks[0]],
-    CompaniesSeed[0].telephone,
-    CompaniesSeed[0].emailAddress,
-    CompaniesSeed[0].electronicAddress,
-    CompaniesSeed[0].electronicAddressSchemeId
+    companiesSeed[0].id,
+    companiesSeed[0].name,
+    companiesSeed[0].city,
+    companiesSeed[0].countryCode,
+    companiesSeed[0].address,
+    companiesSeed[0].zip,
+    companiesSeed[0].vatId,
+    companiesSeed[0].commercialRegisterNumber,
+    [paymentInformationDtoMocks[0]],
+    companiesSeed[0].telephone,
+    companiesSeed[0].emailAddress,
+    companiesSeed[0].electronicAddress,
+    companiesSeed[0].electronicAddressSchemeId
   ),
   new CompanyDto(
-    CompaniesSeed[1].id,
-    CompaniesSeed[1].name,
-    CompaniesSeed[1].city,
-    CompaniesSeed[1].countryCode,
-    CompaniesSeed[1].address,
-    CompaniesSeed[1].zip,
-    CompaniesSeed[1].vatId,
-    CompaniesSeed[1].commercialRegisterNumber,
-    [PaymentInformationDtoMocks[1]],
-    CompaniesSeed[1].telephone,
-    CompaniesSeed[1].emailAddress,
-    CompaniesSeed[1].electronicAddress,
-    CompaniesSeed[1].electronicAddressSchemeId
+    companiesSeed[1].id,
+    companiesSeed[1].name,
+    companiesSeed[1].city,
+    companiesSeed[1].countryCode,
+    companiesSeed[1].address,
+    companiesSeed[1].zip,
+    companiesSeed[1].vatId,
+    companiesSeed[1].commercialRegisterNumber,
+    [paymentInformationDtoMocks[1]],
+    companiesSeed[1].telephone,
+    companiesSeed[1].emailAddress,
+    companiesSeed[1].electronicAddress,
+    companiesSeed[1].electronicAddressSchemeId
   ),
   new CompanyDto(
-    CompaniesSeed[2].id,
-    CompaniesSeed[2].name,
-    CompaniesSeed[2].city,
-    CompaniesSeed[2].countryCode,
-    CompaniesSeed[2].address,
-    CompaniesSeed[2].zip,
-    CompaniesSeed[2].vatId,
-    CompaniesSeed[2].commercialRegisterNumber,
-    [PaymentInformationDtoMocks[2]],
-    CompaniesSeed[2].telephone,
-    CompaniesSeed[2].emailAddress,
-    CompaniesSeed[2].electronicAddress,
-    CompaniesSeed[2].electronicAddressSchemeId
+    companiesSeed[2].id,
+    companiesSeed[2].name,
+    companiesSeed[2].city,
+    companiesSeed[2].countryCode,
+    companiesSeed[2].address,
+    companiesSeed[2].zip,
+    companiesSeed[2].vatId,
+    companiesSeed[2].commercialRegisterNumber,
+    [paymentInformationDtoMocks[2]],
+    companiesSeed[2].telephone,
+    companiesSeed[2].emailAddress,
+    companiesSeed[2].electronicAddress,
+    companiesSeed[2].electronicAddressSchemeId
   ),
 ];

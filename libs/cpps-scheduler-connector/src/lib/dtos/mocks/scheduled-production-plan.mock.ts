@@ -6,22 +6,22 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MachineAssignmentSeed, OffersSeed, ServiceProcessesSeed } from '@ap3/database';
+import { machineAssignmentSeed, offersSeed, serviceProcessesSeed } from '@ap3/database';
 import { ScheduledProductionPlanDto } from '../scheduled-production-plan.dto';
 
-export const ScheduledProductionPlanMock = <ScheduledProductionPlanDto>{
+export const scheduledProductionPlanMock = <ScheduledProductionPlanDto>{
   isOptimized: true,
   productionPlan: [
     {
       machineAssignment: [
         {
-          end: MachineAssignmentSeed[0].end.toISOString(),
-          machineId: MachineAssignmentSeed[0].machineId,
-          start: MachineAssignmentSeed[1].end.toISOString(),
+          end: machineAssignmentSeed[0].end.toISOString(),
+          machineId: machineAssignmentSeed[0].machineId,
+          start: machineAssignmentSeed[1].end.toISOString(),
         },
       ],
-      orderId: ServiceProcessesSeed[0].orderId,
-      price: +OffersSeed[0].basicPrice + +OffersSeed[0].utilization + +OffersSeed[0].timeToProduction,
+      orderId: serviceProcessesSeed[0].orderId,
+      price: +offersSeed[0].basicPrice + +offersSeed[0].utilization + +offersSeed[0].timeToProduction,
     },
   ],
 };

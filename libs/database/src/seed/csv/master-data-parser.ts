@@ -18,7 +18,7 @@ export class MasterDataParser extends CsvParser {
         return value === 'null' ? null : value;
       },
     });
-    this.evaluate(retVal, 'companies.seed.ts', `export const CompaniesSeed = `);
+    this.evaluate(retVal, 'companies.seed.ts', `export const companiesSeed = `);
     return retVal;
   }
 
@@ -33,7 +33,7 @@ export class MasterDataParser extends CsvParser {
         return value === 'null' ? null : value;
       },
     });
-    this.evaluate(retVal, 'machines.seed.ts', `export const MachinesSeed = `);
+    this.evaluate(retVal, 'machines.seed.ts', `export const machinesSeed = `);
     return retVal;
   }
 
@@ -51,7 +51,7 @@ export class MasterDataParser extends CsvParser {
         return value === 'null' ? null : value;
       },
     });
-    this.evaluate(retVal, 'nft.seed.ts', `export const NftSeed = `);
+    this.evaluate(retVal, 'nft.seed.ts', `export const nftSeed = `);
     return retVal;
   }
 
@@ -63,7 +63,7 @@ export class MasterDataParser extends CsvParser {
         return value === 'null' ? null : value;
       },
     });
-    this.evaluate(retVal, 'payment-information.seed.ts', `export const PaymentInformationSeed = `);
+    this.evaluate(retVal, 'payment-information.seed.ts', `export const paymentInformationSeed = `);
     return retVal;
   }
 
@@ -75,7 +75,7 @@ export class MasterDataParser extends CsvParser {
         return value === 'null' ? null : value;
       },
     });
-    this.evaluate(retVal, 'products.seed.ts', `export const ProductsSeed = `);
+    this.evaluate(retVal, 'products.seed.ts', `export const productsSeed = `);
     return retVal;
   }
 }

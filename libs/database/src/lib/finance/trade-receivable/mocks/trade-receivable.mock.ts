@@ -8,10 +8,10 @@
 
 import { PaymentStates } from '@ap3/util';
 import { Prisma, TradeReceivable } from '@prisma/client';
-import { TradeReceivablesSeed } from '../../../../seed';
+import { tradeReceivablesSeed } from '../../../../seed';
 import { TradeReceivablePaymentStatusCount } from '../types/trade-receivable.types';
 
-export const TradeReceivablePaymentStatusCountMock = <TradeReceivablePaymentStatusCount[]>[
+export const tradeReceivablePaymentStatusCountMock = <TradeReceivablePaymentStatusCount[]>[
   {
     status: PaymentStates.PAID.toString(),
     count: 3n,
@@ -34,15 +34,15 @@ export const TradeReceivablePaymentStatusCountMock = <TradeReceivablePaymentStat
   },
 ];
 
-export const TradeReceivableMocks: TradeReceivable[] = [
+export const tradeReceivableMocks: TradeReceivable[] = [
   <TradeReceivable>{
-    id: TradeReceivablesSeed[0].id,
-    nft: TradeReceivablesSeed[0].nft,
-    invoiceId: TradeReceivablesSeed[0].invoiceId,
+    id: tradeReceivablesSeed[0].id,
+    nft: tradeReceivablesSeed[0].nft,
+    invoiceId: tradeReceivablesSeed[0].invoiceId,
   },
   <TradeReceivable>{
-    id: TradeReceivablesSeed[1].id,
-    nft: TradeReceivablesSeed[1].nft,
-    invoiceId: TradeReceivablesSeed[1].invoiceId,
+    id: tradeReceivablesSeed[1].id,
+    nft: tradeReceivablesSeed[1].nft,
+    invoiceId: tradeReceivablesSeed[1].invoiceId,
   },
 ];

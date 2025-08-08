@@ -7,7 +7,7 @@
  */
 
 import { AmqpBrokerQueues, ProductMessagePatterns } from '@ap3/amqp';
-import { ProductDto, ProductDtoMocks } from '@ap3/api';
+import { ProductDto, productDtoMocks } from '@ap3/api';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -40,11 +40,11 @@ describe('OrdersController', () => {
   });
 
   it('should find all Products', async () => {
-    const expectedReturnValue: ProductDto[] = ProductDtoMocks;
+    const expectedReturnValue: ProductDto[] = productDtoMocks;
     const sendRequestSpy = jest.spyOn(masterDataSvcClientProxy, 'send');
 
     sendRequestSpy.mockImplementation((messagePattern: ProductMessagePatterns, data: any) => {
-      return of(ProductDtoMocks);
+      return of(productDtoMocks);
     });
 
     const res: ProductDto[] = await controller.findAll();
@@ -54,16 +54,16 @@ describe('OrdersController', () => {
   });
 
   it('should find an Product by its Id', async () => {
-    const expectedReturnValue: ProductDto = ProductDtoMocks[0];
+    const expectedReturnValue: ProductDto = productDtoMocks[0];
     const sendRequestSpy = jest.spyOn(masterDataSvcClientProxy, 'send');
 
     sendRequestSpy.mockImplementation((messagePattern: ProductMessagePatterns, data: any) => {
-      return of(ProductDtoMocks[0]);
+      return of(productDtoMocks[0]);
     });
 
-    const res: ProductDto = await controller.findOne(ProductDtoMocks[0].id);
+    const res: ProductDto = await controller.findOne(productDtoMocks[0].id);
 
-    expect(sendRequestSpy).toHaveBeenCalledWith(ProductMessagePatterns.READ_BY_ID, ProductDtoMocks[0].id);
+    expect(sendRequestSpy).toHaveBeenCalledWith(ProductMessagePatterns.READ_BY_ID, productDtoMocks[0].id);
     expect(res).toEqual(expectedReturnValue);
   });
 });

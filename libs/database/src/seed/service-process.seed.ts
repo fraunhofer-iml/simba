@@ -1,4 +1,4 @@
-export const ServiceProcessesSeed = [
+export const serviceProcessesSeed = [
   {
     id: 'sp001',
     dueCalendarWeek: 50,

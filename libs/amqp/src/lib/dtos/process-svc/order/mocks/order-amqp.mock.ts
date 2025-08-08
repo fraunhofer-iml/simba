@@ -6,46 +6,46 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CompaniesSeed, MachinesSeed, OrderLinesSeed, OrdersSeed, ServiceProcessesSeed, ServiceStatesSeed } from '@ap3/database';
-import { OfferAmqpMock } from '../../offer';
+import { companiesSeed, machinesSeed, orderLinesSeed, ordersSeed, serviceProcessesSeed, serviceStatesSeed } from '@ap3/database';
+import { offerAmqpMock } from '../../offer';
 import { ServiceStatusAmqpDto } from '../index';
 import { OrderAmqpDto } from '../order-amqp.dto';
 
-export const OrderAmqpMock = <OrderAmqpDto[]>[
+export const orderAmqpMock = <OrderAmqpDto[]>[
   {
-    id: OrdersSeed[0].id,
-    number: OrdersSeed[0].buyerOrderRefDocumentId,
-    productId: OrderLinesSeed[0].itemId,
-    quantity: +OrderLinesSeed[0].requestedQuantity,
-    requestedYear: ServiceProcessesSeed[0].dueYear,
-    requestedCalendarWeek: ServiceProcessesSeed[0].dueCalendarWeek,
-    creationDate: new Date(ServiceStatesSeed[0].timestamp).toISOString(),
-    status: new ServiceStatusAmqpDto(ServiceStatesSeed[0].status, new Date(ServiceStatesSeed[0].timestamp).toISOString()),
+    id: ordersSeed[0].id,
+    number: ordersSeed[0].buyerOrderRefDocumentId,
+    productId: orderLinesSeed[0].itemId,
+    quantity: +orderLinesSeed[0].requestedQuantity,
+    requestedYear: serviceProcessesSeed[0].dueYear,
+    requestedCalendarWeek: serviceProcessesSeed[0].dueCalendarWeek,
+    creationDate: new Date(serviceStatesSeed[0].timestamp).toISOString(),
+    status: new ServiceStatusAmqpDto(serviceStatesSeed[0].status, new Date(serviceStatesSeed[0].timestamp).toISOString()),
     acceptedOfferId: undefined,
     offerIds: [],
-    robots: [MachinesSeed[0].id, MachinesSeed[1].id],
-    customerId: OrdersSeed[0].buyerId,
+    robots: [machinesSeed[0].id, machinesSeed[1].id],
+    customerId: ordersSeed[0].buyerId,
     tradeReceivableIds: [],
-    currency: OrdersSeed[0].vatCurrency,
-    contractorId: OrdersSeed[0].sellerId,
-    contractorName: CompaniesSeed[1].name,
+    currency: ordersSeed[0].vatCurrency,
+    contractorId: ordersSeed[0].sellerId,
+    contractorName: companiesSeed[1].name,
   },
   {
-    id: OrdersSeed[1].id,
-    number: OrdersSeed[1].buyerOrderRefDocumentId,
-    productId: OrderLinesSeed[1].itemId,
-    quantity: +OrderLinesSeed[1].requestedQuantity,
-    requestedYear: ServiceProcessesSeed[1].dueYear,
-    requestedCalendarWeek: ServiceProcessesSeed[1].dueCalendarWeek,
-    creationDate: new Date(ServiceStatesSeed[4].timestamp).toISOString(),
-    status: new ServiceStatusAmqpDto(ServiceStatesSeed[5].status, new Date(ServiceStatesSeed[5].timestamp).toISOString()),
-    acceptedOfferId: OfferAmqpMock[1].id,
+    id: ordersSeed[1].id,
+    number: ordersSeed[1].buyerOrderRefDocumentId,
+    productId: orderLinesSeed[1].itemId,
+    quantity: +orderLinesSeed[1].requestedQuantity,
+    requestedYear: serviceProcessesSeed[1].dueYear,
+    requestedCalendarWeek: serviceProcessesSeed[1].dueCalendarWeek,
+    creationDate: new Date(serviceStatesSeed[4].timestamp).toISOString(),
+    status: new ServiceStatusAmqpDto(serviceStatesSeed[5].status, new Date(serviceStatesSeed[5].timestamp).toISOString()),
+    acceptedOfferId: offerAmqpMock[1].id,
     offerIds: [],
-    robots: [MachinesSeed[0].id, MachinesSeed[1].id],
-    customerId: OrdersSeed[1].buyerId,
+    robots: [machinesSeed[0].id, machinesSeed[1].id],
+    customerId: ordersSeed[1].buyerId,
     tradeReceivableIds: [],
-    currency: OrdersSeed[1].vatCurrency,
-    contractorId: OrdersSeed[1].sellerId,
-    contractorName: CompaniesSeed[1].name,
+    currency: ordersSeed[1].vatCurrency,
+    contractorId: ordersSeed[1].sellerId,
+    contractorName: companiesSeed[1].name,
   },
 ];

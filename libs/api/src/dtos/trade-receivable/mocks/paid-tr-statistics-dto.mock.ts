@@ -8,7 +8,7 @@
 
 import { PaidStatisticsDto } from '../../invoice/paid-statistics.dto';
 
-export const PaidTrStatisticsMock = <PaidStatisticsDto[]>[
+export const paidTrStatisticsMock = <PaidStatisticsDto[]>[
   {
     yearAndMonth: '2024-01',
     totalValuePaid: 0,

@@ -1,4 +1,4 @@
-export const CompaniesSeed = [
+export const companiesSeed = [
   {
     id: 'pt0001',
     name: 'EcoTrade Solutions AG',

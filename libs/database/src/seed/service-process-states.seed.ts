@@ -1,4 +1,4 @@
-export const ServiceStatesSeed = [
+export const serviceStatesSeed = [
   {
     serviceProcessId: 'sp001',
     status: 'open',

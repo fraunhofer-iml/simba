@@ -6,11 +6,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ServiceProcessStatesAmqpMock } from '@ap3/amqp';
+import { serviceProcessStatesAmqpMock } from '@ap3/amqp';
 import { ServiceProcessStatusDto } from '@ap3/api';
 
-export const ProcessStateHistoryMock = <ServiceProcessStatusDto[]>[
-  { ...ServiceProcessStatesAmqpMock[0] },
-  { ...ServiceProcessStatesAmqpMock[1] },
-  { ...ServiceProcessStatesAmqpMock[2] },
+export const processStateHistoryMock = <ServiceProcessStatusDto[]>[
+  { ...serviceProcessStatesAmqpMock[0] },
+  { ...serviceProcessStatesAmqpMock[1] },
+  { ...serviceProcessStatesAmqpMock[2] },
 ];

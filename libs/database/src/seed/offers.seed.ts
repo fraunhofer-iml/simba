@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client'; 
- export const OffersSeed = [
+ export const offersSeed = [
   {
     id: 'of001',
     creationDate: new Date("2025-06-03T08:45:48.924Z"),

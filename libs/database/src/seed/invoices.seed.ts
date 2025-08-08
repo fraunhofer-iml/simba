@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client'; 
- export const InvoiceSeed = [
+ export const invoiceSeed = [
   {
     id: 'IV001',
     invoiceNumber: 'INV-20241012-1',

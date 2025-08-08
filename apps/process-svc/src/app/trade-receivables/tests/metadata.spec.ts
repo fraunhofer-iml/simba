@@ -9,17 +9,17 @@
 import { ConfigurationModule } from '@ap3/config';
 import {
   DatabaseModule,
-  InvoiceSeed,
-  MachineAssignmentSeed,
-  OffersSeed,
+  invoiceSeed,
+  machineAssignmentSeed,
+  offersSeed,
   PrismaService,
-  ServiceProcessesSeed,
-  ServiceStatesSeed,
+  serviceProcessesSeed,
+  serviceStatesSeed,
 } from '@ap3/database';
 import { S3Module, S3Service } from '@ap3/s3';
+import { MINIO_CONNECTION } from 'nestjs-minio';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MetadataService } from '../metadata/metadata.service';
-import { MINIO_CONNECTION } from 'nestjs-minio';
 import { MetadataMock } from './mocks/metadata.mock';
 import { ReadableMock } from './mocks/minio-object.mock';
 
@@ -69,21 +69,21 @@ describe('MetadataService', () => {
 
   it('createMetadata: should create a new metadata object', async () => {
     const prismaServiceProcessSpy = jest.spyOn(prisma.serviceProcess, 'findUnique');
-    prismaServiceProcessSpy.mockResolvedValue(ServiceProcessesSeed[0]);
+    prismaServiceProcessSpy.mockResolvedValue(serviceProcessesSeed[0]);
 
     const prismaOfferSpy = jest.spyOn(prisma.offer, 'findMany');
-    prismaOfferSpy.mockResolvedValue([OffersSeed[0], OffersSeed[1]]);
+    prismaOfferSpy.mockResolvedValue([offersSeed[0], offersSeed[1]]);
 
     const prismaMachineAssignmentSpy = jest.spyOn(prisma.machineAssignment, 'findMany');
-    prismaMachineAssignmentSpy.mockResolvedValue([MachineAssignmentSeed[0], MachineAssignmentSeed[1]]);
+    prismaMachineAssignmentSpy.mockResolvedValue([machineAssignmentSeed[0], machineAssignmentSeed[1]]);
 
     const prismaInvoiceSpy = jest.spyOn(prisma.invoice, 'findMany');
-    prismaInvoiceSpy.mockResolvedValue([InvoiceSeed[0], InvoiceSeed[1]]);
+    prismaInvoiceSpy.mockResolvedValue([invoiceSeed[0], invoiceSeed[1]]);
 
     const prismaServiceStatusSpy = jest.spyOn(prisma.serviceStatus, 'findMany');
-    prismaServiceStatusSpy.mockResolvedValue([ServiceStatesSeed[0], ServiceStatesSeed[1]]);
+    prismaServiceStatusSpy.mockResolvedValue([serviceStatesSeed[0], serviceStatesSeed[1]]);
 
-    const retVal = await service.createMetadata(ServiceProcessesSeed[0].id);
+    const retVal = await service.createMetadata(serviceProcessesSeed[0].id);
     expect(MetadataMock).toEqual(retVal);
   });
 

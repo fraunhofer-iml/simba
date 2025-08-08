@@ -6,13 +6,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CompanyAmqpDto, CompanyAmqpMock } from '@ap3/amqp';
+import { CompanyAmqpDto, companyAmqpMock } from '@ap3/amqp';
 import {
-  CompaniesSeed,
+  companiesSeed,
   CompanyWithPaymentModalitiesTypes,
   DatabaseModule,
-  GET_COMPANY_BY_ID_QUERY_MOCK,
-  PaymentInformationSeed,
+  getCompanyByIdQueryMock,
+  paymentInformationSeed,
   PrismaService,
 } from '@ap3/database';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -51,11 +51,11 @@ describe('CompanyController', () => {
   });
 
   it('findAll: should return all companies', async () => {
-    const expectedReturn: CompanyAmqpDto[] = CompanyAmqpMock;
+    const expectedReturn: CompanyAmqpDto[] = companyAmqpMock;
     const mockResolve: any = <CompanyWithPaymentModalitiesTypes[]>[
-      { ...CompaniesSeed[0], paymentInformation: [PaymentInformationSeed[0]] },
-      { ...CompaniesSeed[1], paymentInformation: [PaymentInformationSeed[1]] },
-      { ...CompaniesSeed[2], paymentInformation: [PaymentInformationSeed[2]] },
+      { ...companiesSeed[0], paymentInformation: [paymentInformationSeed[0]] },
+      { ...companiesSeed[1], paymentInformation: [paymentInformationSeed[1]] },
+      { ...companiesSeed[2], paymentInformation: [paymentInformationSeed[2]] },
     ];
 
     const prismaSpy = jest.spyOn(prisma.company, 'findMany');
@@ -67,14 +67,14 @@ describe('CompanyController', () => {
   });
 
   it('findOne: should return company by id', async () => {
-    const expectedReturn = CompanyAmqpMock[0];
-    const mockResolve: any = <CompanyWithPaymentModalitiesTypes>{ ...CompaniesSeed[0], paymentInformation: [PaymentInformationSeed[0]] };
+    const expectedReturn = companyAmqpMock[0];
+    const mockResolve: any = <CompanyWithPaymentModalitiesTypes>{ ...companiesSeed[0], paymentInformation: [paymentInformationSeed[0]] };
 
     const prismaSpy = jest.spyOn(prisma.company, 'findUnique');
     prismaSpy.mockResolvedValue(mockResolve);
 
-    const retVal = await controller.findOne(CompaniesSeed[0].id);
-    expect(prisma.company.findUnique).toHaveBeenCalledWith(GET_COMPANY_BY_ID_QUERY_MOCK);
+    const retVal = await controller.findOne(companiesSeed[0].id);
+    expect(prisma.company.findUnique).toHaveBeenCalledWith(getCompanyByIdQueryMock);
     expect(retVal).toEqual(expectedReturn);
   });
 
@@ -83,8 +83,8 @@ describe('CompanyController', () => {
     prismaSpy.mockResolvedValue(null);
 
     await expect(async () => {
-      await controller.findOne(CompaniesSeed[0].id);
+      await controller.findOne(companiesSeed[0].id);
     }).rejects.toThrow();
-    expect(prisma.company.findUnique).toHaveBeenCalledWith(GET_COMPANY_BY_ID_QUERY_MOCK);
+    expect(prisma.company.findUnique).toHaveBeenCalledWith(getCompanyByIdQueryMock);
   });
 });

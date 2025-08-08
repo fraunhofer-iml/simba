@@ -7,22 +7,24 @@
  */
 
 import { OFFER_STATES_TO_SHOW, OfferStatesEnum } from '@ap3/util';
-import { OffersSeed, ServiceProcessesSeed } from '../../../../../seed';
+import { offersSeed, serviceProcessesSeed } from '../../../../../seed';
 
 export const queryOffersToShowWithOrder = {
   where: {
-    AND: [{
-      serviceProcess: {
-        orderId: {
-          equals: String(ServiceProcessesSeed[0].orderId),
+    AND: [
+      {
+        serviceProcess: {
+          orderId: {
+            equals: String(serviceProcessesSeed[0].orderId),
+          },
         },
-      }
-    },
-    {
-    status: {
-      in: OFFER_STATES_TO_SHOW,
-    },
-  }]
+      },
+      {
+        status: {
+          in: OFFER_STATES_TO_SHOW,
+        },
+      },
+    ],
   },
   include: {
     serviceProcess: {
@@ -35,18 +37,20 @@ export const queryOffersToShowWithOrder = {
 
 export const queryOpenOffersByOrderId = {
   where: {
-    AND: [{
-      serviceProcess: {
-        orderId: {
-          equals: ServiceProcessesSeed[0].orderId,
+    AND: [
+      {
+        serviceProcess: {
+          orderId: {
+            equals: serviceProcessesSeed[0].orderId,
+          },
         },
-      }
-    },
-    {
-      status: {
-        in: [OfferStatesEnum.OPEN.toString()],
       },
-    }]
+      {
+        status: {
+          in: [OfferStatesEnum.OPEN.toString()],
+        },
+      },
+    ],
   },
   include: {
     serviceProcess: {
@@ -58,5 +62,5 @@ export const queryOpenOffersByOrderId = {
 };
 
 export const queryUniqueOrThrow = {
-  where: { id: OffersSeed[0].id },
+  where: { id: offersSeed[0].id },
 };

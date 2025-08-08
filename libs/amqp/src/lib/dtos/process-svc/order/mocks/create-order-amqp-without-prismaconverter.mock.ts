@@ -6,17 +6,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CompaniesSeed, OrderLinesSeed, OrdersSeed, ProductsSeed, ServiceProcessesSeed } from '@ap3/database';
+import { companiesSeed, orderLinesSeed, ordersSeed, productsSeed, serviceProcessesSeed } from '@ap3/database';
 import { CreateOrderAmqpDto } from '../index';
 
-export const CreateOrderAmqpDtoWithoutPrismaConverterMock: CreateOrderAmqpDto = <CreateOrderAmqpDto>{
-  productId: ProductsSeed[0].id,
-  quantity: +OrderLinesSeed[0].requestedQuantity,
-  requestedYear: ServiceProcessesSeed[0].dueYear,
-  requestedCalendarWeek: ServiceProcessesSeed[0].dueCalendarWeek,
-  customerId: CompaniesSeed[0].id,
-  vatCurrency: OrdersSeed[0].vatCurrency,
-  buyerId: CompaniesSeed[0].id,
-  sellerId: CompaniesSeed[1].id,
-  unitOfMeasureCode: "Stück"
+export const createOrderAmqpDtoWithoutPrismaConverterMock: CreateOrderAmqpDto = <CreateOrderAmqpDto>{
+  productId: productsSeed[0].id,
+  quantity: +orderLinesSeed[0].requestedQuantity,
+  requestedYear: serviceProcessesSeed[0].dueYear,
+  requestedCalendarWeek: serviceProcessesSeed[0].dueCalendarWeek,
+  customerId: companiesSeed[0].id,
+  vatCurrency: ordersSeed[0].vatCurrency,
+  buyerId: companiesSeed[0].id,
+  sellerId: companiesSeed[1].id,
+  unitOfMeasureCode: 'Stück',
 };

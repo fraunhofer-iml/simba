@@ -6,26 +6,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ServiceProcessesSeed, ServiceStatesSeed } from '../../../../seed';
+import { serviceProcessesSeed, serviceStatesSeed } from '../../../../seed';
 import { ServiceStatusWithOrderTypes } from '../types/service-status-with-order.types';
 
-export const ServiceStatusWithOrderMock = <ServiceStatusWithOrderTypes[]>[
+export const serviceStatusWithOrderMock = <ServiceStatusWithOrderTypes[]>[
   {
-    ...ServiceStatesSeed[0],
+    ...serviceStatesSeed[0],
     serviceProcess: {
-      orderId: ServiceProcessesSeed[0].orderId,
+      orderId: serviceProcessesSeed[0].orderId,
     },
   },
   {
-    ...ServiceStatesSeed[1],
+    ...serviceStatesSeed[1],
     serviceProcess: {
-      orderId: ServiceProcessesSeed[0].orderId,
+      orderId: serviceProcessesSeed[0].orderId,
     },
   },
   {
-    ...ServiceStatesSeed[2],
+    ...serviceStatesSeed[2],
     serviceProcess: {
-      orderId: ServiceProcessesSeed[0].orderId,
+      orderId: serviceProcessesSeed[0].orderId,
     },
   },
 ];

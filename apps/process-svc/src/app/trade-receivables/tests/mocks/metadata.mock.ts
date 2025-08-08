@@ -1,10 +1,10 @@
-import { MachineAssignmentSeed, ServiceProcessesSeed, ServiceStatesSeed } from '@ap3/database';
+import { machineAssignmentSeed, serviceProcessesSeed, serviceStatesSeed } from '@ap3/database';
 import { MetadataDto } from '../../metadata/metadata.dto';
 
 export const MetadataMock: MetadataDto = new MetadataDto(
-  ServiceProcessesSeed[0],
+  serviceProcessesSeed[0],
   ['of001', 'of002'],
-  [MachineAssignmentSeed[0], MachineAssignmentSeed[1]],
+  [machineAssignmentSeed[0], machineAssignmentSeed[1]],
   ['IV001', 'IV002'],
-  [ServiceStatesSeed[0], ServiceStatesSeed[1]]
+  [serviceStatesSeed[0], serviceStatesSeed[1]]
 );

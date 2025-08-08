@@ -1,4 +1,4 @@
-export const PaymentStatesSeed = [
+export const paymentStatesSeed = [
   {
     tradeReceivableId: 'TR001',
     status: 'open',

@@ -23,7 +23,7 @@ export class FinanceDataParser extends CsvParser {
         return value === 'null' ? null : value;
       },
     });
-    this.evaluate(retVal, 'invoices.seed.ts', `export const InvoiceSeed = `);
+    this.evaluate(retVal, 'invoices.seed.ts', `export const invoiceSeed = `);
     return retVal;
   }
 
@@ -38,7 +38,7 @@ export class FinanceDataParser extends CsvParser {
         return value === 'null' ? null : value;
       },
     });
-    this.evaluate(retVal, 'payment-states.seed.ts', `export const PaymentStatesSeed = `);
+    this.evaluate(retVal, 'payment-states.seed.ts', `export const paymentStatesSeed = `);
     return retVal;
   }
 
@@ -50,7 +50,7 @@ export class FinanceDataParser extends CsvParser {
         return value === 'null' ? null : value;
       },
     });
-    this.evaluate(retVal, 'trade-receivables.seed.ts', `export const TradeReceivablesSeed = `);
+    this.evaluate(retVal, 'trade-receivables.seed.ts', `export const tradeReceivablesSeed = `);
     return retVal;
   }
 }

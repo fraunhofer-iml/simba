@@ -1,4 +1,4 @@
-export const ServiceProcessesRelationSeed = [
+export const serviceProcessesRelationSeed = [
   { where: { id: 'sp001' }, data: { acceptedOfferId: 'of001' } },
   { where: { id: 'sp002' }, data: { acceptedOfferId: 'of002' } },
   { where: { id: 'sp003' }, data: { acceptedOfferId: 'of003' } },

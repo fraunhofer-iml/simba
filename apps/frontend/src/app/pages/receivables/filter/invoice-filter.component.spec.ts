@@ -1,4 +1,4 @@
-import { CompanyDtoMock } from '@ap3/api';
+import { companyDtoMock } from '@ap3/api';
 import { UserRoles } from '@ap3/util';
 import { TranslateModule } from '@ngx-translate/core';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
@@ -31,7 +31,7 @@ describe('InvoiceFilterComponent', () => {
 
   beforeEach(async () => {
     mockCompaniesService = {
-      getAllAvailableCompanies: jest.fn().mockReturnValue(of(CompanyDtoMock)),
+      getAllAvailableCompanies: jest.fn().mockReturnValue(of(companyDtoMock)),
     };
 
     mockAuthService = {

@@ -7,9 +7,9 @@
  */
 
 import { CompanyAndInvoiceAmqpDto } from '@ap3/amqp';
-import { InvoiceDtoMocks } from '@ap3/api';
+import { invoiceDtoMocks } from '@ap3/api';
 import { ConfigurationModule } from '@ap3/config';
-import { CompaniesSeed, DatabaseModule, InvoiceForZugferdMock, PrismaService } from '@ap3/database';
+import { companiesSeed, DatabaseModule, invoiceForZugferdMock, PrismaService } from '@ap3/database';
 import { S3Module, S3Service } from '@ap3/s3';
 import { Client } from 'minio';
 import { MINIO_CONNECTION } from 'nestjs-minio';
@@ -61,15 +61,15 @@ describe('InvoicesController', () => {
   });
 
   it('createAndUploadZugferdPDF: should return uploaded invoice pdf name', async () => {
-    const expectedReturn = InvoiceDtoMocks[0].invoiceNumber + '.pdf';
+    const expectedReturn = invoiceDtoMocks[0].invoiceNumber + '.pdf';
 
     const prismaZugferdInvoiceSpy = jest.spyOn(prisma.invoice, 'findUniqueOrThrow');
-    prismaZugferdInvoiceSpy.mockResolvedValue(InvoiceForZugferdMock);
+    prismaZugferdInvoiceSpy.mockResolvedValue(invoiceForZugferdMock);
 
     const prismaUpdateInvoiceSpy = jest.spyOn(prisma.invoice, 'update');
-    prismaUpdateInvoiceSpy.mockResolvedValue(InvoiceForZugferdMock);
+    prismaUpdateInvoiceSpy.mockResolvedValue(invoiceForZugferdMock);
 
-    const retVal = await controller.createAndUploadZugferdPDF(new CompanyAndInvoiceAmqpDto(CompaniesSeed[0].id, InvoiceDtoMocks[0].id));
+    const retVal = await controller.createAndUploadZugferdPDF(new CompanyAndInvoiceAmqpDto(companiesSeed[0].id, invoiceDtoMocks[0].id));
 
     expect(prisma.invoice.findUniqueOrThrow).toHaveBeenCalled();
     expect(prisma.invoice.update).toHaveBeenCalled();

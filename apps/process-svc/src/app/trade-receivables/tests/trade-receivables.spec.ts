@@ -7,44 +7,45 @@
  */
 
 import {
-  CreateTradeReceivableAMQPMock,
-  InvoiceAndPaymentStatusDtoAmqpMock,
+  createTradeReceivableAMQPMock,
+  invoiceAndPaymentStatusDtoAmqpMock,
   TradeReceivableAmqpDto,
-  TradeReceivableAMQPMock,
+  tradeReceivableAMQPMock,
 } from '@ap3/amqp';
-import { CreateNftDto, TokenReadDtoMock, TokenUpdateDtoMock } from '@ap3/api';
+import { CreateNftDto, tokenReadDtoMock, tokenUpdateDtoMock } from '@ap3/api';
 import { BlockchainConnectorService } from '@ap3/blockchain-connector';
 import { ConfigurationModule } from '@ap3/config';
 import {
   createTradeReceivableQuery,
   DatabaseModule,
-  InvoiceSeed,
-  PaymentStatesSeed,
+  invoiceSeed,
+  paymentStatesSeed,
   PrismaService,
-  ServiceProcessesSeed,
-  TradeReceivablesSeed,
+  serviceProcessesSeed,
+  tradeReceivablesSeed,
 } from '@ap3/database';
 import { S3Module, S3Service } from '@ap3/s3';
-import { Test, TestingModule } from '@nestjs/testing';
-import { InvoicesStatisticsService } from '../../invoices/statistics/invoices-statistics.service';
-import { MetadataService } from '../metadata/metadata.service';
-import { TradeReceivablesController } from '../trade-receivables.controller';
-import { TradeReceivablesService } from '../trade-receivables.service';
 import { MINIO_CONNECTION } from 'nestjs-minio';
 import {
   DataIntegrityService,
-  TokenMintService, TokenReadDto,
+  TokenMintService,
+  TokenReadDto,
   TokenReadService,
   TokenUpdateService,
 } from 'nft-folder-blockchain-connector-besu';
-import { ReadableMock } from './mocks/minio-object.mock';
 import { ScheduleModule } from '@nestjs/schedule';
-import { NftDatabaseService } from '../nft/nft-database.service';
+import { Test, TestingModule } from '@nestjs/testing';
+import { InvoicesStatisticsService } from '../../invoices/statistics/invoices-statistics.service';
+import { MetadataService } from '../metadata/metadata.service';
 import { NftBlockchainService } from '../nft/nft-blockchain.service';
+import { NftDatabaseService } from '../nft/nft-database.service';
+import { TradeReceivablesController } from '../trade-receivables.controller';
+import { TradeReceivablesService } from '../trade-receivables.service';
+import { ReadableMock } from './mocks/minio-object.mock';
 
 describe('TradeReceivables', () => {
   let controller: TradeReceivablesController;
-  let prisma: PrismaService
+  let prisma: PrismaService;
   let tokenMintService: TokenMintService;
   let tokenUpdateService: TokenUpdateService;
   let tokenReadService: TokenReadService;
@@ -62,7 +63,7 @@ describe('TradeReceivables', () => {
         NftBlockchainService,
         {
           provide: 'NftService',
-          useClass: NftBlockchainService
+          useClass: NftBlockchainService,
         },
         S3Service,
         {
@@ -73,7 +74,7 @@ describe('TradeReceivables', () => {
             },
             paymentStatus: {
               findMany: jest.fn(),
-              updateMany: jest.fn()
+              updateMany: jest.fn(),
             },
             invoice: {
               findMany: jest.fn(),
@@ -86,7 +87,7 @@ describe('TradeReceivables', () => {
             },
             serviceStatus: {
               findMany: jest.fn(),
-            }
+            },
           },
         },
         {
@@ -120,7 +121,7 @@ describe('TradeReceivables', () => {
             getToken: jest.fn(),
             getTokens: jest.fn(),
           },
-        }
+        },
       ],
     }).compile();
 
@@ -138,12 +139,12 @@ describe('TradeReceivables', () => {
 
   it('create: should create new tr for an invoice', async () => {
     const prismaTradeReceivableSpy = jest.spyOn(prisma.tradeReceivable, 'create');
-    prismaTradeReceivableSpy.mockResolvedValue(TradeReceivablesSeed[0]);
+    prismaTradeReceivableSpy.mockResolvedValue(tradeReceivablesSeed[0]);
     const prismaPaymentStatusSpy = jest.spyOn(prisma.paymentStatus, 'findMany');
-    prismaPaymentStatusSpy.mockResolvedValue([PaymentStatesSeed[0], PaymentStatesSeed[1]]);
+    prismaPaymentStatusSpy.mockResolvedValue([paymentStatesSeed[0], paymentStatesSeed[1]]);
 
-    const expectedReturn: TradeReceivableAmqpDto = TradeReceivableAMQPMock[0];
-    const retVal: TradeReceivableAmqpDto = await controller.create(CreateTradeReceivableAMQPMock);
+    const expectedReturn: TradeReceivableAmqpDto = tradeReceivableAMQPMock[0];
+    const retVal: TradeReceivableAmqpDto = await controller.create(createTradeReceivableAMQPMock);
 
     expect(prisma.tradeReceivable.create).toHaveBeenCalledWith({ data: createTradeReceivableQuery });
     expect(prisma.tradeReceivable.create).toHaveBeenCalledTimes(1);
@@ -152,10 +153,10 @@ describe('TradeReceivables', () => {
 
   it('createNft: should create new nft for an invoice', async () => {
     const prismaInvoiceSpy = jest.spyOn(prisma.invoice, 'findMany');
-    prismaInvoiceSpy.mockResolvedValue([InvoiceSeed[0]]);
+    prismaInvoiceSpy.mockResolvedValue([invoiceSeed[0]]);
 
     const serviceProcessSpy = jest.spyOn(prisma.serviceProcess, 'findUnique');
-    serviceProcessSpy.mockResolvedValue(ServiceProcessesSeed[0]);
+    serviceProcessSpy.mockResolvedValue(serviceProcessesSeed[0]);
 
     const prismaOfferSpy = jest.spyOn(prisma.offer, 'findMany');
     prismaOfferSpy.mockResolvedValue([]);
@@ -167,12 +168,12 @@ describe('TradeReceivables', () => {
     prismaServiceStatusSpy.mockResolvedValue([]);
 
     const mintNftSpy = jest.spyOn(tokenMintService, 'mintToken');
-    mintNftSpy.mockResolvedValue(TokenReadDtoMock);
+    mintNftSpy.mockResolvedValue(tokenReadDtoMock);
 
     const createNftDto: CreateNftDto = {
-      invoiceId: 'testInvoiceId'
+      invoiceId: 'testInvoiceId',
     };
-    const expectedReturn: TokenReadDto = TokenReadDtoMock;
+    const expectedReturn: TokenReadDto = tokenReadDtoMock;
     const retVal: TokenReadDto = await controller.createNft(createNftDto);
 
     expect(prisma.invoice.findMany).toHaveBeenCalledTimes(2);
@@ -182,32 +183,32 @@ describe('TradeReceivables', () => {
 
   it('updateNftPaymentStatus: should update a stored nft', async () => {
     const prismaInvoiceSpy = jest.spyOn(prisma.invoice, 'findMany');
-    prismaInvoiceSpy.mockResolvedValue([InvoiceSeed[0]]);
+    prismaInvoiceSpy.mockResolvedValue([invoiceSeed[0]]);
 
     const prismaTradeReceivableSpy = jest.spyOn(prisma.tradeReceivable, 'findUnique');
-    prismaTradeReceivableSpy.mockResolvedValue(TradeReceivablesSeed[0]);
+    prismaTradeReceivableSpy.mockResolvedValue(tradeReceivablesSeed[0]);
 
     const prismaPaymentStatusSpy = jest.spyOn(prisma.paymentStatus, 'create');
     prismaPaymentStatusSpy.mockResolvedValue(undefined);
 
     const readNftSpy = jest.spyOn(tokenReadService, 'getTokens');
-    readNftSpy.mockResolvedValue([TokenReadDtoMock]);
+    readNftSpy.mockResolvedValue([tokenReadDtoMock]);
 
     const readNftByTokenIdSpy = jest.spyOn(tokenReadService, 'getToken');
-    readNftByTokenIdSpy.mockResolvedValue(TokenReadDtoMock);
+    readNftByTokenIdSpy.mockResolvedValue(tokenReadDtoMock);
 
     const updateNftSpy = jest.spyOn(tokenUpdateService, 'updateToken');
-    updateNftSpy.mockResolvedValue(TokenUpdateDtoMock);
+    updateNftSpy.mockResolvedValue(tokenUpdateDtoMock);
 
-    const retVal: boolean = await controller.updateNftPaymentStatus(InvoiceAndPaymentStatusDtoAmqpMock);
+    const retVal: boolean = await controller.updateNftPaymentStatus(invoiceAndPaymentStatusDtoAmqpMock);
     expect(retVal).toBeTruthy();
   });
 
   it('readAllNfts: should read every nft that is stored', async () => {
     const readNftSpy = jest.spyOn(tokenReadService, 'getTokens');
-    readNftSpy.mockResolvedValue([TokenReadDtoMock]);
+    readNftSpy.mockResolvedValue([tokenReadDtoMock]);
 
-    const expectedReturn: TokenReadDto[] = [TokenReadDtoMock];
+    const expectedReturn: TokenReadDto[] = [tokenReadDtoMock];
     const retVal: TokenReadDto[] = await controller.readAllNfts();
     expect(expectedReturn).toEqual(retVal);
   });
@@ -216,9 +217,9 @@ describe('TradeReceivables', () => {
     const testInvoiceNumber = 'testInvoiceNumber';
 
     const readNftSpy = jest.spyOn(tokenReadService, 'getTokens');
-    readNftSpy.mockResolvedValue([TokenReadDtoMock]);
+    readNftSpy.mockResolvedValue([tokenReadDtoMock]);
 
-    const expectedReturn: TokenReadDto = TokenReadDtoMock;
+    const expectedReturn: TokenReadDto = tokenReadDtoMock;
     const retVal: TokenReadDto = await controller.readNftByInvoiceNumber(testInvoiceNumber);
     expect(expectedReturn).toEqual(retVal);
   });

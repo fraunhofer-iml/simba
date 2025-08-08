@@ -1,4 +1,4 @@
-export const TradeReceivablesSeed = [
+export const tradeReceivablesSeed = [
   { id: 'TR001', nft: '', invoiceId: 'IV001' },
   { id: 'TR002', nft: '', invoiceId: 'IV002' },
   { id: 'TR003', nft: '', invoiceId: 'IV003' },

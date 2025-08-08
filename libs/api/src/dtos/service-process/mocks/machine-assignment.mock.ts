@@ -6,26 +6,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MachineAssignmentSeed, OrdersSeed } from '@ap3/database';
+import { machineAssignmentSeed, ordersSeed } from '@ap3/database';
 import { MachineAssignmentDto } from '../machine-assignment.dto';
 
-export const MachineAssignmentsDtoMock = <MachineAssignmentDto[]>[
+export const machineAssignmentsDtoMock = <MachineAssignmentDto[]>[
   {
-    orderId: OrdersSeed[0].id,
-    machineId: MachineAssignmentSeed[0].machineId,
-    start: new Date(MachineAssignmentSeed[0].start),
-    end: new Date(MachineAssignmentSeed[0].end),
+    orderId: ordersSeed[0].id,
+    machineId: machineAssignmentSeed[0].machineId,
+    start: new Date(machineAssignmentSeed[0].start),
+    end: new Date(machineAssignmentSeed[0].end),
   },
   {
-    orderId: OrdersSeed[0].id,
-    machineId: MachineAssignmentSeed[1].machineId,
-    start: new Date(MachineAssignmentSeed[1].start),
-    end: new Date(MachineAssignmentSeed[1].end),
+    orderId: ordersSeed[0].id,
+    machineId: machineAssignmentSeed[1].machineId,
+    start: new Date(machineAssignmentSeed[1].start),
+    end: new Date(machineAssignmentSeed[1].end),
   },
   {
-    orderId: OrdersSeed[2].id,
-    machineId: MachineAssignmentSeed[2].machineId,
-    start: new Date(MachineAssignmentSeed[2].start),
-    end: new Date(MachineAssignmentSeed[2].end),
+    orderId: ordersSeed[2].id,
+    machineId: machineAssignmentSeed[2].machineId,
+    start: new Date(machineAssignmentSeed[2].start),
+    end: new Date(machineAssignmentSeed[2].end),
   },
 ];

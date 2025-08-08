@@ -24,7 +24,7 @@ export class RelationsParser extends CsvParser {
       retVal.push({ where: { id: tuple.serviceProcessId }, data: { acceptedOfferId: tuple.acceptedOfferId } });
     }
 
-    this.evaluate(retVal, 'service-process-relations.seed.ts', `export const ServiceProcessesRelationSeed = `);
+    this.evaluate(retVal, 'service-process-relations.seed.ts', `export const serviceProcessesRelationSeed = `);
     return retVal;
   }
 }

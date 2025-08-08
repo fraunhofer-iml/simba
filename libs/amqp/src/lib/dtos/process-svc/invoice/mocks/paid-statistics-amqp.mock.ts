@@ -8,7 +8,7 @@
 
 import { PaidStatisticsAmqpDto } from '../paid-statistics-amqp.dto';
 
-export const PaidStatisticsAmqpMock = <PaidStatisticsAmqpDto[]>[
+export const paidStatisticsAmqpMock = <PaidStatisticsAmqpDto[]>[
   {
     yearAndMonth: '2024-01',
     totalValuePaid: 0,

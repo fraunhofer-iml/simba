@@ -6,35 +6,35 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { PaymentStatesSeed, TradeReceivablesSeed } from '@ap3/database';
+import { paymentStatesSeed, tradeReceivablesSeed } from '@ap3/database';
 import { TradeReceivableDto } from '../trade-receivable.dto';
 
-export const TradeReceivableMock = <TradeReceivableDto[]>[
+export const tradeReceivableMock = <TradeReceivableDto[]>[
   {
-    id: TradeReceivablesSeed[0].id,
-    nft: TradeReceivablesSeed[0].nft,
+    id: tradeReceivablesSeed[0].id,
+    nft: tradeReceivablesSeed[0].nft,
     status: [
       {
-        status: PaymentStatesSeed[0].status,
-        timestamp: PaymentStatesSeed[0].timestamp,
+        status: paymentStatesSeed[0].status,
+        timestamp: paymentStatesSeed[0].timestamp,
       },
       {
-        status: PaymentStatesSeed[1].status,
-        timestamp: PaymentStatesSeed[1].timestamp,
+        status: paymentStatesSeed[1].status,
+        timestamp: paymentStatesSeed[1].timestamp,
       },
     ],
   },
   {
-    id: TradeReceivablesSeed[1].id,
-    nft: TradeReceivablesSeed[1].nft,
+    id: tradeReceivablesSeed[1].id,
+    nft: tradeReceivablesSeed[1].nft,
     status: [
       {
-        status: PaymentStatesSeed[2].status,
-        timestamp: PaymentStatesSeed[2].timestamp,
+        status: paymentStatesSeed[2].status,
+        timestamp: paymentStatesSeed[2].timestamp,
       },
       {
-        status: PaymentStatesSeed[3].status,
-        timestamp: PaymentStatesSeed[3].timestamp,
+        status: paymentStatesSeed[3].status,
+        timestamp: paymentStatesSeed[3].timestamp,
       },
     ],
   },

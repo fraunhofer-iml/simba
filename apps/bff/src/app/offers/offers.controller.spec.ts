@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AmqpBrokerQueues, OfferAmqpMock, OfferMessagePatterns, OrderAmqpMock } from '@ap3/amqp';
-import { OfferDto, offerDtosMock, OrderDtosMock } from '@ap3/api';
+import { AmqpBrokerQueues, offerAmqpMock, OfferMessagePatterns, orderAmqpMock } from '@ap3/amqp';
+import { OfferDto, offerDtosMock, orderDtosMock } from '@ap3/api';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -42,7 +42,7 @@ describe('OffersController', () => {
     const expectedReturnValue: OfferDto[] = offerDtosMock;
     const sendRequestSpy = jest.spyOn(clientProxy, 'send');
     sendRequestSpy.mockImplementation((messagePattern: OfferMessagePatterns, data: any) => {
-      return of(OfferAmqpMock);
+      return of(offerAmqpMock);
     });
 
     const res: OfferDto[] = await controller.findAll();
@@ -55,19 +55,19 @@ describe('OffersController', () => {
     const expectedReturnValue: OfferDto[] = offerDtosMock;
     const sendRequestSpy = jest.spyOn(clientProxy, 'send');
     sendRequestSpy.mockImplementation((messagePattern: OfferMessagePatterns, data: any) => {
-      return of(OfferAmqpMock);
+      return of(offerAmqpMock);
     });
 
-    const res: OfferDto[] = await controller.findAll(OrderDtosMock[0].id);
+    const res: OfferDto[] = await controller.findAll(orderDtosMock[0].id);
 
-    expect(sendRequestSpy).toHaveBeenCalledWith(OfferMessagePatterns.READ_BY_ORDER_ID, OrderDtosMock[0].id);
+    expect(sendRequestSpy).toHaveBeenCalledWith(OfferMessagePatterns.READ_BY_ORDER_ID, orderDtosMock[0].id);
     expect(res).toEqual(expectedReturnValue);
   });
   it('should find a single offer by Id', async () => {
     const expectedReturnValue: OfferDto = offerDtosMock[0];
     const sendRequestSpy = jest.spyOn(clientProxy, 'send');
     sendRequestSpy.mockImplementation((messagePattern: OfferMessagePatterns, data: any) => {
-      return of(OfferAmqpMock[0]);
+      return of(offerAmqpMock[0]);
     });
 
     const res: OfferDto = await controller.findOne(offerDtosMock[0].id);
@@ -93,19 +93,19 @@ describe('OffersController', () => {
       return of(true);
     });
 
-    await controller.declineOffers(OrderDtosMock[0].id);
+    await controller.declineOffers(orderDtosMock[0].id);
 
-    expect(sendRequestSpy).toHaveBeenCalledWith(OfferMessagePatterns.DECLINE_ALL_OF_ORDER, OrderDtosMock[0].id);
+    expect(sendRequestSpy).toHaveBeenCalledWith(OfferMessagePatterns.DECLINE_ALL_OF_ORDER, orderDtosMock[0].id);
   });
 
   it('should find a single offer by Id that has an accepted offer and return it ', async () => {
     const expectedReturnValue: OfferDto = offerDtosMock[4];
     const sendRequestSpy = jest.spyOn(clientProxy, 'send');
     sendRequestSpy.mockImplementation((messagePattern: OfferMessagePatterns, data: any) => {
-      return of(OfferAmqpMock[4]);
+      return of(offerAmqpMock[4]);
     });
 
-    const res: OfferDto = await offersService.loadAcceptedOfferRef(OrderAmqpMock[1]);
+    const res: OfferDto = await offersService.loadAcceptedOfferRef(orderAmqpMock[1]);
 
     expect(res.id).toEqual(expectedReturnValue.id);
     expect(res.orderId).toEqual(expectedReturnValue.orderId);

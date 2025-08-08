@@ -1,4 +1,4 @@
-import { CompaniesSeed, OrderLinesSeed } from '@ap3/database';
+import { companiesSeed, orderLinesSeed } from '@ap3/database';
 import { Order } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 
@@ -8,12 +8,12 @@ export const orderMock = <Order>{
   buyerOrderRefDocumentId: '202410291549-726762',
   vatCurrency: 'EUR',
   totalAmountWithoutVat: new Decimal(3.5),
-  orderLines: [OrderLinesSeed[0]],
+  orderLines: [orderLinesSeed[0]],
   noteContent: '',
-  referencedBuyerOrderLine: OrderLinesSeed[0].id,
+  referencedBuyerOrderLine: orderLinesSeed[0].id,
   sumOfLinesAmount: 5,
-  buyerId: CompaniesSeed[0].id,
-  sellerId: CompaniesSeed[1].id,
+  buyerId: companiesSeed[0].id,
+  sellerId: companiesSeed[1].id,
   buyerAccountingRefId: 'ACC-202410291551-363148',
   serviceProcess: {
     id: 'sp001',
