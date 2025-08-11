@@ -6,10 +6,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AuthRolesEnum, OfferDto } from '@ap3/api';
+import { AuthRolesEnum, OfferDto, RequestNewOffersDto } from '@ap3/api';
 import { Roles } from 'nest-keycloak-connect';
-import { Controller, Get, Param, Patch, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Patch, Put, Query } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OffersService } from './offers.service';
 
 @Controller('offers')
@@ -30,6 +30,18 @@ export class OffersController {
   @ApiResponse({ type: [OfferDto] })
   async findAll(@Query('orderId') orderId?: string): Promise<OfferDto[]> {
     return this.offersService.findAll(orderId);
+  }
+
+  @Put()
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER] })
+  @ApiOperation({ description: 'Create new offers for a specific order.' })
+  @ApiBody({
+    type: RequestNewOffersDto,
+    required: true,
+  })
+  @ApiResponse({ type: [OfferDto] })
+  async generateNewOffers(@Body() request: RequestNewOffersDto): Promise<OfferDto[]> {
+    return this.offersService.createNewOffersForOrder(request);
   }
 
   @Get(':id')

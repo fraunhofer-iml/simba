@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AmqpBrokerQueues, offerAmqpMock, OfferMessagePatterns, orderAmqpMock } from '@ap3/amqp';
-import { OfferDto, offerDtosMock, orderDtosMock } from '@ap3/api';
+import { AmqpBrokerQueues, newOffersRequestMock, offerAmqpMock, OfferMessagePatterns, orderAmqpMock } from '@ap3/amqp';
+import { OfferDto, offerDtosMock, orderDtosMock, requestNewOffersDtoMock } from '@ap3/api';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -73,6 +73,7 @@ describe('OffersController', () => {
     const res: OfferDto = await controller.findOne(offerDtosMock[0].id);
 
     expect(sendRequestSpy).toHaveBeenCalledWith(OfferMessagePatterns.READ_BY_ID, offerDtosMock[0].id);
+    expect(sendRequestSpy).toHaveBeenCalledWith(OfferMessagePatterns.READ_BY_ID, offerDtosMock[0].id);
     expect(res).toEqual(expectedReturnValue);
   });
 
@@ -83,7 +84,9 @@ describe('OffersController', () => {
     });
 
     await controller.acceptOffer(offerDtosMock[0].id);
+    await controller.acceptOffer(offerDtosMock[0].id);
 
+    expect(sendRequestSpy).toHaveBeenCalledWith(OfferMessagePatterns.ACCEPT_BY_ID, offerDtosMock[0].id);
     expect(sendRequestSpy).toHaveBeenCalledWith(OfferMessagePatterns.ACCEPT_BY_ID, offerDtosMock[0].id);
   });
 
@@ -109,5 +112,18 @@ describe('OffersController', () => {
 
     expect(res.id).toEqual(expectedReturnValue.id);
     expect(res.orderId).toEqual(expectedReturnValue.orderId);
+  });
+
+  it('should generate new offers for a given orderId and calendarWeek ', async () => {
+    const expectedReturnValue: OfferDto[] = offerDtosMock;
+    const sendRequestSpy = jest.spyOn(clientProxy, 'send');
+    sendRequestSpy.mockImplementation((messagePattern: OfferMessagePatterns, data: any) => {
+      return of(offerAmqpMock);
+    });
+
+    const res: OfferDto[] = await controller.generateNewOffers(requestNewOffersDtoMock);
+
+    expect(res).toEqual(expectedReturnValue);
+    expect(sendRequestSpy).toHaveBeenCalledWith(OfferMessagePatterns.CREATE, newOffersRequestMock);
   });
 });

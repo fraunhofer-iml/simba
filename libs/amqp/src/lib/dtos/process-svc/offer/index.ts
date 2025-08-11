@@ -9,3 +9,4 @@
 export * from './offer-amqp.dto';
 export * from './create-offer-amqp.dto';
 export * from './mocks';
+export * from './generate-new-offers.dto';

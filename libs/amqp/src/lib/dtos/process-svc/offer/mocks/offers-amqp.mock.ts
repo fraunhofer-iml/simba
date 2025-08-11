@@ -27,11 +27,11 @@ export const offerAmqpMock = <OfferAmqpDto[]>[
     decisionDate: offersSeed[1].decisionDate,
     plannedCalendarWeek: Number(offersSeed[1].plannedCalendarWeek),
     plannedYear: Number(offersSeed[1].plannedYear),
-     basicPrice: Number(offersSeed[1].basicPrice),
+    basicPrice: Number(offersSeed[1].basicPrice),
     timeToProduction: Number(offersSeed[1].timeToProduction),
     utilization: Number(offersSeed[1].utilization),
     status: offersSeed[1].status,
-    orderId: ordersSeed[1].id,
+    orderId: ordersSeed[0].id,
   },
   {
     id: offersSeed[2].id,
@@ -43,7 +43,7 @@ export const offerAmqpMock = <OfferAmqpDto[]>[
     timeToProduction: Number(offersSeed[2].timeToProduction),
     utilization: Number(offersSeed[2].utilization),
     status: offersSeed[2].status,
-    orderId: ordersSeed[2].id,
+    orderId: ordersSeed[0].id,
   },
   {
     id: offersSeed[3].id,
@@ -55,7 +55,7 @@ export const offerAmqpMock = <OfferAmqpDto[]>[
     timeToProduction: Number(offersSeed[3].timeToProduction),
     utilization: Number(offersSeed[3].utilization),
     status: offersSeed[3].status,
-    orderId: ordersSeed[3].id,
+    orderId: ordersSeed[0].id,
   },
   {
     id: offersSeed[4].id,
@@ -67,7 +67,7 @@ export const offerAmqpMock = <OfferAmqpDto[]>[
     timeToProduction: Number(offersSeed[4].timeToProduction),
     utilization: Number(offersSeed[4].utilization),
     status: offersSeed[4].status,
-    orderId: ordersSeed[4].id,
+    orderId: ordersSeed[1].id,
   },
   {
     id: offersSeed[5].id,
@@ -79,6 +79,6 @@ export const offerAmqpMock = <OfferAmqpDto[]>[
     timeToProduction: Number(offersSeed[5].timeToProduction),
     utilization: Number(offersSeed[5].utilization),
     status: offersSeed[5].status,
-    orderId: ordersSeed[5].id,
+    orderId: ordersSeed[1].id,
   },
 ];

@@ -101,4 +101,21 @@ export class OfferPrismaService {
       throw e;
     }
   }
+
+  async deleteByOrderId(orderId: string) {
+    try {
+      return await this.prisma.offer.deleteMany({
+        where: {
+          serviceProcess: {
+            orderId: {
+              equals: String(orderId),
+            },
+          },
+        },
+      });
+    } catch (e) {
+      this.logger.error(util.inspect(e));
+      throw e;
+    }
+  }
 }

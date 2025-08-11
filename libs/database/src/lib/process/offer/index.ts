@@ -7,5 +7,5 @@
  */
 
 export * from './mocks';
-
+export * from './offer.mock';
 export * from './offer-prisma.service';

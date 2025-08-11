@@ -7,7 +7,7 @@
  */
 
 import { AmqpBrokerQueues, OfferAmqpDto, OfferMessagePatterns, OrderAmqpDto } from '@ap3/amqp';
-import { OfferDto } from '@ap3/api';
+import { OfferDto, RequestNewOffersDto } from '@ap3/api';
 import { firstValueFrom } from 'rxjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -51,5 +51,12 @@ export class OffersService {
       acceptedOffer = await this.findOneAndParse(dto.acceptedOfferId);
     }
     return acceptedOffer;
+  }
+
+  async createNewOffersForOrder(request: RequestNewOffersDto): Promise<OfferDto[]> {
+    const amqpOffers: OfferAmqpDto[] = await firstValueFrom<OfferAmqpDto[]>(
+      this.processAMQPClient.send(OfferMessagePatterns.CREATE, RequestNewOffersDto.toAmqpDto(request))
+    );
+    return OfferDto.toOfferDtos(amqpOffers);
   }
 }

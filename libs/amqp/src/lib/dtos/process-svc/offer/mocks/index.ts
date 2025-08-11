@@ -7,3 +7,4 @@
  */
 
 export * from './offers-amqp.mock';
+export * from './generate-new-offers.mock';

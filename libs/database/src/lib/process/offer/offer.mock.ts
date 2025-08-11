@@ -1,0 +1,53 @@
+import { offersSeed } from '../../../seed';
+import { OfferFromPrisma } from '../order/types/offer.types';
+
+export const offerPrismaMock: any = <OfferFromPrisma[]>[
+  {
+    id: offersSeed[0].id,
+    serviceProcessId: offersSeed[0].serviceProcessId,
+    status: offersSeed[0].status,
+    creationDate: offersSeed[0].creationDate,
+    decisionDate: offersSeed[0].decisionDate,
+    plannedCalendarWeek: offersSeed[0].plannedCalendarWeek,
+    plannedYear: offersSeed[0].plannedYear,
+    basicPrice: offersSeed[0].basicPrice,
+    timeToProduction: offersSeed[0].timeToProduction,
+    utilization: offersSeed[0].utilization,
+  },
+  {
+    id: offersSeed[1].id,
+    serviceProcessId: offersSeed[1].serviceProcessId,
+    status: offersSeed[1].status,
+    creationDate: offersSeed[1].creationDate,
+    decisionDate: offersSeed[1].decisionDate,
+    plannedCalendarWeek: offersSeed[1].plannedCalendarWeek,
+    plannedYear: offersSeed[1].plannedYear,
+    basicPrice: offersSeed[1].basicPrice,
+    timeToProduction: offersSeed[1].timeToProduction,
+    utilization: offersSeed[1].utilization,
+  },
+  {
+    id: offersSeed[2].id,
+    serviceProcessId: offersSeed[2].serviceProcessId,
+    status: offersSeed[2].status,
+    creationDate: offersSeed[2].creationDate,
+    decisionDate: offersSeed[2].decisionDate,
+    plannedCalendarWeek: offersSeed[2].plannedCalendarWeek,
+    plannedYear: offersSeed[2].plannedYear,
+    basicPrice: offersSeed[2].basicPrice,
+    timeToProduction: offersSeed[2].timeToProduction,
+    utilization: offersSeed[2].utilization,
+  },
+  {
+    id: offersSeed[3].id,
+    serviceProcessId: offersSeed[3].serviceProcessId,
+    status: offersSeed[3].status,
+    creationDate: offersSeed[3].creationDate,
+    decisionDate: offersSeed[3].decisionDate,
+    plannedCalendarWeek: offersSeed[3].plannedCalendarWeek,
+    plannedYear: offersSeed[3].plannedYear,
+    basicPrice: offersSeed[3].basicPrice,
+    timeToProduction: offersSeed[3].timeToProduction,
+    utilization: offersSeed[3].utilization,
+  },
+];

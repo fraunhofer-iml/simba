@@ -5,8 +5,7 @@
  * For details on the licensing terms, see the LICENSE file.
  * SPDX-License-Identifier: Apache-2.0
  */
-
-import { OfferAmqpDto } from '@ap3/amqp';
+import { NewOffersRequestAmqpDto, OfferAmqpDto } from '@ap3/amqp';
 import { OfferPrismaService, ServiceProcessPrismaService } from '@ap3/database';
 import { OFFER_STATES_TO_SHOW } from '@ap3/util';
 import { Injectable, Logger } from '@nestjs/common';
@@ -42,6 +41,12 @@ export class OffersService {
       offerDtos.push(OfferAmqpDto.fromPrismaEntity(offer, serviceProcess.orderId));
     }
     return offerDtos;
+  }
+
+  async generateNewOffersForOrder(request: NewOffersRequestAmqpDto): Promise<OfferAmqpDto[]> {
+    this.logger.debug(`Get new offers for ${request.orderId} at Cw ${request.cw}`);
+    await this.offerPrismaService.deleteByOrderId(request.orderId);
+    return this.orderManagementService.generateNewOffersForOrder(request);
   }
 
   async findOne(id: string): Promise<OfferAmqpDto> {

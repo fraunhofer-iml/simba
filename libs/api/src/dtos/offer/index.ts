@@ -8,3 +8,4 @@
 
 export * from './offer.dto';
 export * from './mocks';
+export * from './request-new-offers.dto';

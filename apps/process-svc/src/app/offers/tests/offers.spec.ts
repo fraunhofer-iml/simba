@@ -6,10 +6,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { offerAmqpMock } from '@ap3/amqp';
-import { acceptScheduledOfferResponseMock } from '@ap3/cpps-scheduler-connector';
+import { newOffersRequestMock, offerAmqpMock } from '@ap3/amqp';
+import { acceptScheduledOfferResponseMock, scheduleOrderResponseMock } from '@ap3/cpps-scheduler-connector';
 import {
   DatabaseModule,
+  offerPrismaMock,
   offersSeed,
   orderOverviewPrismaMock,
   PrismaService,
@@ -87,9 +88,9 @@ describe('OfferController', () => {
     const expectedReturn = [offerAmqpMock[0], offerAmqpMock[1], offerAmqpMock[2], offerAmqpMock[3]];
     const prismaServiceProcessSpy = jest.spyOn(prisma.serviceProcess, 'findUnique');
     prismaServiceProcessSpy.mockResolvedValueOnce(serviceProcessesSeed[0]);
-    prismaServiceProcessSpy.mockResolvedValueOnce(serviceProcessesSeed[1]);
-    prismaServiceProcessSpy.mockResolvedValueOnce(serviceProcessesSeed[2]);
-    prismaServiceProcessSpy.mockResolvedValueOnce(serviceProcessesSeed[3]);
+    prismaServiceProcessSpy.mockResolvedValueOnce(serviceProcessesSeed[0]);
+    prismaServiceProcessSpy.mockResolvedValueOnce(serviceProcessesSeed[0]);
+    prismaServiceProcessSpy.mockResolvedValueOnce(serviceProcessesSeed[0]);
 
     const retVal = await controller.findAllByOrderId(expectedReturn[0].orderId);
     expect(prisma.offer.findMany).toHaveBeenCalledWith(queryOffersToShowWithOrder);
@@ -148,6 +149,26 @@ describe('OfferController', () => {
 
     expect(prismaOfferUpdateSpy).toHaveBeenLastCalledWith(setOfferStateToDeclinedQuery); //expect decline offers query
     expect(prismaServiceProcessUpdateSpy).toHaveBeenCalledWith(setServiceStateToCanceledQuery); //set service state to canceled
+    expect(expectedReturn).toEqual(retVal);
+  });
+
+  it('generateNewOffersForOrder: should generate new offers for an order', async () => {
+    const expectedReturn = offerAmqpMock.slice(0, 4);
+    const prismaOfferDeleteSpy = jest.spyOn(prisma.offer, 'deleteMany');
+    prismaOfferDeleteSpy.mockResolvedValue({ count: 0 });
+    const mockResponse = {
+      ok: true,
+      json: jest.fn().mockResolvedValue(scheduleOrderResponseMock),
+    } as unknown as Response;
+    (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
+    const prismaOfferCreateSpy = jest.spyOn(prisma.offer, 'create');
+    prismaOfferCreateSpy.mockResolvedValueOnce(offerPrismaMock[0]);
+    prismaOfferCreateSpy.mockResolvedValueOnce(offerPrismaMock[1]);
+    prismaOfferCreateSpy.mockResolvedValueOnce(offerPrismaMock[2]);
+    prismaOfferCreateSpy.mockResolvedValueOnce(offerPrismaMock[3]);
+
+    const retVal = await controller.generateNewOffersForOrder(newOffersRequestMock);
+
     expect(expectedReturn).toEqual(retVal);
   });
 });

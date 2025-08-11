@@ -6,22 +6,22 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CreateOfferAmqpDto } from '@ap3/amqp';
+import { CreateOfferAmqpDto, NewOffersRequestAmqpDto } from '@ap3/amqp';
 import {
   AcceptScheduledOfferDto,
   CppsSchedulerConnectorService,
+  RequestedCwForOrderDto,
+  ScheduledPricesCwDto,
   ScheduledProductDto,
   ScheduleOrderRequestDto,
   ScheduleOrderResponseDto,
 } from '@ap3/cpps-scheduler-connector';
 import { OrderWithDependencies } from '@ap3/database';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Offer } from '@prisma/client';
 
 @Injectable()
 export class OrderSchedulingHandlerService {
-  private readonly logger = new Logger(OrderSchedulingHandlerService.name);
-
   constructor(private readonly cppsSchedulerConnector: CppsSchedulerConnectorService) {}
 
   async scheduleOrder(
@@ -34,8 +34,25 @@ export class OrderSchedulingHandlerService {
     const product = new ScheduledProductDto(productId, quantity);
     const orderToSchedule = new ScheduleOrderRequestDto(orderId, calendarWeek, year, new Date(), [product]);
     const scheduledOrder: ScheduleOrderResponseDto = await this.cppsSchedulerConnector.scheduleOrder(orderToSchedule);
+    return this.convertScheduledPricesDto(orderId, scheduledOrder.pricesPerCW);
+  }
+
+  async acceptScheduling(orderId: string, offer: Offer, order: OrderWithDependencies): Promise<void> {
+    const scheduledProduct = new ScheduledProductDto(order.orderLines[0].item.id, Number(order.orderLines[0].requestedQuantity));
+    const acceptRequest = new AcceptScheduledOfferDto(Number(offer.plannedCalendarWeek), Number(offer.plannedYear), scheduledProduct);
+
+    await this.cppsSchedulerConnector.acceptOffer(orderId, acceptRequest);
+  }
+
+  async generateNewOffersForOrder(newOffersDto: NewOffersRequestAmqpDto): Promise<CreateOfferAmqpDto[]> {
+    const request = new RequestedCwForOrderDto(newOffersDto.orderId, newOffersDto.cw);
+    const newScheduledOrder: ScheduleOrderResponseDto = await this.cppsSchedulerConnector.generateNewOffersForOrder(request);
+    return this.convertScheduledPricesDto(newOffersDto.orderId, newScheduledOrder.pricesPerCW);
+  }
+
+  private convertScheduledPricesDto(orderId: string, prices: ScheduledPricesCwDto[]): CreateOfferAmqpDto[] {
     const createOffers: CreateOfferAmqpDto[] = [];
-    for (const cwPrice of scheduledOrder.pricesPerCW) {
+    for (const cwPrice of prices) {
       const offer = new CreateOfferAmqpDto();
       offer.orderId = orderId;
       offer.basicPrice = cwPrice.basePrice;
@@ -45,14 +62,6 @@ export class OrderSchedulingHandlerService {
       offer.plannedYear = cwPrice.year;
       createOffers.push(offer);
     }
-
     return createOffers;
-  }
-
-  async acceptScheduling(orderId: string, offer: Offer, order: OrderWithDependencies): Promise<void> {
-    const scheduledProduct = new ScheduledProductDto(order.orderLines[0].item.id, Number(order.orderLines[0].requestedQuantity));
-    const acceptRequest = new AcceptScheduledOfferDto(Number(offer.plannedCalendarWeek), Number(offer.plannedYear), scheduledProduct);
-
-    await this.cppsSchedulerConnector.acceptOffer(orderId, acceptRequest);
   }
 }

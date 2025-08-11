@@ -5,9 +5,15 @@
  * For details on the licensing terms, see the LICENSE file.
  * SPDX-License-Identifier: Apache-2.0
  */
-
 import util from 'node:util';
-import { CreateOfferAmqpDto, CreateOrderAmqpDto, OfferAmqpDto, OrderAmqpDto, ServiceStatusAmqpDto } from '@ap3/amqp';
+import {
+  CreateOfferAmqpDto,
+  CreateOrderAmqpDto,
+  NewOffersRequestAmqpDto,
+  OfferAmqpDto,
+  OrderAmqpDto,
+  ServiceStatusAmqpDto,
+} from '@ap3/amqp';
 import { OfferPrismaService, OrderDatabaseAdapterService, OrderWithDependencies, ServiceProcessPrismaService } from '@ap3/database';
 import { OfferStatesEnum, ServiceStatesEnum } from '@ap3/util';
 import { Injectable, Logger } from '@nestjs/common';
@@ -54,13 +60,9 @@ export class OrderManagementService {
     }
   }
 
-  async createOffers(offers: CreateOfferAmqpDto[]): Promise<OfferAmqpDto[]> {
-    const createdOffers: OfferAmqpDto[] = [];
-    for (const offer of offers) {
-      const created: Offer = await this.offerPrismaService.createOffer(offer.toPrismaEntity());
-      createdOffers.push(OfferAmqpDto.fromPrismaEntity(created, offer.orderId));
-    }
-    return createdOffers;
+  async generateNewOffersForOrder(request: NewOffersRequestAmqpDto): Promise<OfferAmqpDto[]> {
+    const offers: CreateOfferAmqpDto[] = await this.orderSchedulingHandlerService.generateNewOffersForOrder(request);
+    return await this.createOffers(offers);
   }
 
   async accept(offerId: string): Promise<OfferAmqpDto> {
@@ -111,5 +113,14 @@ export class OrderManagementService {
       this.logger.error(`Couldn't create a PRODUCED state for order: ${orderId}`);
       return false;
     }
+  }
+
+  private async createOffers(offers: CreateOfferAmqpDto[]): Promise<OfferAmqpDto[]> {
+    const createdOffers: OfferAmqpDto[] = [];
+    for (const offer of offers) {
+      const created: Offer = await this.offerPrismaService.createOffer(offer.toPrismaEntity());
+      createdOffers.push(OfferAmqpDto.fromPrismaEntity(created, offer.orderId));
+    }
+    return createdOffers;
   }
 }

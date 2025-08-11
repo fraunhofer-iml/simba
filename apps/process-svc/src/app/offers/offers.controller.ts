@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { OfferAmqpDto, OfferMessagePatterns } from '@ap3/amqp';
+import { NewOffersRequestAmqpDto, OfferAmqpDto, OfferMessagePatterns } from '@ap3/amqp';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { OffersService } from './offers.service';
@@ -23,6 +23,11 @@ export class OffersController {
   @MessagePattern(OfferMessagePatterns.READ_BY_ORDER_ID)
   async findAllByOrderId(@Payload() orderId: string): Promise<OfferAmqpDto[]> {
     return this.offerService.findAllByOrderId(orderId);
+  }
+
+  @MessagePattern(OfferMessagePatterns.CREATE)
+  async generateNewOffersForOrder(@Payload() request: NewOffersRequestAmqpDto): Promise<OfferAmqpDto[]> {
+    return this.offerService.generateNewOffersForOrder(request);
   }
 
   @MessagePattern(OfferMessagePatterns.DECLINE_ALL_OF_ORDER)
