@@ -111,7 +111,7 @@
     },
     "Table": {
       "Title": "Rechnungsdetails",
-      "ShowInvoice": "Rechnung anzeigen",
+      "ShowInvoiceAndNft": "Rechnungs- & NFT Details anzeigen",
       "Number": "Rechnungsnummer",
       "Payee": "Kreditor",
       "Amount": "Rechnungsbetrag",
@@ -156,7 +156,7 @@
   },
 
   "Nft": {
-    "Token": "Forderungstoken ID",
+    "Token": "Forderungstoken",
     "Invoice": "Rechnung",
     "Addresses": "Adressen",
     "Owner": "Besitzer",

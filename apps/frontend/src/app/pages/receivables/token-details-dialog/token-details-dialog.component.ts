@@ -7,24 +7,46 @@
  */
 
 import { TokenReadDto } from 'nft-folder-blockchain-connector-besu';
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Observable, of, tap } from 'rxjs';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
-import { Observable } from 'rxjs';
+import { FormatService } from '../../../shared/services/util/format.service';
 
 @Component({
   selector: 'app-token-details',
   templateUrl: './token-details-dialog.component.html',
   styleUrl: './token-details-dialog.component.scss',
 })
-export class TokenDetailsDialogComponent {
-  invoiceNft: Observable<TokenReadDto>;
-
+export class TokenDetailsDialogComponent implements OnChanges {
+  invoiceNft$: Observable<TokenReadDto>;
+  additionalData: Map<string, any> | null = null;
+  @Input() invoiceNumber = '';
   constructor(
     public dialogRef: MatDialogRef<TokenDetailsDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public invoiceNumber: string,
-    private readonly invoiceService: InvoiceService,
+    public formatService: FormatService,
+    private readonly invoiceService: InvoiceService
   ) {
-    this.invoiceNft = this.invoiceService.getNftByInvoiceNumber(invoiceNumber);
+    this.invoiceNft$ = of();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.invoiceNft$ = this.invoiceService.getNftByInvoiceNumber(this.invoiceNumber).pipe(
+      tap((tokenDto: TokenReadDto) => {
+        this.processAdditionalInformation(tokenDto);
+        return tokenDto;
+      })
+    );
+  }
+
+  processAdditionalInformation(dto: TokenReadDto) {
+    let parsedAdditionalInformation = {};
+    try {
+      parsedAdditionalInformation = JSON.parse(dto.additionalData);
+    } catch (error) {
+      throw new Error('Failed parsing additional Information' + error);
+    }
+    const parsedObjectKeyValueMap = new Map<string, any>(Object.entries(parsedAdditionalInformation));
+    this.additionalData = parsedObjectKeyValueMap;
   }
 }

@@ -8,11 +8,13 @@
 
 import { TranslateModule } from '@ngx-translate/core';
 import { KeycloakService } from 'keycloak-angular';
+import { DatePipe } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
+import { FormatService } from '../../../shared/services/util/format.service';
 import { TokenDetailsDialogComponent } from './token-details-dialog.component';
 
 describe('TokenDetailsDialogComponent', () => {
@@ -28,11 +30,13 @@ describe('TokenDetailsDialogComponent', () => {
         InvoiceService,
         AuthService,
         provideHttpClient(),
+        FormatService,
         { provide: MatDialogRef, useValue: {} },
         {
           provide: MAT_DIALOG_DATA,
           useValue: { invoiceNumber: 'INV001' },
         },
+        DatePipe,
         {
           provide: KeycloakService,
           useValue: {

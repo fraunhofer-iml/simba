@@ -116,7 +116,7 @@
     },
     "Table": {
       "Title": "Invoice details",
-      "ShowInvoice": "Show invoice",
+      "ShowInvoiceAndNft": "Show Invoice & NFT Details",
       "Number": "Invoice no.",
       "Payee": "Payee",
       "Amount": "Invoice amount",
@@ -161,7 +161,7 @@
   },
 
   "Nft": {
-    "Token": "Trade receivable token ID",
+    "Token": "Trade Receivable Token",
     "Invoice": "Invoice",
     "Addresses": "Addresses",
     "Owner": "Owner",

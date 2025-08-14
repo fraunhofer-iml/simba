@@ -79,7 +79,7 @@ describe('InvoiceTableComponent', () => {
   });
 
   it('should open token dialog', () => {
-    component.openTokenDetailsDialog('INV-001');
+    component.openDownloadInvoiceDialog({} as Invoice);
     expect(mockDialog.open).toHaveBeenCalled();
   });
 });

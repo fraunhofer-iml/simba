@@ -15,6 +15,7 @@ import { Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute } from '@angular/router';
 import { Invoice } from '../../model/invoice';
 import { InvoiceFilter } from '../../model/invoice-filter';
 import { FilterService } from '../../shared/services/filter/filter.service';
@@ -38,6 +39,7 @@ export class ReceivablesComponent {
   private readonly _snackBar = inject(MatSnackBar);
 
   constructor(
+    private readonly route: ActivatedRoute,
     private readonly dialog: MatDialog,
     private readonly invoiceService: InvoiceService,
     private readonly translationService: TranslateService,
@@ -51,6 +53,8 @@ export class ReceivablesComponent {
         this.activatedFiltersCount = this.countSelectedFilterOptions();
       }
     });
+    const paramValue = this.route.snapshot.queryParamMap.get('invoiceNumber');
+    this.filterText = paramValue ?? '';
     this.activatedFiltersCount = this.countSelectedFilterOptions();
     this.filteredInvoicesIds = [];
     this.paymentStatusChanges = [];

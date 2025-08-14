@@ -7,15 +7,18 @@
  */
 
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
+import { KeycloakService } from 'keycloak-angular';
+import { DatePipe } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
-import { DownloadInvoiceDialogComponent } from './download-invoice-dialog.component';
 import { AuthService } from '../../../shared/services/auth/auth.service';
-import { KeycloakService } from 'keycloak-angular';
+import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
+import { FormatService } from '../../../shared/services/util/format.service';
+import { TokenDetailsDialogComponent } from '../token-details-dialog/token-details-dialog.component';
+import { DownloadInvoiceDialogComponent } from './download-invoice-dialog.component';
 
 describe('DownloadInvoiceDialogComponent', () => {
   let component: DownloadInvoiceDialogComponent;
@@ -23,13 +26,14 @@ describe('DownloadInvoiceDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DownloadInvoiceDialogComponent],
+      declarations: [DownloadInvoiceDialogComponent, TokenDetailsDialogComponent],
       imports: [MatDialogModule, MatTabsModule, TranslateModule.forRoot(), NoopAnimationsModule],
 
       providers: [
         InvoiceService,
         TranslateModule,
         AuthService,
+        FormatService,
         provideHttpClient(),
         { provide: MatDialogRef, useValue: {} },
         {
@@ -39,6 +43,7 @@ describe('DownloadInvoiceDialogComponent', () => {
             { invoiceNumber: 'INV002', url: 'path/to/invoice2.pdf' },
           ],
         },
+        DatePipe,
         { provide: TranslatePipe, useValue: jest.fn((value: string) => value) },
         {
           provide: KeycloakService,

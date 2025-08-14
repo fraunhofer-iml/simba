@@ -63,6 +63,10 @@ body {
   font-weight: bold;
 }
 
+.mat-mdc-tab-body-content {
+  overflow: hidden !important;
+}
+
 .mat-mdc-table {
   background-color: white;
 }
@@ -174,8 +178,7 @@ h4 {
 
 .mat-dialog-container,
 .mat-mdc-dialog-container {
-  max-width: none !important;
-  max-height: none !important;
+  max-width: 95vw !important;
 }
 .mat-mdc-dialog-content {
   max-height: 90vh !important;

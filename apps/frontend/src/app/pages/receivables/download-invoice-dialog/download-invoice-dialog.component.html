@@ -5,26 +5,30 @@
   ~ For details on the licensing terms, see the LICENSE file.
   ~ SPDX-License-Identifier: Apache-2.0
   -->
-
-<mat-dialog-content class="download-invoice-container">
-  <h1>{{ 'Invoices.Title' | translate }}</h1>
+<div class="heading">
+  <h1 mat-dialog-title>{{ 'Invoices.Title' | translate }}</h1>
+  <h1 mat-dialog-title>{{ 'Nft.Token' | translate }}</h1>
   <img src="assets/icons/close.svg" alt="Icon" id="close" (keyup)="dialogRef.close()" (click)="dialogRef.close()" />
-  <div class="file-container">
-    <mat-tab-group mat-stretch-tabs="false" animationDuration="0ms" preserveContent="true">
-      @for (invoice of data; track invoice.id) {
-        <mat-tab [label]="invoice.invoiceNumber" class="invoice-tab">
+</div>
+<mat-dialog-content class="download-invoice-container">
+  <mat-tab-group animationDuration="400ms" preserveContent="true" (selectedIndexChange)="changeTab($event)" preserveContent="true">
+    @for (invoice of data; track invoice.id) {
+      <mat-tab [label]="invoice.invoiceNumber">
+        <ng-template matTabContent>
           <iframe
-            [src]="getSource(invoice.url + '#view=FitH')"
+            lazy
+            [src]="safeUrls?.get(invoice.id)"
             class="pdf-iframe"
             type="application/pdf"
             title="{{ 'InvoiceDetails' | translate }}"
             >{{ 'Invoices.Details' | translate }}</iframe
           >
-        </mat-tab>
-      }
-    </mat-tab-group>
-  </div>
-  <div class="button-container">
-    <button mat-flat-button class="button" (click)="downloadInvoices()">{{ 'Buttons.Download' | translate }}</button>
-  </div>
+        </ng-template>
+      </mat-tab>
+    }
+  </mat-tab-group>
+  <app-token-details class="content" [invoiceNumber]="getSelectedInvoiceId()"></app-token-details>
 </mat-dialog-content>
+<mat-dialog-actions class="button-container">
+  <button mat-flat-button class="button" (click)="downloadInvoices()">{{ 'Buttons.Download' | translate }}</button>
+</mat-dialog-actions>

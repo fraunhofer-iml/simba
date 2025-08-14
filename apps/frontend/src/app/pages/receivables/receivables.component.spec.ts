@@ -6,8 +6,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { activatedRouteMock } from '@ap3/api';
 import { TranslateModule } from '@ngx-translate/core';
 import { KeycloakService } from 'keycloak-angular';
+import { of } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -19,7 +21,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { InvoiceFilter } from '../../model/invoice-filter';
 import { AuthService } from '../../shared/services/auth/auth.service';
 import { FilterService } from '../../shared/services/filter/filter.service';
@@ -70,6 +72,7 @@ describe('ReceivablesComponent', () => {
           },
         },
         { provide: MatDialog, useValue: mockDialog },
+        { provide: ActivatedRoute, useValue: activatedRouteMock },
         FinancialRoleService,
       ],
       imports: [

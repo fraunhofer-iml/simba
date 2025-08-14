@@ -33,7 +33,12 @@
         <span class="text-end">
           {{ 'Orders.Status.' + (getLatestServiceProcessDto(orderDetail.processStateHistory).status | titlecase) | translate | titlecase }}
           @if (getLatestServiceProcessDto(orderDetail.processStateHistory).status === OrderStatus.PRODUCED) {
-            : {{ getLatestServiceProcessDto(orderDetail.processStateHistory).timestamp | date }}
+            :
+            {{
+              formatService.transformDateToCurrentLanguageFormat(
+                getLatestServiceProcessDto(orderDetail.processStateHistory).timestamp.toString()
+              )
+            }}
           } @else {
             : {{ 'CalendarWeek' | translate }} {{ buildCwDate(getLatestServiceProcessDto(orderDetail.processStateHistory)) }}
           }

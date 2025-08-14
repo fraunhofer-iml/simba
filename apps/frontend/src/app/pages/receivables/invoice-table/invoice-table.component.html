@@ -25,8 +25,8 @@
       mat-cell
       class="invoiceNumber"
       *matCellDef="let row"
-      (keyup)="openTokenDetailsDialog(row.invoiceNumber)"
-      (click)="openTokenDetailsDialog(row.invoiceNumber)"
+      (keyup)="openDownloadInvoiceDialog(row)"
+      (click)="openDownloadInvoiceDialog(row)"
     >
       {{ row.invoiceNumber }}
     </td>

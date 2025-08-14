@@ -15,18 +15,6 @@
   margin-left: 1em;
 }
 
-.token-batch {
-  display: inline-block;
-  background: var(--dark-blue-color);
-  color: white;
-  padding: 5px 12px;
-  border-radius: 12px;
-  font-weight: bold;
-  min-width: 120px;
-  text-align: center;
-  margin-left: 1em;
-}
-
 .grid-variables {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -35,6 +23,7 @@
 .split-parts {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
 .text {

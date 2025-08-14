@@ -10,17 +10,16 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Invoice } from '../../../model/invoice';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { FormatService } from '../../../shared/services/util/format.service';
-import { TokenDetailsDialogComponent } from '../token-details-dialog/token-details-dialog.component';
+import { DownloadInvoiceDialogComponent } from '../download-invoice-dialog/download-invoice-dialog.component';
 
 @Component({
   selector: 'app-invoice-table',
   templateUrl: './invoice-table.component.html',
-  styleUrl: './invoice-table.component.scss'
+  styleUrl: './invoice-table.component.scss',
 })
 export class InvoiceTableComponent implements AfterViewInit {
   displayedInvoiceColumns: string[];
   paymentStates = [PaymentStates.PAID, PaymentStates.FINANCED];
-
   @Input() paymentStatusChanges!: InvoiceIdAndPaymentStateDto[];
   @Input() dataSource!: MatTableDataSource<Invoice>;
   @Input() selection: SelectionModel<Invoice> = new SelectionModel<Invoice>(true, []);
@@ -73,7 +72,7 @@ export class InvoiceTableComponent implements AfterViewInit {
   }
 
   changePaymentStatus(paymentStatus: string, row: Invoice) {
-    const existingIndex = this.paymentStatusChanges.findIndex(change => change.invoiceId === row.id);
+    const existingIndex = this.paymentStatusChanges.findIndex((change) => change.invoiceId === row.id);
     if (existingIndex !== -1) {
       this.paymentStatusChanges[existingIndex].paymentStatus = paymentStatus;
     } else {
@@ -93,9 +92,9 @@ export class InvoiceTableComponent implements AfterViewInit {
       .includes(invoiceId);
   }
 
-  openTokenDetailsDialog(invoiceNumber: string) {
-    this.dialog.open(TokenDetailsDialogComponent, {
-      data: invoiceNumber,
+  openDownloadInvoiceDialog(invoice: Invoice) {
+    this.dialog.open(DownloadInvoiceDialogComponent, {
+      data: [invoice],
       panelClass: 'mat-dialog-container',
       disableClose: true,
     });
@@ -103,7 +102,6 @@ export class InvoiceTableComponent implements AfterViewInit {
 
   private setFilterPredicate() {
     this.dataSource.filterPredicate = (data: Invoice, value: string): boolean => {
-
       return (
         (data.invoiceNumber ?? '').toLowerCase().includes(value) ||
         (data.creditor ?? '').toLowerCase().includes(value) ||
