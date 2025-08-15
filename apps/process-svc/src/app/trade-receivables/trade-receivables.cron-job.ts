@@ -1,10 +1,11 @@
-import { AllInvoicesFilterAmqpDto } from '@ap3/amqp';
+import { AllInvoicesFilterAmqpDto, InvoiceIdAndPaymentStateAmqpDto } from '@ap3/amqp';
 import { ConfigurationService } from '@ap3/config';
 import { InvoiceDatabaseAdapterService, InvoiceWithNFT } from '@ap3/database';
 import { PaymentStates } from '@ap3/util';
 import { CronJob } from 'cron';
 import { Injectable, Logger } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
+import { PaymentManagementService } from '../invoices/payment-management/payment-management.service';
 import { TradeReceivablesService } from './trade-receivables.service';
 
 @Injectable()
@@ -15,7 +16,8 @@ export class TradeReceivablesCronJob {
     private readonly tradeReceivablesService: TradeReceivablesService,
     private readonly config: ConfigurationService,
     private readonly schedulerRegistry: SchedulerRegistry,
-    private readonly invoicePrismaAdapterService: InvoiceDatabaseAdapterService
+    private readonly invoicePrismaAdapterService: InvoiceDatabaseAdapterService,
+    private readonly paymentStatesService: PaymentManagementService
   ) {
     if (config.getGeneralConfig().scheduledNFTUpdate.enabled) {
       this.logger.log(`Cron job for updating payment status to exceeded is activated`);
@@ -37,7 +39,9 @@ export class TradeReceivablesCronJob {
     );
     for (const invoice of invoices) {
       if (invoice.dueDate < new Date()) {
-        await this.tradeReceivablesService.updateNftPaymentState(invoice.invoiceNumber, PaymentStates.EXCEEDED);
+        await this.paymentStatesService.createPaymentStateAndUpdateNft([
+          new InvoiceIdAndPaymentStateAmqpDto(invoice.invoiceNumber, PaymentStates.EXCEEDED),
+        ]);
       }
     }
   }

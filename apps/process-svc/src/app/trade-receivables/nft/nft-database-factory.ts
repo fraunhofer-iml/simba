@@ -6,22 +6,21 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { createHash } from 'crypto';
+import { AdditionalDataDto } from '@ap3/blockchain-connector';
 import { NftPrismaService } from '@ap3/database';
 import { PaymentStates } from '@ap3/util';
+import { TokenAssetDto, TokenHierarchyDto, TokenMetadataDto, TokenReadDto } from 'nft-folder-blockchain-connector-besu';
 import { Injectable } from '@nestjs/common';
 import { Nft, ServiceProcess } from '@prisma/client';
-import { AdditionalDataDto } from '@ap3/blockchain-connector';
-import { TokenAssetDto, TokenHierarchyDto, TokenMetadataDto, TokenReadDto } from 'nft-folder-blockchain-connector-besu';
-import { createHash } from 'crypto';
+import { NftFactory } from './nft-factory';
 import { NFT_ADDRESS, NFT_MINTER_ADDRESS, NFT_OWNER_ADDRESS } from './nft.constants';
-import { NftInterface } from './nft.interface';
 
 @Injectable()
-export class NftDatabaseService implements NftInterface{
-
-  constructor(
-    private readonly nftPrismaService: NftPrismaService,
-  ) {}
+export class NftDatabaseFactory extends NftFactory {
+  constructor(private readonly nftPrismaService: NftPrismaService) {
+    super();
+  }
 
   public async mintNFT(
     serviceProcess: ServiceProcess,
@@ -35,19 +34,17 @@ export class NftDatabaseService implements NftInterface{
     const invoiceHash: string = this.hashData(invoicePdf.toString());
     const metadataHash: string = this.hashData(JSON.stringify(metadata));
 
-    const createdToken: Nft = await this.nftPrismaService.createNft(
-      {
-        remoteId: invoiceNumber,
-        ownerAddress: NFT_OWNER_ADDRESS,
-        minterAddress: NFT_MINTER_ADDRESS,
-        tokenAddress: NFT_ADDRESS,
-        assetInvoiceUrl: invoiceURL,
-        assetInvoiceHash: invoiceHash,
-        metadataUrl: metadataURL,
-        metadataHash: metadataHash,
-        additionalData: JSON.stringify(new AdditionalDataDto(serviceProcess.id, serviceProcessHash, PaymentStates.OPEN))
-      }
-    );
+    const createdToken: Nft = await this.nftPrismaService.createNft({
+      remoteId: invoiceNumber,
+      ownerAddress: NFT_OWNER_ADDRESS,
+      minterAddress: NFT_MINTER_ADDRESS,
+      tokenAddress: NFT_ADDRESS,
+      assetInvoiceUrl: invoiceURL,
+      assetInvoiceHash: invoiceHash,
+      metadataUrl: metadataURL,
+      metadataHash: metadataHash,
+      additionalData: JSON.stringify(new AdditionalDataDto(serviceProcess.id, serviceProcessHash, PaymentStates.OPEN)),
+    });
     return createdToken ? this.convertToDto(createdToken) : null;
   }
 
@@ -67,7 +64,7 @@ export class NftDatabaseService implements NftInterface{
       nft.createdOn.toISOString(),
       nft.lastUpdatedOn.toISOString(),
       Number(nft.id),
-      nft.tokenAddress,
+      nft.tokenAddress
     );
   }
 
@@ -91,12 +88,12 @@ export class NftDatabaseService implements NftInterface{
     const additionalData: AdditionalDataDto = JSON.parse(foundToken.additionalData);
     additionalData.status = status;
 
-    const updatedToken: Nft = await this.nftPrismaService.updateNft(tokenId, JSON.stringify(additionalData));
+    const updatedToken: Nft = await this.nftPrismaService.updateNft(tokenId, JSON.stringify(additionalData), new Date().toISOString());
     return updatedToken ? this.convertToDto(updatedToken) : null;
   }
 
   public async readAllNfts(): Promise<TokenReadDto[]> {
-      const foundNfts: Nft[] = await this.nftPrismaService.getNfts();
-      return foundNfts.map(nft => this.convertToDto(nft));
+    const foundNfts: Nft[] = await this.nftPrismaService.getNfts();
+    return foundNfts.map((nft) => this.convertToDto(nft));
   }
 }

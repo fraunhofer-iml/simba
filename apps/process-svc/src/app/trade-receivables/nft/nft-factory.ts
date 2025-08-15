@@ -7,22 +7,21 @@
  */
 
 import { PaymentStates } from '@ap3/util';
-import { ServiceProcess } from '@prisma/client';
 import { TokenReadDto } from 'nft-folder-blockchain-connector-besu';
+import { ServiceProcess } from '@prisma/client';
 
-export interface NftInterface {
-
-  mintNFT(
+export abstract class NftFactory {
+  abstract mintNFT(
     serviceProcess: ServiceProcess,
     invoiceNumber: string,
     invoicePdf: any,
     invoiceURL: string,
     metadata: any,
     metadataURL: string
-  ): Promise<TokenReadDto>
-  readNFT(tokenId: number): Promise<TokenReadDto>
-  readNFTForInvoiceNumber(invoiceNumber: string): Promise<TokenReadDto>
-  readAllNfts(): Promise<TokenReadDto[]>
-  getPaymentState(tokenReadDto: TokenReadDto): PaymentStates
-  updateNFTStatus(tokenId: number, status: PaymentStates): Promise<TokenReadDto>
+  ): Promise<TokenReadDto>;
+  abstract readNFT(tokenId: number): Promise<TokenReadDto>;
+  abstract readNFTForInvoiceNumber(invoiceNumber: string): Promise<TokenReadDto>;
+  abstract readAllNfts(): Promise<TokenReadDto[]>;
+  abstract getPaymentState(tokenReadDto: TokenReadDto): PaymentStates;
+  abstract updateNFTStatus(tokenId: number, status: PaymentStates): Promise<TokenReadDto>;
 }

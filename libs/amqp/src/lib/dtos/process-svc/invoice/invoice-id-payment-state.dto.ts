@@ -6,13 +6,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { PaymentStates } from '@ap3/util';
 import { Prisma } from '@prisma/client';
 
 export class InvoiceIdAndPaymentStateAmqpDto {
   invoiceId: string;
-  paymentStatus: string;
+  paymentStatus: PaymentStates;
 
-  constructor(invoiceId: string, paymentState: string) {
+  constructor(invoiceId: string, paymentState: PaymentStates) {
     this.invoiceId = invoiceId;
     this.paymentStatus = paymentState;
   }

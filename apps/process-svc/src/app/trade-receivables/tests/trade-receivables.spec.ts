@@ -20,6 +20,7 @@ import {
   DatabaseModule,
   invoiceSeed,
   paymentStatesSeed,
+  paymentStatusMocks,
   PrismaService,
   serviceProcessesSeed,
   tradeReceivablesSeed,
@@ -35,10 +36,11 @@ import {
 } from 'nft-folder-blockchain-connector-besu';
 import { ScheduleModule } from '@nestjs/schedule';
 import { Test, TestingModule } from '@nestjs/testing';
+import { PaymentManagementService } from '../../invoices/payment-management/payment-management.service';
 import { InvoicesStatisticsService } from '../../invoices/statistics/invoices-statistics.service';
 import { MetadataService } from '../metadata/metadata.service';
-import { NftBlockchainService } from '../nft/nft-blockchain.service';
-import { NftDatabaseService } from '../nft/nft-database.service';
+import { NftBlockchainFactory } from '../nft/nft-blockchain-factory';
+import { NftDatabaseFactory } from '../nft/nft-database-factory';
 import { TradeReceivablesController } from '../trade-receivables.controller';
 import { TradeReceivablesService } from '../trade-receivables.service';
 import { ReadableMock } from './mocks/minio-object.mock';
@@ -59,11 +61,13 @@ describe('TradeReceivables', () => {
         InvoicesStatisticsService,
         MetadataService,
         BlockchainConnectorService,
-        NftDatabaseService,
-        NftBlockchainService,
+        NftDatabaseFactory,
+        NftBlockchainFactory,
+        PaymentManagementService,
+        BlockchainConnectorService,
         {
-          provide: 'NftService',
-          useClass: NftBlockchainService,
+          provide: 'NftFactory',
+          useClass: NftBlockchainFactory,
         },
         S3Service,
         {
@@ -188,8 +192,11 @@ describe('TradeReceivables', () => {
     const prismaTradeReceivableSpy = jest.spyOn(prisma.tradeReceivable, 'findUnique');
     prismaTradeReceivableSpy.mockResolvedValue(tradeReceivablesSeed[0]);
 
-    const prismaPaymentStatusSpy = jest.spyOn(prisma.paymentStatus, 'create');
-    prismaPaymentStatusSpy.mockResolvedValue(undefined);
+    const prismaPaymentStatusCreateSpy = jest.spyOn(prisma.paymentStatus, 'create');
+    prismaPaymentStatusCreateSpy.mockResolvedValue(undefined);
+
+    const prismaPaymentStatusFindManySpy = jest.spyOn(prisma.paymentStatus, 'findMany');
+    prismaPaymentStatusFindManySpy.mockResolvedValue(paymentStatusMocks);
 
     const readNftSpy = jest.spyOn(tokenReadService, 'getTokens');
     readNftSpy.mockResolvedValue([tokenReadDtoMock]);

@@ -12,13 +12,14 @@ import { DatabaseModule } from '@ap3/database';
 import { S3Module } from '@ap3/s3';
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
+import { PaymentManagementService } from '../invoices/payment-management/payment-management.service';
 import { InvoicesStatisticsService } from '../invoices/statistics/invoices-statistics.service';
 import { MetadataService } from './metadata/metadata.service';
+import { NftBlockchainFactory } from './nft/nft-blockchain-factory';
+import { NftDatabaseFactory } from './nft/nft-database-factory';
 import { TradeReceivablesController } from './trade-receivables.controller';
 import { TradeReceivablesCronJob } from './trade-receivables.cron-job';
 import { TradeReceivablesService } from './trade-receivables.service';
-import { NftDatabaseService } from './nft/nft-database.service';
-import { NftBlockchainService } from './nft/nft-blockchain.service';
 
 @Module({
   imports: [DatabaseModule, S3Module, ConfigurationModule, BlockchainConnectorModule, ScheduleModule.forRoot()],
@@ -28,13 +29,13 @@ import { NftBlockchainService } from './nft/nft-blockchain.service';
     InvoicesStatisticsService,
     MetadataService,
     TradeReceivablesCronJob,
-    NftDatabaseService,
-    NftBlockchainService,
+    NftDatabaseFactory,
+    PaymentManagementService,
+    NftBlockchainFactory,
     {
-      provide: 'NftService',
-      useClass: process.env['BCC_ENABLED'] == 'true' ? NftBlockchainService : NftDatabaseService
-    }
+      provide: 'NftFactory',
+      useClass: process.env['BCC_ENABLED'] == 'true' ? NftBlockchainFactory : NftDatabaseFactory,
+    },
   ],
-
 })
 export class TradeReceivablesModule {}

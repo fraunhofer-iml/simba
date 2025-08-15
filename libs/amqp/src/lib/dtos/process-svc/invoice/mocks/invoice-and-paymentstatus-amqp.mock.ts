@@ -7,9 +7,10 @@
  */
 
 import { paymentStatesSeed } from '@ap3/database';
+import { PaymentStates } from '@ap3/util';
 import { InvoiceIdAndPaymentStateAmqpDto } from '../invoice-id-payment-state.dto';
 
 export const invoiceAndPaymentStatusDtoAmqpMock: InvoiceIdAndPaymentStateAmqpDto[] = [
-  new InvoiceIdAndPaymentStateAmqpDto(paymentStatesSeed[0].tradeReceivableId, paymentStatesSeed[0].status),
-  new InvoiceIdAndPaymentStateAmqpDto(paymentStatesSeed[1].tradeReceivableId, paymentStatesSeed[1].status),
+  new InvoiceIdAndPaymentStateAmqpDto(paymentStatesSeed[0].tradeReceivableId, paymentStatesSeed[0].status as PaymentStates),
+  new InvoiceIdAndPaymentStateAmqpDto(paymentStatesSeed[1].tradeReceivableId, paymentStatesSeed[1].status as PaymentStates),
 ];

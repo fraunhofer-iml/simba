@@ -29,6 +29,7 @@ import { S3Service } from '@ap3/s3';
 import { OfferStatesEnum, PAYMENT_DEADLINE_IN_DAYS, PAYMENT_TERMS, PaymentStates, VAT_IN_PERCENT } from '@ap3/util';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Invoice, Offer, PaymentStatus, TradeReceivable } from '@prisma/client';
+import { PaymentManagementService } from './payment-management/payment-management.service';
 import { InvoicesZugferdService } from './zugferd/invoices-zugferd.service';
 
 @Injectable()
@@ -40,6 +41,7 @@ export class InvoicesService {
     private readonly orderDatabaseAdapterService: OrderDatabaseAdapterService,
     private readonly offerPrismaService: OfferPrismaService,
     private readonly invoiceZugferdService: InvoicesZugferdService,
+    private readonly paymentStatesService: PaymentManagementService,
     private readonly config: ConfigurationService,
     private readonly s3Service: S3Service
   ) {}
@@ -107,21 +109,8 @@ export class InvoicesService {
 
   async createPaymentStatusForInvoice(statusChanges: InvoiceIdAndPaymentStateAmqpDto[]): Promise<boolean> {
     try {
-      for (const statusChange of statusChanges) {
-        const convertedDto = new InvoiceIdAndPaymentStateAmqpDto(statusChange.invoiceId, statusChange.paymentStatus);
-        const relatedTradeReceivable: TradeReceivable = await this.tradeReceivablePrismaService.getTradeReceivableByInvoiceId(
-          convertedDto.invoiceId
-        );
-        if (relatedTradeReceivable) {
-          await this.tradeReceivablePrismaService.createPaymentState(
-            convertedDto.toPrismaCreatePaymentStatusQuery(relatedTradeReceivable.id, new Date())
-          );
-          this.logger.debug('Updated PaymentState for invoice: ', convertedDto.invoiceId);
-        } else {
-          throw new NotFoundException(convertedDto.invoiceId);
-        }
-      }
-      return true;
+      const createdToken = await this.paymentStatesService.createPaymentStateAndUpdateNft(statusChanges);
+      return !!createdToken;
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;

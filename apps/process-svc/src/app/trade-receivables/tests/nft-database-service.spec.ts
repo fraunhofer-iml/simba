@@ -11,17 +11,17 @@ import { ConfigurationModule } from '@ap3/config';
 import { DatabaseModule, nftSeed, PrismaService, serviceProcessesSeed } from '@ap3/database';
 import { PaymentStates } from '@ap3/util';
 import { Test, TestingModule } from '@nestjs/testing';
-import { NftDatabaseService } from '../nft/nft-database.service';
+import { NftDatabaseFactory } from '../nft/nft-database-factory';
 
 describe('NftDatabaseService', () => {
-  let service: NftDatabaseService;
+  let service: NftDatabaseFactory;
   let prisma: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [DatabaseModule, ConfigurationModule],
       providers: [
-        NftDatabaseService,
+        NftDatabaseFactory,
         {
           provide: PrismaService,
           useValue: {
@@ -36,7 +36,7 @@ describe('NftDatabaseService', () => {
       ],
     }).compile();
 
-    service = module.get<NftDatabaseService>(NftDatabaseService) as NftDatabaseService;
+    service = module.get<NftDatabaseFactory>(NftDatabaseFactory) as NftDatabaseFactory;
     prisma = module.get<PrismaService>(PrismaService) as PrismaService;
   });
 

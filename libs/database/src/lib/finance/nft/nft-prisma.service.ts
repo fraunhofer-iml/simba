@@ -14,9 +14,7 @@ import { PrismaService } from '../../prisma.service';
 @Injectable()
 export class NftPrismaService {
   private logger = new Logger(NftPrismaService.name);
-  constructor(
-    private readonly prismaService: PrismaService
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async createNft(data: Prisma.NftCreateInput): Promise<Nft | null> {
     this.logger.verbose(`Insert new Nft ${data}`);
@@ -31,7 +29,7 @@ export class NftPrismaService {
   async getNft(tokenId: number): Promise<Nft | null> {
     try {
       return await this.prismaService.nft.findUnique({
-        where: { id: tokenId }
+        where: { id: tokenId },
       });
     } catch (e) {
       this.logger.error(util.inspect(e));
@@ -42,7 +40,7 @@ export class NftPrismaService {
   async getNftByInvoiceNumber(invoiceNumber: string): Promise<Nft[] | null> {
     try {
       return await this.prismaService.nft.findMany({
-        where: { remoteId: invoiceNumber }
+        where: { remoteId: invoiceNumber },
       });
     } catch (e) {
       this.logger.error(util.inspect(e));
@@ -59,16 +57,15 @@ export class NftPrismaService {
     }
   }
 
-  async updateNft(id: number, additionalData: string): Promise<Nft | null> {
+  async updateNft(id: number, additionalData: string, currentDateIsoString: string): Promise<Nft | null> {
     try {
       return await this.prismaService.nft.update({
         where: { id: id },
-        data: { additionalData: additionalData },
+        data: { additionalData: additionalData, lastUpdatedOn: currentDateIsoString },
       });
     } catch (e) {
       this.logger.error(util.inspect(e));
       throw e;
     }
   }
-
 }

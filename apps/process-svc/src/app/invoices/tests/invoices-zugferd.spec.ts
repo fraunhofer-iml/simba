@@ -8,14 +8,18 @@
 
 import { CompanyAndInvoiceAmqpDto } from '@ap3/amqp';
 import { invoiceDtoMocks } from '@ap3/api';
+import { BlockchainConnectorService } from '@ap3/blockchain-connector';
 import { ConfigurationModule } from '@ap3/config';
 import { companiesSeed, DatabaseModule, invoiceForZugferdMock, PrismaService } from '@ap3/database';
 import { S3Module, S3Service } from '@ap3/s3';
 import { Client } from 'minio';
 import { MINIO_CONNECTION } from 'nestjs-minio';
+import { DataIntegrityService, TokenMintService, TokenReadService, TokenUpdateService } from 'nft-folder-blockchain-connector-besu';
 import { Test, TestingModule } from '@nestjs/testing';
+import { NftBlockchainFactory } from '../../trade-receivables/nft/nft-blockchain-factory';
 import { InvoicesController } from '../invoices.controller';
 import { InvoicesService } from '../invoices.service';
+import { PaymentManagementService } from '../payment-management/payment-management.service';
 import { InvoicesStatisticsService } from '../statistics/invoices-statistics.service';
 import { InvoicesZugferdService } from '../zugferd/invoices-zugferd.service';
 
@@ -37,6 +41,13 @@ describe('InvoicesController', () => {
         InvoicesService,
         InvoicesZugferdService,
         InvoicesStatisticsService,
+        PaymentManagementService,
+        BlockchainConnectorService,
+
+        {
+          provide: 'NftFactory',
+          useClass: NftBlockchainFactory,
+        },
         {
           provide: PrismaService,
           useValue: {
@@ -51,6 +62,31 @@ describe('InvoicesController', () => {
         {
           provide: MINIO_CONNECTION,
           useValue: minioClientMock,
+        },
+        {
+          provide: DataIntegrityService,
+          useValue: {
+            hashData: jest.fn(),
+          },
+        },
+        {
+          provide: TokenMintService,
+          useValue: {
+            mintToken: jest.fn(),
+          },
+        },
+        {
+          provide: TokenUpdateService,
+          useValue: {
+            updateToken: jest.fn(),
+          },
+        },
+        {
+          provide: TokenReadService,
+          useValue: {
+            getToken: jest.fn(),
+            getTokens: jest.fn(),
+          },
         },
       ],
     }).compile();

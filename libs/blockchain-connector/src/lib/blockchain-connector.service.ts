@@ -84,7 +84,8 @@ export class BlockchainConnectorService {
    * The current user is the owner of the private key specified in the environments.
    */
   public async readNFTs(): Promise<TokenReadDto[]> {
-    return this.tokenReadService.getTokens();
+    const res = this.tokenReadService.getTokens();
+    return res;
   }
 
   /**
@@ -103,7 +104,6 @@ export class BlockchainConnectorService {
    */
   public async updateNFTStatus(tokenId: number, status: PaymentStates): Promise<TokenReadDto> {
     const foundToken: TokenReadDto = await this.readNFT(tokenId);
-
     const additionalData: AdditionalDataDto = JSON.parse(foundToken.additionalData);
     additionalData.status = status;
 

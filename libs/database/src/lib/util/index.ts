@@ -7,3 +7,4 @@
  */
 
 export * from './database.util';
+export * from './query-builder-helper.service';

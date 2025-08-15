@@ -6,19 +6,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { BlockchainConnectorService } from '@ap3/blockchain-connector';
 import { PaymentStates } from '@ap3/util';
+import { TokenReadDto } from 'nft-folder-blockchain-connector-besu';
 import { Injectable } from '@nestjs/common';
 import { ServiceProcess } from '@prisma/client';
-import { BlockchainConnectorService } from '@ap3/blockchain-connector';
-import { TokenReadDto } from 'nft-folder-blockchain-connector-besu';
-import { NftInterface } from './nft.interface';
+import { NftFactory } from './nft-factory';
 
 @Injectable()
-export class NftBlockchainService implements NftInterface{
-
-  constructor(
-    private readonly blockchainConnectorService: BlockchainConnectorService,
-  ) {}
+export class NftBlockchainFactory extends NftFactory {
+  constructor(private readonly blockchainConnectorService: BlockchainConnectorService) {
+    super();
+  }
 
   public async mintNFT(
     serviceProcess: ServiceProcess,
@@ -28,14 +27,7 @@ export class NftBlockchainService implements NftInterface{
     metadata: any,
     metadataURL: string
   ): Promise<TokenReadDto> {
-    return this.blockchainConnectorService.mintNFT(
-      serviceProcess,
-      invoiceNumber,
-      invoicePdf,
-      invoiceURL,
-      metadata,
-      metadataURL
-    );
+    return this.blockchainConnectorService.mintNFT(serviceProcess, invoiceNumber, invoicePdf, invoiceURL, metadata, metadataURL);
   }
 
   public async readNFT(tokenId: number): Promise<TokenReadDto> {
@@ -55,6 +47,6 @@ export class NftBlockchainService implements NftInterface{
   }
 
   public async readAllNfts(): Promise<TokenReadDto[]> {
-      return this.blockchainConnectorService.readNFTs();
+    return this.blockchainConnectorService.readNFTs();
   }
 }

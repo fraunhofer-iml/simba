@@ -29,7 +29,6 @@ export class InvoiceDatabaseAdapterService {
     private readonly invoicePrismaService: InvoicePrismaService
   ) {}
 
-
   async createInvoice(invoiceAmqpDto: InvoiceAmqpDto): Promise<Invoice> {
     this.logger.verbose('Create new invoice');
     return (await this.invoicePrismaService.createInvoice({
