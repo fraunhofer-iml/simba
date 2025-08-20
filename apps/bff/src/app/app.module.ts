@@ -12,11 +12,11 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { CompaniesModule } from './companies/companies.module';
 import { InvoicesModule } from './invoices/invoices.module';
+import { NftsModule } from './nfts/nfts.module';
 import { OffersModule } from './offers/offers.module';
 import { OrdersModule } from './orders/orders.module';
 import { ProductsModule } from './products/products.module';
 import { ServiceProcessModule } from './service-process/service-process.module';
-import { TradeReceivablesModule } from './trade-receivables/trade-receivables.module';
 
 @Module({
   imports: [
@@ -24,7 +24,7 @@ import { TradeReceivablesModule } from './trade-receivables/trade-receivables.mo
     OffersModule,
     OrdersModule,
     ProductsModule,
-    TradeReceivablesModule,
+    NftsModule,
     CompaniesModule,
     KeycloakConnectModule.registerAsync({
       useExisting: KeycloakConfigService,

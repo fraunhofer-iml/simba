@@ -70,7 +70,7 @@ export class InvoiceDto {
     this.currency = currency;
   }
 
-  public static toTradeReceivableDto(dto: InvoiceAmqpDto, creditor: string, debtor: string): InvoiceDto {
+  public static toInvoiceDto(dto: InvoiceAmqpDto, creditor: string, debtor: string): InvoiceDto {
     return new InvoiceDto(
       dto.id,
       dto.invoiceNumber,

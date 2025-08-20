@@ -16,7 +16,6 @@ export * from './payment-states.seed';
 export * from './products.seed';
 export * from './service-process-states.seed';
 export * from './service-process.seed';
-export * from './trade-receivables.seed';
 export * from './payment-information.seed';
 export * from './offers.seed';
 export * from './machine-assignments.seed';

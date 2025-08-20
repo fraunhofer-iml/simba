@@ -153,7 +153,7 @@ export class InvoicesController {
 
   @Get('/statistics/paid')
   @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR, AuthRolesEnum.CUSTOMER] })
-  @ApiOperation({ description: 'Get a statistic for all trade receivables paid in a given year, grouped by month. ' })
+  @ApiOperation({ description: 'Get a statistic for all invoices paid in a given year, grouped by month. ' })
   @ApiQuery({
     name: 'year',
     type: Number,
@@ -176,7 +176,7 @@ export class InvoicesController {
     required: false,
   })
   @ApiResponse({ type: [PaidStatisticsAmqpDto] })
-  async getStatisticPaidTradePerMonth(
+  async getPaidInvoiceStatisticPerMonth(
     @AuthenticatedUser() user: KeycloakUser,
     @Query('year') year: number,
     @Query('financialRole') financialRole: FinancialRoles,
@@ -187,7 +187,7 @@ export class InvoicesController {
 
   @Get('/statistics/unpaid')
   @Roles({ roles: [AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR, AuthRolesEnum.CUSTOMER] })
-  @ApiOperation({ description: 'Get trade receivables statistics by companyId.' })
+  @ApiOperation({ description: 'Get invoice statistics by companyId.' })
   @ApiQuery({
     name: 'financialRole',
     type: String,

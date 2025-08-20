@@ -28,7 +28,6 @@ export enum SeedFileNames {
   SERVICE_PROCESSES = 'service-processes.seed.csv',
   SERVICE_PROCESS_STATES = 'service-process-states.seed.csv',
   SERVICE_PROCESS_RELATIONS = 'service-process-relations.seed.csv',
-  TRADE_RECEIVABLES = 'trade-receivables.seed.csv',
 }
 export abstract class CsvParser {
   protected static prismaImport = `import { Prisma } from '@prisma/client';`;

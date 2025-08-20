@@ -7,20 +7,15 @@
  */
 
 export class NotPaidStatisticsAmqpDto {
-  overdueTradeReceivableCount: number;
-  overdueTradeReceivableValue: number;
-  outstandingTradeReceivableCount: number;
-  outstandingTradeReceivableValue: number;
+  overdueInvoiceCount: number;
+  overdueInvoiceValue: number;
+  outstandingInvoiceCount: number;
+  outstandingInvoiceValue: number;
 
-  constructor(
-    overdueTradeReceivableCount: number,
-    overdueTradeReceivableValue: number,
-    outstandingTradeReceivableCount: number,
-    outstandingTradeReceivableValue: number
-  ) {
-    this.overdueTradeReceivableCount = overdueTradeReceivableCount;
-    this.overdueTradeReceivableValue = overdueTradeReceivableValue;
-    this.outstandingTradeReceivableCount = outstandingTradeReceivableCount;
-    this.outstandingTradeReceivableValue = outstandingTradeReceivableValue;
+  constructor(overdueInvoiceCount: number, overdueInvoiceValue: number, outstandingInvoiceCount: number, outstandingInvoiceValue: number) {
+    this.overdueInvoiceCount = overdueInvoiceCount;
+    this.overdueInvoiceValue = overdueInvoiceValue;
+    this.outstandingInvoiceCount = outstandingInvoiceCount;
+    this.outstandingInvoiceValue = outstandingInvoiceValue;
   }
 }

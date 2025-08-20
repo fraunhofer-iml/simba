@@ -11,16 +11,14 @@ import { CreateInvoiceDto, orderOverviewMock, tokenReadDtoMock } from '@ap3/api'
 import { BlockchainConnectorService } from '@ap3/blockchain-connector';
 import { ConfigurationModule, ConfigurationService } from '@ap3/config';
 import {
-  createPaymentStatusQueryMocks,
-  DatabaseModule,
+  createPaymentStatusQueryMocks /*   createPaymentStatusQueryMocks, */,
+  DatabaseModule /*   invoiceIdQueryMock, */,
   invoiceIdQueryMock,
   invoiceNFTPrismaMock,
   invoiceSeed,
   paymentStatesSeed,
   paymentStatusMocks,
   PrismaService,
-  tradeReceivableMocks,
-  tradeReceivablesSeed,
 } from '@ap3/database';
 import { S3Module, S3Service } from '@ap3/s3';
 import { PaymentStates } from '@ap3/util';
@@ -30,8 +28,8 @@ import { DataIntegrityService, TokenMintService, TokenReadService, TokenUpdateSe
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PaymentManagementService } from '../../invoices/payment-management/payment-management.service';
-import { NftBlockchainFactory } from '../../trade-receivables/nft/nft-blockchain-factory';
-import { NftDatabaseFactory } from '../../trade-receivables/nft/nft-database-factory';
+import { NftBlockchainFactory } from '../../nfts/util/nft-blockchain-factory';
+import { NftDatabaseFactory } from '../../nfts/util/nft-database-factory';
 import { InvoicesController } from '../invoices.controller';
 import { InvoicesService } from '../invoices.service';
 import { InvoicesStatisticsService } from '../statistics/invoices-statistics.service';
@@ -101,10 +99,6 @@ describe('InvoicesController', () => {
               findMany: jest.fn(),
               create: jest.fn(),
             },
-            tradeReceivable: {
-              findUnique: jest.fn(),
-            },
-
             $queryRaw: jest.fn(),
           },
         },
@@ -154,8 +148,8 @@ describe('InvoicesController', () => {
     prismaPSCreateSpy.mockResolvedValueOnce(paymentStatusMocks[0]);
     prismaPSCreateSpy.mockResolvedValueOnce(paymentStatusMocks[1]);
 
-    prismaTRFindSpy = jest.spyOn(prisma.tradeReceivable, 'findUnique');
-    prismaTRFindSpy.mockResolvedValue(tradeReceivableMocks[0]);
+    prismaTRFindSpy = jest.spyOn(prisma.invoice, 'findUnique');
+    prismaTRFindSpy.mockResolvedValue(invoiceSeed[0]);
 
     prismaPSSpy = jest.spyOn(prisma.paymentStatus, 'findMany');
     prismaPSSpy.mockResolvedValueOnce([paymentStatesSeed[0], paymentStatesSeed[1]]);
@@ -203,7 +197,7 @@ describe('InvoicesController', () => {
   it('findAll: should return all invoices', async () => {
     const expectedReturn = [invoicesAmqpMock[0], invoicesAmqpMock[1]];
     const prismaRawSpy = jest.spyOn(prisma, '$queryRaw');
-    prismaRawSpy.mockResolvedValue([tradeReceivablesSeed[0], tradeReceivablesSeed[1]]);
+    prismaRawSpy.mockResolvedValue(invoiceNFTPrismaMock);
 
     const params = new AllInvoicesFilterAmqpDto(
       [PaymentStates.PAID],

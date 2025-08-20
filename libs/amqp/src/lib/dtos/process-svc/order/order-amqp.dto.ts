@@ -23,7 +23,7 @@ export class OrderAmqpDto {
   offerIds: string[];
   robots: string[];
   customerId: string;
-  tradeReceivableIds: string[];
+  invoiceIds: string[];
   currency: string;
   contractorId: string;
   contractorName: string;
@@ -39,7 +39,7 @@ export class OrderAmqpDto {
     status: ServiceStatusAmqpDto,
     customerId: string,
     currency: string,
-    tradeReceivableIds: string[] = [],
+    invoiceIds: string[] = [],
     offerIds: string[] = [],
     robots: string[] = [],
     contractorId: string,
@@ -56,7 +56,7 @@ export class OrderAmqpDto {
     this.status = status;
     this.customerId = customerId;
     this.currency = currency;
-    this.tradeReceivableIds = tradeReceivableIds;
+    this.invoiceIds = invoiceIds;
     this.offerIds = offerIds;
     this.robots = robots;
     this.contractorId = contractorId;
@@ -64,9 +64,10 @@ export class OrderAmqpDto {
     this.acceptedOfferId = acceptedOfferId;
   }
 
+  //TODO: test if invoiceId is ok
   public static fromPrismaEntity(order: OrderWithDependencies, currentState: ServiceStatusAmqpDto): OrderAmqpDto {
-    const tradeReceivableIds: string[] | undefined = order.serviceProcess?.invoices
-      ?.map((invoice) => invoice.tradeReceivable?.id)
+    const invoiceIds: string[] | undefined = order.serviceProcess?.invoices
+      ?.map((invoice) => invoice.id)
       ?.filter((id): id is string => id !== undefined);
 
     return new OrderAmqpDto(
@@ -80,7 +81,7 @@ export class OrderAmqpDto {
       currentState,
       order.buyer.id,
       order.vatCurrency,
-      tradeReceivableIds ? tradeReceivableIds : [],
+      invoiceIds ? invoiceIds : [],
       order.serviceProcess?.offers.map((offer) => offer.id),
       DatabaseUtil.ExtractMachineIdsFromServiceProcess(order.serviceProcess),
       order.seller.id,

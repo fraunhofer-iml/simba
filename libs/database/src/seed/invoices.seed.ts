@@ -14,7 +14,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp001',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'AEF3122355213EFA1'
   },
   {
     id: 'IV002',
@@ -30,7 +31,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp002',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'AEF3122355213EFA2'
   },
   {
     id: 'IV003',
@@ -46,7 +48,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp003',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'AEF3122355213EFA3'
   },
   {
     id: 'IV004',
@@ -62,7 +65,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp004',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'AEF3122355213EFA4'
   },
   {
     id: 'IV005',
@@ -78,7 +82,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp005',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'AEF3122355213EFA5'
   },
   {
     id: 'IV006',
@@ -94,7 +99,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp006',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'AEF3122355213EFA6'
   },
   {
     id: 'IV007',
@@ -110,7 +116,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp007',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'AEF3122355213EFA7'
   },
   {
     id: 'IV008',
@@ -126,7 +133,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp008',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'AEF3122355213EFA8'
   },
   {
     id: 'IV009',
@@ -142,7 +150,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp009',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'AEF3122355213EFA9'
   },
   {
     id: 'IV010',
@@ -158,7 +167,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp010',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '0VYJSO1DYGH6Q6ON'
   },
   {
     id: 'IV011',
@@ -174,7 +184,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp011',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'AVSGE47QZYAS3I3H'
   },
   {
     id: 'IV012',
@@ -190,7 +201,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp012',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '87096LEC1LEKVGCP'
   },
   {
     id: 'IV013',
@@ -206,7 +218,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp013',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'W918C15LIVCDQY1O'
   },
   {
     id: 'IV014',
@@ -222,7 +235,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp014',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'WBEW4AAH6CASXXZ7'
   },
   {
     id: 'IV015',
@@ -238,7 +252,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp015',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'FBHXGYTJU625FR1G'
   },
   {
     id: 'IV016',
@@ -254,7 +269,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp016',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'AA96WO8I74P56ZNU'
   },
   {
     id: 'IV017',
@@ -270,7 +286,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp017',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '4HJ1ZIF30H2GUN03'
   },
   {
     id: 'IV018',
@@ -286,7 +303,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp018',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '433KUR11IUO16CJB'
   },
   {
     id: 'IV019',
@@ -302,7 +320,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp019',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'SW4BST0GBBBAM1C5'
   },
   {
     id: 'IV020',
@@ -318,7 +337,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp020',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '9N76ZTS284WXRXXF'
   },
   {
     id: 'IV021',
@@ -334,7 +354,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp021',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '65BX3E8RBKGIWPYV'
   },
   {
     id: 'IV022',
@@ -350,7 +371,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp022',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '3COFQENPZOXRFB9N'
   },
   {
     id: 'IV023',
@@ -366,7 +388,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp023',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '366VMJRQJMOFZTFM'
   },
   {
     id: 'IV024',
@@ -382,7 +405,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp024',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '8XFJIF365YAWJ9PM'
   },
   {
     id: 'IV025',
@@ -398,7 +422,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp025',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'ZXJFG4KM0MCTYF0N'
   },
   {
     id: 'IV026',
@@ -414,7 +439,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp026',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '062SPSQTW62E5P9D'
   },
   {
     id: 'IV027',
@@ -430,7 +456,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp027',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'K08WUXL4FPRVXY94'
   },
   {
     id: 'IV028',
@@ -446,7 +473,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp028',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '4SVM0WGL5IMDFLUS'
   },
   {
     id: 'IV029',
@@ -462,7 +490,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp029',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'BOTJEU5RAF90GP6D'
   },
   {
     id: 'IV030',
@@ -478,7 +507,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp030',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '4I1C42G1HK5XBWZ1'
   },
   {
     id: 'IV031',
@@ -494,7 +524,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp031',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '3TABOTRAJ4UWS9U7'
   },
   {
     id: 'IV032',
@@ -510,7 +541,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp032',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '4EHSV5P15ZDONJ13'
   },
   {
     id: 'IV033',
@@ -526,7 +558,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp033',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'OEFDRU8DGWC664VI'
   },
   {
     id: 'IV034',
@@ -542,7 +575,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp034',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '6B98HKMVRAGN1TQK'
   },
   {
     id: 'IV035',
@@ -558,7 +592,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp035',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: 'QYKHHTAU1YAGQ8A7'
   },
   {
     id: 'IV036',
@@ -574,7 +609,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0001',
     creditorId: 'pt0002',
     serviceProcessId: 'sp036',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '9TXKD84MGET3P62K'
   },
   {
     id: 'IV037',
@@ -590,7 +626,8 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp037',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '4VQH7RQ17KFGV94H'
   },
   {
     id: 'IV038',
@@ -606,6 +643,7 @@ import { Prisma } from '@prisma/client';
     debtorId: 'pt0002',
     creditorId: 'pt0003',
     serviceProcessId: 'sp038',
-    paymentTerms: '10 Tage 2%; 60 Tage netto'
+    paymentTerms: '10 Tage 2%; 60 Tage netto',
+    nft: '5E23BF9M8GGKTPV3'
   }
 ]

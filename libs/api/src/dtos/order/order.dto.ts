@@ -36,7 +36,7 @@ export class OrderDto {
   @ApiProperty()
   customerId: string;
   @ApiProperty()
-  tradeReceivableId: string;
+  invoiceId: string;
 
   constructor(
     id: string,
@@ -50,7 +50,7 @@ export class OrderDto {
     offerIds: string[],
     robots: string[],
     customerId: string,
-    tradeReceivableId: string
+    invoiceId: string
   ) {
     this.id = id;
     this.productId = productId;
@@ -63,6 +63,6 @@ export class OrderDto {
     this.offerIds = offerIds;
     this.robots = robots;
     this.customerId = customerId;
-    this.tradeReceivableId = tradeReceivableId;
+    this.invoiceId = invoiceId;
   }
 }

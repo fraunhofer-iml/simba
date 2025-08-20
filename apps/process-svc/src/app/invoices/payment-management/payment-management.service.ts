@@ -1,11 +1,11 @@
 import util from 'node:util';
 import { InvoiceIdAndPaymentStateAmqpDto } from '@ap3/amqp';
-import { InvoiceDatabaseAdapterService, InvoiceWithNFT, TradeReceivablePrismaService } from '@ap3/database';
+import { InvoiceDatabaseAdapterService, InvoiceWithOrderBuyerRef, NftPrismaService } from '@ap3/database';
 import { PaymentStates } from '@ap3/util';
 import { TokenReadDto } from 'nft-folder-blockchain-connector-besu';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { PaymentStatus, TradeReceivable } from '@prisma/client';
-import { NftFactory } from '../../trade-receivables/nft/nft-factory';
+import { PaymentStatus } from '@prisma/client';
+import { NftFactory } from '../../nfts/util/nft-factory';
 
 @Injectable()
 export class PaymentManagementService {
@@ -13,26 +13,20 @@ export class PaymentManagementService {
   constructor(
     @Inject('NftFactory')
     private readonly persistenceFactory: NftFactory,
-    private readonly tradeReceivablePrismaService: TradeReceivablePrismaService,
+    private readonly nftPrismaServices: NftPrismaService,
     private readonly invoicePrismaAdapterService: InvoiceDatabaseAdapterService
   ) {}
   public async createPaymentStateAndUpdateNft(idsAndStates: InvoiceIdAndPaymentStateAmqpDto[]): Promise<TokenReadDto> {
     try {
       for (const idAndState of idsAndStates) {
-        const invoice: InvoiceWithNFT = await this.invoicePrismaAdapterService.getInvoiceById(idAndState.invoiceId);
+        const invoice: InvoiceWithOrderBuyerRef = await this.invoicePrismaAdapterService.getInvoiceById(idAndState.invoiceId);
         if (!invoice) return;
-        const tradeReceivable: TradeReceivable = await this.tradeReceivablePrismaService.getTradeReceivableByInvoiceId(invoice.id);
-        if (!tradeReceivable) return;
-        const paymentStates: PaymentStatus[] = await this.tradeReceivablePrismaService.getPaymentStatesForTradeReceivable(
-          tradeReceivable.id
-        );
+        const paymentStates: PaymentStatus[] = await this.invoicePrismaAdapterService.getPaymentStatesForInvoice(invoice.id);
         const currentPaymentState = this.getLatestPaymentState(paymentStates);
         if (currentPaymentState == idAndState.paymentStatus) return;
-        this.logger.log(`A new payment status for the trade receivable with id ${tradeReceivable.id} will be created.`);
+        this.logger.log(`A new payment status for the invoice with id ${invoice.id} will be created.`);
         const convertedDto = new InvoiceIdAndPaymentStateAmqpDto(invoice.id, idAndState.paymentStatus);
-        await this.tradeReceivablePrismaService.createPaymentState(
-          convertedDto.toPrismaCreatePaymentStatusQuery(tradeReceivable.id, new Date())
-        );
+        await this.invoicePrismaAdapterService.createPaymentState(convertedDto.toPrismaCreatePaymentStatusQuery(invoice.id, new Date()));
         const foundNft: TokenReadDto = await this.persistenceFactory.readNFTForInvoiceNumber(invoice.invoiceNumber);
         if (!foundNft) return;
         this.logger.log(`The nft of the invoice with id ${idAndState.invoiceId} will be updated.`);

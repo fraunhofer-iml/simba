@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { parse } from 'csv-parse/sync';
-import { Invoice, PaymentStatus, Prisma, TradeReceivable } from '@prisma/client';
+import { Invoice, PaymentStatus, Prisma } from '@prisma/client';
 import { CsvParser, SeedFileNames } from './csv-parser';
 
 export class FinanceDataParser extends CsvParser {
@@ -39,18 +39,6 @@ export class FinanceDataParser extends CsvParser {
       },
     });
     this.evaluate(retVal, 'payment-states.seed.ts', `export const paymentStatesSeed = `);
-    return retVal;
-  }
-
-  public static parseTradeReceivables(): TradeReceivable[] {
-    const retVal: TradeReceivable[] = parse(this.loadAndSanitizeFile(SeedFileNames.TRADE_RECEIVABLES), {
-      delimiter: ',',
-      columns: true,
-      cast: (value, context) => {
-        return value === 'null' ? null : value;
-      },
-    });
-    this.evaluate(retVal, 'trade-receivables.seed.ts', `export const tradeReceivablesSeed = `);
     return retVal;
   }
 }

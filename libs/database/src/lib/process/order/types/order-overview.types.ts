@@ -26,9 +26,7 @@ export type OrderWithDependencies = {
         acceptedOffer: { id: string; basicPrice: Decimal; timeToProduction: Decimal; utilization: Decimal } | null;
         invoices:
           | {
-              tradeReceivable: {
-                id: string;
-              } | null;
+              id: string;
             }[]
           | null;
       })

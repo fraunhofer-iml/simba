@@ -8,6 +8,7 @@
 
 import {
   companiesSeed,
+  invoiceSeed,
   machinesSeed,
   offersSeed,
   orderLinesSeed,
@@ -15,7 +16,6 @@ import {
   productsSeed,
   serviceProcessesSeed,
   serviceStatesSeed,
-  tradeReceivablesSeed,
 } from '@ap3/database';
 import { OrderDto } from '../order.dto';
 
@@ -32,7 +32,7 @@ export const orderDtosMock: OrderDto[] = [
     [offersSeed[0].id, offersSeed[1].id, offersSeed[2].id, offersSeed[3].id],
     [machinesSeed[0].id, machinesSeed[1].id],
     companiesSeed[0].id,
-    tradeReceivablesSeed[0].id
+    invoiceSeed[0].id
   ),
   new OrderDto(
     ordersSeed[1].id,

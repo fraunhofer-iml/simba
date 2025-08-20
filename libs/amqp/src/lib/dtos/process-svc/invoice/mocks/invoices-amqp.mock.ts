@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { invoiceSeed, ordersSeed, paymentStatesSeed, tradeReceivablesSeed } from '@ap3/database';
-import { PaymentStatusAmqpDto } from '../../trade-receivable';
+import { invoiceSeed, ordersSeed, paymentStatesSeed } from '@ap3/database';
+import { PaymentStatusAmqpDto } from '../../payment-status';
 import { InvoiceAmqpDto } from '../invoice-amqp.dto';
 
 export const invoicesAmqpMock = <InvoiceAmqpDto[]>[
@@ -17,7 +17,7 @@ export const invoicesAmqpMock = <InvoiceAmqpDto[]>[
     creditorId: invoiceSeed[0].creditorId,
     orderId: ordersSeed[0].id,
     orderNumber: ordersSeed[0].buyerOrderRefDocumentId,
-    nft: tradeReceivablesSeed[0].nft,
+    nft: invoiceSeed[0].nft,
     totalAmountWithoutVat: +invoiceSeed[0].totalAmountWithoutVat,
     status: new PaymentStatusAmqpDto(paymentStatesSeed[1].status, paymentStatesSeed[1].timestamp),
     invoiceNumber: invoiceSeed[0].invoiceNumber,
@@ -36,7 +36,7 @@ export const invoicesAmqpMock = <InvoiceAmqpDto[]>[
     creditorId: invoiceSeed[1].creditorId,
     orderId: ordersSeed[1].id,
     orderNumber: ordersSeed[1].buyerOrderRefDocumentId,
-    nft: tradeReceivablesSeed[1].nft,
+    nft: invoiceSeed[1].nft,
     totalAmountWithoutVat: +invoiceSeed[1].totalAmountWithoutVat,
     status: new PaymentStatusAmqpDto(paymentStatesSeed[3].status, paymentStatesSeed[3].timestamp),
     invoiceNumber: invoiceSeed[1].invoiceNumber,
@@ -55,7 +55,7 @@ export const invoicesAmqpMock = <InvoiceAmqpDto[]>[
     creditorId: invoiceSeed[2].creditorId,
     orderId: '',
     orderNumber: '',
-    nft: '',
+    nft: invoiceSeed[2].nft,
     totalAmountWithoutVat: +invoiceSeed[2].totalAmountWithoutVat,
     status: new PaymentStatusAmqpDto(paymentStatesSeed[0].status, paymentStatesSeed[0].timestamp),
     invoiceNumber: invoiceSeed[2].invoiceNumber,

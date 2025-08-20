@@ -8,6 +8,6 @@
 
 export * from './order';
 export * from './offer';
-export * from './trade-receivable';
+export * from './payment-status';
 export * from './invoice';
 export * from './service-process';

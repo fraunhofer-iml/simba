@@ -44,21 +44,21 @@ export class InvoicesService {
     dueDateFrom?: Date,
     dueDateTo?: Date
   ): Promise<InvoiceDto[]> {
-    this.logger.debug(`Requesting Tradereceivables `);
+    this.logger.debug(`Requesting Invoices `);
     const params = new AllInvoicesFilterAmqpDto(paymentStates, creditorId, debtorId, invoiceNumber, dueDateFrom, dueDateTo, orderNumber);
     const response: InvoiceAmqpDto[] = await firstValueFrom<InvoiceAmqpDto[]>(
       this.processAMQPClient.send(InvoiceMessagePatterns.READ_ALL, params)
     );
 
-    return await this.handleFrontendTradeReceivableDTOCreation(response);
+    return await this.handleFrontendInvoiceDTOCreation(response);
   }
 
   async findOne(companyId: string, id: string): Promise<InvoiceDto> {
     try {
-      this.logger.verbose('Requesting trade receivable ', id);
+      this.logger.verbose('Requesting invoice ', id);
       const params = new CompanyAndInvoiceAmqpDto(companyId, id);
       const retVal = await firstValueFrom<InvoiceAmqpDto>(this.processAMQPClient.send(InvoiceMessagePatterns.READ_BY_ID, params));
-      return (await this.handleFrontendTradeReceivableDTOCreation([retVal]))[0];
+      return (await this.handleFrontendInvoiceDTOCreation([retVal]))[0];
     } catch (e) {
       this.logger.warn(e);
       throw e;
@@ -76,18 +76,18 @@ export class InvoicesService {
     }
   }
 
-  private async handleFrontendTradeReceivableDTOCreation(tradeReceivables: InvoiceAmqpDto[]): Promise<InvoiceDto[]> {
+  private async handleFrontendInvoiceDTOCreation(invoices: InvoiceAmqpDto[]): Promise<InvoiceDto[]> {
     const retVal: InvoiceDto[] = [];
     const companies: Map<string, CompanyAmqpDto> = new Map();
-    for (const tr of tradeReceivables) {
-      if (!companies.has(tr.creditorId)) {
-        companies.set(tr.creditorId, await this.companyService.findOne(tr.creditorId));
+    for (const iv of invoices) {
+      if (!companies.has(iv.creditorId)) {
+        companies.set(iv.creditorId, await this.companyService.findOne(iv.creditorId));
       }
-      if (!companies.has(tr.debtorId)) {
-        companies.set(tr.debtorId, await this.companyService.findOne(tr.debtorId));
+      if (!companies.has(iv.debtorId)) {
+        companies.set(iv.debtorId, await this.companyService.findOne(iv.debtorId));
       }
 
-      retVal.push(InvoiceDto.toTradeReceivableDto(tr, companies.get(tr.creditorId).name, companies.get(tr.debtorId).name));
+      retVal.push(InvoiceDto.toInvoiceDto(iv, companies.get(iv.creditorId).name, companies.get(iv.debtorId).name));
     }
     return retVal;
   }
@@ -108,8 +108,8 @@ export class InvoicesService {
     financialRole: FinancialRoles,
     invoiceIds?: string
   ): Promise<PaidStatisticsDto[]> {
-    const tradeReceivableDtos: PaidStatisticsDto[] = [];
-    const tradeReceivableAmqpDtos: PaidStatisticsAmqpDto[] = await firstValueFrom<PaidStatisticsAmqpDto[]>(
+    const invoiceDtos: PaidStatisticsDto[] = [];
+    const invoiceAmqpDtos: PaidStatisticsAmqpDto[] = await firstValueFrom<PaidStatisticsAmqpDto[]>(
       this.processAMQPClient
         .send(
           InvoiceMessagePatterns.READ_STATISTICS_PAID,
@@ -122,10 +122,10 @@ export class InvoicesService {
         )
         .pipe(defaultIfEmpty(null))
     );
-    for (const amqpTr of tradeReceivableAmqpDtos) {
-      tradeReceivableDtos.push(PaidStatisticsDto.toPaidStatisticsDto(amqpTr));
+    for (const amqpIv of invoiceAmqpDtos) {
+      invoiceDtos.push(PaidStatisticsDto.toPaidStatisticsDto(amqpIv));
     }
-    return tradeReceivableDtos;
+    return invoiceDtos;
   }
 
   async createNewPaymentStatusForInvoice(statusChanges: InvoiceIdAndPaymentStateDto[]): Promise<void> {

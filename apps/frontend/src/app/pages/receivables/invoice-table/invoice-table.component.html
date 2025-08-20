@@ -73,13 +73,13 @@
           <mat-menu #menu="matMenu">
             @if (row.paymentStatus !== row.displayedStatus) {
               <mat-option (click)="changePaymentStatus(row.paymentStatus, row)" onkeyup="">
-                {{ 'PaymentStatus.' + row.paymentStatus | translate }}
+                {{ 'PaymentStatus.' + (row.paymentStatus | titlecase) | translate }}
               </mat-option>
             }
             @for (state of paymentStates; track state) {
               @if (state !== row.displayedStatus && state !== row.paymentStatus) {
                 <mat-option (click)="changePaymentStatus(state, row)" onkeyup="">
-                  {{ 'PaymentStatus.' + state | translate }}
+                  {{ 'PaymentStatus.' + (state | titlecase) | translate }}
                 </mat-option>
               }
             }

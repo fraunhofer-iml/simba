@@ -6,10 +6,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { paymentStatesSeed } from '@ap3/database';
+import { invoiceSeed, paymentStatesSeed } from '@ap3/database';
 import { InvoiceIdAndPaymentStateDto } from '../invoice-id-and-payment-state';
 
 export const invoiceAndPaymentStatusDtoMock: InvoiceIdAndPaymentStateDto[] = [
-  new InvoiceIdAndPaymentStateDto(paymentStatesSeed[0].tradeReceivableId, paymentStatesSeed[0].status),
-  new InvoiceIdAndPaymentStateDto(paymentStatesSeed[1].tradeReceivableId, paymentStatesSeed[1].status),
+  new InvoiceIdAndPaymentStateDto(invoiceSeed[0].id, paymentStatesSeed[0].status),
+  new InvoiceIdAndPaymentStateDto(invoiceSeed[1].id, paymentStatesSeed[1].status),
 ];

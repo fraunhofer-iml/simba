@@ -8,3 +8,6 @@
 
 export * from './invoice.mock';
 export * from './invoice-and-paymentstatus.mock';
+export * from './paid-invoice-statistics-dto.mock';
+export * from './unpaid-invoice-statistics-dto.mock';
+export * from './create-invoice.mock';

@@ -161,7 +161,7 @@
   },
 
   "Nft": {
-    "Token": "Trade Receivable Token",
+    "Token": "Invoice Token",
     "Invoice": "Invoice",
     "Addresses": "Addresses",
     "Owner": "Owner",

@@ -18,10 +18,10 @@ export const ApiEndpoints = {
   products: {
     getAllProducts: '/products',
   },
-  tradeReceivables: {
-    getAllTradeReceivablesForOrder: '/trade-receivables?orderId=',
-    getALlTradeReceivableNfts: '/trade-receivables/nft',
-    updateTradeReceivableNfts: '/trade-receivables/nft',
+  nfts: {
+    getAllNftsForOrder: '/nfts?invoiceNumber=',
+    getNfts: '/nfts',
+    updateNfts: '/nfts',
   },
   invoices: {
     getAllInvoices: '/invoices',

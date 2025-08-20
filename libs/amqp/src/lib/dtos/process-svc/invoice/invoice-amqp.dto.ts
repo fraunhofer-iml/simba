@@ -6,9 +6,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InvoiceWithNFT } from '@ap3/database';
+import { InvoiceWithOrderBuyerRef } from '@ap3/database';
 import { PaymentStatus } from '@prisma/client';
-import { PaymentStatusAmqpDto } from '../trade-receivable';
+import { PaymentStatusAmqpDto } from '../payment-status';
 
 export class InvoiceAmqpDto {
   id: string;
@@ -67,7 +67,7 @@ export class InvoiceAmqpDto {
     this.serviceProcessId = serviceProcessId;
   }
 
-  public static fromPrismaEntity(invoice: InvoiceWithNFT, states: PaymentStatus[], fileServerUrl: string): InvoiceAmqpDto {
+  public static fromPrismaEntity(invoice: InvoiceWithOrderBuyerRef, states: PaymentStatus[], fileServerUrl: string): InvoiceAmqpDto {
     const lastState = this.getLatestState(states);
     const currentState = lastState
       ? new PaymentStatusAmqpDto(lastState.status, lastState.timestamp)
@@ -79,7 +79,7 @@ export class InvoiceAmqpDto {
       invoice.creditorId ? invoice.creditorId : '',
       invoice.serviceProcess?.order?.id ? invoice.serviceProcess.order?.id : '',
       invoice.serviceProcess?.order?.buyerOrderRefDocumentId ? invoice.serviceProcess.order?.buyerOrderRefDocumentId : '',
-      invoice?.tradeReceivable?.nft ? invoice.tradeReceivable.nft : '',
+      invoice?.nft ? invoice.nft : '',
       +invoice.totalAmountWithoutVat,
       currentState,
       invoice.invoiceNumber,

@@ -88,6 +88,7 @@ model Invoice {
   totalAmountWithoutVat Decimal  @db.Money
   vat                   Decimal  @db.Money
   url                   String
+  nft                   String
   paymentTerms          String
 
   serviceProcess   ServiceProcess? @relation("InvoiceServiceProcess", fields: [serviceProcessId], references: [id])
@@ -98,25 +99,16 @@ model Invoice {
   creditor   Company? @relation(name: "creditorRel", fields: [creditorId], references: [id])
   creditorId String?
 
-  tradeReceivable TradeReceivable?
-}
-
-model TradeReceivable {
-  id     String          @id @default(cuid())
-  nft    String
   states PaymentStatus[]
-
-  invoice   Invoice @relation(fields: [invoiceId], references: [id])
-  invoiceId String  @unique
 }
 
 model PaymentStatus {
-  tradeReceivableId String
   status            String
   timestamp         DateTime        @default(now())
-  tradeReceivable   TradeReceivable @relation(fields: [tradeReceivableId], references: [id])
-
-  @@id([tradeReceivableId, timestamp, status])
+  invoice           Invoice         @relation(fields: [invoiceId], references: [id]) 
+  invoiceId         String   
+  
+  @@id([invoiceId, timestamp, status])
 }
 
 model ServiceProcess {

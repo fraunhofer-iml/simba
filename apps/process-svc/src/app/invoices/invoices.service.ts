@@ -19,16 +19,16 @@ import { ConfigurationService } from '@ap3/config';
 import {
   InvoiceDatabaseAdapterService,
   InvoiceForZugferd,
-  InvoiceWithNFT,
+  InvoiceWithOrderBuyerRef,
+  NftPrismaService,
   OfferPrismaService,
   OrderDatabaseAdapterService,
   OrderWithDependencies,
-  TradeReceivablePrismaService,
 } from '@ap3/database';
 import { S3Service } from '@ap3/s3';
 import { OfferStatesEnum, PAYMENT_DEADLINE_IN_DAYS, PAYMENT_TERMS, PaymentStates, VAT_IN_PERCENT } from '@ap3/util';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Invoice, Offer, PaymentStatus, TradeReceivable } from '@prisma/client';
+import { Invoice, Offer, PaymentStatus } from '@prisma/client';
 import { PaymentManagementService } from './payment-management/payment-management.service';
 import { InvoicesZugferdService } from './zugferd/invoices-zugferd.service';
 
@@ -36,8 +36,8 @@ import { InvoicesZugferdService } from './zugferd/invoices-zugferd.service';
 export class InvoicesService {
   private readonly logger = new Logger(InvoicesService.name);
   constructor(
-    private readonly tradeReceivablePrismaService: TradeReceivablePrismaService,
-    private readonly invoicePrismaService: InvoiceDatabaseAdapterService,
+    private readonly nftPrismaService: NftPrismaService,
+    private readonly invoiceAdapterService: InvoiceDatabaseAdapterService,
     private readonly orderDatabaseAdapterService: OrderDatabaseAdapterService,
     private readonly offerPrismaService: OfferPrismaService,
     private readonly invoiceZugferdService: InvoicesZugferdService,
@@ -47,11 +47,10 @@ export class InvoicesService {
   ) {}
 
   async findAll(filterParams: AllInvoicesFilterAmqpDto): Promise<InvoiceAmqpDto[]> {
-    this.logger.verbose(`requesting all trade receivables for ${util.inspect(filterParams)}`);
+    this.logger.verbose(`requesting all invoices for ${util.inspect(filterParams)}`);
     try {
       const possibleInvoiceIds: string[] = [];
-
-      const tradeReceivables: TradeReceivable[] = await this.tradeReceivablePrismaService.getTradeReceivablesForFilterParams(
+      const rawInvoices: Invoice[] = await this.invoiceAdapterService.getInvoicesForFilterParams(
         filterParams.paymentStates,
         filterParams.creditorId,
         filterParams.debtorId,
@@ -59,17 +58,24 @@ export class InvoicesService {
         filterParams.dueDateFrom,
         filterParams.dueDateTo
       );
-      if (!tradeReceivables || tradeReceivables.length == 0) {
+      if (!rawInvoices || rawInvoices.length == 0) {
         this.logger.verbose(`No invoices found for the filter parameters ${JSON.stringify(filterParams)}`);
         return [];
       }
-      for (const tr of tradeReceivables) {
-        possibleInvoiceIds.push(tr.invoiceId);
+
+      for (const iv of rawInvoices) {
+        possibleInvoiceIds.push(iv.id);
       }
-      const invoices: InvoiceWithNFT[] = await this.invoicePrismaService.getInvoicesCorrespondingToFilterParams(
+
+      const invoices: InvoiceWithOrderBuyerRef[] = await this.invoiceAdapterService.getInvoicesCorrespondingToFilterParams(
         filterParams,
         possibleInvoiceIds
       );
+
+      if (!invoices || invoices.length == 0) {
+        this.logger.verbose(`No invoices found for the filter parameters ${JSON.stringify(filterParams)}`);
+        return [];
+      }
       return this.loadAssociatedDataAndConvertToDTO(invoices);
     } catch (e) {
       this.logger.error(util.inspect(e));
@@ -78,33 +84,31 @@ export class InvoicesService {
   }
 
   async findOne(params: CompanyAndInvoiceAmqpDto): Promise<InvoiceAmqpDto> {
-    const invoice: InvoiceWithNFT = await this.invoicePrismaService.getInvoiceById(params.invoiceId, params.companyId);
+    const invoice: InvoiceWithOrderBuyerRef = await this.invoiceAdapterService.getInvoiceById(params.invoiceId, params.companyId);
 
     return (await this.loadAssociatedDataAndConvertToDTO([invoice]))[0];
   }
 
   async createAndUploadZugferdPDF(params: CompanyAndInvoiceAmqpDto) {
-    const invoice: InvoiceForZugferd = await this.invoicePrismaService.getInvoiceByIdForZugferd(params.invoiceId, params.companyId);
+    const invoice: InvoiceForZugferd = await this.invoiceAdapterService.getInvoiceByIdForZugferd(params.invoiceId, params.companyId);
     const pdfFile: Uint8Array = await this.invoiceZugferdService.generatePdf(invoice);
 
     const fileName = `${invoice.invoiceNumber}.pdf`;
     await this.s3Service.uploadPdf(Buffer.from(pdfFile.buffer), fileName);
 
-    await this.invoicePrismaService.updateInvoiceURL(params.invoiceId, fileName);
+    await this.invoiceAdapterService.updateInvoiceURL(params.invoiceId, fileName);
     return fileName;
   }
 
-  private async loadAssociatedDataAndConvertToDTO(invoices: InvoiceWithNFT[]): Promise<InvoiceAmqpDto[]> {
-    const tradeReceivableDtos: InvoiceAmqpDto[] = [];
+  private async loadAssociatedDataAndConvertToDTO(invoices: InvoiceWithOrderBuyerRef[]): Promise<InvoiceAmqpDto[]> {
+    const invoiceDtos: InvoiceAmqpDto[] = [];
 
     for (const invoice of invoices) {
-      const trStates: PaymentStatus[] = await this.tradeReceivablePrismaService.getPaymentStatesForTradeReceivable(
-        invoice.tradeReceivable.id
-      );
+      const trStates: PaymentStatus[] = await this.invoiceAdapterService.getPaymentStatesForInvoice(invoice.id);
 
-      tradeReceivableDtos.push(InvoiceAmqpDto.fromPrismaEntity(invoice, trStates, this.config.getMinioConfig().objectStorageURL));
+      invoiceDtos.push(InvoiceAmqpDto.fromPrismaEntity(invoice, trStates, this.config.getMinioConfig().objectStorageURL));
     }
-    return tradeReceivableDtos;
+    return invoiceDtos;
   }
 
   async createPaymentStatusForInvoice(statusChanges: InvoiceIdAndPaymentStateAmqpDto[]): Promise<boolean> {
@@ -165,13 +169,13 @@ export class InvoicesService {
       PAYMENT_TERMS,
       orderOverview.serviceProcess.id
     );
-    const newInvoice: Invoice = await this.invoicePrismaService.createInvoice(newInvoiceInput);
-    const newInvoiceWithNft: InvoiceWithNFT = { ...newInvoice, serviceProcess: null, tradeReceivable: null };
+    const newInvoice: Invoice = await this.invoiceAdapterService.createInvoice(newInvoiceInput);
+    const newInvoiceWithNft: InvoiceWithOrderBuyerRef = { ...newInvoice, serviceProcess: null };
     return InvoiceAmqpDto.fromPrismaEntity(
       newInvoiceWithNft,
       [
         {
-          tradeReceivableId: '',
+          invoiceId: '',
           status: newInvoiceInput.status.status,
           timestamp: newInvoiceInput.status.timestamp,
         },

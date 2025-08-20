@@ -8,15 +8,11 @@
 
 import { Invoice } from '@prisma/client';
 
-export type InvoiceWithNFT = Invoice & {
+export type InvoiceWithOrderBuyerRef = Invoice & {
   serviceProcess: {
     order: {
       id: string | null;
       buyerOrderRefDocumentId: string | null;
     } | null;
-  } | null;
-  tradeReceivable: {
-    id: string;
-    nft: string;
   } | null;
 };

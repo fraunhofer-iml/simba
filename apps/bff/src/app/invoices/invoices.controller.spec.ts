@@ -26,9 +26,9 @@ import {
   InvoiceDto,
   invoiceDtoMocks,
   KeycloakUser,
-  paidTrStatisticsMock,
+  paidInvoiceStatisticsMock,
+  unpaidInvoiceStatisticsMock,
   UnpaidStatisticsDto,
-  unpaidTradeReceivableStatisticsMock,
 } from '@ap3/api';
 import { companiesSeed } from '@ap3/database';
 import { FinancialRoles, PaymentStates } from '@ap3/util';
@@ -201,8 +201,8 @@ describe('InvoicesController', () => {
     expect(res).toEqual(expectedReturnValue);
   });
 
-  it('should get Tradereceivable unpaid TR statistics by its companyId without filter', async () => {
-    const expectedReturnValue = unpaidTradeReceivableStatisticsMock;
+  it('should get unpaid invoice statistics by its companyId without filter', async () => {
+    const expectedReturnValue = unpaidInvoiceStatisticsMock;
     const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
     sendRequestSpy.mockImplementationOnce((messagePattern: InvoiceMessagePatterns, data: any) => {
       return of(notPaidStatisticsAmqpMock);
@@ -217,8 +217,8 @@ describe('InvoicesController', () => {
     expect(res).toEqual(expectedReturnValue);
   });
 
-  it('should get Tradereceivable unpaid TR statistics by its companyId with filter', async () => {
-    const expectedReturnValue = unpaidTradeReceivableStatisticsMock;
+  it('should get unpaid invoice statistics by its companyId with filter', async () => {
+    const expectedReturnValue = unpaidInvoiceStatisticsMock;
     const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
     sendRequestSpy.mockImplementationOnce((messagePattern: InvoiceMessagePatterns, data: any) => {
       return of(notPaidStatisticsAmqpMock);
@@ -233,14 +233,14 @@ describe('InvoicesController', () => {
     expect(res).toEqual(expectedReturnValue);
   });
 
-  it('should get Tradereceivable paid TR statistics by its companyId', async () => {
-    const expectedReturnValue = paidTrStatisticsMock;
+  it('should get paid invoice statistics by its companyId', async () => {
+    const expectedReturnValue = paidInvoiceStatisticsMock;
     const sendRequestSpy = jest.spyOn(processSvcClientProxy, 'send');
     sendRequestSpy.mockImplementationOnce((messagePattern: InvoiceMessagePatterns, data: any) => {
       return of(paidStatisticsAmqpMock);
     });
 
-    const res = await controller.getStatisticPaidTradePerMonth(request, 2024, FinancialRoles.DEBTOR, '[]');
+    const res = await controller.getPaidInvoiceStatisticPerMonth(request, 2024, FinancialRoles.DEBTOR, '[]');
     expect(sendRequestSpy).toHaveBeenCalledWith(
       InvoiceMessagePatterns.READ_STATISTICS_PAID,
       new TRParamsCompanyIdAndYearAndFinancialRole([], companiesSeed[1].id, 2024, FinancialRoles.DEBTOR)

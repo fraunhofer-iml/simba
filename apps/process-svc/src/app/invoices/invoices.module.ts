@@ -12,8 +12,8 @@ import { DatabaseModule, QueryBuilderHelperService } from '@ap3/database';
 import { S3Module } from '@ap3/s3';
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
-import { NftBlockchainFactory } from '../trade-receivables/nft/nft-blockchain-factory';
-import { NftDatabaseFactory } from '../trade-receivables/nft/nft-database-factory';
+import { NftBlockchainFactory } from '../nfts/util/nft-blockchain-factory';
+import { NftDatabaseFactory } from '../nfts/util/nft-database-factory';
 import { InvoicesController } from './invoices.controller';
 import { InvoicesService } from './invoices.service';
 import { PaymentManagementService } from './payment-management/payment-management.service';
@@ -39,7 +39,6 @@ import { InvoicesZugferdService } from './zugferd/invoices-zugferd.service';
     PaymentManagementService,
     NftDatabaseFactory,
     NftBlockchainFactory,
-    PaymentManagementService,
     QueryBuilderHelperService,
     {
       provide: 'NftFactory',

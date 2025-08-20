@@ -46,11 +46,7 @@ const ordersOverviewSelect = <Prisma.OrderSelect>{
       },
       invoices: {
         select: {
-          tradeReceivable: {
-            select: {
-              id: true,
-            },
-          },
+          id: true,
         },
       },
     },

@@ -1,361 +1,361 @@
 export const paymentStatesSeed = [
   {
-    tradeReceivableId: 'TR001',
+    invoiceId: 'IV001',
     status: 'open',
     timestamp: new Date("2024-10-12T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR001',
+    invoiceId: 'IV001',
     status: 'paid',
     timestamp: new Date("2024-10-13T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR002',
+    invoiceId: 'IV002',
     status: 'open',
     timestamp: new Date("2024-10-22T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR002',
+    invoiceId: 'IV002',
     status: 'paid',
     timestamp: new Date("2024-10-23T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR003',
+    invoiceId: 'IV003',
     status: 'open',
     timestamp: new Date("2024-10-23T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR003',
+    invoiceId: 'IV003',
     status: 'paid',
     timestamp: new Date("2024-10-24T08:40:55.695Z")
   },
   {
-    tradeReceivableId: 'TR004',
+    invoiceId: 'IV004',
     status: 'open',
     timestamp: new Date("2024-10-27T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR004',
+    invoiceId: 'IV004',
     status: 'exceeded',
     timestamp: new Date("2024-11-27T07:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR005',
+    invoiceId: 'IV005',
     status: 'open',
     timestamp: new Date("2024-11-09T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR005',
+    invoiceId: 'IV005',
     status: 'exceeded',
     timestamp: new Date("2024-12-09T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR006',
+    invoiceId: 'IV006',
     status: 'open',
     timestamp: new Date("2024-11-11T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR006',
+    invoiceId: 'IV006',
     status: 'paid',
     timestamp: new Date("2024-11-12T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR007',
+    invoiceId: 'IV007',
     status: 'open',
     timestamp: new Date("2024-11-18T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR007',
+    invoiceId: 'IV007',
     status: 'paid',
     timestamp: new Date("2024-11-19T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR008',
+    invoiceId: 'IV008',
     status: 'open',
     timestamp: new Date("2024-11-20T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR008',
+    invoiceId: 'IV008',
     status: 'exceeded',
     timestamp: new Date("2024-12-20T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR009',
+    invoiceId: 'IV009',
     status: 'open',
     timestamp: new Date("2024-11-21T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR009',
+    invoiceId: 'IV009',
     status: 'exceeded',
     timestamp: new Date("2024-12-21T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR010',
+    invoiceId: 'IV010',
     status: 'open',
     timestamp: new Date("2024-11-25T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR010',
+    invoiceId: 'IV010',
     status: 'paid',
     timestamp: new Date("2024-12-13T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR011',
+    invoiceId: 'IV011',
     status: 'open',
     timestamp: new Date("2024-12-01T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR011',
+    invoiceId: 'IV011',
     status: 'paid',
     timestamp: new Date("2024-12-14T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR012',
+    invoiceId: 'IV012',
     status: 'open',
     timestamp: new Date("2024-12-06T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR012',
+    invoiceId: 'IV012',
     status: 'paid',
     timestamp: new Date("2024-12-10T08:40:55.695Z")
   },
   {
-    tradeReceivableId: 'TR013',
+    invoiceId: 'IV013',
     status: 'open',
     timestamp: new Date("2024-12-17T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR013',
+    invoiceId: 'IV013',
     status: 'paid',
     timestamp: new Date("2024-12-20T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR014',
+    invoiceId: 'IV014',
     status: 'open',
     timestamp: new Date("2025-01-15T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR014',
+    invoiceId: 'IV014',
     status: 'paid',
     timestamp: new Date("2025-01-19T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR015',
+    invoiceId: 'IV015',
     status: 'open',
     timestamp: new Date("2025-01-20T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR015',
+    invoiceId: 'IV015',
     status: 'exceeded',
     timestamp: new Date("2025-02-20T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR016',
+    invoiceId: 'IV016',
     status: 'open',
     timestamp: new Date("2025-01-21T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR016',
+    invoiceId: 'IV016',
     status: 'exceeded',
     timestamp: new Date("2025-02-21T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR017',
+    invoiceId: 'IV017',
     status: 'open',
     timestamp: new Date("2025-01-24T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR017',
+    invoiceId: 'IV017',
     status: 'paid',
     timestamp: new Date("2025-01-27T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR018',
+    invoiceId: 'IV018',
     status: 'open',
     timestamp: new Date("2025-01-26T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR018',
+    invoiceId: 'IV018',
     status: 'paid',
     timestamp: new Date("2025-01-29T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR019',
+    invoiceId: 'IV019',
     status: 'open',
     timestamp: new Date("2025-01-28T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR019',
+    invoiceId: 'IV019',
     status: 'paid',
     timestamp: new Date("2025-01-29T08:40:55.695Z")
   },
   {
-    tradeReceivableId: 'TR020',
+    invoiceId: 'IV020',
     status: 'open',
     timestamp: new Date("2025-02-03T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR020',
+    invoiceId: 'IV020',
     status: 'paid',
     timestamp: new Date("2025-02-12T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR021',
+    invoiceId: 'IV021',
     status: 'open',
     timestamp: new Date("2025-02-05T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR021',
+    invoiceId: 'IV021',
     status: 'paid',
     timestamp: new Date("2025-02-12T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR022',
+    invoiceId: 'IV022',
     status: 'open',
     timestamp: new Date("2025-02-09T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR022',
+    invoiceId: 'IV022',
     status: 'exceeded',
     timestamp: new Date("2025-03-09T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR023',
+    invoiceId: 'IV023',
     status: 'open',
     timestamp: new Date("2025-02-17T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR023',
+    invoiceId: 'IV023',
     status: 'exceeded',
     timestamp: new Date("2025-03-17T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR024',
+    invoiceId: 'IV024',
     status: 'open',
     timestamp: new Date("2025-02-19T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR024',
+    invoiceId: 'IV024',
     status: 'paid',
     timestamp: new Date("2025-02-25T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR025',
+    invoiceId: 'IV025',
     status: 'open',
     timestamp: new Date("2025-03-07T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR025',
+    invoiceId: 'IV025',
     status: 'paid',
     timestamp: new Date("2025-03-09T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR026',
+    invoiceId: 'IV026',
     status: 'open',
     timestamp: new Date("2025-03-10T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR026',
+    invoiceId: 'IV026',
     status: 'paid',
     timestamp: new Date("2025-03-12T08:40:55.695Z")
   },
   {
-    tradeReceivableId: 'TR027',
+    invoiceId: 'IV027',
     status: 'open',
     timestamp: new Date("2025-03-12T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR027',
+    invoiceId: 'IV027',
     status: 'paid',
     timestamp: new Date("2025-03-14T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR028',
+    invoiceId: 'IV028',
     status: 'open',
     timestamp: new Date("2025-03-15T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR028',
+    invoiceId: 'IV028',
     status: 'paid',
     timestamp: new Date("2025-03-17T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR029',
+    invoiceId: 'IV029',
     status: 'open',
     timestamp: new Date("2025-03-23T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR029',
+    invoiceId: 'IV029',
     status: 'exceeded',
     timestamp: new Date("2025-04-23T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR030',
+    invoiceId: 'IV030',
     status: 'open',
     timestamp: new Date("2025-04-01T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR030',
+    invoiceId: 'IV030',
     status: 'exceeded',
     timestamp: new Date("2025-05-01T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR031',
+    invoiceId: 'IV031',
     status: 'open',
     timestamp: new Date("2025-04-03T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR031',
+    invoiceId: 'IV031',
     status: 'paid',
     timestamp: new Date("2025-04-13T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR032',
+    invoiceId: 'IV032',
     status: 'open',
     timestamp: new Date("2025-04-09T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR032',
+    invoiceId: 'IV032',
     status: 'paid',
     timestamp: new Date("2025-04-11T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR033',
+    invoiceId: 'IV033',
     status: 'open',
     timestamp: new Date("2025-04-10T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR033',
+    invoiceId: 'IV033',
     status: 'paid',
     timestamp: new Date("2025-04-18T08:40:55.695Z")
   },
   {
-    tradeReceivableId: 'TR034',
+    invoiceId: 'IV034',
     status: 'open',
     timestamp: new Date("2025-04-10T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR034',
+    invoiceId: 'IV034',
     status: 'paid',
     timestamp: new Date("2025-04-12T07:55:55.695Z")
   },
   {
-    tradeReceivableId: 'TR035',
+    invoiceId: 'IV035',
     status: 'open',
     timestamp: new Date("2025-05-04T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR036',
+    invoiceId: 'IV036',
     status: 'open',
     timestamp: new Date("2025-05-11T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR037',
+    invoiceId: 'IV037',
     status: 'open',
     timestamp: new Date("2025-05-17T00:00:00.000Z")
   },
   {
-    tradeReceivableId: 'TR038',
+    invoiceId: 'IV038',
     status: 'open',
     timestamp: new Date("2025-05-19T00:00:00.000Z")
   }

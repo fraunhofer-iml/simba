@@ -16,7 +16,7 @@ import { Client } from 'minio';
 import { MINIO_CONNECTION } from 'nestjs-minio';
 import { DataIntegrityService, TokenMintService, TokenReadService, TokenUpdateService } from 'nft-folder-blockchain-connector-besu';
 import { Test, TestingModule } from '@nestjs/testing';
-import { NftBlockchainFactory } from '../../trade-receivables/nft/nft-blockchain-factory';
+import { NftBlockchainFactory } from '../../nfts/util/nft-blockchain-factory';
 import { InvoicesController } from '../invoices.controller';
 import { InvoicesService } from '../invoices.service';
 import { PaymentManagementService } from '../payment-management/payment-management.service';

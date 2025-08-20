@@ -18,11 +18,11 @@ export class InvoiceIdAndPaymentStateAmqpDto {
     this.paymentStatus = paymentState;
   }
 
-  public toPrismaCreatePaymentStatusQuery(tradeReceivableId: string, statusTimestamp: Date): Prisma.PaymentStatusCreateInput {
+  public toPrismaCreatePaymentStatusQuery(invoiceId: string, statusTimestamp: Date): Prisma.PaymentStatusCreateInput {
     return <Prisma.PaymentStatusCreateInput>{
       status: this.paymentStatus,
       timestamp: statusTimestamp,
-      tradeReceivable: { connect: { id: tradeReceivableId } },
+      invoice: { connect: { id: invoiceId } },
     };
   }
 }

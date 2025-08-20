@@ -55,7 +55,7 @@ export class InvoiceService {
   }
 
   getNftByInvoiceNumber(invoiceNumber: string): Observable<TokenReadDto> {
-    return this.httpClient.get<TokenReadDto>(`${BASE_URL}${ApiEndpoints.tradeReceivables.getALlTradeReceivableNfts}/${invoiceNumber}`);
+    return this.httpClient.get<TokenReadDto>(`${BASE_URL}${ApiEndpoints.nfts.getNfts}/${invoiceNumber}`);
   }
 
   processFiltersToParams(filter?: InvoiceFilter): HttpParams {

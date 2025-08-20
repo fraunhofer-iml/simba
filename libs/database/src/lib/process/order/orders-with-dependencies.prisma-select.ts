@@ -45,11 +45,7 @@ export const ordersWithDependenciesSelect = {
       states: true,
       invoices: {
         select: {
-          tradeReceivable: {
-            select: {
-              id: true,
-            },
-          },
+          id: true,
         },
       },
     },

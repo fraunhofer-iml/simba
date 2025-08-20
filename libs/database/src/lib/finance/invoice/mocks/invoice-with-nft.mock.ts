@@ -6,10 +6,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { invoiceSeed, ordersSeed, tradeReceivablesSeed } from '../../../../seed';
-import { InvoiceWithNFT } from '../types';
+import { invoiceSeed, ordersSeed } from '../../../../seed';
+import { InvoiceWithOrderBuyerRef } from '../types';
 
-export const invoiceNFTPrismaMock: any[] = <InvoiceWithNFT[]>[
+export const invoiceNFTPrismaMock: any[] = <InvoiceWithOrderBuyerRef[]>[
   {
     id: invoiceSeed[0].id,
     debtorId: invoiceSeed[0].debtorId,
@@ -23,6 +23,7 @@ export const invoiceNFTPrismaMock: any[] = <InvoiceWithNFT[]>[
     totalAmountWithoutVat: invoiceSeed[0].totalAmountWithoutVat,
     vat: invoiceSeed[0].vat,
     url: invoiceSeed[0].url,
+    nft: invoiceSeed[0].nft,
     paymentTerms: invoiceSeed[0].paymentTerms,
     serviceProcessId: invoiceSeed[0].serviceProcessId,
     serviceProcess: {
@@ -30,10 +31,6 @@ export const invoiceNFTPrismaMock: any[] = <InvoiceWithNFT[]>[
         id: ordersSeed[0].id,
         buyerOrderRefDocumentId: ordersSeed[0].buyerOrderRefDocumentId,
       },
-    },
-    tradeReceivable: {
-      id: tradeReceivablesSeed[0].id,
-      nft: tradeReceivablesSeed[0].nft,
     },
   },
   {
@@ -49,6 +46,7 @@ export const invoiceNFTPrismaMock: any[] = <InvoiceWithNFT[]>[
     totalAmountWithoutVat: invoiceSeed[1].totalAmountWithoutVat,
     vat: invoiceSeed[1].vat,
     url: invoiceSeed[1].url,
+    nft: invoiceSeed[1].nft,
     paymentTerms: invoiceSeed[1].paymentTerms,
     serviceProcessId: invoiceSeed[1].serviceProcessId,
     serviceProcess: {
@@ -56,10 +54,6 @@ export const invoiceNFTPrismaMock: any[] = <InvoiceWithNFT[]>[
         id: ordersSeed[1].id,
         buyerOrderRefDocumentId: ordersSeed[1].buyerOrderRefDocumentId,
       },
-    },
-    tradeReceivable: {
-      id: tradeReceivablesSeed[1].id,
-      nft: tradeReceivablesSeed[1].nft,
     },
   },
 ];

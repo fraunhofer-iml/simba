@@ -7,7 +7,7 @@
  */
 
 import { AllInvoicesFilterAmqpDto, InvoiceAmqpDto } from '@ap3/amqp';
-import { FinancialRoles } from '@ap3/util';
+import { FinancialRoles, PaymentStates } from '@ap3/util';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Invoice, Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
@@ -15,10 +15,12 @@ import { QueryBuilderHelperService } from '../util/query-builder-helper.service'
 import {
   InvoiceCountAndDueMonth,
   InvoiceForZugferd,
+  InvoiceIdTypes,
   InvoicePrismaService,
   InvoiceSumTotalAmountWithoutVatTypes,
-  InvoiceWithNFT,
+  InvoiceWithOrderBuyerRef,
 } from './invoice';
+import { InvoicePaymentStatusCount } from './invoice/types/invoice-payment-status';
 
 @Injectable()
 export class InvoiceDatabaseAdapterService {
@@ -38,6 +40,7 @@ export class InvoiceDatabaseAdapterService {
       measuringUnit: invoiceAmqpDto.measuringUnit,
       netPricePerUnit: invoiceAmqpDto.netPricePerUnit,
       totalAmountWithoutVat: invoiceAmqpDto.totalAmountWithoutVat,
+      nft: invoiceAmqpDto.nft,
       vat: invoiceAmqpDto.vat,
       url: '',
       paymentTerms: invoiceAmqpDto.paymentTerms,
@@ -47,14 +50,18 @@ export class InvoiceDatabaseAdapterService {
     }))!;
   }
 
+  async createPaymentState(createPaymentState: Prisma.PaymentStatusCreateInput) {
+    return await this.invoicePrismaService.createPaymentState(createPaymentState);
+  }
+
   async updateInvoiceURL(invoiceId: string, url: string): Promise<void> {
     const updateUrlData: Prisma.InvoiceUpdateInput = { url: url };
     await this.invoicePrismaService.updateInvoice(invoiceId, updateUrlData);
   }
 
-  async getInvoiceById(id: string, companyId?: string): Promise<InvoiceWithNFT> {
+  async getInvoiceById(id: string, companyId?: string): Promise<InvoiceWithOrderBuyerRef> {
     this.logger.verbose('Return invoice by id from database');
-    const invoices: InvoiceWithNFT[] = await this.invoicePrismaService.getInvoices({
+    const invoices: InvoiceWithOrderBuyerRef[] = await this.invoicePrismaService.getInvoices({
       creditorId: companyId,
       debtorId: companyId,
       invoiceIds: [id],
@@ -68,9 +75,9 @@ export class InvoiceDatabaseAdapterService {
     }
   }
 
-  async getInvoiceByNumber(invoiceNumber: string): Promise<InvoiceWithNFT> {
+  async getInvoiceByNumber(invoiceNumber: string): Promise<InvoiceWithOrderBuyerRef> {
     this.logger.verbose('Return invoice by invoice number from database');
-    const invoices: InvoiceWithNFT[] = await this.invoicePrismaService.getInvoices({
+    const invoices: InvoiceWithOrderBuyerRef[] = await this.invoicePrismaService.getInvoices({
       invoiceNumbers: [invoiceNumber],
     });
     if (invoices && invoices.length == 1) {
@@ -82,7 +89,10 @@ export class InvoiceDatabaseAdapterService {
     }
   }
 
-  async getInvoicesCorrespondingToFilterParams(filterParams: AllInvoicesFilterAmqpDto, invoiceIds: string[]): Promise<InvoiceWithNFT[]> {
+  async getInvoicesCorrespondingToFilterParams(
+    filterParams: AllInvoicesFilterAmqpDto,
+    invoiceIds: string[]
+  ): Promise<InvoiceWithOrderBuyerRef[]> {
     return this.invoicePrismaService.getInvoices({
       creditorId: filterParams.creditorId,
       debtorId: filterParams.debtorId,
@@ -90,6 +100,24 @@ export class InvoiceDatabaseAdapterService {
       paymentStates: filterParams.paymentStates,
       orderNumber: filterParams.orderNumber,
     });
+  }
+
+  async getInvoicesForFilterParams(
+    paymentStates: PaymentStates[],
+    creditorId: string,
+    debtorId: string,
+    invoiceNumber: string,
+    dueDateFrom: Date,
+    dueDateTo: Date
+  ): Promise<Invoice[]> {
+    return await this.invoicePrismaService.getInvoicesForFilterParams(
+      paymentStates,
+      creditorId,
+      debtorId,
+      invoiceNumber,
+      dueDateFrom,
+      dueDateTo
+    );
   }
 
   async countInvoicesDueInMonthByFinancialRole(
@@ -100,19 +128,19 @@ export class InvoiceDatabaseAdapterService {
   ): Promise<InvoiceCountAndDueMonth[]> {
     const financialQuery: Prisma.Sql = this.queryBuilderService.buildRawQueryForFinancialRole(financialRole, companyId);
     const invoiceQuery: Prisma.Sql = this.queryBuilderService.buildRawQueryForFilteredInvoiceIds(filteredInvoiceIds);
-    return this.invoicePrismaService.countInvoicesDueInMonth(year, financialQuery, invoiceQuery);
+    return await this.invoicePrismaService.countInvoicesDueInMonth(year, financialQuery, invoiceQuery);
   }
 
-  async sumInvoiceAmountsForTradeReceivablesByFinancialRole(
+  async sumInvoiceAmountsByFinancialRole(
     financialRole: string,
     invoiceIds: string[],
     companyId: string
   ): Promise<InvoiceSumTotalAmountWithoutVatTypes> {
     let invoiceSum: InvoiceSumTotalAmountWithoutVatTypes | null = null;
     if (financialRole === FinancialRoles.CREDITOR) {
-      invoiceSum = await this.invoicePrismaService.sumInvoiceAmountsForTradeReceivables({ invoiceIds: invoiceIds, creditorId: companyId });
+      invoiceSum = await this.invoicePrismaService.sumInvoiceAmounts({ invoiceIds: invoiceIds, creditorId: companyId });
     } else if (financialRole === FinancialRoles.DEBTOR) {
-      invoiceSum = await this.invoicePrismaService.sumInvoiceAmountsForTradeReceivables({ invoiceIds: invoiceIds, debtorId: companyId });
+      invoiceSum = await this.invoicePrismaService.sumInvoiceAmounts({ invoiceIds: invoiceIds, debtorId: companyId });
     }
     if (!invoiceSum) {
       return { _sum: { totalAmountWithoutVat: new Decimal(0) } };
@@ -121,6 +149,48 @@ export class InvoiceDatabaseAdapterService {
   }
 
   async getInvoiceByIdForZugferd(id: string, companyId: string): Promise<InvoiceForZugferd> {
-    return this.invoicePrismaService.getInvoiceByIdForZugferd(id, companyId);
+    return await this.invoicePrismaService.getInvoiceByIdForZugferd(id, companyId);
+  }
+
+  async getPaymentStatesForInvoice(invoiceId: string): Promise<
+    {
+      status: string;
+      timestamp: Date;
+      invoiceId: string;
+    }[]
+  > {
+    return await this.invoicePrismaService.getPaymentStatesForInvoice(invoiceId);
+  }
+
+  async getInvoiceStateStatisticsByFinancialRole(
+    filteredInvoiceIds: string[],
+    financialRole: string,
+    companyId: string
+  ): Promise<InvoicePaymentStatusCount[]> {
+    return await this.invoicePrismaService.getInvoiceStateStatisticsByFinancialRole(filteredInvoiceIds, financialRole, companyId);
+  }
+
+  async getPaidInvoiceIdsForMonthByFinancialRole(
+    invoiceIds: string[],
+    financialRole: string,
+    month: string,
+    year: number,
+    companyId: string
+  ): Promise<InvoiceIdTypes[]> {
+    return await this.invoicePrismaService.getIdsForPaidInvoicesForMonthByFinancialRole(invoiceIds, financialRole, month, year, companyId);
+  }
+
+  async countPaidOnTimeInvoicesMonthlyByFinancialRole(
+    filteredInvoiceIds: string[],
+    financialRole: string,
+    year: number,
+    companyId: string
+  ): Promise<InvoiceCountAndDueMonth[]> {
+    return await this.invoicePrismaService.countPaidOnTimeInvoicesMonthlyByFinancialRole(
+      filteredInvoiceIds,
+      financialRole,
+      year,
+      companyId
+    );
   }
 }

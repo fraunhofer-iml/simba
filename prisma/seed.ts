@@ -67,11 +67,6 @@ const dataSets: Entity[] = [
     createRecord: async (data: any) => await prisma.invoice.create({ data }),
   },
   {
-    name: 'tradeReceivable',
-    records: FinanceDataParser.parseTradeReceivables(),
-    createRecord: async (data: any) => await prisma.tradeReceivable.create({ data }),
-  },
-  {
     name: 'paymentStatus',
     records: FinanceDataParser.parsePaymentStates(),
     createRecord: async (data: any) => await prisma.paymentStatus.create({ data }),
