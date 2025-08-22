@@ -10,7 +10,7 @@ import { ServiceProcessStatusDto } from '@ap3/api';
 import { ServiceStatesEnum } from '@ap3/util';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
-import { DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, PercentPipe } from '@angular/common';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -44,6 +44,8 @@ describe('OrderDetailsComponent', () => {
         TranslateService,
         CalendarWeekService,
         DatePipe,
+        CurrencyPipe,
+        PercentPipe,
         AuthService,
         FormatService,
         DatePipe,

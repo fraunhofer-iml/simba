@@ -10,7 +10,7 @@ import { activatedRouteMock } from '@ap3/api';
 import { TranslateModule } from '@ngx-translate/core';
 import { KeycloakService } from 'keycloak-angular';
 import { of } from 'rxjs';
-import { DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, PercentPipe } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -53,6 +53,8 @@ describe('ReceivablesComponent', () => {
       providers: [
         FormatService,
         DatePipe,
+        CurrencyPipe,
+        PercentPipe,
         InvoiceService,
         AuthService,
         InvoiceService,

@@ -13,7 +13,7 @@ import { ChartData, ChartOptions, Plugin } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { BaseChartDirective } from 'ng2-charts';
 import { map, Observable, Subscription, tap } from 'rxjs';
-import { TitleCasePipe } from '@angular/common';
+import { CurrencyPipe, TitleCasePipe } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -22,8 +22,8 @@ import { ActivatedRoute } from '@angular/router';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
 import { FormatService } from '../../../shared/services/util/format.service';
-import { centerTextPlugin } from './diagram-plugins/diagram-plugins';
 import { OrderDetailsUtils } from '../util/order-details.util';
+import { centerTextPlugin } from './diagram-plugins/diagram-plugins';
 
 @Component({
   selector: 'app-order-details',
@@ -64,6 +64,7 @@ export class OrderDetailsComponent {
     private readonly route: ActivatedRoute,
     private readonly translate: TranslateService,
     private readonly titleCasePipe: TitleCasePipe,
+    private readonly currencyPipe: CurrencyPipe,
     private readonly cwService: CalendarWeekService
   ) {
     this.id$ = this.route.snapshot.paramMap.get('id');
@@ -114,8 +115,13 @@ export class OrderDetailsComponent {
   }
 
   initDoughnutChart(priceData: number[]): void {
-    this.plugins.push(centerTextPlugin(priceData.reduce((sum, price) => sum + price, 0)));
-    this.doughnutChartOptions = OrderDetailsUtils.buildOptionsConfig(this.translate);
+    this.plugins.push(
+      centerTextPlugin(
+        priceData.reduce((sum, price) => sum + price, 0),
+        this.formatService
+      )
+    );
+    this.doughnutChartOptions = OrderDetailsUtils.buildOptionsConfig(this.translate, this.formatService);
     this.doughnutChartData = OrderDetailsUtils.buildDataset(this.translate.instant('Orders.Details.Diagram.DoughnutLabels'), priceData);
     this.updateLabelTranslations();
     this.chart?.update();

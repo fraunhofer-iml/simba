@@ -9,7 +9,7 @@
 import { TranslateModule } from '@ngx-translate/core';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { FileSaverModule } from 'ngx-filesaver';
-import { CommonModule, DatePipe, NgOptimizedImage } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe, NgOptimizedImage, PercentPipe } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -107,6 +107,9 @@ import { UnpaidStatisticsComponent } from './unpaid-statistics/unpaid-statistics
     FilterService<InvoiceFilter>,
     FormatService,
     DatePipe,
+    CurrencyPipe,
+    FormatService,
+    PercentPipe,
     FinancialRoleService,
     AuthService,
     CompaniesService,

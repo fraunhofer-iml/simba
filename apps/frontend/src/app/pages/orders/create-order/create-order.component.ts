@@ -9,7 +9,7 @@
 import { CreateOrderDto, OfferDto, OrderOverviewDto, ProductDto } from '@ap3/api';
 import { UNITS } from '@ap3/util';
 import { TranslateService } from '@ngx-translate/core';
-import { Chart, ChartDataset, ChartOptions } from 'chart.js';
+import { ChartDataset, ChartOptions } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import _moment, { default as _rollupMoment, Moment } from 'moment';
 import { BaseChartDirective } from 'ng2-charts';
@@ -32,7 +32,6 @@ import { CreateOrderUtils } from './create-order.util';
 import { OfferPricingStatistic } from './model/offer-pricing-statistics';
 
 const moment = _rollupMoment || _moment;
-Chart.register(ChartDataLabels);
 
 @Component({
   selector: 'app-create-order',
@@ -201,7 +200,7 @@ export class CreateOrderComponent implements OnInit {
   }
 
   private updatePagedChartData() {
-    this.barChartOptions = CreateOrderUtils.buildBarChartOptions(this.translate);
+    this.barChartOptions = CreateOrderUtils.buildBarChartOptions(this.translate, this.formatService);
     this.barChartData = CreateOrderUtils.buildChartData(this.translate, this.offerPricingStatistic);
     this.barChartLabels = CreateOrderUtils.buildChartLabels(this.translate, this.baseWeek);
     this.chart?.update();

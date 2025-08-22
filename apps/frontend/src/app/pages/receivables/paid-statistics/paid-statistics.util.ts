@@ -7,7 +7,9 @@
  */
 
 import { ChartData } from 'chart.js';
+import { formatCurrency, PercentPipe } from '@angular/common';
 import { PAID_STATISTICS_DIAGRAM_AND_LEGENDS_COLORS } from '../../../shared/constants/diagram-colors';
+import { FormatService } from '../../../shared/services/util/format.service';
 
 export class PaidStatisticsUtil {
   static generateSelectableYears(): number[] {
@@ -65,7 +67,7 @@ export class PaidStatisticsUtil {
     };
   }
 
-  static buildOptionsConfig() {
+  static buildOptionsConfig(percentPipe: PercentPipe, formatterService: FormatService) {
     return {
       responsive: true,
       maintainAspectRatio: false,
@@ -77,7 +79,7 @@ export class PaidStatisticsUtil {
           },
           ticks: {
             callback: function (value: any) {
-              return value.toLocaleString() + '€';
+              return formatCurrency(value, formatterService.getCurrentLocaleFormatter(), '€', 'EUR', '1.2-2');
             },
           },
         },
@@ -92,7 +94,7 @@ export class PaidStatisticsUtil {
           ticks: {
             stepSize: 0.2,
             callback: function (value: any) {
-              return (Number(value) * 100).toLocaleString() + '%';
+              return percentPipe.transform(value, '1.0-2', formatterService.getCurrentLocaleFormatter());
             },
           },
         },
@@ -110,17 +112,14 @@ export class PaidStatisticsUtil {
           enabled: true,
           callbacks: {
             label: (tooltipItem: any) => {
-              let dataPointUnit = '';
-              let dataPointValue = 0;
-              if (tooltipItem.datasetIndex === 1 || tooltipItem?.datasetIndex === 3) {
-                dataPointUnit = '€';
-                dataPointValue = Number(tooltipItem.raw) || 0;
-              } else {
-                dataPointUnit = '%';
-                dataPointValue = parseFloat((Number(tooltipItem.raw) * 100).toFixed(2)) || 0;
-              }
               const datasetLabel = tooltipItem.dataset.label || '';
-              return `${datasetLabel}: ${dataPointValue}${dataPointUnit} `;
+              let dataPointValue: string | null = '';
+              if (tooltipItem.datasetIndex === 1 || tooltipItem?.datasetIndex === 3) {
+                dataPointValue = formatCurrency(tooltipItem.raw, formatterService.getCurrentLocaleFormatter(), '€', 'EUR', '1.2-2');
+              } else {
+                dataPointValue = percentPipe.transform(tooltipItem.raw, '1.0-2');
+              }
+              return `${datasetLabel}: ${dataPointValue} `;
             },
           },
         },

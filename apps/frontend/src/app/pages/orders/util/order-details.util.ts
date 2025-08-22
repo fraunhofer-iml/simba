@@ -1,7 +1,9 @@
 import { ServiceProcessStatusDto } from '@ap3/api';
 import { TranslateService } from '@ngx-translate/core';
 import { ChartData, ChartOptions } from 'chart.js';
+import { formatCurrency } from '@angular/common';
 import { ORDER_DETAILS_DIAGRAM_COLORS } from '../../../shared/constants/diagram-colors';
+import { FormatService } from '../../../shared/services/util/format.service';
 
 export class OrderDetailsUtils {
   static buildDataset(doughnutParts: string[], data: number[]): ChartData<'doughnut'> {
@@ -22,7 +24,7 @@ export class OrderDetailsUtils {
     };
   }
 
-  static buildOptionsConfig(translationService: TranslateService): ChartOptions {
+  static buildOptionsConfig(translationService: TranslateService, formatterService: FormatService): ChartOptions {
     return <ChartOptions>{
       type: 'doughnut',
       responsive: true,
@@ -34,7 +36,7 @@ export class OrderDetailsUtils {
         },
         datalabels: {
           color: '#fff',
-          formatter: (value: number) => value + ' €',
+          formatter: (value: number) => formatCurrency(value, formatterService.getCurrentLocaleFormatter(), '€', 'EUR', '1.2-2'),
           font: {
             weight: 'bold',
             size: 14,
@@ -67,9 +69,7 @@ export class OrderDetailsUtils {
     }
 
     let latestObject: ServiceProcessStatusDto = serviceProcessStatusDtos[0];
-    let latestTimestamp: number = new Date(
-      serviceProcessStatusDtos[0].timestamp,
-    ).getTime();
+    let latestTimestamp: number = new Date(serviceProcessStatusDtos[0].timestamp).getTime();
 
     for (let i = 1; i < serviceProcessStatusDtos.length; i++) {
       const currentDto = serviceProcessStatusDtos[i];
@@ -78,7 +78,7 @@ export class OrderDetailsUtils {
       if (currentTimestamp > latestTimestamp) {
         latestTimestamp = currentTimestamp;
         latestObject = currentDto;
-       }
+      }
     }
 
     return latestObject;

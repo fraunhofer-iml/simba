@@ -1,4 +1,3 @@
-;
 /*
  * Copyright Fraunhofer Institute for Material Flow and Logistics
  *
@@ -10,7 +9,7 @@
 import { TranslateModule } from '@ngx-translate/core';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { CountdownComponent } from 'ngx-countdown';
-import { CommonModule, DatePipe, NgOptimizedImage, TitleCasePipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe, NgOptimizedImage, TitleCasePipe } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -100,6 +99,7 @@ import { OrdersRoutingModule } from './orders-routing.module';
     CalendarWeekService,
     FormatService,
     DatePipe,
+    CurrencyPipe,
     FilterService<OrderFilter>,
     provideNativeDateAdapter(),
     provideMomentDateAdapter(YEAR_FORMAT),

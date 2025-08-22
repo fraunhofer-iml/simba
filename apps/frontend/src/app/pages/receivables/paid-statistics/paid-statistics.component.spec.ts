@@ -8,6 +8,7 @@
 
 import { TranslateModule } from '@ngx-translate/core';
 import { KeycloakService } from 'keycloak-angular';
+import { CurrencyPipe, DatePipe, PercentPipe } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -15,6 +16,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 import { FinancialRoleService } from '../../../shared/services/util/financial-role.service';
+import { FormatService } from '../../../shared/services/util/format.service';
 import { PaidStatisticsComponent } from './paid-statistics.component';
 
 jest.mock('ng2-charts', () => ({
@@ -35,6 +37,10 @@ describe('PaidStatisticsComponent', () => {
       providers: [
         AuthService,
         InvoiceService,
+        CurrencyPipe,
+        FormatService,
+        PercentPipe,
+        DatePipe,
         provideHttpClient(),
         FinancialRoleService,
         {

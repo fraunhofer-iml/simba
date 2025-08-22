@@ -1,11 +1,13 @@
 import { TranslateService } from '@ngx-translate/core';
 import { ChartDataset, ChartOptions } from 'chart.js';
 import { Context } from 'chartjs-plugin-datalabels';
+import { formatCurrency } from '@angular/common';
 import { OFFERS_DIAGRAM_COLORS } from '../../../shared/constants/diagram-colors';
+import { FormatService } from '../../../shared/services/util/format.service';
 import { OfferPricingStatistic } from './model/offer-pricing-statistics';
 
 export class CreateOrderUtils {
-  static buildBarChartOptions(translate: TranslateService): ChartOptions {
+  static buildBarChartOptions(translate: TranslateService, formatterService: FormatService): ChartOptions {
     return <ChartOptions>{
       responsive: true,
       maintainAspectRatio: true,
@@ -25,10 +27,10 @@ export class CreateOrderUtils {
         tooltip: {
           callbacks: {
             title: () => '',
-            label: function (context) {
+            label: function (context: any) {
               const value = context.raw;
               const label = context.dataset.label ?? '';
-              const formatted = typeof value === 'number' ? value.toFixed(2) + ' €' : value;
+              const formatted = formatCurrency(context.raw, formatterService.getCurrentLocaleFormatter(), '€', 'EUR', '1.2-2');
               return `${label}: ${formatted}`;
             },
           },
@@ -46,7 +48,7 @@ export class CreateOrderUtils {
               return typeof val === 'number' ? acc + val : acc;
             }, 0);
 
-            return sum.toFixed(2) + ' €';
+            return formatCurrency(sum, formatterService.getCurrentLocaleFormatter(), '€', 'EUR', '1.2-2');
           },
           font: {
             weight: 'bold',
@@ -59,8 +61,8 @@ export class CreateOrderUtils {
         y: {
           beginAtZero: true,
           ticks: {
-            callback: function (value) {
-              return parseFloat(value.toString()).toFixed(0) + ' €';
+            callback: function (value: number) {
+              return formatCurrency(value, formatterService.getCurrentLocaleFormatter(), '€', 'EUR', '1.2-2');
             },
           },
         },

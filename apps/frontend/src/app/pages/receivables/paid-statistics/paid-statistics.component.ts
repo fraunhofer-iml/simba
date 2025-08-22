@@ -12,9 +12,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { forkJoin, map, Subscription } from 'rxjs';
+import { CurrencyPipe, PercentPipe } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
+import { FormatService } from '../../../shared/services/util/format.service';
 import { DiagramData } from './model/diagram-data';
 import { PaidStatisticsUtil } from './paid-statistics.util';
 
@@ -38,6 +40,9 @@ export class PaidStatisticsComponent implements OnChanges {
   constructor(
     private readonly invoiceService: InvoiceService,
     private readonly translationService: TranslateService,
+    private readonly currencyPipe: CurrencyPipe,
+    private readonly formatterService: FormatService,
+    private readonly percentPipe: PercentPipe,
     private readonly authService: AuthService
   ) {
     this.initPaidStatisticsChart();
@@ -59,7 +64,7 @@ export class PaidStatisticsComponent implements OnChanges {
   initPaidStatisticsChart() {
     this.selectableYears = PaidStatisticsUtil.generateSelectableYears();
     this.selectedYear = this.selectableYears[0];
-    this.mixedChartOptions = PaidStatisticsUtil.buildOptionsConfig();
+    this.mixedChartOptions = PaidStatisticsUtil.buildOptionsConfig(this.percentPipe, this.formatterService);
     this.mixedChartData = PaidStatisticsUtil.buildDataset(
       this.translationService.instant('MonthLabels'),
       this.volumeYAxis,
