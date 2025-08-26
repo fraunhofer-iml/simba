@@ -68,7 +68,7 @@
           !authService.isCustomer() && authService.isCurrentlyLoggedInCompany(row.creditorId) && !paymentStates.includes(row.paymentStatus)
         ) {
           <button class="paymentStatus-options-button" mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon><img src="assets/icons/arrow_down.svg" alt="Icon" /></mat-icon>
+            <mat-icon fontSet="material-symbols-outlined">keyboard_arrow_down</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
             @if (row.paymentStatus !== row.displayedStatus) {

@@ -1,3 +1,5 @@
+import { MatIconModule } from '@angular/material/icon';
+
 ;
 /*
  * Copyright Fraunhofer Institute for Material Flow and Logistics
@@ -75,6 +77,7 @@ describe('OrdersOverviewComponent', () => {
         TranslateModule.forRoot(),
         KeycloakAngularModule,
         FilterModule,
+        MatIconModule
       ],
       providers: [
         { provide: OrdersService, useValue: mockOrdersService },

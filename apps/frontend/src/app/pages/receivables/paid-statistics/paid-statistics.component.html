@@ -12,10 +12,10 @@
     <div class="years-container">
       <div class="year">
         <span>{{ 'Invoices.Statistics.PaidStatistics.Year' | translate }}</span>
-        <span> {{ selectedYear }}</span>
+        <span>{{ selectedYear }}</span>
       </div>
       <button mat-icon-button [matMenuTriggerFor]="menu">
-        <mat-icon><img ngSrc="assets/icons/calendar.svg" alt="Icon" height="24" width="24" /></mat-icon>
+        <mat-icon fontSet="material-symbols-outlined">calendar_month</mat-icon>
       </button>
       <mat-menu class="year-selector" #menu="matMenu" xPosition="before" cdkScrollable="true">
         @for (year of selectableYears; track year) {

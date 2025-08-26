@@ -16,6 +16,7 @@ import { AuthService } from '../../../shared/services/auth/auth.service';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 import { FormatService } from '../../../shared/services/util/format.service';
 import { TokenDetailsDialogComponent } from './token-details-dialog.component';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('TokenDetailsDialogComponent', () => {
   let component: TokenDetailsDialogComponent;
@@ -24,7 +25,7 @@ describe('TokenDetailsDialogComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [TokenDetailsDialogComponent],
-      imports: [MatDialogModule, TranslateModule.forRoot()],
+      imports: [MatDialogModule, TranslateModule.forRoot(), MatIconModule],
 
       providers: [
         InvoiceService,

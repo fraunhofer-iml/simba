@@ -9,20 +9,6 @@
 @use 'material-symbols';
 @import '@angular/material/prebuilt-themes/azure-blue.css';
 
-@font-face {
-  font-family: 'roboto';
-  src: url('/assets/fonts/Roboto/Roboto-Regular.ttf');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'roboto-bold';
-  src: url('/assets/fonts/Roboto/Roboto-Bold.ttf');
-  font-weight: bold;
-  font-style: normal;
-}
-
 .material-symbols-outlined {
   font-variation-settings:
     'FILL' 0,
@@ -34,7 +20,7 @@
 html,
 body {
   margin: 0;
-  font-family: roboto, 'Helvetica Neue', sans-serif;
+  font-family: 'Roboto', sans-serif;
   height: 100%;
 }
 
@@ -116,6 +102,10 @@ h4 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.search-icon {
+  margin-left: 0.5em;
 }
 
 //Mat

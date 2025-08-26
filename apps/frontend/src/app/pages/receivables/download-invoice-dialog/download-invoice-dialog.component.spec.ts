@@ -19,6 +19,7 @@ import { InvoiceService } from '../../../shared/services/invoices/invoices.servi
 import { FormatService } from '../../../shared/services/util/format.service';
 import { TokenDetailsDialogComponent } from '../token-details-dialog/token-details-dialog.component';
 import { DownloadInvoiceDialogComponent } from './download-invoice-dialog.component';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('DownloadInvoiceDialogComponent', () => {
   let component: DownloadInvoiceDialogComponent;
@@ -27,8 +28,7 @@ describe('DownloadInvoiceDialogComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DownloadInvoiceDialogComponent, TokenDetailsDialogComponent],
-      imports: [MatDialogModule, MatTabsModule, TranslateModule.forRoot(), NoopAnimationsModule],
-
+      imports: [MatDialogModule, MatTabsModule, TranslateModule.forRoot(), NoopAnimationsModule, MatIconModule],
       providers: [
         InvoiceService,
         TranslateModule,

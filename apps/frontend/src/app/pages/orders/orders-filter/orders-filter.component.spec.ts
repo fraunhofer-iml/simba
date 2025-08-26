@@ -11,6 +11,7 @@ import { AuthService } from '../../../shared/services/auth/auth.service';
 import { FilterService } from '../../../shared/services/filter/filter.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { OrdersFilterComponent } from './orders-filter.component';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('OrdersFilterComponent', () => {
   let component: OrdersFilterComponent;
@@ -18,7 +19,7 @@ describe('OrdersFilterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), FilterModule, BrowserAnimationsModule],
+      imports: [TranslateModule.forRoot(), FilterModule, BrowserAnimationsModule, MatIconModule],
       providers: [
         FilterService<OrderFilter>,
         OrdersService,

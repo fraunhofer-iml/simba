@@ -103,7 +103,7 @@ describe('OrderDetailsComponent', () => {
 
   it('should return the correct icon path for a given status', () => {
     const iconPath = component.getStatusIcon(ServiceStatesEnum.PLANNED);
-    expect(iconPath).toBe('./assets/icons/planned.svg');
+    expect(iconPath).toBe('assignment');
   });
 
   it('should return empty tooltip if timestamp is missing', () => {

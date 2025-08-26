@@ -11,7 +11,7 @@
     <div class="drawer-content-container">
       <div class="title">
         @if (!titleLogoUrl) {
-          <span class="material-symbols-outlined">pets</span>
+          <mat-icon fontSet="material-symbols-outlined">pets</mat-icon>
           <p>{{ 'Sidebar.ProjectName' | translate }}</p>
         } @else {
           <img class="logo" src="{{ titleLogoUrl }}" alt="title-logo" />
@@ -19,13 +19,13 @@
         <div class="language-button-container">
           <button mat-icon-button [matMenuTriggerFor]="menu">
             <div class="image">
-              <img src="assets/icons/languages.svg" alt="Icon" />
+              <mat-icon fontSet="material-symbols-outlined">language</mat-icon>
             </div>
           </button>
           <mat-menu #menu="matMenu">
             @for (language of languages; track language) {
               <button mat-menu-item (click)="setLanguage(language.label)">
-                <img src="{{ language.img }}" alt="flags" id="flags" />
+                <mat-icon fontSet="material-symbols-outlined">label</mat-icon>
                 {{ language.label }}
               </button>
             }
@@ -36,19 +36,19 @@
       <mat-selection-list class="selection-list">
         <mat-list-item [routerLink]="ROUTING.orders" routerLinkActive="active">
           <div class="image">
-            <img src="assets/icons/orders.svg" alt="Icon" />
+            <mat-icon fontSet="material-symbols-outlined">orders</mat-icon>
             {{ 'Sidebar.Orders' | translate }}
           </div>
         </mat-list-item>
         <mat-list-item [routerLink]="ROUTING.production" routerLinkActive="active">
           <div class="image">
-            <img src="assets/icons/precision_manufacturing.svg" alt="Icon" />
+            <mat-icon fontSet="material-symbols-outlined">precision_manufacturing</mat-icon>
             {{ 'Sidebar.Production' | translate }}
           </div>
         </mat-list-item>
         <mat-list-item [routerLink]="ROUTING.receivables" routerLinkActive="active">
           <div class="image">
-            <img src="assets/icons/receivables.svg" alt="Icon" id="receivables" />
+            <mat-icon fontSet="material-symbols-outlined">wallet</mat-icon>
             {{ 'Sidebar.Receivables' | translate }}
           </div>
         </mat-list-item>
@@ -56,11 +56,11 @@
       <div class="footer">
         <div class="user-container">
           <div class="user-information">
-            <img src="assets/icons/account_circle.svg" alt="Icon" class="icon" />
+            <mat-icon fontSet="material-symbols-outlined" class="account-icon">account_circle</mat-icon>
             <span> {{ userName }} </span>
           </div>
-          <button mat-button>
-            <img src="assets/icons/logout.svg" alt="Icon" (click)="logout()" (keydown)="logout()" />
+          <button mat-icon-button (click)="logout()" (keydown)="logout()" aria-label="Logout">
+            <mat-icon fontSet="material-symbols-outlined">logout</mat-icon>
           </button>
         </div>
         <div class="site-policies">

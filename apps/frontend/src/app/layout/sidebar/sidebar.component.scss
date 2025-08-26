@@ -77,6 +77,11 @@
   color: white;
 }
 
+.account-icon {
+  margin-right: 0.5em;
+  font-size: x-large;
+}
+
 /* Logout Button */
 .user-container button {
   border: none;
@@ -96,15 +101,14 @@
   background-color: var(--dark-blue-color);
 }
 
+.logout:hover {
+  cursor:pointer;
+}
+
 .logos-container {
   margin-top: 2em;
   display: grid;
   grid-template-columns: auto auto;
-  gap: 1em;
-}
-
-.icon {
-  color: white;
 }
 
 .title {
@@ -157,3 +161,10 @@
 .language-button-container {
   margin-left: auto;
 }
+
+.label-icon {
+  font-size: x-large;
+  margin-right: 0.5em;
+  vertical-align: middle;
+}
+

@@ -22,6 +22,7 @@ import { AuthService } from '../../../shared/services/auth/auth.service';
 import { CompaniesService } from '../../../shared/services/companies/companies.service';
 import { FilterService } from '../../../shared/services/filter/filter.service';
 import { InvoiceFilterComponent } from './invoice-filter.component';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('InvoiceFilterComponent', () => {
   let component: InvoiceFilterComponent;
@@ -51,6 +52,7 @@ describe('InvoiceFilterComponent', () => {
         MatCheckboxModule,
         NoopAnimationsModule,
         TranslateModule.forRoot(),
+        MatIconModule
       ],
       providers: [
         FilterService<InvoiceFilter>,

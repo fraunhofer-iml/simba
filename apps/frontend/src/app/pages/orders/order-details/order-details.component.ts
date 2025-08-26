@@ -24,6 +24,7 @@ import { CalendarWeekService } from '../../../shared/services/util/calendar-week
 import { FormatService } from '../../../shared/services/util/format.service';
 import { OrderDetailsUtils } from '../util/order-details.util';
 import { centerTextPlugin } from './diagram-plugins/diagram-plugins';
+import { STATUS_ICONS_MAP } from './const/status_icons_map';
 
 @Component({
   selector: 'app-order-details',
@@ -96,7 +97,7 @@ export class OrderDetailsComponent {
     const timestamp = this.getStatusTimestamp(allProcessStatus, status);
     if (!timestamp) return '';
 
-    return `${this.translate.instant('Orders.OrderTable.Status')}: ${this.translate.instant('Orders.Status.' + this.titleCasePipe.transform(status))} 
+    return `${this.translate.instant('Orders.OrderTable.Status')}: ${this.translate.instant('Orders.Status.' + this.titleCasePipe.transform(status))}
             ${this.translate.instant('Nft.Date')}: ${timestamp}`;
   }
 
@@ -105,8 +106,7 @@ export class OrderDetailsComponent {
   }
 
   getStatusIcon(status: string): string {
-    const iconPath = './assets/icons/';
-    return `${iconPath}${status.toLowerCase()}.svg`;
+    return STATUS_ICONS_MAP[status as ServiceStatesEnum] || '';
   }
 
   getStatusTimestamp(allProcessStatus: ServiceProcessStatusDto[], status: string): string {

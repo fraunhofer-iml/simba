@@ -5,6 +5,7 @@
   ~ For details on the licensing terms, see the LICENSE file.
   ~ SPDX-License-Identifier: Apache-2.0
   -->
+
 <mat-drawer-container class="drawer">
   <mat-drawer #drawer mode="side" position="end">
     <app-invoice-filter (outPutFilter)="getFilteredData($event)" class="drawer"></app-invoice-filter>
@@ -30,11 +31,11 @@
             (click)="drawer.toggle()"
             class="filter-button"
           >
-            <span mat-icon class="material-symbols-outlined"> filter_alt </span>
+            <mat-icon fontSet="material-symbols-outlined">filter_alt</mat-icon>
           </button>
 
           <mat-form-field class="searchbar">
-            <img matIconPrefix src="assets/icons/search.svg" alt="Icon" />
+            <mat-icon matIconPrefix fontSet="material-symbols-outlined">search</mat-icon>
             <input matInput (keyup)="convertInputAndResetPaginator($event)" />
           </mat-form-field>
         </div>
