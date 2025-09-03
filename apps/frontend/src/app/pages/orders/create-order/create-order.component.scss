@@ -6,20 +6,24 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-.price-diagram {
+.diagram-grid {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.price-diagram {
   height: 40vh;
-  max-width: 100%;
-  margin: 1em;
+  max-width: 90%;
 }
 
 canvas {
-  display: block;
   height: 100%;
   width: auto;
+  display: block;
 }
 
 .offer-details-grid {
@@ -93,7 +97,7 @@ canvas {
 
 .accept-button {
   background-color: var(--creme-color) !important;
-  color: black;
+  color: black !important;
 }
 
 .create-button-container {

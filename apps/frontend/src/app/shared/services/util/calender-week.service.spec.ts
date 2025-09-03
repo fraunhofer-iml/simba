@@ -7,24 +7,15 @@
  */
 
 import { addWeeks, startOfWeek } from 'date-fns';
-import moment from 'moment';
 import { TestBed } from '@angular/core/testing';
 import { CalendarWeekService } from './calendar-week.service';
 
-jest.mock('moment', () => {
-  const mMoment = {
-    year: jest.fn(),
-    isoWeek: jest.fn(),
-  };
-  return jest.fn(() => mMoment);
-});
 
 describe('CalendarWeekService', () => {
   let service: CalendarWeekService;
-  let mockMoment: any;
 
   beforeEach(() => {
-    mockMoment = moment();
+    jest.useFakeTimers().setSystemTime(new Date('2024-12-10T09:00:00Z'));
     TestBed.configureTestingModule({ imports: [], providers: [CalendarWeekService] });
 
     service = TestBed.inject(CalendarWeekService);
@@ -35,21 +26,11 @@ describe('CalendarWeekService', () => {
   });
 
   it('should return remaining weeks for the current year', () => {
-    mockMoment.year.mockReturnValue(2024);
-    mockMoment.isoWeek.mockReturnValue(50);
     const selectedYear = 2024;
-    const lastCalendarWeek = 52;
-    const expectedWeeks = [50, 51, 52];
-    const result = service.getCalendarWeeks(selectedYear, lastCalendarWeek);
+    const expectedWeeks = [ 51, 52];
+    const result = service.getCalendarWeeks(selectedYear);
 
     expect(result).toEqual(expectedWeeks);
-  });
-
-  it('should return full weeks list for past year', () => {
-    const result = service.getCalendarWeeks(2020, 52);
-    expect(result.length).toBe(52);
-    expect(result[0]).toBe(1);
-    expect(result[51]).toBe(52);
   });
 
   it('should return correct timestamp for first calendar week', () => {

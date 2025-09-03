@@ -16,19 +16,21 @@ describe('CreateOrderUtils', () => {
     expect(mockTranslate.instant).toHaveBeenCalledWith('CalendarWeek');
   });
 
-  it('should build correct chart data from stats', () => {
-    const stats = {
-      basePrice: [10, 20, 30],
-      utilization: [1, 2, 3],
-      timeUntilOrderBegins: [5, 6, 7],
-    };
+  it('should build correct chart data from offers', () => {
+    const offers = [
+      { basicPrice: 10, utilization: 10, timeUntilProduction: 50 },
+      { basicPrice: 20, utilization: 20, timeUntilProduction: 60 },
+      { basicPrice: 30, utilization: 30, timeUntilProduction: 70 },
+    ];
 
-    const result = CreateOrderUtils.buildChartData(mockTranslate, stats as any);
+    const result = CreateOrderUtils.buildChartData(mockTranslate, offers as any);
 
     expect(result.length).toBe(3);
     expect(result[0].data).toEqual([10, 20, 30]);
-    expect(result[0].label).toBe('translated:Offers.BasePrice');
+    expect(result[0].label).toBe('translated:Offers.BasicPrice');
+    expect(result[1].data).toEqual([10, 20, 30]);
     expect(result[1].label).toBe('translated:Offers.Utilization');
-    expect(result[2].label).toBe('translated:Offers.TimeUntilOrderBegins');
+    expect(result[2].data).toEqual([50, 60, 70]);
+    expect(result[2].label).toBe('translated:Offers.TimeUntilProduction');
   });
 });

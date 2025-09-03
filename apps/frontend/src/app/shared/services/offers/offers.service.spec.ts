@@ -31,19 +31,6 @@ describe('OffersService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should get offers', () => {
-    const mockOffers: OfferDto[] = offerDtosMock;
-    const orderId = '123';
-
-    service.getOffersByOrderId(orderId).subscribe((offers) => {
-      expect(offers).toEqual(mockOffers);
-    });
-
-    const req = httpMock.expectOne(`${BASE_URL}${ApiEndpoints.offers.getAllOffers}?orderId=${orderId}`);
-    expect(req.request.method).toBe('GET');
-    req.flush(mockOffers);
-  });
-
   it('should get one offer', () => {
     const mockOffer: OfferDto = offerDtosMock[0];
     const offerId = '1';

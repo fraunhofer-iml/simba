@@ -14,16 +14,13 @@
         <mat-form-field class="order-field">
           <mat-select placeholder="{{ 'Orders.Create.ProductInputField' | translate }}" formControlName="product">
             @for (product of products$ | async; track product) {
-              <mat-option [value]="product">{{ product.name }} </mat-option>
+              <mat-option [value]="product">{{ product.name }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
         <mat-form-field class="order-field">
-          <mat-select
-            [(value)]="unitOfMeasurement"
-            placeholder="{{ 'Orders.Create.UnitOfMeasureCode' | translate }}"
-            formControlName="unitOfMeasurement"
-          >
+          <mat-select placeholder="{{ 'Orders.Create.UnitOfMeasureCode' | translate }}"
+                      formControlName="unitOfMeasurement">
             <mat-option *ngFor="let unitOfMeasurement of UNITS" [value]="unitOfMeasurement">
               {{ unitOfMeasurement }}
             </mat-option>
@@ -50,10 +47,12 @@
             formControlName="date"
           />
           <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
-          <mat-datepicker #dp startView="multi-year" (yearSelected)="setYear($event, dp)" panelClass="year-picker"> </mat-datepicker>
+          <mat-datepicker #dp startView="multi-year" (yearSelected)="setYear($event, dp)"
+                          panelClass="year-picker"></mat-datepicker>
         </mat-form-field>
         <mat-form-field class="order-field" id="order-week">
-          <mat-select placeholder="{{ 'Orders.Create.WeekInputField' | translate }}" formControlName="selectedCalendarWeek">
+          <mat-select placeholder="{{ 'Orders.Create.WeekInputField' | translate }}"
+                      formControlName="selectedCalendarWeek">
             @for (week of allCalendarWeeks; track week) {
               <mat-option [value]="week">{{ 'CalendarWeek' | translate }} {{ week }}</mat-option>
             }
@@ -69,40 +68,52 @@
   </div>
 
   <!-- Offers -->
-  <div class="card offer-container" *ngIf="openOffers">
+  <div class="card offer-container" *ngIf="offers$">
     <div class="offers-header">
       <h1 class="title">{{ 'Offers.Title' | translate }}</h1>
       <div class="deadline">
         <p>{{ 'Offers.TimerText' | translate }}</p>
-        <countdown [config]="countdownConfig" (event)="onEvent($event)"></countdown>
+        <countdown #cd [config]="{ leftTime: 300, format: 'mm:ss' }" (event)="onEvent($event)"></countdown>
       </div>
     </div>
-
-    <div class="price-diagram">
-      <canvas
-        baseChart
-        [datasets]="barChartData"
-        [labels]="barChartLabels"
-        [options]="barChartOptions"
-        [plugins]="barChartPlugins"
-        [legend]="barChartLegend"
-      >
-      </canvas>
+    <div class="diagram-grid">
+      <div class="button-left">
+        <button mat-icon-button class="icon-button" (click)="offersForPreviousWeeks()"
+                matTooltip="{{ 'Buttons.CalendarNavigation.Previous' | translate }}"
+                [disabled]="isCurrentOrPastWeek(tmpOrderInfo.cw, tmpOrderInfo.year)">
+          <mat-icon fontSet="material-symbols-outlined"> arrow_back_ios</mat-icon>
+        </button>
+      </div>
+      <div class="price-diagram">
+        <canvas
+          baseChart
+          [datasets]="baseChartConfig.data"
+          [labels]="baseChartConfig.labels"
+          [options]="baseChartConfig.options"
+          [plugins]="baseChartConfig.plugins"
+          [legend]="baseChartConfig.legend">
+        </canvas>
+      </div>
+      <div class="button-right">
+        <button mat-icon-button class="icon-button" (click)="offersForNextWeeks()"
+                matTooltip="{{ 'Buttons.CalendarNavigation.Next' | translate }}">
+          <mat-icon fontSet="material-symbols-outlined"> arrow_forward_ios</mat-icon>
+        </button>
+      </div>
     </div>
-
     <div class="offers-container">
       @for (offer of offers$ | async; track $index) {
-        <div class="card offers">
+        <div class="card">
           <div class="offerIdAndDate">
             <p id="offerId" class="grey">ID {{ offer.id }}</p>
           </div>
-          <p id="offerName">{{ orderForm.get('product')?.value.name }}</p>
+          <p id="offerName">{{ orderForm.value.product?.name }}</p>
           <dl class="offer-details-grid">
             <dt>{{ 'Offers.ProductionWeek' | translate }}:</dt>
             <dd>{{ getScheduledFor(offer.plannedCalendarWeek, offer.plannedYear) }}</dd>
 
             <dt>{{ 'Offers.Amount' | translate }}:</dt>
-            <dd>{{ orderForm.get('amount')?.value }}</dd>
+            <dd>{{ orderForm.value.amount }}</dd>
 
             <dt>{{ 'Offers.OfferedPrice' | translate }}:</dt>
             <dd>
@@ -113,13 +124,15 @@
             </dd>
           </dl>
           <div class="button-container">
-            <button mat-flat-button class="accept-button" (click)="acceptOffer(offer.id)">{{ 'Buttons.Accept' | translate }}</button>
+            <button mat-flat-button class="accept-button" (click)="acceptOffer(offer.id)">
+              {{ 'Buttons.Accept' | translate }}
+            </button>
           </div>
         </div>
       }
     </div>
     <div class="button-container">
-      <button mat-flat-button class="decline-button" (click)="declineAllOffers(); navigateToOrders()">
+      <button mat-flat-button class="decline-button" (click)="declineAllOffers()">
         {{ 'Offers.DeclineAllOffers' | translate }}
       </button>
     </div>

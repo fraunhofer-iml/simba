@@ -16,7 +16,10 @@
       "UnitOfMeasureCode": "Einheit",
       "YearInputField": "Jahr",
       "WeekInputField": "Bevorzugter Produktionszeitraum",
-      "AmountInputField": "Stück"
+      "AmountInputField": "Stück",
+      "OrderCreationFailed": "Der Auftrag konnte nicht erstellt werden.",
+      "OfferGenerationFailed": "Es konnten keine Angebote generiert werden.",
+      "OfferAcceptationFailed": "Angebot konnte nicht angenommen werden."
     },
     "OrderTable": {
       "Id": "Auftrags ID",
@@ -67,9 +70,9 @@
     "Amount": "Stück",
     "DeclineAllOffers": "Alle Ablehnen",
     "OffersExpired": "Das tut uns leid, Ihre Angebote sind abgelaufen.",
-    "BasePrice": "Grundpreis",
+    "BasicPrice": "Grundpreis",
     "Utilization": "Auslastung",
-    "TimeUntilOrderBegins": "Zeit bis Produktion",
+    "TimeUntilProduction": "Zeit bis Produktion",
     "CalendarWeek": "Kalenderwoche"
   },
 
@@ -152,7 +155,11 @@
     "Cancel": "Abbrechen",
     "Change": "Änderungen anwenden",
     "Create": "Erstellen",
-    "Accept": "Akzeptieren"
+    "Accept": "Akzeptieren",
+    "CalendarNavigation": {
+      "Next": "Nächste 4 Kalenderwochen",
+      "Previous": "Vorherige 4 Kalenderwochen"
+    }
   },
 
   "Nft": {

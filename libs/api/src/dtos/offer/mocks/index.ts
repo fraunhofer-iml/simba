@@ -7,4 +7,4 @@
  */
 
 export * from './offer-dtos.mock';
-export * from './request-new-offers.dto';
+export * from './request-new-offers.mock';

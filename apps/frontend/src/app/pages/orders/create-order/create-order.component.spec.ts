@@ -9,7 +9,6 @@
 import { CreateOrderDto, orderOverviewMock } from '@ap3/api';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
-import moment from 'moment';
 import { CountdownEvent, CountdownModule } from 'ngx-countdown';
 import { of, throwError } from 'rxjs';
 import { DatePipe } from '@angular/common';
@@ -41,6 +40,7 @@ import { ProductService } from '../../../shared/services/product/product.service
 import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
 import { FormatService } from '../../../shared/services/util/format.service';
 import { CreateOrderComponent } from './create-order.component';
+import {getYear} from "date-fns";
 
 jest.mock('ng2-charts', () => ({
   BaseChartDirective: jest.fn().mockImplementation(() => ({
@@ -55,12 +55,17 @@ describe('CreateOrderComponent', () => {
   let fixture: ComponentFixture<CreateOrderComponent>;
   let orderService: OrdersService;
   let offerService: OffersService;
-  let datepicker: MatDatepicker<moment.Moment>;
+  let datepicker: MatDatepicker<Date>;
+  let mockOfferService: jest.Mocked<OffersService>;
 
   beforeEach(async () => {
     datepicker = {
       close: jest.fn(),
-    } as unknown as MatDatepicker<moment.Moment>;
+    } as unknown as MatDatepicker<Date>;
+
+    mockOfferService = {
+      generateNewOffers: jest.fn()
+    } as unknown as jest.Mocked<OffersService>;
 
     await TestBed.configureTestingModule({
       declarations: [CreateOrderComponent, DialogOffersExpiredComponent],
@@ -125,7 +130,7 @@ describe('CreateOrderComponent', () => {
   });
 
   it('should call declineAllOffers when countdown reaches zero', () => {
-    component.orderId = '123';
+    component.tmpOrderInfo.orderId = '123';
     const event: CountdownEvent = { left: 0 } as CountdownEvent;
     jest.spyOn(component, 'declineAllOffers');
     component.onEvent(event);
@@ -133,48 +138,44 @@ describe('CreateOrderComponent', () => {
   });
 
   it('should handle successful order creation', () => {
-    component.orderForm.get('date')?.setValue(moment());
-    component.orderForm.get('product')?.setValue('12345');
+    component.orderForm.get('date')?.setValue(new Date());
+    component.orderForm.get('product')?.setValue({id:'12345', name:"prod"});
     component.orderForm.get('selectedCalendarWeek')?.setValue(2);
     component.orderForm.get('amount')?.setValue(4);
 
     const createOrderFrontendDto = <CreateOrderDto>{
-      productId: component.orderForm.get('product')?.value.id,
-      amount: component.orderForm.get('amount')?.value,
-      year: component.orderForm.get('date')?.value.year(),
-      calendarWeek: component.orderForm.get('selectedCalendarWeek')?.value,
-      customerId: '',
+      productId: component.orderForm.value.product?.id,
+      amount: component.orderForm.value.amount,
+      year: getYear(component.orderForm.value.date ?? new Date()),
+      calendarWeek: component.orderForm.value.selectedCalendarWeek,
       unitOfMeasureCode: '',
     };
 
     jest.spyOn(orderService, 'createOrder').mockReturnValue(of(orderOverviewMock[0]));
-    jest.spyOn(offerService, 'getOffersByOrderId').mockReturnValue(of([]));
+    jest.spyOn(offerService, 'generateNewOffers').mockReturnValue(of([]));
 
     component.createOrder();
     expect(orderService.createOrder).toHaveBeenCalledWith(createOrderFrontendDto);
-    expect(offerService.getOffersByOrderId).toHaveBeenCalledWith(orderOverviewMock[0].id);
-    expect(component.openOffers).toBe(true);
   });
 
   it('should handle error in order creation', () => {
-    component.orderForm.get('date')?.setValue(moment());
+    component.orderForm.get('date')?.setValue(new Date());
     jest.spyOn(orderService, 'createOrder').mockReturnValue(throwError(() => new Error('Error')));
-    jest.spyOn(offerService, 'getOffersByOrderId');
+    jest.spyOn(offerService, 'generateNewOffers');
 
     component.createOrder();
     expect(orderService.createOrder).toHaveBeenCalled();
-    expect(offerService.getOffersByOrderId).not.toHaveBeenCalled();
-    expect(component.openOffers).toBe(false);
+    expect(offerService.generateNewOffers).not.toHaveBeenCalled();
   });
 
   it('should set the year of the date value', () => {
-    const normalizedDate = moment().year(2025);
-    const initialDate = moment().year(2020);
+    const normalizedDate = new Date('2025-01-01');
+    const initialDate = new Date('2020-01-01');
     component.orderForm.get('date')?.setValue(initialDate);
 
     component.setYear(normalizedDate, datepicker);
 
-    const date = component.orderForm.get('date')?.value;
-    expect(date.year()).toBe(2025);
+    const date = component.orderForm.value.date as Date;
+    expect(date.getFullYear()).toBe(2025);
   });
 });

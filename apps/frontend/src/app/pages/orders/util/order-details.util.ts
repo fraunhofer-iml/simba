@@ -2,7 +2,7 @@ import { ServiceProcessStatusDto } from '@ap3/api';
 import { TranslateService } from '@ngx-translate/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { formatCurrency } from '@angular/common';
-import { ORDER_DETAILS_DIAGRAM_COLORS } from '../../../shared/constants/diagram-colors';
+import { PRICE_COMPONENT_COLORS } from '../../../shared/constants/diagram-colors';
 import { FormatService } from '../../../shared/services/util/format.service';
 
 export class OrderDetailsUtils {
@@ -14,9 +14,9 @@ export class OrderDetailsUtils {
           label: '',
           data: data,
           backgroundColor: [
-            ORDER_DETAILS_DIAGRAM_COLORS.BASE_PRICE,
-            ORDER_DETAILS_DIAGRAM_COLORS.UTILIZATION_PRICE,
-            ORDER_DETAILS_DIAGRAM_COLORS.FIX_PRICE,
+            PRICE_COMPONENT_COLORS.BASIC_PRICE,
+            PRICE_COMPONENT_COLORS.UTILIZATION,
+            PRICE_COMPONENT_COLORS.TIME_UNTIL_PRODUCTION,
           ],
           type: 'doughnut',
         },

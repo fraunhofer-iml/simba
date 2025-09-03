@@ -27,7 +27,11 @@
 
 .site-policies-links {
   text-decoration: none;
-  color: var(--link-color);
+  color: var(--dark-blue-color);
+}
+
+.site-policies-links:hover {
+  text-decoration: underline;
 }
 
 #flags {
@@ -140,7 +144,7 @@
 }
 
 .footer {
-  padding: 1em;
+  padding: 1em 1em 0 1em;
   position: absolute;
   bottom: 0;
   left: 0;

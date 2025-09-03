@@ -19,7 +19,7 @@ export class CreateOrderDto {
   @ApiProperty()
   calendarWeek: number;
   @ApiProperty()
-  customerId: string;
+  customerId?: string;
   @ApiProperty()
   unitOfMeasureCode: string;
 

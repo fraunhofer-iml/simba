@@ -16,7 +16,10 @@
       "UnitOfMeasureCode": "Unit",
       "YearInputField": "Year",
       "WeekInputField": "Preferred production period",
-      "AmountInputField": "Piece(s)"
+      "AmountInputField": "Piece(s)",
+      "OrderCreationFailed": "Order creation failed.",
+      "OfferGenerationFailed": "Generation of offers failed.",
+      "OfferAcceptationFailed": "Acceptation of offer failed."
     },
     "OrderTable": {
       "Id": "Order ID",
@@ -73,9 +76,9 @@
     "ProductionWeek": "Offered production period",
     "Amount": "Piece(s)",
     "OffersExpired": "We're sorry, your offers have expired.",
-    "BasePrice": "Base price",
+    "BasicPrice": "Base price",
     "Utilization": "Utilization",
-    "TimeUntilOrderBegins": "Time until production",
+    "TimeUntilProduction": "Time until production",
     "CalendarWeek": "Calendar week"
   },
 
@@ -157,7 +160,11 @@
     "Cancel": "Cancel",
     "Change": "Apply changes",
     "Create": "Create",
-    "Accept": "Accept"
+    "Accept": "Accept",
+    "CalendarNavigation": {
+      "Next": "Next 4 Calendar Weeks",
+      "Previous": "Previous 4 Calendar Weeks"
+    }
   },
 
   "Nft": {

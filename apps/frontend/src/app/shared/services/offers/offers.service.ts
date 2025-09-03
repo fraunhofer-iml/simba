@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { OfferDto } from '@ap3/api';
+import { OfferDto, RequestNewOffersDto } from '@ap3/api';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -17,10 +17,11 @@ import { ApiEndpoints } from '../../constants/endpoints';
 export class OffersService {
   constructor(private httpClient: HttpClient) {}
 
-  public getOffersByOrderId(orderId: string): Observable<OfferDto[]> {
-    let params = new HttpParams();
-    params = params.set('orderId', orderId);
-    return this.httpClient.get<OfferDto[]>(`${BASE_URL}${ApiEndpoints.offers.getAllOffers}`, { params });
+  public generateNewOffers(requestNewOffers: RequestNewOffersDto): Observable<OfferDto[]> {
+    return this.httpClient.put<OfferDto[]>(
+      `${BASE_URL}${ApiEndpoints.offers.getAllOffers}`,
+      requestNewOffers
+    );
   }
 
   public getOfferById(offerId: string): Observable<OfferDto> {

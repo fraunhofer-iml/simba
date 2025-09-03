@@ -7,12 +7,19 @@
  */
 
 import { AmqpBrokerQueues, newOffersRequestMock, offerAmqpMock, OfferMessagePatterns, orderAmqpMock } from '@ap3/amqp';
-import { OfferDto, offerDtosMock, orderDtosMock, requestNewOffersDtoMock } from '@ap3/api';
+import {
+  OfferDto,
+  offerDtosMock,
+  orderDtosMock,
+  requestNewOffersDtoMock,
+  requestNewOffersDtoMockWrongKW
+} from '@ap3/api';
 import { of } from 'rxjs';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
 import { OffersController } from './offers.controller';
 import { OffersService } from './offers.service';
+import {BadRequestException} from "@nestjs/common";
 
 describe('OffersController', () => {
   let controller: OffersController;
@@ -63,6 +70,7 @@ describe('OffersController', () => {
     expect(sendRequestSpy).toHaveBeenCalledWith(OfferMessagePatterns.READ_BY_ORDER_ID, orderDtosMock[0].id);
     expect(res).toEqual(expectedReturnValue);
   });
+
   it('should find a single offer by Id', async () => {
     const expectedReturnValue: OfferDto = offerDtosMock[0];
     const sendRequestSpy = jest.spyOn(clientProxy, 'send');
@@ -125,5 +133,14 @@ describe('OffersController', () => {
 
     expect(res).toEqual(expectedReturnValue);
     expect(sendRequestSpy).toHaveBeenCalledWith(OfferMessagePatterns.CREATE, newOffersRequestMock);
+  });
+
+  it('should throw because calendarWeek is not valid', async () => {
+    const sendRequestSpy = jest.spyOn(clientProxy, 'send');
+    sendRequestSpy.mockImplementation((messagePattern: OfferMessagePatterns, data: any) => {
+      return of(offerAmqpMock);
+    });
+
+    await expect(controller.generateNewOffers(requestNewOffersDtoMockWrongKW)).rejects.toThrow(BadRequestException)
   });
 });
