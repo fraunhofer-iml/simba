@@ -32,7 +32,7 @@ export class CreateOrderUtils {
           maxWidth: 200,
           labels: {
             font: {
-              size: 14
+              size: 14,
             },
           },
         },
@@ -70,7 +70,7 @@ export class CreateOrderUtils {
             return formatCurrency(sum, formatterService.getCurrentLocaleFormatter(), '€', 'EUR', '1.2-2');
           },
           font: {
-            size: 14
+            size: 14,
           },
         },
       },
@@ -95,9 +95,8 @@ export class CreateOrderUtils {
     };
   }
 
-  static buildChartLabels(translate: TranslateService, baseWeek: number) {
-    const numberOfWeeks = 4;
-    return Array.from({ length: numberOfWeeks }, (_, i) => `${translate.instant('CalendarWeek')} ${baseWeek + i}`);
+  static buildChartLabels(translate: TranslateService, baseWeek: number, calendarWeeks: number[]) {
+    return Array.from({ length: calendarWeeks.length }, (_, i) => `${translate.instant('CalendarWeek')} ${calendarWeeks[i]}`);
   }
 
   static buildChartData(translate: TranslateService, offers: OfferDto[]) {

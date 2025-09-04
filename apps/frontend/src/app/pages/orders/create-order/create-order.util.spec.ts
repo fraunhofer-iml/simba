@@ -11,8 +11,13 @@ describe('CreateOrderUtils', () => {
   });
 
   it('should generate correct week labels with translation', () => {
-    const labels = CreateOrderUtils.buildChartLabels(mockTranslate, 3);
-    expect(labels).toEqual(['translated:CalendarWeek 3', 'translated:CalendarWeek 4', 'translated:CalendarWeek 5', 'translated:CalendarWeek 6']);
+    const labels = CreateOrderUtils.buildChartLabels(mockTranslate, 3, [3, 4, 5, 6]);
+    expect(labels).toEqual([
+      'translated:CalendarWeek 3',
+      'translated:CalendarWeek 4',
+      'translated:CalendarWeek 5',
+      'translated:CalendarWeek 6',
+    ]);
     expect(mockTranslate.instant).toHaveBeenCalledWith('CalendarWeek');
   });
 

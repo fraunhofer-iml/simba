@@ -57,7 +57,7 @@ export class CppsSchedulerConnectorService {
     const request = new Request(this.baseURL + GET_NEW_OFFERS(requestedCwForOrderDto.orderId), {
       method: 'POST',
       headers: this.buildHeader(),
-      body: JSON.stringify({ startCW: requestedCwForOrderDto.cw }),
+      body: JSON.stringify({ startCW: requestedCwForOrderDto.cw, RequestedYear: requestedCwForOrderDto.year }),
     });
 
     const response = await fetch(request);

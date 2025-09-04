@@ -6,30 +6,30 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {CreateOrderDto, OfferDto, OrderOverviewDto, ProductDto, RequestNewOffersDto} from '@ap3/api';
-import {UNITS} from '@ap3/util';
-import {TranslateService} from '@ngx-translate/core';
+import { CreateOrderDto, OfferDto, OrderOverviewDto, ProductDto, RequestNewOffersDto } from '@ap3/api';
+import { UNITS } from '@ap3/util';
+import { TranslateService } from '@ngx-translate/core';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {CountdownComponent, CountdownEvent} from 'ngx-countdown';
-import {catchError, Observable, switchMap, tap, throwError} from 'rxjs';
-import {ChangeDetectionStrategy, Component, HostListener, OnInit, ViewChild} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {MatDatepicker} from '@angular/material/datepicker';
-import {MatDialog} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {Router} from '@angular/router';
-import {DialogOffersExpiredComponent} from '../../../layout/dialog-offers-expired/dialog-offers-expired.component';
-import {ROUTING} from '../../../routing/routing.enum';
-import {OffersService} from '../../../shared/services/offers/offers.service';
-import {OrdersService} from '../../../shared/services/orders/orders.service';
-import {ProductService} from '../../../shared/services/product/product.service';
-import {CalendarWeekService} from '../../../shared/services/util/calendar-week.service';
-import {FormatService} from '../../../shared/services/util/format.service';
-import {CreateOrderChartEntity} from './model/create-order-chart.entity';
-import {CreateOrderUtils} from './create-order.util';
-import {BaseChartDirective} from "ng2-charts";
-import {getWeek, getYear} from "date-fns";
-import {debounce} from "lodash";
+import { getWeek, getYear } from 'date-fns';
+import { debounce } from 'lodash';
+import { BaseChartDirective } from 'ng2-charts';
+import { CountdownComponent, CountdownEvent } from 'ngx-countdown';
+import { catchError, Observable, switchMap, tap, throwError } from 'rxjs';
+import { ChangeDetectionStrategy, Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDatepicker } from '@angular/material/datepicker';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { DialogOffersExpiredComponent } from '../../../layout/dialog-offers-expired/dialog-offers-expired.component';
+import { ROUTING } from '../../../routing/routing.enum';
+import { OffersService } from '../../../shared/services/offers/offers.service';
+import { OrdersService } from '../../../shared/services/orders/orders.service';
+import { ProductService } from '../../../shared/services/product/product.service';
+import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
+import { FormatService } from '../../../shared/services/util/format.service';
+import { CreateOrderUtils } from './create-order.util';
+import { CreateOrderChartEntity } from './model/create-order-chart.entity';
 
 @Component({
   selector: 'app-create-order',
@@ -38,14 +38,14 @@ import {debounce} from "lodash";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateOrderComponent implements OnInit {
-  protected readonly weekShift = 4
+  protected readonly weekShift = 4;
   protected readonly UNITS = UNITS;
   orderForm: FormGroup<{
-    date: FormControl<Date | null>,
-    product: FormControl<ProductDto | null>,
-    amount: FormControl<number | null>,
-    selectedCalendarWeek: FormControl<number | null>,
-    unitOfMeasurement: FormControl<string | null>
+    date: FormControl<Date | null>;
+    product: FormControl<ProductDto | null>;
+    amount: FormControl<number | null>;
+    selectedCalendarWeek: FormControl<number | null>;
+    unitOfMeasurement: FormControl<string | null>;
   }>;
   offers$: Observable<OfferDto[]> | undefined;
   products$: Observable<ProductDto[]> | undefined;
@@ -58,7 +58,7 @@ export class CreateOrderComponent implements OnInit {
   datePickerFilter = (d: Date | null): boolean => getYear(d ?? new Date()) >= getYear(new Date());
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
-  @ViewChild('cd', {static: false}) countdown!: CountdownComponent;
+  @ViewChild('cd', { static: false }) countdown!: CountdownComponent;
 
   constructor(
     public readonly formatService: FormatService,
@@ -75,11 +75,11 @@ export class CreateOrderComponent implements OnInit {
       date: new FormControl<Date | null>(null, Validators.required),
       product: new FormControl<ProductDto | null>(null, Validators.required),
       amount: new FormControl<number | null>(null, [Validators.required, Validators.min(0)]),
-      selectedCalendarWeek: new FormControl<number | null>({value: null, disabled: true}, Validators.required),
+      selectedCalendarWeek: new FormControl<number | null>({ value: null, disabled: true }, Validators.required),
       unitOfMeasurement: new FormControl<string>('', Validators.required),
     });
 
-    this.tmpOrderInfo = {orderId: '', cw: 0, year: 0}
+    this.tmpOrderInfo = { orderId: '', cw: 0, year: 0 };
     this.allCalendarWeeks = [];
     this.products$ = this.productService.getProducts();
   }
@@ -95,7 +95,7 @@ export class CreateOrderComponent implements OnInit {
       options: {
         responsive: true,
         plugins: {
-          legend: {display: true},
+          legend: { display: true },
         },
       },
       plugins: [ChartDataLabels],
@@ -145,7 +145,7 @@ export class CreateOrderComponent implements OnInit {
   setYear(normalizedMonthAndYear: Date, datepicker: MatDatepicker<Date>) {
     this.tmpOrderInfo.year = getYear(normalizedMonthAndYear);
     this.allCalendarWeeks = this.calendarWeekService.getCalendarWeeks(this.tmpOrderInfo.year);
-    this.orderForm.patchValue({date: normalizedMonthAndYear, selectedCalendarWeek: null});
+    this.orderForm.patchValue({ date: normalizedMonthAndYear, selectedCalendarWeek: null });
     this.orderForm.get('selectedCalendarWeek')?.enable();
     this.orderForm.get('selectedCalendarWeek')?.reset();
     datepicker.close();
@@ -172,9 +172,10 @@ export class CreateOrderComponent implements OnInit {
           this.onError('Orders.Create.OfferAcceptationFailed');
           return throwError(() => err);
         })
-      ).subscribe(() => {
-      this.navigateToOrders();
-    });
+      )
+      .subscribe(() => {
+        this.navigateToOrders();
+      });
   }
 
   declineAllOffers() {
@@ -239,14 +240,17 @@ export class CreateOrderComponent implements OnInit {
   private updatePagedChartData(offers: OfferDto[]) {
     this.baseChartConfig.options = CreateOrderUtils.buildBarChartOptions(this.formatService);
     this.baseChartConfig.data = CreateOrderUtils.buildChartData(this.translate, offers);
-    this.baseChartConfig.labels = CreateOrderUtils.buildChartLabels(this.translate, offers[0].plannedCalendarWeek);
+    this.baseChartConfig.labels = CreateOrderUtils.buildChartLabels(
+      this.translate,
+      offers[0].plannedCalendarWeek,
+      offers.flatMap((offer: OfferDto) => {
+        return offer.plannedCalendarWeek;
+      })
+    );
     this.chart?.update();
   }
 
   private onError(msg: string) {
-    this.snackBar.open(
-      this.translate.instant(msg),
-      this.translate.instant('CloseSnackBarAction')
-    );
+    this.snackBar.open(this.translate.instant(msg), this.translate.instant('CloseSnackBarAction'));
   }
 }

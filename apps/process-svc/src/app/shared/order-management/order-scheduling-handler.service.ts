@@ -46,7 +46,7 @@ export class OrderSchedulingHandlerService {
   }
 
   async generateNewOffersForOrder(newOffersDto: NewOffersRequestAmqpDto): Promise<CreateOfferAmqpDto[]> {
-    const request = new RequestedCwForOrderDto(newOffersDto.orderId, newOffersDto.cw);
+    const request = new RequestedCwForOrderDto(newOffersDto.orderId, newOffersDto.cw, newOffersDto.year);
     const newScheduledOrder: ScheduleOrderResponseDto = await this.cppsSchedulerConnector.generateNewOffersForOrder(request);
     return this.convertScheduledPricesDto(newOffersDto.orderId, newScheduledOrder.pricesPerCW);
   }
