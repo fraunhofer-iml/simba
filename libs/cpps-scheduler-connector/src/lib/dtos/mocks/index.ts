@@ -9,3 +9,5 @@
 export * from './schedule-order-response.mock';
 export * from './scheduled-production-plan.mock';
 export * from './accept-scheduled-offer-response.mock';
+export * from './current-scheduling-dto.mock';
+export * from './schedule-machine-assignment-dto.mock';

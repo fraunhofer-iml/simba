@@ -9,4 +9,9 @@
 import { productsSeed } from '@ap3/database';
 import { ProductAmqpDto } from '../product-amqp.dto';
 
-export const productAmqpMock = <ProductAmqpDto[]>[{ id: productsSeed[0].id, name: productsSeed[0].name, variant: productsSeed[0].variant }];
+export const productAmqpMock = <ProductAmqpDto[]>[
+  { id: productsSeed[0].id, name: productsSeed[0].name, variant: productsSeed[0].variant },
+  { id: productsSeed[1].id, name: productsSeed[1].name, variant: productsSeed[1].variant },
+  { id: productsSeed[2].id, name: productsSeed[2].name, variant: productsSeed[2].variant },
+  { id: productsSeed[3].id, name: productsSeed[3].name, variant: productsSeed[3].variant },
+];

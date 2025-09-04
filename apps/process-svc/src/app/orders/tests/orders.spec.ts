@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllOrdersFilterAmqpDto, createOrderAmqpDtoMock, orderAmqpMock } from '@ap3/amqp';
-import { scheduleOrderResponseMock } from '@ap3/cpps-scheduler-connector';
+import { AllOrdersFilterAmqpDto, createOrderAmqpDtoMock, orderAmqpMock, scheduleAmqpDtoMock } from '@ap3/amqp';
+import { currentSchedulingDtoMock, scheduleOrderResponseMock } from '@ap3/cpps-scheduler-connector';
 import {
   companiesSeed,
   createOrderQueryMock,
@@ -149,5 +149,20 @@ describe('OrdersService', () => {
 
     expect(prisma.serviceProcess.update).toHaveBeenCalledWith(prismaInputMock);
     expect(true).toEqual(res);
+  });
+
+  it('should get the schedule from the cpps ', async () => {
+    const expectedReturn = [scheduleAmqpDtoMock];
+
+    //Mock sending order to cpps scheduler
+    const mockResponse = {
+      ok: true,
+      json: jest.fn().mockResolvedValue([currentSchedulingDtoMock]),
+    } as unknown as Response;
+    (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
+
+    const retVal = await controller.getScheduling();
+
+    expect(retVal).toEqual(expectedReturn);
   });
 });

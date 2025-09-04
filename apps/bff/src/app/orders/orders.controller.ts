@@ -7,7 +7,7 @@
  */
 
 import { AllOrdersFilterAmqpDto } from '@ap3/amqp';
-import { APIUtil, AuthRolesEnum, CreateOrderDto, KeycloakUser, OrderDetailsDto, OrderOverviewDto } from '@ap3/api';
+import { APIUtil, AuthRolesEnum, CreateOrderDto, KeycloakUser, OrderDetailsDto, OrderOverviewDto, ScheduleDto } from '@ap3/api';
 import { ServiceStatesEnum } from '@ap3/util';
 import { AuthenticatedUser, Roles } from 'nest-keycloak-connect';
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Query } from '@nestjs/common';
@@ -37,6 +37,16 @@ export class OrdersController {
     } else {
       throw new HttpException("Forbidden: JWT user and customer id doesn't match", HttpStatus.FORBIDDEN);
     }
+  }
+
+  @Get('/scheduling')
+  @Roles({ roles: [AuthRolesEnum.CUSTOMER, AuthRolesEnum.ADMIN, AuthRolesEnum.CONTRIBUTOR] })
+  @ApiOperation({
+    description: 'Get the current scheduling.',
+  })
+  @ApiResponse({ type: [ScheduleDto] })
+  async getScheduling(): Promise<ScheduleDto[]> {
+    return await this.ordersService.getScheduling();
   }
 
   @Get()

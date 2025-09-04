@@ -37,4 +37,13 @@ export class MachineAssignmentDto {
   public toAMQPDto(): MachineAssignmentAmqpDto {
     return new MachineAssignmentAmqpDto(this.orderId, this.machineId, this.start, this.end);
   }
+
+  public static fromAMQPDtos(amqpDtos: MachineAssignmentAmqpDto[]): MachineAssignmentDto[] {
+    const machineAssignmentDtos = [];
+
+    for (const amqpDto of amqpDtos) {
+      machineAssignmentDtos.push(new MachineAssignmentDto(amqpDto.orderId, amqpDto.machineId, amqpDto.start, amqpDto.end));
+    }
+    return machineAssignmentDtos;
+  }
 }

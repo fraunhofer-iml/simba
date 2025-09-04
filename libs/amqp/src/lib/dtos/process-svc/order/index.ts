@@ -12,3 +12,5 @@ export * from './order-amqp.dto';
 export * from './service-status-amqp.dto';
 export * from './mocks';
 export * from './params';
+export * from './schedule-amqp.dto';
+export * from './schedule-machine-assignment-amqp.dto';

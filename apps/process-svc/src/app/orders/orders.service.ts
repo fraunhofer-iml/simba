@@ -7,7 +7,7 @@
  */
 
 import util from 'node:util';
-import { AllOrdersFilterAmqpDto, CreateOrderAmqpDto, OrderAmqpDto, ServiceStatusAmqpDto } from '@ap3/amqp';
+import { AllOrdersFilterAmqpDto, CreateOrderAmqpDto, OrderAmqpDto, ScheduleAmqpDto, ServiceStatusAmqpDto } from '@ap3/amqp';
 import { OrderDatabaseAdapterService, OrderWithDependencies } from '@ap3/database';
 import { SERVICE_STATES_TO_SHOW } from '@ap3/util';
 import { Injectable, Logger } from '@nestjs/common';
@@ -57,5 +57,9 @@ export class OrdersService {
 
   async finishOrder(offerId: string): Promise<boolean> {
     return await this.orderManagementService.finishOrder(offerId);
+  }
+
+  async getScheduling(): Promise<ScheduleAmqpDto[]> {
+    return await this.orderManagementService.getScheduling();
   }
 }

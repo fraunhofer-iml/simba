@@ -7,7 +7,14 @@
  */
 
 import * as util from 'node:util';
-import { AllOrdersFilterAmqpDto, AmqpBrokerQueues, CreateOrderAmqpDto, OrderAmqpDto, OrderMessagePatterns } from '@ap3/amqp';
+import {
+  AllOrdersFilterAmqpDto,
+  AmqpBrokerQueues,
+  CreateOrderAmqpDto,
+  OrderAmqpDto,
+  OrderMessagePatterns,
+  ScheduleAmqpDto,
+} from '@ap3/amqp';
 import {
   CompanyDto,
   CreateOrderDto,
@@ -17,6 +24,7 @@ import {
   OrderDetailsDto,
   OrderOverviewDto,
   ProductDto,
+  ScheduleDto,
   ServiceProcessStatusDto,
 } from '@ap3/api';
 import { ConfigurationService } from '@ap3/config';
@@ -103,6 +111,13 @@ export class OrdersService {
       this.logger.log(util.inspect(e));
       throw e;
     }
+  }
+
+  async getScheduling(): Promise<ScheduleDto[]> {
+    const scheduling: ScheduleAmqpDto[] = await firstValueFrom<ScheduleAmqpDto[]>(
+      this.processAMQPClient.send(OrderMessagePatterns.READ_SCHEDULING, {})
+    );
+    return ScheduleDto.toScheduleDtos(scheduling);
   }
 
   private async loadOrderReferences(orders: OrderAmqpDto[]): Promise<OrderOverviewDto[]> {

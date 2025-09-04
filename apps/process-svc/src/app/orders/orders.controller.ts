@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllOrdersFilterAmqpDto, CreateOrderAmqpDto, OrderAmqpDto, OrderMessagePatterns } from '@ap3/amqp';
+import { AllOrdersFilterAmqpDto, CreateOrderAmqpDto, OrderAmqpDto, OrderMessagePatterns, ScheduleAmqpDto } from '@ap3/amqp';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { OrdersService } from './orders.service';
@@ -38,5 +38,10 @@ export class OrdersController {
   @MessagePattern(OrderMessagePatterns.FINISH_BY_ID)
   async finishOrder(@Payload() offerId: string): Promise<boolean> {
     return this.ordersService.finishOrder(offerId);
+  }
+
+  @MessagePattern(OrderMessagePatterns.READ_SCHEDULING)
+  async getScheduling(): Promise<ScheduleAmqpDto[]> {
+    return this.ordersService.getScheduling();
   }
 }

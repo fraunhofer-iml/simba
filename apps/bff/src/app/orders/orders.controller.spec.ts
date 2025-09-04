@@ -16,6 +16,7 @@ import {
   OfferMessagePatterns,
   orderAmqpMock,
   OrderMessagePatterns,
+  scheduleAmqpDtoMock,
   ServiceProcessPattern,
   serviceProcessStatesAmqpMock,
 } from '@ap3/amqp';
@@ -30,6 +31,8 @@ import {
   OrderOverviewDto,
   orderOverviewMock,
   productDtoMocks,
+  ScheduleDto,
+  schedulingMock,
 } from '@ap3/api';
 import { ConfigurationModule, ConfigurationService } from '@ap3/config';
 import { companiesSeed } from '@ap3/database';
@@ -189,6 +192,19 @@ describe('OrdersController', () => {
     const res: OrderOverviewDto = await controller.findOne(orderOverviewMock[0].id);
 
     expect(sendProcessRequestSpy).toHaveBeenCalledWith(OrderMessagePatterns.READ_BY_ID, orderOverviewMock[0].id);
+    expect(res).toEqual(expectedReturnValue);
+  });
+
+  it('should get a Scheduling', async () => {
+    const expectedReturnValue = schedulingMock;
+
+    sendProcessRequestSpy.mockImplementation((messagePattern: OrderMessagePatterns, data: any) => {
+      return of([scheduleAmqpDtoMock]);
+    });
+
+    const res: ScheduleDto[] = await controller.getScheduling();
+
+    expect(sendProcessRequestSpy).toHaveBeenCalledWith(OrderMessagePatterns.READ_SCHEDULING, {});
     expect(res).toEqual(expectedReturnValue);
   });
 

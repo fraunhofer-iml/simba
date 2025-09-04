@@ -6,10 +6,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CreateOfferAmqpDto, NewOffersRequestAmqpDto } from '@ap3/amqp';
+import { CreateOfferAmqpDto, NewOffersRequestAmqpDto, ScheduleAmqpDto } from '@ap3/amqp';
 import {
   AcceptScheduledOfferDto,
   CppsSchedulerConnectorService,
+  CurrentSchedulingDto,
   RequestedCwForOrderDto,
   ScheduledPricesCwDto,
   ScheduledProductDto,
@@ -48,6 +49,19 @@ export class OrderSchedulingHandlerService {
     const request = new RequestedCwForOrderDto(newOffersDto.orderId, newOffersDto.cw);
     const newScheduledOrder: ScheduleOrderResponseDto = await this.cppsSchedulerConnector.generateNewOffersForOrder(request);
     return this.convertScheduledPricesDto(newOffersDto.orderId, newScheduledOrder.pricesPerCW);
+  }
+
+  async getScheduling(): Promise<ScheduleAmqpDto[]> {
+    const currentScheduling: CurrentSchedulingDto[] = await this.cppsSchedulerConnector.getCurrentScheduling();
+    return this.convertCurrentSchedulingToAmqpDto(currentScheduling);
+  }
+
+  private convertCurrentSchedulingToAmqpDto(currentScheduling: CurrentSchedulingDto[]): ScheduleAmqpDto[] {
+    const amqpDtos: ScheduleAmqpDto[] = [];
+    for (const schedule of currentScheduling) {
+      amqpDtos.push(new ScheduleAmqpDto(schedule.machineAssignment, schedule.orderId, schedule.price));
+    }
+    return amqpDtos;
   }
 
   private convertScheduledPricesDto(orderId: string, prices: ScheduledPricesCwDto[]): CreateOfferAmqpDto[] {

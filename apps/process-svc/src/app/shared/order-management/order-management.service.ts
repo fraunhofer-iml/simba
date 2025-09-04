@@ -12,6 +12,7 @@ import {
   NewOffersRequestAmqpDto,
   OfferAmqpDto,
   OrderAmqpDto,
+  ScheduleAmqpDto,
   ServiceStatusAmqpDto,
 } from '@ap3/amqp';
 import { OfferPrismaService, OrderDatabaseAdapterService, OrderWithDependencies, ServiceProcessPrismaService } from '@ap3/database';
@@ -113,6 +114,10 @@ export class OrderManagementService {
       this.logger.error(`Couldn't create a PRODUCED state for order: ${orderId}`);
       return false;
     }
+  }
+
+  async getScheduling(): Promise<ScheduleAmqpDto[]> {
+    return await this.orderSchedulingHandlerService.getScheduling();
   }
 
   private async createOffers(offers: CreateOfferAmqpDto[]): Promise<OfferAmqpDto[]> {
