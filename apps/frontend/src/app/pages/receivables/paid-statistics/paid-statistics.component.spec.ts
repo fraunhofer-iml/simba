@@ -18,6 +18,9 @@ import { InvoiceService } from '../../../shared/services/invoices/invoices.servi
 import { FinancialRoleService } from '../../../shared/services/util/financial-role.service';
 import { FormatService } from '../../../shared/services/util/format.service';
 import { PaidStatisticsComponent } from './paid-statistics.component';
+import { throwError } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 jest.mock('ng2-charts', () => ({
   BaseChartDirective: jest.fn().mockImplementation(() => ({
@@ -30,8 +33,19 @@ jest.mock('ng2-charts', () => ({
 describe('PaidStatisticsComponent', () => {
   let component: PaidStatisticsComponent;
   let fixture: ComponentFixture<PaidStatisticsComponent>;
+  let invoiceServiceMock: jest.Mocked<InvoiceService>;
+  let mockSnackBar: jest.Mocked<MatSnackBar>;
 
   beforeEach(async () => {
+
+    invoiceServiceMock = {
+      getPaidStatistics: jest.fn()
+    } as unknown as jest.Mocked<InvoiceService>;
+
+    mockSnackBar = {
+      open: jest.fn(),
+    } as unknown as jest.Mocked<MatSnackBar>;
+
     await TestBed.configureTestingModule({
       declarations: [PaidStatisticsComponent],
       providers: [
@@ -57,7 +71,7 @@ describe('PaidStatisticsComponent', () => {
           },
         },
       ],
-      imports: [TranslateModule.forRoot(), MatMenuModule],
+      imports: [TranslateModule.forRoot(), MatMenuModule, BrowserAnimationsModule],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
@@ -99,5 +113,15 @@ describe('PaidStatisticsComponent', () => {
     component.mixedChartData.datasets[0] = { label: 'paid-statistics-creditor-percentage-color', data: [] };
     const result = component.getCssColorClassRate('paid-statistics-creditor-percentage-color');
     expect(result).toBe('paid-statistics-creditor-percentage-color option');
+  })
+
+  it('should handle errors for both creditor and debtor', () => {
+    invoiceServiceMock.getPaidStatistics.mockReturnValue(throwError(() => new Error()));
+
+    component.getPaidStatistics(2025).subscribe(result => {
+      expect(result.creditorData).toEqual([]);
+      expect(result.debtorData).toEqual([]);
+      expect(mockSnackBar.open).toHaveBeenCalledTimes(2);
+    });
   });
 });

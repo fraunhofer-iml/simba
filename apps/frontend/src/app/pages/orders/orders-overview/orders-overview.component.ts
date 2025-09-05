@@ -8,7 +8,10 @@
 
 import { OrderOverviewDto } from '@ap3/api';
 import { ServiceStatesEnum } from '@ap3/util';
+import { TranslateService } from '@ngx-translate/core';
+import { catchError, throwError } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { OrderFilter } from '../../../model/order-filter';
@@ -36,7 +39,9 @@ export class OrdersOverviewComponent implements OnInit {
     private readonly orderService: OrdersService,
     readonly authService: AuthService,
     private readonly route: ActivatedRoute,
-    private readonly orderFilterService: FilterService<OrderFilter>
+    private readonly orderFilterService: FilterService<OrderFilter>,
+    private readonly snackBar: MatSnackBar,
+    private readonly translateService: TranslateService,
   ) {
     this.orderFilterService.resetFilter();
     this.activatedFiltersCount = this.orderFilterService.countSelectedFilterOptions();
@@ -52,10 +57,22 @@ export class OrdersOverviewComponent implements OnInit {
   }
 
   private loadOrders(filter: OrderFilter): void {
-    this.orderService.getOrders(filter).subscribe((orders: OrderOverviewDto[]) => {
-      this.dataSourceOpen.data = orders.filter((order: OrderOverviewDto) => order.status !== ServiceStatesEnum.PRODUCED);
-      this.dataSourceClosed.data = orders.filter((order: OrderOverviewDto) => order.status === ServiceStatesEnum.PRODUCED);
-    });
+    this.orderService.getOrders(filter)
+      .pipe(
+        catchError((err) => {
+          this.snackBar.open(
+            this.translateService.instant('Error.LoadOrdersFailed'),
+            this.translateService.instant('CloseSnackBarAction')
+          );
+          return throwError(() => err);
+        })
+      )
+      .subscribe((orders: OrderOverviewDto[] | null) => {
+        if (orders) {
+          this.dataSourceOpen.data = orders.filter((order) => order.status !== ServiceStatesEnum.PRODUCED);
+          this.dataSourceClosed.data = orders.filter((order) => order.status === ServiceStatesEnum.PRODUCED);
+        }
+      });
   }
 
   applyFilter(event: Event) {

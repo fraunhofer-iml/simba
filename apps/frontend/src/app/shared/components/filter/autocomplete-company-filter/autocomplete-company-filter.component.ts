@@ -7,9 +7,11 @@
  */
 import { CompanyDto } from '@ap3/api';
 import { UserRoles } from '@ap3/util';
-import { map, Observable, of } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { Component, EventEmitter, input, InputSignal, OnInit, output } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../services/auth/auth.service';
 import { CompaniesService } from '../../../services/companies/companies.service';
 import { AutocompleteCompanyFilterConfig } from './autocomplete-company-filter-config';
@@ -29,7 +31,9 @@ export class AutocompleteCompanyFilterComponent implements OnInit {
   selectedCompany = output<CompanyDto | undefined>();
   constructor(
     private readonly companiesService: CompaniesService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly snackBar: MatSnackBar,
+    private readonly translateService: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -45,11 +49,16 @@ export class AutocompleteCompanyFilterComponent implements OnInit {
       map((res: CompanyDto[]) => {
         if (this.authService.getCurrentlyLoggedInUserRole() !== UserRoles.ADMIN) {
           const userCompanyId = this.authService.getCurrentlyLoggedInCompanyId();
-          res = res.filter((company: CompanyDto) => {
-            return company.id !== userCompanyId;
-          });
+          res = res.filter((company: CompanyDto) => company.id !== userCompanyId);
         }
         return res;
+      }),
+      catchError((err) => {
+        this.snackBar.open(
+          this.translateService.instant('Error.GetCompaniesFailed'),
+          this.translateService.instant('CloseSnackBarAction')
+        );
+        return throwError(() => err);
       })
     );
   }

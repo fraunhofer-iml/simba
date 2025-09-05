@@ -1,6 +1,3 @@
-import { MatIconModule } from '@angular/material/icon';
-
-;
 /*
  * Copyright Fraunhofer Institute for Material Flow and Logistics
  *
@@ -45,6 +42,7 @@ import { OrderTableComponent } from './order-table/order-table.component';
 import { OrdersOverviewComponent } from './orders-overview.component';
 import localeDe from '@angular/common/locales/de';
 import { registerLocaleData } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('OrdersOverviewComponent', () => {
   let component: OrdersOverviewComponent;

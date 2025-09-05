@@ -8,8 +8,10 @@
 
 import { UnpaidStatisticsDto } from '@ap3/api';
 import { FinancialRoles, PaymentStates } from '@ap3/util';
-import { Observable, of } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { catchError, Observable, of, throwError } from 'rxjs';
 import { Component, Input, OnChanges } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvoiceFilter } from '../../../model/invoice-filter';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { FilterService } from '../../../shared/services/filter/filter.service';
@@ -27,9 +29,11 @@ export class UnpaidStatisticsComponent implements OnChanges {
   @Input({ required: true }) invoiceIds: string[] = [];
 
   constructor(
+    readonly authService: AuthService,
     public readonly formatService: FormatService,
     private readonly invoiceService: InvoiceService,
-    readonly authService: AuthService,
+    private readonly snackBar: MatSnackBar,
+    private readonly translateService: TranslateService,
     private readonly filterService: FilterService<InvoiceFilter>
   ) {
     this.creditorStatisticsDto$ = of();
@@ -37,8 +41,29 @@ export class UnpaidStatisticsComponent implements OnChanges {
   }
 
   ngOnChanges(): void {
-    this.creditorStatisticsDto$ = this.invoiceService.getUnPaidStatistics(this.invoiceIds, FinancialRoles.CREDITOR);
-    this.debtorStatisticsDto$ = this.invoiceService.getUnPaidStatistics(this.invoiceIds, FinancialRoles.DEBTOR);
+    this.creditorStatisticsDto$ = this.invoiceService
+      .getUnPaidStatistics(this.invoiceIds, FinancialRoles.CREDITOR)
+      .pipe(
+        catchError((err) => {
+          this.snackBar.open(
+            this.translateService.instant('Error.GetUnpaidStatisticsFailed'),
+            this.translateService.instant('CloseSnackBarAction')
+          );
+          return throwError(() => err);
+        })
+      );
+
+    this.debtorStatisticsDto$ = this.invoiceService
+      .getUnPaidStatistics(this.invoiceIds, FinancialRoles.DEBTOR)
+      .pipe(
+        catchError((err) => {
+          this.snackBar.open(
+            this.translateService.instant('Error.GetUnpaidStatisticsFailed'),
+            this.translateService.instant('CloseSnackBarAction')
+          );
+          return throwError(() => err);
+        })
+      );
   }
 
   setInvoiceFilterToLiabilities() {

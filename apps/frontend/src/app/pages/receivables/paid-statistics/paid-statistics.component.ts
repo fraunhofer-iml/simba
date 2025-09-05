@@ -11,9 +11,10 @@ import { FinancialRoles } from '@ap3/util';
 import { TranslateService } from '@ngx-translate/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import { forkJoin, map, Subscription } from 'rxjs';
+import { catchError, forkJoin, map, Subscription, throwError } from 'rxjs';
 import { CurrencyPipe, PercentPipe } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 import { FormatService } from '../../../shared/services/util/format.service';
@@ -43,7 +44,8 @@ export class PaidStatisticsComponent implements OnChanges {
     private readonly currencyPipe: CurrencyPipe,
     private readonly formatterService: FormatService,
     private readonly percentPipe: PercentPipe,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly snackBar: MatSnackBar,
   ) {
     this.initPaidStatisticsChart();
     this.translation = translationService.onLangChange
@@ -76,11 +78,29 @@ export class PaidStatisticsComponent implements OnChanges {
   getPaidStatistics(year: number) {
     const creditorData = this.invoiceService
       .getPaidStatistics(this.invoiceIds, FinancialRoles.CREDITOR, year)
-      .pipe(map((paidDtos: PaidStatisticsDto[]) => new DiagramData(paidDtos)));
+      .pipe(
+        map((paidDtos: PaidStatisticsDto[]) => new DiagramData(paidDtos)),
+        catchError((err) => {
+          this.snackBar.open(
+            this.translationService.instant('Error.GetPaidStatisticsFailed'),
+            this.translationService.instant('CloseSnackBarAction')
+          );
+          return throwError(() => err);
+        })
+      );
 
     const debtorData = this.invoiceService
       .getPaidStatistics(this.invoiceIds, FinancialRoles.DEBTOR, year)
-      .pipe(map((paidDtos: PaidStatisticsDto[]) => new DiagramData(paidDtos)));
+      .pipe(
+        map((paidDtos: PaidStatisticsDto[]) => new DiagramData(paidDtos)),
+        catchError((err) => {
+          this.snackBar.open(
+            this.translationService.instant('Error.GetPaidStatisticsFailed'),
+            this.translationService.instant('CloseSnackBarAction')
+          );
+          return throwError(() => err);
+        })
+      );
 
     return forkJoin({ creditorData, debtorData });
   }

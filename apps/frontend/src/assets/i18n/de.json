@@ -16,10 +16,7 @@
       "UnitOfMeasureCode": "Einheit",
       "YearInputField": "Jahr",
       "WeekInputField": "Bevorzugter Produktionszeitraum",
-      "AmountInputField": "Stück",
-      "OrderCreationFailed": "Der Auftrag konnte nicht erstellt werden.",
-      "OfferGenerationFailed": "Es konnten keine Angebote generiert werden.",
-      "OfferAcceptationFailed": "Angebot konnte nicht angenommen werden."
+      "AmountInputField": "Stück"
     },
     "OrderTable": {
       "Id": "Auftrags ID",
@@ -175,6 +172,23 @@
     "MetaData": "Metadaten",
     "Information": "Zusätzliche Information",
     "ErrorNft": "Keine NFT-Daten für diese Rechnung gefunden."
+  },
+
+  "Error": {
+    "OrderCreationFailed": "Der Auftrag konnte nicht erstellt werden.",
+    "OrderDetailsFailed": "Die Auftragsdetails konnten nicht angezeigt werden.",
+    "OfferGenerationFailed": "Es konnten keine Angebote generiert werden.",
+    "OfferAcceptationFailed": "Angebot konnte nicht angenommen werden.",
+    "OfferAcceptFailed": "Das Angebot konnte nicht akzeptiert werden.",
+    "OfferDeclineFailed": "Die Angebote konnten nicht abgelehnt werden.",
+    "LoadOrdersFailed": "Die Aufträge konnten nicht geladen werden.",
+    "DownloadInvoicesFailed": "Der Download ist fehlgeschlagen.",
+    "GetPaidStatisticsFailed": "Es wurden keine bezahlten Rechnungen gefunden.",
+    "NftFailed": "Es wurde kein NFT gefunden.",
+    "GetUnpaidStatisticsFailed": "Es wurden keine unbezahlten Rechnungen gefunden.",
+    "GetInvoicesFailed": "Es wurden keine Rechnungen gefunden.",
+    "GetCompaniesFailed": "Es wurden keine Unternehmen gefunden.",
+    "GetProductsFailed": "Es wurden keine Produkte gefunden."
   },
 
   "NoMatchingData": "Es wurden keine Daten gefunden, die dem Filter entsprechen ",

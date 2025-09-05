@@ -9,7 +9,7 @@
 import { InvoiceDto, InvoiceIdAndPaymentStateDto } from '@ap3/api';
 import { PaymentStates } from '@ap3/util';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -43,7 +43,9 @@ export class ReceivablesComponent {
     private readonly dialog: MatDialog,
     private readonly invoiceService: InvoiceService,
     private readonly translationService: TranslateService,
-    private readonly filterService: FilterService<InvoiceFilter>
+    private readonly filterService: FilterService<InvoiceFilter>,
+    private readonly snackBar: MatSnackBar,
+    private readonly translateService: TranslateService,
   ) {
     this.filterService.resetFilter();
     this.filterSubject = this.filterService.getSubject().asObservable();
@@ -105,7 +107,15 @@ export class ReceivablesComponent {
   }
 
   private loadInvoices(filter?: InvoiceFilter): void {
-    this.invoiceService.getInvoices(filter).subscribe((invoices: InvoiceDto[]) => {
+    this.invoiceService.getInvoices(filter).pipe(
+      catchError((err) => {
+        this.snackBar.open(
+          this.translateService.instant('Error.GetInvoicesFailed'),
+          this.translateService.instant('CloseSnackBarAction')
+        );
+        return throwError(() => err);
+      })
+    ).subscribe((invoices: InvoiceDto[]) => {
       this.filteredInvoicesIds = invoices.map((invoice: InvoiceDto) => invoice.id);
       this.dataSourceOpen.data = Invoice.convertToInvoice(
         invoices.filter(

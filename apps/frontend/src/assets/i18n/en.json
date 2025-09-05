@@ -16,10 +16,7 @@
       "UnitOfMeasureCode": "Unit",
       "YearInputField": "Year",
       "WeekInputField": "Preferred production period",
-      "AmountInputField": "Piece(s)",
-      "OrderCreationFailed": "Order creation failed.",
-      "OfferGenerationFailed": "Generation of offers failed.",
-      "OfferAcceptationFailed": "Acceptation of offer failed."
+      "AmountInputField": "Piece(s)"
     },
     "OrderTable": {
       "Id": "Order ID",
@@ -185,6 +182,23 @@
   "Paginator": {
     "ItemsPerPage": "Items per page",
     "Of": "of"
+  },
+
+  "Error": {
+    "OrderCreationFailed": "Order creation failed.",
+    "OrderDetailsFailed": "The order details could not be displayed.",
+    "OfferGenerationFailed": "Generation of offers failed.",
+    "OfferAcceptationFailed": "Acceptation of offer failed.",
+    "OfferAcceptFailed": "The offer could not be accepted.",
+    "OfferDeclineFailed": "The offers could not be declined.",
+    "LoadOrdersFailed": "The orders could not be loaded.",
+    "DownloadInvoicesFailed": "The download failed.",
+    "GetPaidStatisticsFailed": "No paid invoices were found.",
+    "NftFailed": "No NFT was found.",
+    "GetUnpaidStatisticsFailed": "No unpaid invoices were found.",
+    "GetInvoicesFailed": "No invoices were found.",
+    "GetCompaniesFailed": "No companies were found.",
+    "GetProductsFailed": "No products were found."
   },
 
   "CalendarWeek": "CW",

@@ -12,10 +12,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { ChartData, ChartOptions, Plugin } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { BaseChartDirective } from 'ng2-charts';
-import { map, Observable, Subscription, tap } from 'rxjs';
-import { CurrencyPipe, TitleCasePipe } from '@angular/common';
+import { catchError, map, Observable, Subscription, tap, throwError } from 'rxjs';
+import { TitleCasePipe } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
@@ -23,8 +24,8 @@ import { OrdersService } from '../../../shared/services/orders/orders.service';
 import { CalendarWeekService } from '../../../shared/services/util/calendar-week.service';
 import { FormatService } from '../../../shared/services/util/format.service';
 import { OrderDetailsUtils } from '../util/order-details.util';
-import { centerTextPlugin } from './diagram-plugins/diagram-plugins';
 import { STATUS_ICONS_MAP } from './const/status_icons_map';
+import { centerTextPlugin } from './diagram-plugins/diagram-plugins';
 
 @Component({
   selector: 'app-order-details',
@@ -36,7 +37,7 @@ export class OrderDetailsComponent {
   protected readonly OrderStatus = ServiceStatesEnum;
   translation: Subscription;
   id$: string | null;
-  orderDetails$: Observable<OrderDetailsDto>;
+  orderDetails$: Observable<OrderDetailsDto | null>;
   allFinancialStatus = ALL_SERVICE_STATES_FOR_DETAILS;
   displayedColumnsCustomer: string[] = ['robots', 'startDate', 'endDate', 'ownerName'];
   dataSource = new MatTableDataSource<GetMachineAssignmentDto>([]);
@@ -63,10 +64,10 @@ export class OrderDetailsComponent {
     public readonly formatService: FormatService,
     private readonly ordersService: OrdersService,
     private readonly route: ActivatedRoute,
-    private readonly translate: TranslateService,
+    private readonly translateService: TranslateService,
     private readonly titleCasePipe: TitleCasePipe,
-    private readonly currencyPipe: CurrencyPipe,
-    private readonly cwService: CalendarWeekService
+    private readonly cwService: CalendarWeekService,
+    private readonly snackBar: MatSnackBar
   ) {
     this.id$ = this.route.snapshot.paramMap.get('id');
     if (!this.id$) throw new Error('ID parameter is missing from the route.');
@@ -76,10 +77,17 @@ export class OrderDetailsComponent {
         if (orderDetail.offer) {
           this.initDoughnutChart([orderDetail.offer.basicPrice, orderDetail.offer.utilization, orderDetail.offer.timeUntilProduction]);
         }
+      }),
+      catchError((err) => {
+        this.snackBar.open(
+          this.translateService.instant('Error.OrderDetailsFailed'),
+          this.translateService.instant('CloseSnackBarAction')
+        );
+        return throwError(() => err);
       })
     );
 
-    this.translation = translate.onLangChange
+    this.translation = translateService.onLangChange
       .pipe(
         map(() => {
           this.updateLabelTranslations();
@@ -97,8 +105,8 @@ export class OrderDetailsComponent {
     const timestamp = this.getStatusTimestamp(allProcessStatus, status);
     if (!timestamp) return '';
 
-    return `${this.translate.instant('Orders.OrderTable.Status')}: ${this.translate.instant('Orders.Status.' + this.titleCasePipe.transform(status))}
-            ${this.translate.instant('Nft.Date')}: ${timestamp}`;
+    return `${this.translateService.instant('Orders.OrderTable.Status')}: ${this.translateService.instant('Orders.Status.' + this.titleCasePipe.transform(status))}
+            ${this.translateService.instant('Nft.Date')}: ${timestamp}`;
   }
 
   getStatus(allProcessStatus: ServiceProcessStatusDto[], status: string): boolean {
@@ -121,14 +129,14 @@ export class OrderDetailsComponent {
         this.formatService
       )
     );
-    this.doughnutChartOptions = OrderDetailsUtils.buildOptionsConfig(this.translate, this.formatService);
-    this.doughnutChartData = OrderDetailsUtils.buildDataset(this.translate.instant('Orders.Details.Diagram.DoughnutLabels'), priceData);
+    this.doughnutChartOptions = OrderDetailsUtils.buildOptionsConfig(this.translateService, this.formatService);
+    this.doughnutChartData = OrderDetailsUtils.buildDataset(this.translateService.instant('Orders.Details.Diagram.DoughnutLabels'), priceData);
     this.updateLabelTranslations();
     this.chart?.update();
   }
 
   updateLabelTranslations() {
-    this.doughnutChartData.labels = this.translate.instant('Orders.Details.Diagram.DoughnutLabels');
+    this.doughnutChartData.labels = this.translateService.instant('Orders.Details.Diagram.DoughnutLabels');
     this.chart?.update();
   }
 

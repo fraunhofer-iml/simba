@@ -7,10 +7,13 @@
  */
 
 import { InvoiceDto } from '@ap3/api';
+import { TranslateService } from '@ngx-translate/core';
 import { FileSaverService } from 'ngx-filesaver';
+import { catchError, throwError } from 'rxjs';
 import { Component, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 
@@ -27,7 +30,9 @@ export class DownloadInvoiceDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: InvoiceDto[],
     private readonly invoiceService: InvoiceService,
     private readonly sanitizer: DomSanitizer,
-    private readonly fileSaverService: FileSaverService
+    private readonly fileSaverService: FileSaverService,
+    private readonly snackBar: MatSnackBar,
+    private readonly translateService: TranslateService
   ) {
     this.selectedInvoice.setValue(data[0]);
     for (const invoice of data) {
@@ -44,9 +49,21 @@ export class DownloadInvoiceDialogComponent {
 
   downloadInvoices() {
     this.data.forEach((invoice) => {
-      this.invoiceService.downloadInvoicePdf(invoice.url).subscribe((res) => {
-        this.fileSaverService.save(res, `${invoice.invoiceNumber}.pdf`);
-      });
+      this.invoiceService.downloadInvoicePdf(invoice.url)
+        .pipe(
+          catchError((err) => {
+            this.snackBar.open(
+              this.translateService.instant('Error.DownloadInvoicesFailed'),
+              this.translateService.instant('CloseSnackBarAction')
+              );
+            return throwError(() => err);
+          })
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.fileSaverService.save(res, `${invoice.invoiceNumber}.pdf`);
+          }
+        });
     });
   }
 

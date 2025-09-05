@@ -66,7 +66,7 @@ export class CreateOrderComponent implements OnInit {
     private readonly router: Router,
     private readonly dialog: MatDialog,
     private readonly orderService: OrdersService,
-    private readonly translate: TranslateService,
+    private readonly translateService: TranslateService,
     private readonly offerService: OffersService,
     private readonly productService: ProductService,
     private readonly calendarWeekService: CalendarWeekService
@@ -81,11 +81,16 @@ export class CreateOrderComponent implements OnInit {
 
     this.tmpOrderInfo = { orderId: '', cw: 0, year: 0 };
     this.allCalendarWeeks = [];
-    this.products$ = this.productService.getProducts();
+    this.products$ = this.productService.getProducts().pipe(
+      catchError((err) => {
+        this.onError(this.translateService.instant('Error.GetProductsFailed'));
+        return throwError(() => err);
+      })
+    );
   }
 
   ngOnInit() {
-    this.translate.onLangChange.subscribe(() => {
+    this.translateService.onLangChange.subscribe(() => {
       this.updatePagedChartData(this.offers);
     });
     this.baseChartConfig = {
@@ -119,14 +124,14 @@ export class CreateOrderComponent implements OnInit {
     };
     this.offers$ = this.orderService.createOrder(createOrderDto).pipe(
       catchError((err) => {
-        this.onError(this.translate.instant('Orders.Create.OrderCreationFailed'));
+        this.onError(this.translateService.instant('Error.OrderCreationFailed'));
         return throwError(() => err);
       }),
       switchMap((order: OrderOverviewDto) => {
         this.tmpOrderInfo.orderId = order.id;
         return this.offerService.generateNewOffers(this.tmpOrderInfo).pipe(
           catchError((err) => {
-            this.onError(this.translate.instant('Orders.Create.OfferGenerationFailed'));
+            this.onError(this.translateService.instant('Error.OfferGenerationFailed'));
             return throwError(() => err);
           })
         );
@@ -169,7 +174,7 @@ export class CreateOrderComponent implements OnInit {
       .acceptOffer(offerId)
       .pipe(
         catchError((err: Error) => {
-          this.onError('Orders.Create.OfferAcceptationFailed');
+          this.onError('Error.OfferAcceptationFailed');
           return throwError(() => err);
         })
       )
@@ -179,7 +184,12 @@ export class CreateOrderComponent implements OnInit {
   }
 
   declineAllOffers() {
-    this.offerService.declineAllOffersByOrderId(this.tmpOrderInfo.orderId).subscribe(() => this.navigateToOrders());
+    this.offerService.declineAllOffersByOrderId(this.tmpOrderInfo.orderId).pipe(
+        catchError((err) => {
+          this.onError('Error.OfferDeclineFailed');
+          return throwError(() => err)
+        })
+      ).subscribe(() => this.navigateToOrders());
   }
 
   navigateToOrders() {
@@ -187,7 +197,7 @@ export class CreateOrderComponent implements OnInit {
   }
 
   getScheduledFor(cw: number, year: number) {
-    return `${this.translate.instant('CalendarWeek')} ${cw}, ${year}`;
+    return `${this.translateService.instant('CalendarWeek')} ${cw}, ${year}`;
   }
 
   offersForPreviousWeeks() {
@@ -219,7 +229,7 @@ export class CreateOrderComponent implements OnInit {
   private loadOffersForOrderWeek() {
     this.offers$ = this.offerService.generateNewOffers(this.tmpOrderInfo).pipe(
       catchError((err: Error) => {
-        this.onError('Orders.Create.OfferGenerationFailed');
+        this.onError('Error.OfferGenerationFailed');
         return throwError(() => err);
       }),
       tap((offers: OfferDto[]) => {
@@ -239,9 +249,9 @@ export class CreateOrderComponent implements OnInit {
 
   private updatePagedChartData(offers: OfferDto[]) {
     this.baseChartConfig.options = CreateOrderUtils.buildBarChartOptions(this.formatService);
-    this.baseChartConfig.data = CreateOrderUtils.buildChartData(this.translate, offers);
+    this.baseChartConfig.data = CreateOrderUtils.buildChartData(this.translateService, offers);
     this.baseChartConfig.labels = CreateOrderUtils.buildChartLabels(
-      this.translate,
+      this.translateService,
       offers[0].plannedCalendarWeek,
       offers.flatMap((offer: OfferDto) => {
         return offer.plannedCalendarWeek;
@@ -251,6 +261,6 @@ export class CreateOrderComponent implements OnInit {
   }
 
   private onError(msg: string) {
-    this.snackBar.open(this.translate.instant(msg), this.translate.instant('CloseSnackBarAction'));
+    this.snackBar.open(this.translateService.instant(msg), this.translateService.instant('CloseSnackBarAction'));
   }
 }

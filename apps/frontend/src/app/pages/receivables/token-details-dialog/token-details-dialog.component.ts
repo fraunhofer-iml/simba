@@ -6,10 +6,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { TranslateService } from '@ngx-translate/core';
 import { TokenReadDto } from 'nft-folder-blockchain-connector-besu';
-import { Observable, of, tap } from 'rxjs';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { catchError, Observable, of, tap, throwError } from 'rxjs';
+import { Component, Input, OnChanges } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 import { FormatService } from '../../../shared/services/util/format.service';
 
@@ -25,16 +27,24 @@ export class TokenDetailsDialogComponent implements OnChanges {
   constructor(
     public dialogRef: MatDialogRef<TokenDetailsDialogComponent>,
     public formatService: FormatService,
+    private readonly snackBar: MatSnackBar,
+    private readonly translateService: TranslateService,
     private readonly invoiceService: InvoiceService
   ) {
     this.invoiceNft$ = of();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     this.invoiceNft$ = this.invoiceService.getNftByInvoiceNumber(this.invoiceNumber).pipe(
       tap((tokenDto: TokenReadDto) => {
-        this.processAdditionalInformation(tokenDto);
-        return tokenDto;
+          this.processAdditionalInformation(tokenDto);
+      }),
+      catchError((err) => {
+        this.snackBar.open(
+          this.translateService.instant('Error.NftFailed'),
+          this.translateService.instant('CloseSnackBarAction')
+        );
+        return throwError(() => err);
       })
     );
   }
