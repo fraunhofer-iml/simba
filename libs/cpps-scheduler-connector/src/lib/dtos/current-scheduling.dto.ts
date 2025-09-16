@@ -10,11 +10,13 @@ import { ScheduledMachineAssignmentDto } from './scheduled-machine-assignment.dt
 
 export class CurrentSchedulingDto {
   orderId: string;
+  buyerOrderRefDocumentId: string;
   price: number;
   machineAssignment: ScheduledMachineAssignmentDto[];
 
-  constructor(orderId: string, price: number, machineAssignment: ScheduledMachineAssignmentDto[]) {
+  constructor(orderId: string, buyerOrderRefDocumentId: string, price: number, machineAssignment: ScheduledMachineAssignmentDto[]) {
     this.orderId = orderId;
+    this.buyerOrderRefDocumentId = buyerOrderRefDocumentId;
     this.price = price;
     this.machineAssignment = machineAssignment;
   }

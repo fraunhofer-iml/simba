@@ -4,10 +4,12 @@ import { ScheduleMachineAssignmentDto } from './schedule-machine-assignments.dto
 export class ScheduleDto {
   machineAssignments: ScheduleMachineAssignmentAmqpDto[];
   orderId: string;
+  buyerOrderRefDocumentId: string;
   price: number;
-  constructor(machineAssignment: ScheduleMachineAssignmentAmqpDto[], orderId: string, price: number) {
+  constructor(machineAssignment: ScheduleMachineAssignmentAmqpDto[], orderId: string, buyerOrderRefDocumentId: string, price: number) {
     this.machineAssignments = machineAssignment;
     this.orderId = orderId;
+    this.buyerOrderRefDocumentId = buyerOrderRefDocumentId;
     this.price = price;
   }
 
@@ -20,6 +22,11 @@ export class ScheduleDto {
   }
 
   public static toScheduleDto(amqpDto: ScheduleAmqpDto) {
-    return new ScheduleDto(ScheduleMachineAssignmentDto.fromAMQPDtos(amqpDto.machineAssignment), amqpDto.orderId, amqpDto.price);
+    return new ScheduleDto(
+      ScheduleMachineAssignmentDto.fromAMQPDtos(amqpDto.machineAssignment),
+      amqpDto.orderId,
+      amqpDto.buyerOrderRefDocumentId,
+      amqpDto.price
+    );
   }
 }

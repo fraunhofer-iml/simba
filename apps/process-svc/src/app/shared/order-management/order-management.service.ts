@@ -18,7 +18,7 @@ import {
 import { OfferPrismaService, OrderDatabaseAdapterService, OrderWithDependencies, ServiceProcessPrismaService } from '@ap3/database';
 import { OfferStatesEnum, ServiceStatesEnum } from '@ap3/util';
 import { Injectable, Logger } from '@nestjs/common';
-import { Offer, Prisma } from '@prisma/client';
+import { Offer, Order, Prisma } from '@prisma/client';
 import { ServiceProcessService } from '../../service-process/service-process.service';
 import { OrderSchedulingHandlerService } from './order-scheduling-handler.service';
 
@@ -37,12 +37,13 @@ export class OrderManagementService {
   async create(createOrderDto: CreateOrderAmqpDto): Promise<OrderAmqpDto> {
     this.logger.debug(`Create order: ${util.inspect(createOrderDto)}`);
     const createOrderEntity: Prisma.OrderCreateInput = createOrderDto.toPrismaCreateEntity();
-    const newOrderId: string = (await this.orderDatabaseAdapterService.createOrder(createOrderEntity)).id;
+    const newOrder: Order = await this.orderDatabaseAdapterService.createOrder(createOrderEntity);
     try {
-      await this.serviceProcessService.updateServiceStatus(newOrderId, ServiceStatesEnum.OPEN);
+      await this.serviceProcessService.updateServiceStatus(newOrder.id, ServiceStatesEnum.OPEN);
 
       const offers: CreateOfferAmqpDto[] = await this.orderSchedulingHandlerService.scheduleOrder(
-        newOrderId,
+        newOrder.id,
+        newOrder.buyerOrderRefDocumentId,
         createOrderDto.requestedCalendarWeek,
         createOrderDto.requestedYear,
         createOrderDto.productId,
@@ -50,13 +51,13 @@ export class OrderManagementService {
       );
       await this.createOffers(offers);
 
-      const orderOverview: OrderWithDependencies = await this.orderDatabaseAdapterService.getOrder(newOrderId);
+      const orderOverview: OrderWithDependencies = await this.orderDatabaseAdapterService.getOrder(newOrder.id);
       const currentState: ServiceStatusAmqpDto = OrderAmqpDto.getLatestState(orderOverview.serviceProcess.states);
 
       return OrderAmqpDto.fromPrismaEntity(orderOverview, currentState);
     } catch (e) {
-      this.logger.error(`Couldn't reach cpps to scheduler order #${newOrderId}`);
-      await this.cancelOrder(newOrderId);
+      this.logger.error(`Couldn't reach cpps to scheduler order #${newOrder.id}`);
+      await this.cancelOrder(newOrder.id);
       throw e;
     }
   }

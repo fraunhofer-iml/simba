@@ -27,13 +27,14 @@ export class OrderSchedulingHandlerService {
 
   async scheduleOrder(
     orderId: string,
+    buyerOrderRefDocumentId: string,
     calendarWeek: number,
     year: number,
     productId: string,
     quantity: number
   ): Promise<CreateOfferAmqpDto[]> {
     const product = new ScheduledProductDto(productId, quantity);
-    const orderToSchedule = new ScheduleOrderRequestDto(orderId, calendarWeek, year, new Date(), [product]);
+    const orderToSchedule = new ScheduleOrderRequestDto(orderId, buyerOrderRefDocumentId, calendarWeek, year, new Date(), [product]);
     const scheduledOrder: ScheduleOrderResponseDto = await this.cppsSchedulerConnector.scheduleOrder(orderToSchedule);
     return this.convertScheduledPricesDto(orderId, scheduledOrder.pricesPerCW);
   }
@@ -59,7 +60,7 @@ export class OrderSchedulingHandlerService {
   private convertCurrentSchedulingToAmqpDto(currentScheduling: CurrentSchedulingDto[]): ScheduleAmqpDto[] {
     const amqpDtos: ScheduleAmqpDto[] = [];
     for (const schedule of currentScheduling) {
-      amqpDtos.push(new ScheduleAmqpDto(schedule.machineAssignment, schedule.orderId, schedule.price));
+      amqpDtos.push(new ScheduleAmqpDto(schedule.machineAssignment, schedule.orderId, schedule.buyerOrderRefDocumentId, schedule.price));
     }
     return amqpDtos;
   }

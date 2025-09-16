@@ -4,6 +4,7 @@ import { scheduledMachineAssignmentDtoMock } from './schedule-machine-assignment
 
 export const currentSchedulingDtoMock: CurrentSchedulingDto = new CurrentSchedulingDto(
   ordersSeed[0].id,
+  ordersSeed[0].buyerOrderRefDocumentId,
   Number(offersSeed[0].basicPrice),
   scheduledMachineAssignmentDtoMock
 );
