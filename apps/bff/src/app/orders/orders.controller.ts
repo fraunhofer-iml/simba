@@ -101,7 +101,7 @@ export class OrdersController {
       companyId = user.company;
     }
     return await this.ordersService.findAll(
-      new AllOrdersFilterAmqpDto(serviceStates, companyId, customerName, productionDateFrom, productionDateTo)
+      new AllOrdersFilterAmqpDto([], serviceStates, companyId, customerName, productionDateFrom, productionDateTo)
     );
   }
 

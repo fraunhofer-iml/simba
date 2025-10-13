@@ -61,7 +61,6 @@ export class CppsSchedulerConnectorService {
     });
 
     const response = await fetch(request);
-    console.log(response);
     if (!response.ok) {
       this.throwSchedulerException(response);
     }

@@ -16,12 +16,13 @@ export class OrderDatabaseAdapterService {
   constructor(private readonly orderPrismaService: OrderPrismaService) {}
 
   async getOrder(id: string): Promise<OrderWithDependencies | null> {
-    const order = await this.orderPrismaService.getOrdersWithDependencies({ orderId: id });
+    const order = await this.orderPrismaService.getOrdersWithDependencies({ orderIds: [id] });
     return order && order.length == 1 ? order[0] : null;
   }
 
   async getOrders(params: AllOrdersFilterAmqpDto): Promise<OrderWithDependencies[] | null> {
     return await this.orderPrismaService.getOrdersWithDependencies({
+      orderIds: params.ids,
       buyerId: params.companyId,
       sellerId: params.companyId,
       machineOwnerId: params.companyId,

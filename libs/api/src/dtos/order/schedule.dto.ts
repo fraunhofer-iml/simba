@@ -5,27 +5,32 @@ export class ScheduleDto {
   machineAssignments: ScheduleMachineAssignmentAmqpDto[];
   orderId: string;
   buyerOrderRefDocumentId: string;
+  productName: string;
+  amount: number;
   price: number;
-  constructor(machineAssignment: ScheduleMachineAssignmentAmqpDto[], orderId: string, buyerOrderRefDocumentId: string, price: number) {
-    this.machineAssignments = machineAssignment;
+  constructor(
+    machineAssignments: ScheduleMachineAssignmentAmqpDto[],
+    orderId: string,
+    buyerOrderRefDocumentId: string,
+    productName: string,
+    amount: number,
+    price: number
+  ) {
+    this.machineAssignments = machineAssignments;
     this.orderId = orderId;
     this.buyerOrderRefDocumentId = buyerOrderRefDocumentId;
+    this.productName = productName;
+    this.amount = amount;
     this.price = price;
   }
 
-  public static toScheduleDtos(amqpDtos: ScheduleAmqpDto[]) {
-    const transFormedDtos = [];
-    for (const dto of amqpDtos) {
-      transFormedDtos.push(this.toScheduleDto(dto));
-    }
-    return transFormedDtos;
-  }
-
-  public static toScheduleDto(amqpDto: ScheduleAmqpDto) {
+  public static toScheduleDto(amqpDto: ScheduleAmqpDto, amount: number, productName: string) {
     return new ScheduleDto(
       ScheduleMachineAssignmentDto.fromAMQPDtos(amqpDto.machineAssignment),
       amqpDto.orderId,
       amqpDto.buyerOrderRefDocumentId,
+      productName,
+      amount,
       amqpDto.price
     );
   }

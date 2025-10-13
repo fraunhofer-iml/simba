@@ -20,7 +20,7 @@ export class OrderPrismaService {
   constructor(private prisma: PrismaService) {}
 
   async getOrdersWithDependencies({
-    orderId,
+    orderIds,
     buyerId,
     sellerId,
     machineOwnerId,
@@ -29,7 +29,7 @@ export class OrderPrismaService {
     productionDateFrom,
     productionDateTo,
   }: {
-    orderId?: string;
+    orderIds?: string[];
     buyerId?: string;
     sellerId?: string;
     machineOwnerId?: string;
@@ -42,7 +42,7 @@ export class OrderPrismaService {
       const filters: Prisma.OrderWhereInput[][] = this.createCompaniesFilter(buyerId, sellerId, machineOwnerId);
       const orFilters: Prisma.OrderWhereInput[] = filters[0];
       const andFilters: Prisma.OrderWhereInput[] = filters[1];
-      andFilters.push(...this.createOrderAndFilter(orderId, serviceStates, buyerName, productionDateFrom, productionDateTo));
+      andFilters.push(...this.createOrderAndFilter(orderIds, serviceStates, buyerName, productionDateFrom, productionDateTo));
 
       const whereClause: Prisma.OrderWhereInput = {
         ...(orFilters.length ? { OR: orFilters } : {}),
@@ -85,13 +85,13 @@ export class OrderPrismaService {
   }
 
   private createOrderAndFilter(
-    orderId?: string,
+    orderIds?: string[],
     serviceStates?: ServiceStatesEnum[],
     buyerName?: string,
     productionDateFrom?: Date,
     productionDateTo?: Date
   ): Prisma.OrderWhereInput[] {
-    const orderIdFilter: Prisma.OrderWhereInput | undefined = orderId ? { id: orderId } : undefined;
+    const orderIdFilter: Prisma.OrderWhereInput | undefined = orderIds && orderIds.length > 0 ? { id: { in: orderIds } } : undefined;
     const stateFilter: Prisma.OrderWhereInput | undefined =
       serviceStates && serviceStates.length > 0 ? { serviceProcess: { states: { some: { status: { in: serviceStates } } } } } : undefined;
     const buyerNameFilter: Prisma.OrderWhereInput | undefined = buyerName ? { buyer: { name: buyerName } } : undefined;

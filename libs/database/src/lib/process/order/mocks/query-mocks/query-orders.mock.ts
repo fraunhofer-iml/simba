@@ -66,7 +66,7 @@ const ordersOverviewSelect = <Prisma.OrderSelect>{
 };
 
 export const findSingleOrderMock = <Prisma.OrderWhereInput>{
-  where: { AND: [{ id: String(ordersSeed[0].id) }] },
+  where: { AND: [{ id: { in: [String(ordersSeed[0].id)] } }] },
   select: ordersOverviewSelect,
 };
 

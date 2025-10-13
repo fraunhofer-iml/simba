@@ -9,6 +9,7 @@
 import { ServiceStatesEnum } from '@ap3/util';
 
 export class AllOrdersFilterAmqpDto {
+  ids?: string[] = [];
   serviceStates?: ServiceStatesEnum[] = [];
   companyId?: string;
   customerName?: string;
@@ -16,12 +17,15 @@ export class AllOrdersFilterAmqpDto {
   productionDateTo?: Date;
 
   constructor(
+    ids?: string[],
     serviceStates?: ServiceStatesEnum[],
     companyId?: string,
     customerName?: string,
     productionDateFrom?: Date,
     productionDateTo?: Date
   ) {
+    this.ids = ids;
+    this.serviceStates = [];
     if (serviceStates) {
       this.serviceStates = Array.isArray(serviceStates) ? serviceStates : [serviceStates];
     }

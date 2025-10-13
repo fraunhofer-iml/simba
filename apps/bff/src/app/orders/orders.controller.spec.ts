@@ -161,6 +161,7 @@ describe('OrdersController', () => {
     const res: OrderOverviewDto[] = await controller.findAll(request, companiesSeed[0].id);
 
     expect(sendProcessRequestSpy).toHaveBeenCalledWith(OrderMessagePatterns.READ_ALL, {
+      ids: [],
       companyId: companiesSeed[0].id,
       customerName: undefined,
       productionDateFrom: undefined,
@@ -198,8 +199,12 @@ describe('OrdersController', () => {
   it('should get a Scheduling', async () => {
     const expectedReturnValue = schedulingMock;
 
-    sendProcessRequestSpy.mockImplementation((messagePattern: OrderMessagePatterns, data: any) => {
+    sendProcessRequestSpy.mockImplementationOnce((messagePattern: OrderMessagePatterns.READ_SCHEDULING, data: any) => {
       return of([scheduleAmqpDtoMock]);
+    });
+
+    sendProcessRequestSpy.mockImplementationOnce((messagePattern: OrderMessagePatterns.READ_ALL, data: any) => {
+      return of([orderAmqpMock[0]]);
     });
 
     const res: ScheduleDto[] = await controller.getScheduling();
