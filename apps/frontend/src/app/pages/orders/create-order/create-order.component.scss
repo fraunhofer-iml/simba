@@ -43,14 +43,6 @@ canvas {
   text-align: right;
 }
 
-.deadline {
-  grid-column: 2 / 3;
-  justify-self: end;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 .offers-container {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

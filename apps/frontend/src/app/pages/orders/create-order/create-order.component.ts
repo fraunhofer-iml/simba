@@ -13,7 +13,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { getWeek, getYear } from 'date-fns';
 import { debounce } from 'lodash';
 import { BaseChartDirective } from 'ng2-charts';
-import { CountdownComponent, CountdownEvent } from 'ngx-countdown';
+import { CountdownComponent } from 'ngx-countdown';
 import { catchError, Observable, switchMap, tap, throwError } from 'rxjs';
 import { ChangeDetectionStrategy, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -21,7 +21,6 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { DialogOffersExpiredComponent } from '../../../layout/dialog-offers-expired/dialog-offers-expired.component';
 import { ROUTING } from '../../../routing/routing.enum';
 import { OffersService } from '../../../shared/services/offers/offers.service';
 import { OrdersService } from '../../../shared/services/orders/orders.service';
@@ -162,13 +161,6 @@ export class CreateOrderComponent implements OnInit {
     return year < currentYear || (year === currentYear && week <= currentWeek);
   }
 
-  onEvent($event: CountdownEvent) {
-    if ($event.left === 0) {
-      this.declineAllOffers();
-      this.showDialog();
-    }
-  }
-
   acceptOffer(offerId: string) {
     this.offerService
       .acceptOffer(offerId)
@@ -237,14 +229,6 @@ export class CreateOrderComponent implements OnInit {
         this.updatePagedChartData(offers);
       })
     );
-  }
-
-  private showDialog() {
-    const dialogRef = this.dialog.open(DialogOffersExpiredComponent);
-    dialogRef.afterClosed().subscribe(() => {
-      this.orderForm.enable();
-      this.navigateToOrders();
-    });
   }
 
   private updatePagedChartData(offers: OfferDto[]) {

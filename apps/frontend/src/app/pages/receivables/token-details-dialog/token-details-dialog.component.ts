@@ -10,7 +10,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { TokenReadDto } from 'nft-folder-blockchain-connector-besu';
 import { catchError, Observable, of, tap, throwError } from 'rxjs';
 import { Component, Input, OnChanges } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvoiceService } from '../../../shared/services/invoices/invoices.service';
 import { FormatService } from '../../../shared/services/util/format.service';
@@ -25,7 +24,6 @@ export class TokenDetailsDialogComponent implements OnChanges {
   additionalData: Map<string, any> | null = null;
   @Input() invoiceNumber = '';
   constructor(
-    public dialogRef: MatDialogRef<TokenDetailsDialogComponent>,
     public formatService: FormatService,
     private readonly snackBar: MatSnackBar,
     private readonly translateService: TranslateService,
@@ -56,7 +54,6 @@ export class TokenDetailsDialogComponent implements OnChanges {
     } catch (error) {
       throw new Error('Failed parsing additional Information' + error);
     }
-    const parsedObjectKeyValueMap = new Map<string, any>(Object.entries(parsedAdditionalInformation));
-    this.additionalData = parsedObjectKeyValueMap;
+    this.additionalData = new Map<string, any>(Object.entries(parsedAdditionalInformation));
   }
 }

@@ -52,7 +52,14 @@
         @for (information of additionalData; track information[0]) {
           <div class="grid-variables">
             <p class="bold">{{ information[0] | titlecase }}</p>
-            <p class="text wrap-text">{{ information[1] }}</p>
+            <p class="text wrap-text">
+              {{
+                (information[0] === 'status'
+                    ? 'PaymentStatus.' + (information[1] | titlecase)
+                    : information[1]
+                ) | translate
+              }}
+            </p>
           </div>
         }
       </div>

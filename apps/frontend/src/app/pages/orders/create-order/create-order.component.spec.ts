@@ -30,7 +30,6 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
-import { DialogOffersExpiredComponent } from '../../../layout/dialog-offers-expired/dialog-offers-expired.component';
 import { OrderFilter } from '../../../model/order-filter';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { FilterService } from '../../../shared/services/filter/filter.service';
@@ -68,7 +67,7 @@ describe('CreateOrderComponent', () => {
     } as unknown as jest.Mocked<OffersService>;
 
     await TestBed.configureTestingModule({
-      declarations: [CreateOrderComponent, DialogOffersExpiredComponent],
+      declarations: [CreateOrderComponent],
       imports: [
         MatDividerModule,
         CountdownModule,
@@ -127,14 +126,6 @@ describe('CreateOrderComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should call declineAllOffers when countdown reaches zero', () => {
-    component.tmpOrderInfo.orderId = '123';
-    const event: CountdownEvent = { left: 0 } as CountdownEvent;
-    jest.spyOn(component, 'declineAllOffers');
-    component.onEvent(event);
-    expect(component.declineAllOffers).toHaveBeenCalled();
   });
 
   it('should handle successful order creation', () => {

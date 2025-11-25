@@ -31,10 +31,10 @@
       "InvoiceNumber": "Rechnungsnummer"
     },
     "Status": {
-      "Open": "offen",
-      "Planned": "geplant",
-      "Scheduled": "scheduled",
-      "Produced": "produziert"
+      "Open": "Offen",
+      "Planned": "Geplant",
+      "Scheduled": "Terminiert",
+      "Produced": "Produziert"
     },
     "Details": {
       "Table": { "StartDate": "Startzeitraum", "EndDate": "Endzeitraum", "RobotId": "Roboter ID", "Participant": "Maschineneigentümer" },
@@ -74,10 +74,10 @@
   },
 
   "PaymentStatus": {
-    "Open": "offen",
-    "Financed": "finanziert",
-    "Paid": "bezahlt",
-    "Exceeded": "überfällig",
+    "Open": "Offen",
+    "Financed": "Finanziert",
+    "Paid": "Bezahlt",
+    "Exceeded": "Überfällig",
     "PaymentStateChangeSuccessfulSnackBarMessage": "Der Status wurde erfolgreich geändert",
     "PaymentStateErrorSnackBarMessage": "Etwas ist schiefgelaufen. Der Status konnte nicht geändert werden. :("
   },

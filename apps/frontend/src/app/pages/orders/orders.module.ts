@@ -32,7 +32,6 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { MatTooltip } from '@angular/material/tooltip';
-import { DialogOffersExpiredComponent } from '../../layout/dialog-offers-expired/dialog-offers-expired.component';
 import { OrderFilter } from '../../model/order-filter';
 import { FilterModule } from '../../shared/components/filter/filter.module';
 import { YEAR_FORMAT } from '../../shared/formats/datepicker-format';
@@ -55,7 +54,6 @@ import { OrdersRoutingModule } from './orders-routing.module';
     OrdersFilterComponent,
     OrdersOverviewComponent,
     CreateOrderComponent,
-    DialogOffersExpiredComponent,
     OrderDetailsComponent,
     OrderTableComponent,
   ],
