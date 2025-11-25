@@ -176,4 +176,8 @@ canvas {
   .order-content > * {
     flex: 1 1 calc(50% - 1em);
   }
+
+  .price-diagram {
+    max-width: 80%;
+  }
 }

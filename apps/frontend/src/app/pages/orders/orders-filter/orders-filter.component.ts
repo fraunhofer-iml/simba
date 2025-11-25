@@ -1,6 +1,6 @@
 import { CompanyDto } from '@ap3/api';
 import { ServiceStatesEnum } from '@ap3/util';
-import { Component, EventEmitter, output } from '@angular/core';
+import {Component, EventEmitter, output } from '@angular/core';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { OrderFilter } from '../../../model/order-filter';
 import { AutocompleteCompanyFilterConfig } from '../../../shared/components/filter/autocomplete-company-filter/autocomplete-company-filter-config';

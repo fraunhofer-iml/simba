@@ -11,7 +11,7 @@ import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import localeEn from '@angular/common/locales/en';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { environment } from '../../../../../frontend/src/environments/environment';
+import { environment } from '../../../environments/environment';
 import { Languages } from '../../../assets/i18n/languages';
 import { ROUTING } from '../../routing/routing.enum';
 import { AuthService } from '../../shared/services/auth/auth.service';

@@ -32,13 +32,15 @@
           </mat-form-field>
         </div>
         @if (authService.isCustomer()) {
-          <button mat-flat-button class="create-button" routerLink="{{ ROUTING.newOrders }}">
-            {{ 'Orders.Create.Title' | translate }}
-          </button>
+          <div class="create-button-container">
+            <button mat-flat-button class="create-button" routerLink="{{ ROUTING.newOrders }}">
+              {{ 'Orders.Create.Title' | translate }}
+            </button>
+          </div>
         }
       </div>
 
-      <div class="table-container card">
+      <div class="card">
         <mat-tab-group>
           <mat-tab label="{{ 'Open' | translate }}">
             <app-order-table [dataSource]="dataSourceOpen" [filterValue]="filterText" [isCustomer]="isCustomer"> </app-order-table>

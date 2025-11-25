@@ -1,6 +1,6 @@
 import { CompanyDto } from '@ap3/api';
 import { PaymentStates } from '@ap3/util';
-import { Component, EventEmitter, output } from '@angular/core';
+import {Component, EventEmitter, output} from '@angular/core';
 import { InvoiceFilter } from '../../../model/invoice-filter';
 import { AutocompleteCompanyFilterConfig } from '../../../shared/components/filter/autocomplete-company-filter/autocomplete-company-filter-config';
 import { CheckBoxFilterConfig } from '../../../shared/components/filter/checkbox-filter/checkbox-filter-config';

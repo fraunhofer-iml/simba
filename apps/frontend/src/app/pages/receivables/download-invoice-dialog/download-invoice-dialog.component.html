@@ -7,11 +7,11 @@
   -->
 <div class="heading">
   <h1 mat-dialog-title>{{ 'Invoices.Title' | translate }}</h1>
-  <h1 mat-dialog-title>{{ 'Nft.Token' | translate }}</h1>
+  <h1 mat-dialog-title class="nft-token">{{ 'Nft.Token' | translate }}</h1>
   <mat-icon fontSet="material-symbols-outlined" id="close" (keyup)="dialogRef.close()" (click)="dialogRef.close()">close</mat-icon>
 </div>
 <mat-dialog-content class="download-invoice-container">
-  <mat-tab-group animationDuration="400ms" preserveContent="true" (selectedIndexChange)="changeTab($event)" preserveContent="true">
+  <mat-tab-group animationDuration="400ms" preserveContent="true" (selectedIndexChange)="changeTab($event)">
     @for (invoice of data; track invoice.id) {
       <mat-tab [label]="invoice.invoiceNumber">
         <ng-template matTabContent>

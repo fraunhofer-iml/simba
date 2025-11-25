@@ -6,9 +6,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-.imprint{
+.imprint {
   justify-content: center;
   max-width: 100%;
   padding-left: 8rem;
   padding-right: 8rem;
+}
+
+@media (max-width: 60em) {
+  .imprint {
+    padding: 1em;
+  }
 }

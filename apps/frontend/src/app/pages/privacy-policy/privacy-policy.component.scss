@@ -6,9 +6,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-.privacy-policy{
+.privacy-policy {
   justify-content: center;
   max-width: 100%;
   padding-left: 8rem;
   padding-right: 8rem;
+}
+
+@media (max-width: 60em) {
+  .privacy-policy {
+    padding: 1em;
+  }
 }
