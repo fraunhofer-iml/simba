@@ -6,12 +6,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export const LANGUAGEFORMATS = {
-  DE: 'dd.MM.yyyy',
-  EN: 'MM-dd-yyyy',
-  DE_DATETIME: 'dd.MM.yyyy, HH:mm',
-  EN_DATETIME: 'MM-dd-yyyy, HH:mm',
-};
-
-export const FILTERDATEFORMAT = 'YYYY-MM-DDTHH:mm:ssZ';
-export const TIMEZONEFORMAT = 'UTC'
+export enum SchedulingViewEnum {
+  WEEK = 'week',
+  DAY = 'day',
+  HOUR = 'hour',
+}

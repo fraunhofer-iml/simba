@@ -22,6 +22,10 @@ export class FormatService {
     return this.datePipe.transform(date, this.getDateFormatByCurrentLang()) || '';
   }
 
+  transformDateTimeToCurrentLanguageFormat(date: string): string {
+    return this.datePipe.transform(date, this.getDateTimeFormatByCurrentLang()) ?? '';
+  }
+
   getDateFormatByCurrentLang() {
     return this.translateService.currentLang === 'en' ? LANGUAGEFORMATS.EN : LANGUAGEFORMATS.DE;
   }

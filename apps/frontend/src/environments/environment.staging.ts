@@ -7,6 +7,7 @@
  */
 
 export const BASE_URL = 'https://affds-bff-dev.public.apps.blockchain-europe.iml.fraunhofer.de';
+export const STREAM_URL = 'https://unity.flw.mb.tu-dortmund.de'
 
 export const environment = {
   production: true,

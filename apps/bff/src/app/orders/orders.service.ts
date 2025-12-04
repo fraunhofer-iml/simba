@@ -114,17 +114,17 @@ export class OrdersService {
   }
 
   async getScheduling(): Promise<ScheduleDto[]> {
-    const transFormedDtos: ScheduleDto[] = [];
+    const transformedDtos: ScheduleDto[] = [];
     const scheduling: ScheduleAmqpDto[] = await firstValueFrom<ScheduleAmqpDto[]>(
       this.processAMQPClient.send(OrderMessagePatterns.READ_SCHEDULING, {})
     );
-
+    if (scheduling.length === 0) return [];
     const correspondingOrders = await this.findAll(new AllOrdersFilterAmqpDto(scheduling.map((schedule) => schedule.orderId)));
     for (const order of correspondingOrders) {
       const correspondingSchedule = scheduling.find((schedule) => schedule.orderId === order.id);
-      transFormedDtos.push(ScheduleDto.toScheduleDto(correspondingSchedule, order.amount, order.product));
+      transformedDtos.push(ScheduleDto.toScheduleDto(correspondingSchedule, order.amount, order.product));
     }
-    return transFormedDtos;
+    return transformedDtos;
   }
 
   private async loadOrderReferences(orders: OrderAmqpDto[]): Promise<OrderOverviewDto[]> {

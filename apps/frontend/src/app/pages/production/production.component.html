@@ -8,7 +8,36 @@
 
 <div class="production-container">
   <h1>{{ 'Sidebar.Production' | translate }}</h1>
+
   <div class="unity-stream-container">
     <iframe title="renderStreaming" [src]="streamUrl" allowfullscreen></iframe>
   </div>
+
+  <ng-container *ngIf="viewChartTitle">
+    <h2>{{ 'Production.ProductionPlan' | translate }}</h2>
+
+    <div class="card">
+      <div class="chart-button">
+          <mat-button-toggle-group [value]="currentView" (change)="setView($event.value)">
+            <mat-button-toggle value="{{ ScheduleViewEnum.WEEK }}" onKeyUp="">{{ 'Production.Week' | translate }}</mat-button-toggle>
+            <mat-button-toggle value="{{ ScheduleViewEnum.DAY }}" onKeyUp="">{{ 'Production.Day' | translate }}</mat-button-toggle>
+            <mat-button-toggle value="{{ ScheduleViewEnum.HOUR }}" onKeyUp="">{{ 'Production.Hour' | translate }}</mat-button-toggle>
+          </mat-button-toggle-group>
+      </div>
+
+      <div class="chart-title-container">
+        <button mat-icon-button (click)="shiftBackward(-viewShift)" [disabled]="!canShiftBackward">
+          <mat-icon fontSet="material-symbols-outlined">arrow_back_ios</mat-icon>
+        </button>
+
+        <h3 class="chart-title">{{ viewChartTitle }}</h3>
+
+        <button mat-icon-button (click)="shiftForward(viewShift)" [disabled]="!canShiftForward">
+          <mat-icon fontSet="material-symbols-outlined">arrow_forward_ios</mat-icon>
+        </button>
+      </div>
+
+      <div echarts [options]="chartOptions" (chartClick)="onChartClick($event)"></div>
+    </div>
+  </ng-container>
 </div>

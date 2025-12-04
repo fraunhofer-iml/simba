@@ -73,6 +73,19 @@
     "CalendarWeek": "Kalenderwoche"
   },
 
+  "Production": {
+    "ProductionPlan": "Produktionsplan",
+    "CalenderWeek": "Kalenderwoche",
+    "Start": "Produktionsstart",
+    "End": "Produktionsende",
+    "Price": "Preis",
+    "Product": "Produkt",
+    "Amount": "Menge",
+    "Week": "Woche",
+    "Day": "Tag",
+    "Hour": "Stunde"
+  },
+
   "PaymentStatus": {
     "Open": "Offen",
     "Financed": "Finanziert",
@@ -188,7 +201,8 @@
     "GetUnpaidStatisticsFailed": "Es wurden keine unbezahlten Rechnungen gefunden.",
     "GetInvoicesFailed": "Es wurden keine Rechnungen gefunden.",
     "GetCompaniesFailed": "Es wurden keine Unternehmen gefunden.",
-    "GetProductsFailed": "Es wurden keine Produkte gefunden."
+    "GetProductsFailed": "Es wurden keine Produkte gefunden.",
+    "GetCurrentSchedulingFailed": "Scheduling konnte nicht gefunden werden."
   },
 
   "NoMatchingData": "Es wurden keine Daten gefunden, die dem Filter entsprechen ",

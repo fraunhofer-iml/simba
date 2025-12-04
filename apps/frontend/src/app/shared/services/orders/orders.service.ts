@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CreateOrderDto, OrderDetailsDto, OrderOverviewDto } from '@ap3/api';
+import { CreateOrderDto, OrderDetailsDto, OrderOverviewDto, ScheduleDto } from '@ap3/api';
 import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -61,5 +61,9 @@ export class OrdersService {
         companyId: companyId,
       },
     });
+  }
+
+  public getCurrentScheduling(): Observable<ScheduleDto[]> {
+    return this.httpClient.get<ScheduleDto[]>(`${BASE_URL}${ApiEndpoints.orders.getScheduling}`);
   }
 }

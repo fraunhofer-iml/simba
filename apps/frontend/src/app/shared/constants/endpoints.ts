@@ -14,6 +14,7 @@ export const ApiEndpoints = {
   },
   orders: {
     getAllOrders: '/orders',
+    getScheduling: '/orders/scheduling',
   },
   products: {
     getAllProducts: '/products',

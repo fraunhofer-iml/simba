@@ -7,6 +7,7 @@
  */
 
 export const BASE_URL = 'http://localhost:3000';
+export const STREAM_URL = 'https://unity.flw.mb.tu-dortmund.de'
 
 export const environment = {
   production: false,
