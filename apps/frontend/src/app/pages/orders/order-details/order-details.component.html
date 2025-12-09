@@ -31,7 +31,7 @@
       <div class="data-row">
         <span class="description">{{ 'Orders.Details.Status' | translate }}</span>
         <span class="text-end">
-          {{ 'Orders.Status.' + (getLatestServiceProcessDto(orderDetail.processStateHistory).status | titlecase) | translate | titlecase }}
+          {{ 'Orders.Status.' + (getLatestServiceProcessDto(orderDetail.processStateHistory).status | titlecase) | translate | titlecase }}:
           @if (getLatestServiceProcessDto(orderDetail.processStateHistory).status === OrderStatus.PRODUCED) {
             :
             {{
@@ -40,7 +40,7 @@
               )
             }}
           } @else {
-            : {{ 'CalendarWeek' | translate }} {{ buildCwDate(getLatestServiceProcessDto(orderDetail.processStateHistory)) }}
+            {{ 'CalendarWeek' | translate }} {{ buildCwDate(getLatestServiceProcessDto(orderDetail.processStateHistory)) }}
           }
         </span>
       </div>

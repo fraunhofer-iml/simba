@@ -25,7 +25,7 @@ import { CalendarWeekService } from '../../../shared/services/util/calendar-week
 import { FormatService } from '../../../shared/services/util/format.service';
 import { OrderDetailsUtils } from '../util/order-details.util';
 import { STATUS_ICONS_MAP } from './const/status_icons_map';
-import { centerTextPlugin } from './diagram-plugins/diagram-plugins';
+import {centerTextPlugin, sliceConnectorPlugin} from './diagram-plugins/diagram-plugins';
 
 @Component({
   selector: 'app-order-details',
@@ -124,6 +124,7 @@ export class OrderDetailsComponent {
 
   initDoughnutChart(priceData: number[]): void {
     this.plugins.push(
+      sliceConnectorPlugin(),
       centerTextPlugin(
         priceData.reduce((sum, price) => sum + price, 0),
         this.formatService

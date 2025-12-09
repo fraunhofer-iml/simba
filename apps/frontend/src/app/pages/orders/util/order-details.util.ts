@@ -29,22 +29,30 @@ export class OrderDetailsUtils {
       type: 'doughnut',
       responsive: true,
       maintainAspectRatio: false,
+      radius: '80%',
+      layout: {
+        padding: {
+          right: 100,
+          left: 100
+        }
+      },
       plugins: {
         legend: {
           display: true,
           position: 'left',
         },
         datalabels: {
-          color: '#fff',
           formatter: (value: number) => formatCurrency(value, formatterService.getCurrentLocaleFormatter(), '€', 'EUR', '1.2-2'),
           font: {
             weight: 'bold',
             size: 14,
           },
+          anchor: 'end',
+          align: 'end',
+          offset: 5,
         },
         tooltip: {
           enabled: true,
-
           callbacks: {
             label: (tooltipItem: any) => {
               return '';
@@ -80,7 +88,6 @@ export class OrderDetailsUtils {
         latestObject = currentDto;
       }
     }
-
     return latestObject;
   }
 }

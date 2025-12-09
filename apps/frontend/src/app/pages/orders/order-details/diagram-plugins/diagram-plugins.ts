@@ -22,3 +22,25 @@ export function centerTextPlugin(priceSum: number, formatService: FormatService)
     },
   };
 }
+
+export function sliceConnectorPlugin(): Plugin {
+  return <Plugin> {
+    id: 'sliceConnectorPlugin',
+    afterDatasetsDraw(chart: any) {
+      const ctx = chart.ctx;
+      chart.getDatasetMeta(0).data.forEach((slice: any) => {
+        const offsetX = slice.tooltipPosition().x - slice.x;
+        const offsetY = slice.tooltipPosition().y - slice.y;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(slice.x + offsetX * 1.35, slice.y + offsetY * 1.35);
+        ctx.lineTo(slice.x + offsetX * 1.45, slice.y + offsetY * 1.45);
+        ctx.strokeStyle = '#888';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.restore();
+      });
+    },
+  };
+}
