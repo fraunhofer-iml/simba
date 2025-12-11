@@ -20,7 +20,6 @@ import {
   InvoiceDatabaseAdapterService,
   InvoiceForZugferd,
   InvoiceWithOrderBuyerRef,
-  NftPrismaService,
   OfferPrismaService,
   OrderDatabaseAdapterService,
   OrderWithDependencies,
@@ -36,7 +35,6 @@ import { InvoicesZugferdService } from './zugferd/invoices-zugferd.service';
 export class InvoicesService {
   private readonly logger = new Logger(InvoicesService.name);
   constructor(
-    private readonly nftPrismaService: NftPrismaService,
     private readonly invoiceAdapterService: InvoiceDatabaseAdapterService,
     private readonly orderDatabaseAdapterService: OrderDatabaseAdapterService,
     private readonly offerPrismaService: OfferPrismaService,
@@ -175,7 +173,7 @@ export class InvoicesService {
       newInvoiceWithNft,
       [
         {
-          invoiceId: '',
+          invoiceId: newInvoice.id,
           status: newInvoiceInput.status.status,
           timestamp: newInvoiceInput.status.timestamp,
         },

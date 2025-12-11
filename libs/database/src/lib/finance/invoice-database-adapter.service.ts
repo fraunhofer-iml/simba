@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import * as util from 'node:util';
 import { AllInvoicesFilterAmqpDto, InvoiceAmqpDto } from '@ap3/amqp';
 import { FinancialRoles, PaymentStates } from '@ap3/util';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
@@ -31,23 +32,35 @@ export class InvoiceDatabaseAdapterService {
     private readonly invoicePrismaService: InvoicePrismaService
   ) {}
 
-  async createInvoice(invoiceAmqpDto: InvoiceAmqpDto): Promise<Invoice> {
-    this.logger.verbose('Create new invoice');
-    return (await this.invoicePrismaService.createInvoice({
-      invoiceNumber: invoiceAmqpDto.invoiceNumber,
-      dueDate: invoiceAmqpDto.invoiceDueDate,
-      contractCurrency: invoiceAmqpDto.currency,
-      measuringUnit: invoiceAmqpDto.measuringUnit,
-      netPricePerUnit: invoiceAmqpDto.netPricePerUnit,
-      totalAmountWithoutVat: invoiceAmqpDto.totalAmountWithoutVat,
-      nft: invoiceAmqpDto.nft,
-      vat: invoiceAmqpDto.vat,
-      url: '',
-      paymentTerms: invoiceAmqpDto.paymentTerms,
-      serviceProcess: { connect: { id: invoiceAmqpDto.serviceProcessId } },
-      debtor: { connect: { id: invoiceAmqpDto.debtorId } },
-      creditor: { connect: { id: invoiceAmqpDto.creditorId } },
-    }))!;
+  async createInvoice(invoiceAmqpDto: InvoiceAmqpDto): Promise<Invoice | null> {
+    try {
+      const invoice: Invoice | null = await this.invoicePrismaService.createInvoice({
+        invoiceNumber: invoiceAmqpDto.invoiceNumber,
+        dueDate: invoiceAmqpDto.invoiceDueDate,
+        contractCurrency: invoiceAmqpDto.currency,
+        measuringUnit: invoiceAmqpDto.measuringUnit,
+        netPricePerUnit: invoiceAmqpDto.netPricePerUnit,
+        totalAmountWithoutVat: invoiceAmqpDto.totalAmountWithoutVat,
+        nft: invoiceAmqpDto.nft,
+        vat: invoiceAmqpDto.vat,
+        url: '',
+        paymentTerms: invoiceAmqpDto.paymentTerms,
+        serviceProcess: { connect: { id: invoiceAmqpDto.serviceProcessId } },
+        debtor: { connect: { id: invoiceAmqpDto.debtorId } },
+        creditor: { connect: { id: invoiceAmqpDto.creditorId } },
+        states: {
+          create: {
+            status: PaymentStates.OPEN,
+            timestamp: new Date(),
+          },
+        },
+      });
+      this.logger.verbose(`Create new Invoice  ${util.inspect(invoice)}`);
+      return invoice;
+    } catch (error) {
+      this.logger.error(util.inspect(error));
+      throw error;
+    }
   }
 
   async createPaymentState(createPaymentState: Prisma.PaymentStatusCreateInput) {

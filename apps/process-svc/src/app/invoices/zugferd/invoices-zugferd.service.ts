@@ -102,7 +102,7 @@ export class InvoicesZugferdService {
     return new InvoiceZugferdEntity(additional, buyer, invoiceZugferd, orderLines, supplier);
   }
 
-  private createItemsForZugferd(invoice: any, vat: number): ItemZugferd[] {
+  private createItemsForZugferd(invoice: InvoiceForZugferd, vat: number): ItemZugferd[] {
     const retVal: ItemZugferd[] = [];
 
     for (const orderLine of invoice.serviceProcess.order.orderLines) {
@@ -111,9 +111,9 @@ export class InvoicesZugferdService {
         articleNumber: orderLine.item.id,
         currency: invoice.contractCurrency,
         quantity: Number(orderLine.requestedQuantity),
-        totalAmountNet: Number(orderLine.lineTotalAmount),
-        totalAmountGross: Number(orderLine.lineTotalAmount) * (1 + vat),
-        unitPrice: Number(orderLine.netPrice),
+        totalAmountNet: Number(invoice.totalAmountWithoutVat),
+        totalAmountGross: Number(invoice.totalAmountWithoutVat) * (1 + vat),
+        unitPrice: Number(invoice.netPricePerUnit),
       });
     }
     return retVal;

@@ -10,7 +10,12 @@ import { Module } from '@nestjs/common';
 import { InvoiceDatabaseAdapterService, InvoicePrismaService, NftPrismaService } from './finance';
 import { CompanyPrismaService, ProductPrismaService } from './master-data';
 import { PrismaService } from './prisma.service';
-import { OfferPrismaService, OrderDatabaseAdapterService, OrderPrismaService, ServiceProcessPrismaService } from './process';
+import {
+  OfferPrismaService,
+  OrderDatabaseAdapterService,
+  OrderPrismaService,
+  ServiceProcessPrismaService,
+} from './process';
 import { QueryBuilderHelperService } from './util/query-builder-helper.service';
 
 @Module({
