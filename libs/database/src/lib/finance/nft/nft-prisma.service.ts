@@ -68,4 +68,20 @@ export class NftPrismaService {
       throw e;
     }
   }
+
+  async getHighestNftId() {
+    try {
+      const result = await this.prismaService.nft.aggregate({
+        _max: {
+          id: true,
+        },
+      });
+
+      const maxId = result._max.id && result._max.id != 0 ? result._max.id + 1 : 0;
+      return maxId;
+    } catch (e) {
+      this.logger.error(util.inspect(e));
+      throw e;
+    }
+  }
 }

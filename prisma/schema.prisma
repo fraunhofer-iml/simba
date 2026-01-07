@@ -187,7 +187,7 @@ model MachineAssignment {
 }
 
 model Nft {
-  id               Int      @id @default(autoincrement())
+  id               Int      @id @default(0)
   remoteId         String
   ownerAddress     String
   minterAddress    String

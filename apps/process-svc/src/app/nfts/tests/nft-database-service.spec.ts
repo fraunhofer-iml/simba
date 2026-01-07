@@ -12,6 +12,7 @@ import { DatabaseModule, nftSeed, PrismaService, serviceProcessesSeed } from '@a
 import { PaymentStates } from '@ap3/util';
 import { Test, TestingModule } from '@nestjs/testing';
 import { NftDatabaseFactory } from '../util/nft-database-factory';
+import { AggregatedIdMock } from './mocks/aggregated-id.mock';
 
 describe('NftDatabaseService', () => {
   let service: NftDatabaseFactory;
@@ -30,6 +31,7 @@ describe('NftDatabaseService', () => {
               findUnique: jest.fn(),
               findMany: jest.fn(),
               update: jest.fn(),
+              aggregate: jest.fn(),
             },
           },
         },
@@ -41,8 +43,11 @@ describe('NftDatabaseService', () => {
   });
 
   it('mintNFT: should create a new nft', async () => {
-    const prismaNftSpy = jest.spyOn(prisma.nft, 'create');
-    prismaNftSpy.mockResolvedValue(nftSeed[0]);
+    const prismaNftCreateSpy = jest.spyOn(prisma.nft, 'create');
+    prismaNftCreateSpy.mockResolvedValue(nftSeed[0]);
+
+    const prismaNftAggregateSpy = jest.spyOn(prisma.nft, 'aggregate');
+    prismaNftAggregateSpy.mockResolvedValue(AggregatedIdMock);
 
     const retVal = await service.mintNFT(serviceProcessesSeed[0], 'remoteId', 'test pdf', 'test url', 'test metadata', 'test metadata url');
     expect(tokenReadDtoMock).toEqual(retVal);

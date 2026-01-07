@@ -33,8 +33,9 @@ export class NftDatabaseFactory extends NftFactory {
     const serviceProcessHash: string = this.hashData(JSON.stringify(serviceProcess));
     const invoiceHash: string = this.hashData(invoicePdf.toString());
     const metadataHash: string = this.hashData(JSON.stringify(metadata));
-
+    const maxId: number = await this.nftPrismaService.getHighestNftId();
     const createdToken: Nft = await this.nftPrismaService.createNft({
+      id: maxId,
       remoteId: invoiceNumber,
       ownerAddress: NFT_OWNER_ADDRESS,
       minterAddress: NFT_MINTER_ADDRESS,
