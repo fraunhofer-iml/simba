@@ -36,7 +36,7 @@ export class FinanceDataParser extends CsvParser {
           return !value || value === 'null' ? null : new Date(value);
         }
         return value === 'null' ? null : value;
-      },
+        },
     });
     this.evaluate(retVal, 'payment-states.seed.ts', `export const paymentStatesSeed = `);
     return retVal;

@@ -49,7 +49,6 @@ export class InvoicesService {
     const response: InvoiceAmqpDto[] = await firstValueFrom<InvoiceAmqpDto[]>(
       this.processAMQPClient.send(InvoiceMessagePatterns.READ_ALL, params)
     );
-
     return await this.handleFrontendInvoiceDTOCreation(response);
   }
 

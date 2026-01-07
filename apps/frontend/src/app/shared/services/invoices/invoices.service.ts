@@ -14,13 +14,11 @@ import { Injectable } from '@angular/core';
 import { BASE_URL } from '../../../../environments/environment';
 import { InvoiceFilter } from '../../../model/invoice-filter';
 import { ApiEndpoints } from '../../constants/endpoints';
-import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class InvoiceService {
   constructor(
-    private readonly httpClient: HttpClient,
-    private readonly authService: AuthService
+    private readonly httpClient: HttpClient
   ) {}
 
   getInvoices(filter?: InvoiceFilter): Observable<InvoiceDto[]> {

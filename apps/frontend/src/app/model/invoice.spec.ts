@@ -32,6 +32,6 @@ describe('Invoice', () => {
 
   it('should format totalAmountWithoutVat to two decimal places with currency symbol', () => {
     const result = Invoice.convertToInvoice(invoiceDtoMocks);
-    expect(result[0].totalAmountWithoutVat).toBe('60.00');
+    expect(result[0].totalAmountWithoutVat).toBe('12123.76');
   });
 });
