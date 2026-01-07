@@ -105,7 +105,7 @@ export class OrderDetailsComponent {
     const timestamp = this.getStatusTimestamp(allProcessStatus, status);
     if (!timestamp) return '';
 
-    return `${this.translateService.instant('Orders.OrderTable.Status')}: ${this.translateService.instant('Orders.Status.' + this.titleCasePipe.transform(status))}
+    return `${this.translateService.instant('Orders.OrderTable.Status')}: ${this.translateService.instant('Orders.Status.' + this.titleCasePipe.transform(status))},
             ${this.translateService.instant('Nft.Date')}: ${timestamp}`;
   }
 
@@ -141,7 +141,7 @@ export class OrderDetailsComponent {
     this.chart?.update();
   }
 
-  getLatestServiceProcessDto(serviceProcessStatusDtos: ServiceProcessStatusDto[]) {
+  getLatestServiceProcessDto(serviceProcessStatusDtos: ServiceProcessStatusDto[]): ServiceProcessStatusDto {
     return OrderDetailsUtils.getLatestStatus(serviceProcessStatusDtos);
   }
 

@@ -13,12 +13,10 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { getWeek, getYear } from 'date-fns';
 import { debounce } from 'lodash';
 import { BaseChartDirective } from 'ng2-charts';
-import { CountdownComponent } from 'ngx-countdown';
 import { catchError, Observable, switchMap, tap, throwError } from 'rxjs';
 import { ChangeDetectionStrategy, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ROUTING } from '../../../routing/routing.enum';
@@ -57,13 +55,11 @@ export class CreateOrderComponent implements OnInit {
   datePickerFilter = (d: Date | null): boolean => getYear(d ?? new Date()) >= getYear(new Date());
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
-  @ViewChild('cd', { static: false }) countdown!: CountdownComponent;
 
   constructor(
     public readonly formatService: FormatService,
     private readonly snackBar: MatSnackBar,
     private readonly router: Router,
-    private readonly dialog: MatDialog,
     private readonly orderService: OrdersService,
     private readonly translateService: TranslateService,
     private readonly offerService: OffersService,
@@ -176,12 +172,15 @@ export class CreateOrderComponent implements OnInit {
   }
 
   declineAllOffers() {
-    this.offerService.declineAllOffersByOrderId(this.tmpOrderInfo.orderId).pipe(
+    this.offerService
+      .declineAllOffersByOrderId(this.tmpOrderInfo.orderId)
+      .pipe(
         catchError((err) => {
           this.onError('Error.OfferDeclineFailed');
-          return throwError(() => err)
+          return throwError(() => err);
         })
-      ).subscribe(() => this.navigateToOrders());
+      )
+      .subscribe(() => this.navigateToOrders());
   }
 
   navigateToOrders() {
@@ -225,7 +224,6 @@ export class CreateOrderComponent implements OnInit {
         return throwError(() => err);
       }),
       tap((offers: OfferDto[]) => {
-        this.countdown.restart();
         this.updatePagedChartData(offers);
       })
     );

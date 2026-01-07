@@ -59,7 +59,6 @@ export class ProductionComponent {
     private readonly formatService: FormatService,
     private readonly translateService: TranslateService
   ) {
-
     this.streamUrl = this.sanitizer.bypassSecurityTrustResourceUrl(STREAM_URL); // NOSONAR: URL is trusted and controlled
     this.getCurrentScheduling();
     this.translateService.onLangChange.subscribe(() => {

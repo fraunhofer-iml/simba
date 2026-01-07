@@ -14,16 +14,13 @@
 }
 
 .paymentStatus-changed {
-  padding-top: 10px;
   color: green;
 }
 
-.paymentStatus-unchanged {
-  padding-top: 10px;
-}
-
-.paymentStatus-options-button {
-  margin-left: auto;
+.paymentStatus {
+  line-height: 0.5em;
+  display: inline-flex;
+  align-items: center;
 }
 
 .background-white {

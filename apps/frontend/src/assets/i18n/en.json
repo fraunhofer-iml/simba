@@ -138,7 +138,7 @@
       "DueDate": "Invoice due date",
       "Payer": "Payer",
       "FinancialState": "Financial status",
-      "OrderNumber": "Order id"
+      "OrderNumber": "Order ID"
     }
   },
 
