@@ -48,6 +48,7 @@ import { OrdersFilterComponent } from './orders-filter/orders-filter.component';
 import { OrderTableComponent } from './orders-overview/order-table/order-table.component';
 import { OrdersOverviewComponent } from './orders-overview/orders-overview.component';
 import { OrdersRoutingModule } from './orders-routing.module';
+import { DynamicPricingScreenshotDialogComponent } from './create-order/dynamic-pricing-screenshot-dialog/dynamic-pricing-screenshot-dialog.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { OrdersRoutingModule } from './orders-routing.module';
     CreateOrderComponent,
     OrderDetailsComponent,
     OrderTableComponent,
+    DynamicPricingScreenshotDialogComponent
   ],
   imports: [
     CommonModule,

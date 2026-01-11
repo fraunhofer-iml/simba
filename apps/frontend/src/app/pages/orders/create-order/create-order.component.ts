@@ -27,6 +27,8 @@ import { CalendarWeekService } from '../../../shared/services/util/calendar-week
 import { FormatService } from '../../../shared/services/util/format.service';
 import { CreateOrderUtils } from './create-order.util';
 import { CreateOrderChartEntity } from './model/create-order-chart.entity';
+import { DynamicPricingScreenshotDialogComponent } from './dynamic-pricing-screenshot-dialog/dynamic-pricing-screenshot-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-create-order',
@@ -64,7 +66,8 @@ export class CreateOrderComponent implements OnInit {
     private readonly translateService: TranslateService,
     private readonly offerService: OffersService,
     private readonly productService: ProductService,
-    private readonly calendarWeekService: CalendarWeekService
+    private readonly calendarWeekService: CalendarWeekService,
+    private readonly dialog: MatDialog
   ) {
     this.orderForm = new FormGroup({
       date: new FormControl<Date | null>(null, Validators.required),
@@ -155,6 +158,12 @@ export class CreateOrderComponent implements OnInit {
     const currentYear = getYear(new Date());
     const currentWeek = getWeek(new Date());
     return year < currentYear || (year === currentYear && week <= currentWeek);
+  }
+
+  openDynamicPricingScreenshotDialog() {
+    this.dialog.open(DynamicPricingScreenshotDialogComponent, {
+      maxWidth: '70vw'
+    });
   }
 
   acceptOffer(offerId: string) {

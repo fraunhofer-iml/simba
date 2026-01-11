@@ -135,6 +135,16 @@ canvas {
   margin-top: -0.5em;
 }
 
+.title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#iconInformation {
+  cursor: pointer;
+}
+
 @media (max-width: 60em) {
   .offers-container {
     display: block;

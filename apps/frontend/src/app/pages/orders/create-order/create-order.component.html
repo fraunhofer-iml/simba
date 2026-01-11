@@ -100,8 +100,11 @@
     <div class="offers-container">
       @for (offer of offers$ | async; track $index) {
         <div class="card">
-          <div class="offerIdAndDate">
-            <p id="offerId" class="grey">ID {{ offer.id }}</p>
+          <div class="title-wrapper">
+            <div class="offerIdAndDate">
+              <p id="offerId" class="grey">ID {{ offer.id }}</p>
+            </div>
+            <mat-icon fontSet="material-symbols-outlined" id="iconInformation" onKeyUp=""  (click)="openDynamicPricingScreenshotDialog()">info</mat-icon>
           </div>
           <p id="offerName">{{ orderForm.value.product?.name }}</p>
           <dl class="offer-details-grid">
