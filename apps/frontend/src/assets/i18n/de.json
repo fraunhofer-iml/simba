@@ -47,9 +47,9 @@
       "ProductionProcess": "Produktionsablauf",
       "Diagram": {
         "DoughnutTitle": "Zusammensetzung des Preises",
-        "DoughnutLabels": ["Grundpreis", "Auslastung", "Zeitzuschlag"],
+        "DoughnutLabels": ["Herstellerpreis", "Auslastung", "Zeitzuschlag"],
         "DoughnutDescriptions": [
-          "Der Grundpreis wird täglich anhand der durchschnittlichen Nachfrage bestimmt und stellt die Basis des Gesamtpreises dar.",
+          "Der Herstellerpreis wird täglich anhand der durchschnittlichen Nachfrage bestimmt und stellt die Basis des Gesamtpreises dar.",
           "Die Systemauslastung stellt eine dynamische Preiskomponente dar. Abhängig vom Auslastungsgrad der Maschinen verändert sie sich und spiegelt so die Nachfrage bei begrenzten Kapazitäten wieder.",
           "Der Zeitzuschlag ist eine Gebühr, die sich je nach Dringlichkeit der Produktion erhöht. Je schneller ein Produkt hergestellt werden muss, desto höher fällt dieser Zuschlag aus."
         ]
@@ -67,7 +67,7 @@
     "Amount": "Stück",
     "DeclineAllOffers": "Alle Ablehnen",
     "OffersExpired": "Das tut uns leid, Ihre Angebote sind abgelaufen.",
-    "BasicPrice": "Grundpreis",
+    "BasicPrice": "Herstellerpreis",
     "Utilization": "Auslastung",
     "TimeUntilProduction": "Zeit bis Produktion",
     "CalendarWeek": "Kalenderwoche"

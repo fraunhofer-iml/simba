@@ -71,7 +71,7 @@ services:
   # CPPS-Scheduler #
   ##################
   cpps-scheduler:
-    image: container-registry.gitlab.cc-asp.fraunhofer.de/skala/ap3/cpps/ki-und-scheduling/cpps-scheduler:v0.1.7-rc4
+    image: container-registry.gitlab.cc-asp.fraunhofer.de/skala/ap3/cpps/ki-und-scheduling/cpps-scheduler:v0.1.7-rc5
     logging:
       options:
         max-size: 10m

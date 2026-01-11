@@ -53,9 +53,9 @@
       "ProductionProcess": "Production process",
       "Diagram": {
         "DoughnutTitle": "Price composition",
-        "DoughnutLabels": ["Basic price", "Utilization", "Time surcharge"],
+        "DoughnutLabels": ["Manufacturing price", "Utilization", "Time surcharge"],
         "DoughnutDescriptions": [
-          "The base price is determined daily based on average demand and serves as the foundation of the total price.",
+          "The manufacturing price is determined daily based on average demand and serves as the foundation of the total price.",
           "System utilization is a dynamic pricing component. It changes depending on how much the machines are being used – increasing with high utilization and decreasing with low utilization – and thus reflects demand under limited capacity. ",
           "The time surcharge is a fee that increases based on the urgency of the Production. The sooner a product needs to be produced, the more this surcharge increases."
         ]
@@ -73,7 +73,7 @@
     "ProductionWeek": "Offered production period",
     "Amount": "Piece(s)",
     "OffersExpired": "We're sorry, your offers have expired.",
-    "BasicPrice": "Base price",
+    "BasicPrice": "Manufacturing price",
     "Utilization": "Utilization",
     "TimeUntilProduction": "Time until production",
     "CalendarWeek": "Calendar week"
